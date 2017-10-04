@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\" />
-    <Folder Include="Areas\Front\" />
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="Areas\Front\Controllers\" />
+    <Folder Include="Areas\Front\Views\" />
+    <Folder Include="Model\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
