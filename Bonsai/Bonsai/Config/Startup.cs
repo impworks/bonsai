@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bonsai
+namespace Bonsai.Config
 {
     public class Startup
     {
@@ -15,6 +12,19 @@ namespace Bonsai
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+            services.AddRouting(opts =>
+            {
+                opts.AppendTrailingSlash = false;
+                opts.LowercaseUrls = true;
+            });
+
+#if RELEASE
+            services.Configure<MvcOptions>(opts =>
+            {
+                opts.Filters.Add(new RequireHttpsAttribute());
+            });
+#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -23,12 +33,15 @@ namespace Bonsai
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+#if RELEASE
+            app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
+#endif
+
+            app.UseStaticFiles();
+            app.UseMvc();
         }
     }
 }
