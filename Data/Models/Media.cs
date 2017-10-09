@@ -28,7 +28,7 @@ namespace Bonsai.Data.Models
         public virtual string FileName { get; set; }
 
         /// <summary>
-        /// Serialized collection of facts.
+        /// Serialized collection of facts related to current media file.
         /// </summary>
         public virtual string Facts { get; set; }
     }

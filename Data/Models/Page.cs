@@ -33,7 +33,7 @@ namespace Bonsai.Data.Models
         public virtual string Description { get; set; }
 
         /// <summary>
-        /// Serialized facts collection.
+        /// Serialized collection of facts related to current entity.
         /// </summary>
         public virtual string Facts { get; set; }
     }

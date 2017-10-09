@@ -12,6 +12,7 @@
     <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Areas\Front\Controllers\" />
     <Folder Include="Areas\Front\Views\" />
+    <Folder Include="Code\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
