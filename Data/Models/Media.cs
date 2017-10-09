@@ -2,13 +2,34 @@
 
 namespace Bonsai.Data.Models
 {
+    /// <summary>
+    /// Uploaded photo or video.
+    /// </summary>
     public class Media
     {
-        public Guid Id { get; set; }
+        /// <summary>
+        /// Surrogate ID.
+        /// </summary>
+        public virtual Guid Id { get; set; }
 
-        public string FilePath { get; set; }
-        public string FileName { get; set; }
+        /// <summary>
+        /// Type of the media file.
+        /// </summary>
+        public virtual MediaType Type { get; set; }
 
-        public string Facts { get; set; }
+        /// <summary>
+        /// Path to the file on the server.
+        /// </summary>
+        public virtual string FilePath { get; set; }
+
+        /// <summary>
+        /// Name of the file.
+        /// </summary>
+        public virtual string FileName { get; set; }
+
+        /// <summary>
+        /// Serialized collection of facts.
+        /// </summary>
+        public virtual string Facts { get; set; }
     }
 }

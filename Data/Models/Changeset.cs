@@ -2,17 +2,44 @@
 
 namespace Bonsai.Data.Models
 {
+    /// <summary>
+    /// The log of a page's edit and its consequences on other pages.
+    /// </summary>
     public class Changeset
     {
-        public Guid Id { get; set; }
+        /// <summary>
+        /// Surrogate ID.
+        /// </summary>
+        public virtual Guid Id { get; set; }
 
-        public DateTimeOffset Date { get; set; }
-        public AppUser Author { get; set; }
+        /// <summary>
+        /// Edit date.
+        /// </summary>
+        public virtual DateTimeOffset Date { get; set; }
 
-        public Guid SourceEntityId { get; set; }
-        public string SourceDiff { get; set; }
+        /// <summary>
+        /// User that has authored the edit.
+        /// </summary>
+        public virtual AppUser Author { get; set; }
 
-        public string AffectedEntityIds { get; set; }
-        public string AffectedDiff { get; set; }
+        /// <summary>
+        /// ID of the entity that has been edited.
+        /// </summary>
+        public virtual Guid SourceEntityId { get; set; }
+
+        /// <summary>
+        /// The diff of the entity's changes.
+        /// </summary>
+        public virtual string SourceDiff { get; set; }
+
+        /// <summary>
+        /// IDs of entities that have been transitively affected by the change.
+        /// </summary>
+        public virtual string AffectedEntityIds { get; set; }
+
+        /// <summary>
+        /// The diff of all other entities' changes.
+        /// </summary>
+        public virtual string AffectedDiff { get; set; }
     }
 }
