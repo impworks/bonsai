@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bonsai.Data.Models
 {
@@ -7,6 +8,11 @@ namespace Bonsai.Data.Models
     /// </summary>
     public class AppConfig
     {
+        /// <summary>
+        /// Surrogate key.
+        /// </summary>
+        public virtual Guid Id { get; set; }
+
         /// <summary>
         /// The title of the website. Displayed in the top bar and browser title.
         /// </summary>
