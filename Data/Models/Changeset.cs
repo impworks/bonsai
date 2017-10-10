@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bonsai.Data.Models
 {
@@ -30,16 +31,19 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// The diff of the entity's changes.
         /// </summary>
+        [MaxLength]
         public virtual string SourceDiff { get; set; }
 
         /// <summary>
         /// IDs of entities that have been transitively affected by the change.
         /// </summary>
+        [MaxLength]
         public virtual string AffectedEntityIds { get; set; }
 
         /// <summary>
         /// The diff of all other entities' changes.
         /// </summary>
+        [MaxLength]
         public virtual string AffectedDiff { get; set; }
     }
 }

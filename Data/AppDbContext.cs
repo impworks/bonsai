@@ -12,7 +12,9 @@ namespace Bonsai.Data
         public virtual DbSet<AccessRule> AccessRules => Set<AccessRule>();
         public virtual DbSet<Changeset> Changes => Set<Changeset>();
         public virtual DbSet<Media> Media => Set<Media>();
+        public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
         public virtual DbSet<Page> Pages => Set<Page>();
+        public virtual DbSet<Relation> Relations => Set<Relation>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -21,11 +23,26 @@ namespace Bonsai.Data
             builder.Entity<AppUser>()
                    .HasMany(x => x.Changes).WithOne(x => x.Author);
 
+            builder.Entity<Changeset>()
+                   .HasOne(x => x.Author).WithMany();
+
             builder.Entity<AccessRule>()
                    .HasOne(x => x.Page).WithMany();
 
             builder.Entity<AccessRule>()
                 .HasOne(x => x.User).WithMany();
+
+            builder.Entity<Relation>()
+                   .HasOne(x => x.Subject).WithMany(x => x.Relations);
+
+            builder.Entity<Relation>()
+                   .HasOne(x => x.Object).WithMany();
+
+            builder.Entity<MediaTag>()
+                   .HasOne(x => x.Media).WithMany(x => x.Tags);
+
+            builder.Entity<MediaTag>()
+                   .HasOne(x => x.Object).WithMany(x => x.MediaTags);
         }
     }
 }
