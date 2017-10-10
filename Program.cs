@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Bonsai.Config;
+using Bonsai.Code.Config;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Bonsai

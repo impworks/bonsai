@@ -9,6 +9,12 @@ namespace Bonsai.Data
     /// </summary>
     public class AppDbContext: IdentityDbContext<AppUser>
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+            
+        }
+
         public virtual DbSet<AppConfig> Config => Set<AppConfig>();
         public virtual DbSet<AccessRule> AccessRules => Set<AccessRule>();
         public virtual DbSet<Changeset> Changes => Set<Changeset>();

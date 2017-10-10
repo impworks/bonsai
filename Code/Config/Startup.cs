@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantUsingDirective
+﻿using Bonsai.Code.Services;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Builder;
@@ -10,16 +10,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bonsai.Config
+namespace Bonsai.Code.Config
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -29,32 +31,37 @@ namespace Bonsai.Config
                     .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddMvc().AddControllersAsServices();
             services.AddRouting(opts =>
             {
                 opts.AppendTrailingSlash = false;
                 opts.LowercaseUrls = true;
             });
 
-#if RELEASE
-            services.Configure<MvcOptions>(opts =>
+            services.AddTransient<AppDbContext>();
+            services.AddTransient<AppConfigService>();
+
+            if (Environment.IsProduction())
             {
-                opts.Filters.Add(new RequireHttpsAttribute());
-            });
-#endif
+                services.Configure<MvcOptions>(opts =>
+                {
+                    opts.Filters.Add(new RequireHttpsAttribute());
+                });
+            }
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
 
-#if RELEASE
-            app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
-#endif
+            if (Environment.IsProduction())
+            {
+                app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
+            }
 
             app.UseStaticFiles();
             app.UseAuthentication();
