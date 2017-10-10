@@ -1,0 +1,21 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bonsai.Data.Models
+{
+    /// <summary>
+    /// General application configuration.
+    /// </summary>
+    public class AppConfig
+    {
+        /// <summary>
+        /// The title of the website. Displayed in the top bar and browser title.
+        /// </summary>
+        [StringLength(200)]
+        public virtual string Title { get; set; }
+
+        /// <summary>
+        /// Flag indicating that the website allows unauthorized visitors to view the contents.
+        /// </summary>
+        public virtual bool AllowGuests { get; set; }
+    }
+}
