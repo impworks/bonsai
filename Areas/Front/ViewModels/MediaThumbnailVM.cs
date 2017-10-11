@@ -8,14 +8,9 @@ namespace Bonsai.Areas.Front.ViewModels
     public class MediaThumbnailVM
     {
         /// <summary>
-        /// URL of the media thumbnail's file.
-        /// </summary>
-        public string ThumbnailUrl { get; set; }
-
-        /// <summary>
         /// Full URL of the media's display page.
         /// </summary>
-        public string DisplayUrl { get; set; }
+        public string MediaKey { get; set; }
 
         /// <summary>
         /// Type of the media. 

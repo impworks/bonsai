@@ -46,6 +46,8 @@ namespace Bonsai.Code.Config
 
             services.AddTransient<AppDbContext>();
             services.AddTransient<AppConfigService>();
+            services.AddTransient<PageService>();
+            services.AddTransient<MarkdownService>();
 
             if (Environment.IsProduction())
             {

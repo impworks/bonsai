@@ -17,7 +17,7 @@ namespace Bonsai.Code.Services
 
         private readonly AppDbContext _context;
         private readonly object _lock;
-        private AppConfig _config;
+        private static AppConfig _config;
 
         /// <summary>
         /// Returns the configuration instance.
@@ -30,6 +30,15 @@ namespace Bonsai.Code.Services
                         _config = LoadOrCreateConfig();
 
             return _config;
+        }
+
+        /// <summary>
+        /// Resets the currently loaded config.
+        /// </summary>
+        public void ResetCache()
+        {
+            lock(_lock)
+                _config = null;
         }
 
         /// <summary>

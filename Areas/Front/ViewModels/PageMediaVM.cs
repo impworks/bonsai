@@ -5,11 +5,11 @@ namespace Bonsai.Areas.Front.ViewModels
     /// <summary>
     /// Descriptions of the media's 
     /// </summary>
-    public class PageMediaVM
+    public class PageMediaVM: PageVMBase
     {
         /// <summary>
         /// The list of media item thumbnails for current page.
         /// </summary>
-        public IEnumerable<MediaThumbnailVM> Thumbnails { get; set; }
+        public IEnumerable<MediaThumbnailVM> Media { get; set; }
     }
 }
