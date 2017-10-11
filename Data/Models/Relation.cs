@@ -35,7 +35,7 @@ namespace Bonsai.Data.Models
         public virtual RelationType? Type { get; set; }
 
         /// <summary>
-        /// Relation duration.
+        /// Timespan of the relation.
         /// </summary>
         [StringLength(100)]
         public virtual string Duration { get; set; }

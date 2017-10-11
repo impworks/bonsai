@@ -15,7 +15,10 @@
         Friend,
         Colleague,
 
-        MediaLocation,
-        MediaEvent
+        Owner,
+        Pet,
+
+        Location,
+        Event
     }
 }
