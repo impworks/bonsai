@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20171011082326_Initial")]
+    [Migration("20171012133121_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("AppUserId");
 
-                    b.Property<Guid?>("PageId");
+                    b.Property<string>("PageKey");
 
                     b.Property<string>("UserId");
 
@@ -39,7 +39,7 @@ namespace Bonsai.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("PageId");
+                    b.HasIndex("PageKey");
 
                     b.HasIndex("UserId");
 
@@ -174,7 +174,7 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("MediaKey");
 
-                    b.Property<Guid?>("ObjectId");
+                    b.Property<string>("ObjectKey");
 
                     b.Property<string>("ObjectTitle")
                         .HasMaxLength(500);
@@ -185,29 +185,29 @@ namespace Bonsai.Data.Migrations
 
                     b.HasIndex("MediaKey");
 
-                    b.HasIndex("ObjectId");
+                    b.HasIndex("ObjectKey");
 
                     b.ToTable("MediaTags");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Page", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Key")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(200);
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Facts");
+
+                    b.Property<Guid>("Id");
 
                     b.Property<int>("PageType");
 
                     b.Property<string>("Title")
                         .HasMaxLength(200);
 
-                    b.Property<string>("Url")
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
+                    b.HasKey("Key");
 
                     b.ToTable("Pages");
                 });
@@ -220,12 +220,12 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Duration")
                         .HasMaxLength(100);
 
-                    b.Property<Guid?>("ObjectId");
+                    b.Property<string>("ObjectKey");
 
                     b.Property<string>("ObjectTitle")
                         .HasMaxLength(200);
 
-                    b.Property<Guid?>("SubjectId");
+                    b.Property<string>("SubjectKey");
 
                     b.Property<string>("Title")
                         .HasMaxLength(200);
@@ -234,9 +234,9 @@ namespace Bonsai.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectId");
+                    b.HasIndex("ObjectKey");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SubjectKey");
 
                     b.ToTable("Relations");
                 });
@@ -356,7 +356,7 @@ namespace Bonsai.Data.Migrations
 
                     b.HasOne("Bonsai.Data.Models.Page", "Page")
                         .WithMany()
-                        .HasForeignKey("PageId");
+                        .HasForeignKey("PageKey");
 
                     b.HasOne("Bonsai.Data.Models.AppUser", "User")
                         .WithMany()
@@ -382,18 +382,18 @@ namespace Bonsai.Data.Migrations
 
                     b.HasOne("Bonsai.Data.Models.Page", "Object")
                         .WithMany("MediaTags")
-                        .HasForeignKey("ObjectId");
+                        .HasForeignKey("ObjectKey");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>
                 {
                     b.HasOne("Bonsai.Data.Models.Page", "Object")
                         .WithMany()
-                        .HasForeignKey("ObjectId");
+                        .HasForeignKey("ObjectKey");
 
                     b.HasOne("Bonsai.Data.Models.Page", "Subject")
                         .WithMany("Relations")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("SubjectKey");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

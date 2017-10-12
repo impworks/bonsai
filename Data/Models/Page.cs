@@ -21,10 +21,11 @@ namespace Bonsai.Data.Models
         public virtual string Title { get; set; }
 
         /// <summary>
-        /// Page URL.
+        /// Url-friendly key that is generated from title or entered by the user.
         /// </summary>
+        [Key]
         [StringLength(200)]
-        public virtual string Url { get; set; }
+        public virtual string Key { get; set; }
 
         /// <summary>
         /// Type of the entity described by this page.

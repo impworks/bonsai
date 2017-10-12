@@ -82,16 +82,16 @@ namespace Bonsai.Data.Migrations
                 name: "Pages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Facts = table.Column<string>(type: "text", nullable: true),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     PageType = table.Column<int>(type: "int4", nullable: false),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
-                    Url = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
+                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pages", x => x.Id);
+                    table.PrimaryKey("PK_Pages", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
@@ -237,7 +237,7 @@ namespace Bonsai.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AllowEditing = table.Column<bool>(type: "bool", nullable: false),
                     AppUserId = table.Column<string>(type: "text", nullable: true),
-                    PageId = table.Column<Guid>(type: "uuid", nullable: true),
+                    PageKey = table.Column<string>(type: "varchar(200)", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -250,10 +250,10 @@ namespace Bonsai.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AccessRules_Pages_PageId",
-                        column: x => x.PageId,
+                        name: "FK_AccessRules_Pages_PageKey",
+                        column: x => x.PageKey,
                         principalTable: "Pages",
-                        principalColumn: "Id",
+                        principalColumn: "Key",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccessRules_AspNetUsers_UserId",
@@ -270,7 +270,7 @@ namespace Bonsai.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Coordinates = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     MediaKey = table.Column<string>(type: "varchar(50)", nullable: true),
-                    ObjectId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ObjectKey = table.Column<string>(type: "varchar(200)", nullable: true),
                     ObjectTitle = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
                     Type = table.Column<int>(type: "int4", nullable: false)
                 },
@@ -284,10 +284,10 @@ namespace Bonsai.Data.Migrations
                         principalColumn: "Key",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MediaTags_Pages_ObjectId",
-                        column: x => x.ObjectId,
+                        name: "FK_MediaTags_Pages_ObjectKey",
+                        column: x => x.ObjectKey,
                         principalTable: "Pages",
-                        principalColumn: "Id",
+                        principalColumn: "Key",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -297,9 +297,9 @@ namespace Bonsai.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Duration = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    ObjectId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ObjectKey = table.Column<string>(type: "varchar(200)", nullable: true),
                     ObjectTitle = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
-                    SubjectId = table.Column<Guid>(type: "uuid", nullable: true),
+                    SubjectKey = table.Column<string>(type: "varchar(200)", nullable: true),
                     Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     Type = table.Column<int>(type: "int4", nullable: true)
                 },
@@ -307,16 +307,16 @@ namespace Bonsai.Data.Migrations
                 {
                     table.PrimaryKey("PK_Relations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Relations_Pages_ObjectId",
-                        column: x => x.ObjectId,
+                        name: "FK_Relations_Pages_ObjectKey",
+                        column: x => x.ObjectKey,
                         principalTable: "Pages",
-                        principalColumn: "Id",
+                        principalColumn: "Key",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Relations_Pages_SubjectId",
-                        column: x => x.SubjectId,
+                        name: "FK_Relations_Pages_SubjectKey",
+                        column: x => x.SubjectKey,
                         principalTable: "Pages",
-                        principalColumn: "Id",
+                        principalColumn: "Key",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -326,9 +326,9 @@ namespace Bonsai.Data.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessRules_PageId",
+                name: "IX_AccessRules_PageKey",
                 table: "AccessRules",
-                column: "PageId");
+                column: "PageKey");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccessRules_UserId",
@@ -388,19 +388,19 @@ namespace Bonsai.Data.Migrations
                 column: "MediaKey");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MediaTags_ObjectId",
+                name: "IX_MediaTags_ObjectKey",
                 table: "MediaTags",
-                column: "ObjectId");
+                column: "ObjectKey");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Relations_ObjectId",
+                name: "IX_Relations_ObjectKey",
                 table: "Relations",
-                column: "ObjectId");
+                column: "ObjectKey");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Relations_SubjectId",
+                name: "IX_Relations_SubjectKey",
                 table: "Relations",
-                column: "SubjectId");
+                column: "SubjectKey");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
