@@ -13,6 +13,6 @@
         /// <summary>
         /// Canonical URL of the current page.
         /// </summary>
-        public string Url { get; set; }
+        public string Key { get; set; }
     }
 }

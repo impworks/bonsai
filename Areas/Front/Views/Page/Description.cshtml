@@ -1,7 +1,8 @@
-﻿@using Bonsai.Areas.Fromt.ViewModels
+﻿@using Bonsai.Areas.Front.ViewModels
 @model PageDescriptionVM
 @{
-    Layout = "~/Areas/Front/Views/Layout.cshtml";
+    Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
+    ViewBag.PageModel = Model;
 }
 
-<p>Description</p>
+@Html.Raw(Model.Description)

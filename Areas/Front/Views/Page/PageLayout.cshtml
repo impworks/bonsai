@@ -1,0 +1,32 @@
+﻿@using Bonsai.Areas.Front.ViewModels;
+@{
+    Layout = "~/Areas/Front/Views/Layout.cshtml";
+
+    var pageVm = (PageVMBase)ViewBag.PageModel;
+    var actions = new[]
+    {
+        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key})},
+        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key})},
+        new {Title = "Факты", Active = pageVm is PageFactsVM, Url = Url.Action("Facts", new {key = pageVm.Key})}
+    };
+}
+
+<h2>@pageVm.Title</h2>
+
+<ul class="nav nav-pills">
+    @foreach (var action in actions)
+    {
+        <li>
+            @if (action.Active)
+            {
+                <span class="nav-link active">@action.Title</span>
+            }
+            else
+            {
+                <a href="@action.Url" class="nav-link">@action.Title</a>
+            }
+        </li>
+    }
+</ul>
+
+@RenderBody()

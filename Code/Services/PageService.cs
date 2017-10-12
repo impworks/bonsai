@@ -27,36 +27,34 @@ namespace Bonsai.Code.Services
         /// <summary>
         /// Returns the description VM for a page.
         /// </summary>
-        public async Task<PageDescriptionVM> GetPageDescriptionAsync(string url)
+        public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
         {
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(r => r.Object)
-                                .FirstOrDefaultAsync(x => x.Url == url);
+                                .FirstOrDefaultAsync(x => x.Key == key);
 
             if(page == null)
                 throw new KeyNotFoundException();
 
             // todo: main block
-            return new PageDescriptionVM
+            return Configure(page, new PageDescriptionVM
             {
-                Title = page.Title,
-                Url = page.Url,
                 Description = _markdown.Compile(page.Description)
-            };
+            });
         }
 
         /// <summary>
         /// Returns the list of media files.
         /// </summary>
-        public async Task<PageMediaVM> GetPageMediaAsync(string url)
+        public async Task<PageMediaVM> GetPageMediaAsync(string key)
         {
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Url == url);
+                                .FirstOrDefaultAsync(x => x.Key == key);
 
             if (page == null)
                 throw new KeyNotFoundException();
@@ -72,24 +70,22 @@ namespace Bonsai.Code.Services
                 });
             }
 
-            return new PageMediaVM
+            return Configure(page, new PageMediaVM
             {
-                Title = page.Title,
-                Url = page.Url,
                 Media = list
-            };
+            });
         }
 
         /// <summary>
         /// Returns the list of fact groups.
         /// </summary>
-        public async Task<PageFactsVM> GetPageFactsAsync(string url)
+        public async Task<PageFactsVM> GetPageFactsAsync(string key)
         {
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(t => t.Object)
-                                .FirstOrDefaultAsync(x => x.Url == url);
+                                .FirstOrDefaultAsync(x => x.Key == key);
 
             if (page == null)
                 throw new KeyNotFoundException();
@@ -98,17 +94,27 @@ namespace Bonsai.Code.Services
                 .Concat(GetRelationFacts(page))
                 .ToList();
 
-            return new PageFactsVM
+            return Configure(page, new PageFactsVM
             {
-                Title = page.Title,
-                Url = page.Url,
                 FactGroups = groups
-            };
+            });
         }
 
         #endregion
 
         #region Helper methods
+
+        /// <summary>
+        /// Sets additional properties on a page view model.
+        /// </summary>
+        private T Configure<T>(Page page, T vm)
+            where T : PageVMBase
+        {
+            vm.Title = page.Title;
+            vm.Key = page.Key;
+
+            return vm;
+        }
 
         /// <summary>
         /// Returns the list of fact groups based converted from relations.
