@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.Logic.Facts;
+using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Code.Services
 {
@@ -33,9 +37,10 @@ namespace Bonsai.Code.Services
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(r => r.Object)
-                                .FirstOrDefaultAsync(x => x.Key == key);
+                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .ConfigureAwait(false);
 
-            if(page == null)
+            if (page == null)
                 throw new KeyNotFoundException();
 
             // todo: main block
@@ -54,7 +59,8 @@ namespace Bonsai.Code.Services
                                 .AsNoTracking()
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Key == key);
+                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .ConfigureAwait(false);
 
             if (page == null)
                 throw new KeyNotFoundException();
@@ -85,7 +91,8 @@ namespace Bonsai.Code.Services
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(t => t.Object)
-                                .FirstOrDefaultAsync(x => x.Key == key);
+                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .ConfigureAwait(false);
 
             if (page == null)
                 throw new KeyNotFoundException();
@@ -121,8 +128,29 @@ namespace Bonsai.Code.Services
         /// </summary>
         private IEnumerable<FactGroupVM> GetRelationFacts(Page page)
         {
-            // todo
-            yield break;
+            if (page.Relations.Count == 0)
+                yield break;
+
+            var templatePath = FactTemplate.String.GetViewTemplatePath();
+            var rels = page.Relations.GroupBy(x => x.Type).ToList();
+
+            foreach (var relGroup in RelationGroups.List)
+            {
+                var facts = rels.Where(x => relGroup.Types.Contains(x.Key))
+                                .Select(x => x.OrderBy(y => y.ObjectTitle))
+                                .SelectMany(x => x)
+                                .Select(x => new FactVM {Data = x, TemplatePath = templatePath, Title = x.Title})
+                                .ToList();
+
+                if (facts.Count > 0)
+                {
+                    yield return new FactGroupVM
+                    {
+                        Title = relGroup.Title,
+                        Facts = facts
+                    };
+                }
+            }
         }
 
         /// <summary>
@@ -130,8 +158,40 @@ namespace Bonsai.Code.Services
         /// </summary>
         private IEnumerable<FactGroupVM> GetPersonalFacts(Page page)
         {
-            // todo
-            yield break;
+            if (string.IsNullOrEmpty(page.Facts))
+                yield break;
+
+            var pageFacts = JObject.Parse(page.Facts);
+
+            foreach (var group in FactDefinitions.FactGroups[page.PageType])
+            {
+                var factsVms = new List<FactVM>();
+
+                foreach (var fact in group.Facts)
+                {
+                    var key = group.Id + "." + fact.Id;
+                    var factInfo = pageFacts[key];
+
+                    if (factInfo == null)
+                        continue;
+
+                    factsVms.Add(new FactVM
+                    {
+                        Title = fact.Title,
+                        TemplatePath = fact.Template.GetViewTemplatePath(),
+                        Data = factInfo
+                    });
+                }
+
+                if (factsVms.Count > 0)
+                {
+                    yield return new FactGroupVM
+                    {
+                        Title = group.Title,
+                        Facts = factsVms
+                    };
+                }
+            }
         }
 
         #endregion

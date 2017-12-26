@@ -19,6 +19,7 @@
         Pet,
 
         Location,
-        Event
+        Event,
+        Participant
     }
 }

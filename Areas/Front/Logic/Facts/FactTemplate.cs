@@ -1,4 +1,4 @@
-﻿namespace Bonsai.Areas.Front.Logic
+﻿namespace Bonsai.Areas.Front.Logic.Facts
 {
     /// <summary>
     /// Known types of templates for displaying and editing facts.
@@ -12,6 +12,7 @@
         Photo,
         Name,
         Language,
-        Skill
+        Skill,
+        Relation
     }
 }

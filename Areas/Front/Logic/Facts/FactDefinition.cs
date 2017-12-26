@@ -1,4 +1,4 @@
-﻿namespace Bonsai.Areas.Front.Logic
+﻿namespace Bonsai.Areas.Front.Logic.Facts
 {
     /// <summary>
     /// Blueprint of a fact's template and editor.

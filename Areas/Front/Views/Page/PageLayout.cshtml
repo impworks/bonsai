@@ -2,7 +2,7 @@
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 
-    var pageVm = (PageVMBase)ViewBag.PageModel;
+    var pageVm = (PageVMBase) ViewBag.PageModel;
     var actions = new[]
     {
         new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key})},

@@ -24,7 +24,8 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}")]
         public async Task<ActionResult> Description(string key)
         {
-            var vm = await _pages.GetPageDescriptionAsync(key);
+            var vm = await _pages.GetPageDescriptionAsync(key)
+                                 .ConfigureAwait(false);
             return View(vm);
         }
 
@@ -34,7 +35,8 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}/facts")]
         public async Task<ActionResult> Facts(string key)
         {
-            var vm = await _pages.GetPageFactsAsync(key);
+            var vm = await _pages.GetPageFactsAsync(key)
+                                 .ConfigureAwait(false);
             return View(vm);
         }
 
@@ -45,7 +47,8 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}/media")]
         public async Task<ActionResult> Media(string key)
         {
-            var vm = await _pages.GetPageMediaAsync(key);
+            var vm = await _pages.GetPageMediaAsync(key)
+                                 .ConfigureAwait(false);
             return View(vm);
         }
     }
