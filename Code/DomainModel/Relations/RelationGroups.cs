@@ -1,6 +1,6 @@
 ﻿using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Front.Logic.Relations
+namespace Bonsai.Code.DomainModel.Relations
 {
     /// <summary>
     /// The collection of known relation groups.

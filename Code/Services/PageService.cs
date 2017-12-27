@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Areas.Front.Logic;
-using Bonsai.Areas.Front.Logic.Facts;
-using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels;
+using Bonsai.Code.DomainModel.Facts;
+using Bonsai.Code.DomainModel.Facts.Templates;
+using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -131,7 +131,14 @@ namespace Bonsai.Code.Services
             if (page.Relations.Count == 0)
                 yield break;
 
-            var templatePath = FactTemplate.String.GetViewTemplatePath();
+            RelationFactTemplate Converter(Relation r) => new RelationFactTemplate
+            {
+                Name = r.ObjectTitle,
+                RelatedObjectKey = r.Object.Key,
+                RelationTitle = r.Title
+            };
+
+            var templatePath = new FactDefinition<RelationFactTemplate>(null, null).ViewTemplatePath;
             var rels = page.Relations.GroupBy(x => x.Type).ToList();
 
             foreach (var relGroup in RelationGroups.List)
@@ -139,7 +146,7 @@ namespace Bonsai.Code.Services
                 var facts = rels.Where(x => relGroup.Types.Contains(x.Key))
                                 .Select(x => x.OrderBy(y => y.ObjectTitle))
                                 .SelectMany(x => x)
-                                .Select(x => new FactVM {Data = x, TemplatePath = templatePath, Title = x.Title})
+                                .Select(x => new FactVM {Data = Converter(x), TemplatePath = templatePath, Title = x.Title})
                                 .ToList();
 
                 if (facts.Count > 0)
@@ -178,7 +185,7 @@ namespace Bonsai.Code.Services
                     factsVms.Add(new FactVM
                     {
                         Title = fact.Title,
-                        TemplatePath = fact.Template.GetViewTemplatePath(),
+                        TemplatePath = fact.ViewTemplatePath,
                         Data = factInfo
                     });
                 }
