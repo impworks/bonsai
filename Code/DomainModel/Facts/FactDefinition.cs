@@ -1,5 +1,4 @@
-﻿using System;
-using Bonsai.Code.DomainModel.Facts.Templates;
+﻿using Bonsai.Code.DomainModel.Facts.Templates;
 
 namespace Bonsai.Code.DomainModel.Facts
 {
@@ -28,11 +27,20 @@ namespace Bonsai.Code.DomainModel.Facts
         /// <summary>
         /// Returns the path for display template.
         /// </summary>
-        public string ViewTemplatePath => throw new NotImplementedException();
+        public string ViewTemplatePath => GetTemplatePath("~/Areas/Front/Views/Page/Facts/");
 
         /// <summary>
         /// Returns the path for editor template.
         /// </summary>
-        public string EditTemplatePath => throw new NotImplementedException();
+        public string EditTemplatePath => GetTemplatePath("~/Areas/Admin/Views/Editor/Facts/");
+
+        /// <summary>
+        /// Returns the path for current template.
+        /// </summary>
+        private string GetTemplatePath(string prefixPath)
+        {
+            var itemName = typeof(TTemplate).Name;
+            return prefixPath + itemName + ".cshtml";
+        }
     }
 }

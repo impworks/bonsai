@@ -1,4 +1,6 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Templates
+﻿using System.ComponentModel;
+
+namespace Bonsai.Code.DomainModel.Facts.Templates
 {
     /// <summary>
     /// The template for specifying known languages.
@@ -17,9 +19,16 @@
 
     public enum LanguageProficiency
     {
+        [Description("Базовый")]
         Beginner,
+
+        [Description("Средний")]
         Intermediate,
+
+        [Description("Свободный")]
         Profound,
+
+        [Description("Родной")]
         Native
     }
 }

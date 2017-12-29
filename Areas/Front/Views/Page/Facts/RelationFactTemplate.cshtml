@@ -1,0 +1,12 @@
+﻿@model Bonsai.Code.DomainModel.Facts.Templates.RelationFactTemplate
+
+<div class="fact-item">
+    @if (string.IsNullOrEmpty(Model.ObjectKey))
+    {
+        <text>@Model.Name</text>
+    }
+    else
+    {
+        <a href="@Url.Action("Description", "Page", new { key = Model.ObjectKey })">@Model.Name</a>
+    }
+</div>

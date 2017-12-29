@@ -26,6 +26,11 @@ namespace Bonsai.Code.Services
         private readonly AppDbContext _db;
         private readonly MarkdownService _markdown;
 
+        /// <summary>
+        /// List of specially handled facts which should not be displayed on the facts page.
+        /// </summary>
+        private static readonly string[] ExcludedFacts = {"common.photo"};
+
         #region Public methods
 
         /// <summary>
@@ -134,8 +139,7 @@ namespace Bonsai.Code.Services
             RelationFactTemplate Converter(Relation r) => new RelationFactTemplate
             {
                 Name = r.ObjectTitle,
-                RelatedObjectKey = r.Object.Key,
-                RelationTitle = r.Title
+                ObjectKey = r.Object.Key
             };
 
             var templatePath = new FactDefinition<RelationFactTemplate>(null, null).ViewTemplatePath;
@@ -179,7 +183,7 @@ namespace Bonsai.Code.Services
                     var key = group.Id + "." + fact.Id;
                     var factInfo = pageFacts[key];
 
-                    if (factInfo == null)
+                    if (factInfo == null || ExcludedFacts.Contains(key))
                         continue;
 
                     factsVms.Add(new FactVM

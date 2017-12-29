@@ -10,11 +10,11 @@ namespace Bonsai.Code.DomainModel.Facts.Templates
         /// <summary>
         /// Start of the duration.
         /// </summary>
-        public FuzzyDate RangeStart { get; set; }
+        public FuzzyDate? RangeStart { get; set; }
 
         /// <summary>
         /// End of the duration.
         /// </summary>
-        public FuzzyDate RangeEnd { get; set; }
+        public FuzzyDate? RangeEnd { get; set; }
     }
 }

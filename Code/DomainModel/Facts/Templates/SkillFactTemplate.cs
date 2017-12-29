@@ -1,4 +1,6 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Templates
+﻿using System.ComponentModel;
+
+namespace Bonsai.Code.DomainModel.Facts.Templates
 {
     /// <summary>
     /// The template for specifying posessed skills.
@@ -17,8 +19,13 @@
 
     public enum SkillProficiency
     {
+        [Description("Новичок")]
         Beginner,
+
+        [Description("Любитель")]
         Intermediate,
+
+        [Description("Эксперт")]
         Profound
     }
 }

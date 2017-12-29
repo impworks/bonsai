@@ -7,8 +7,6 @@
     {
         public string Name { get; set; }
 
-        public string RelationTitle { get; set; }
-
-        public string RelatedObjectKey { get; set; }
+        public string ObjectKey { get; set; }
     }
 }
