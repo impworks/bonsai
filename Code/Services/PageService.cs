@@ -5,6 +5,7 @@ using Bonsai.Areas.Front.ViewModels;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Templates;
 using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -139,7 +140,8 @@ namespace Bonsai.Code.Services
             RelationFactTemplate Converter(Relation r) => new RelationFactTemplate
             {
                 Name = r.ObjectTitle,
-                ObjectKey = r.Object.Key
+                ObjectKey = r.Object.Key,
+                Range = FuzzyRange.Parse(r.Duration)
             };
 
             var templatePath = new FactDefinition<RelationFactTemplate>(null, null).ViewTemplatePath;

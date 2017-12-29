@@ -9,4 +9,8 @@
     {
         <a href="@Url.Action("Description", "Page", new { key = Model.ObjectKey })">@Model.Name</a>
     }
+    @if (Model.Range?.IsEmpty == false)
+    {
+        <span class="fact-range" title="@Model.Range.Value.ReadableRange">@Model.Range.Value.ShortReadableRange</span>
+    }
 </div>

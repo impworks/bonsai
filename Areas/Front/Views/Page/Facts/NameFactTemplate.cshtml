@@ -1,16 +1,13 @@
-﻿@using Bonsai.Code.Tools
-@model Bonsai.Code.DomainModel.Facts.Templates.NameFactTemplate
+﻿@model Bonsai.Code.DomainModel.Facts.Templates.NameFactTemplate
     
 <div>
     @foreach (var item in Model.Values)
     {
-        var range = new FuzzyRange(item.RangeStart, item.RangeEnd);
-
         <div class="fact-item">
             <span class="fact-main">@item.LastName @item.FirstName @item.MiddleName</span>
-            @if (!range.IsEmpty)
+            @if (!item.Range.IsEmpty)
             {
-                <span class="fact-range">@range</span>
+                <span class="fact-range" title="@item.Range.ReadableRange">@item.Range.ShortReadableRange</span>
             }
         </div>    
     }

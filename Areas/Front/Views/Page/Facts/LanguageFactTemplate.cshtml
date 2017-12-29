@@ -4,14 +4,12 @@
 <div>
 @foreach (var item in Model.Values)
 {
-    var range = new FuzzyRange(item.RangeStart, item.RangeEnd);
-
     <div class="fact-item">
         <span class="fact-main">@item.Language</span>
         <span class="fact-extra">@item.Proficiency.GetEnumDescription()</span>
-        @if (!range.IsEmpty)
+        @if (!item.Range.IsEmpty)
         {
-            <span class="fact-range">@range</span>
+            <span class="fact-range" title="@item.Range.ReadableRange">@item.Range.ShortReadableRange</span>
         }
     </div>    
 }

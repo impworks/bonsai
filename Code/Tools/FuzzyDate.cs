@@ -9,12 +9,32 @@ namespace Bonsai.Code.Tools
     /// </summary>
     public struct FuzzyDate
     {
+        #region Constructor
+
+        public FuzzyDate(int? year, int? month, int? day, bool isDecade = false)
+        {
+            if (day != null && month == null)
+                throw new ArgumentException("When day is specified, month must also be specified.");
+
+            // ReSharper disable once ObjectCreationAsStatement
+            // invokes internal validation
+            new DateTime(year ?? 2000, month ?? 1, day ?? 1);
+
+            Year = year;
+            Month = month;
+            Day = day;
+            IsDecade = isDecade;
+        }
+
+        #endregion
+
         #region Fields
 
-        private readonly bool _isDecade;
-        private readonly int? _year;
-        private readonly int? _month;
-        private readonly int? _day;
+        public readonly int? Year;
+        public readonly int? Month;
+        public readonly int? Day;
+
+        public readonly bool IsDecade;
 
         #endregion
 
@@ -29,27 +49,27 @@ namespace Bonsai.Code.Tools
             {
                 var sb = new StringBuilder();
 
-                if (_day != null)
+                if (Day != null)
                 {
-                    sb.Append(_day);
+                    sb.Append(Day);
                     sb.Append(" ");
                 }
 
-                if (_month != null)
+                if (Month != null)
                 {
                     sb.Append(
-                        _day != null
-                            ? MonthNamesGenitive[_month.Value]
-                            : MonthNamesNominative[_month.Value]
+                        Day != null
+                            ? MonthNamesGenitive[Month.Value]
+                            : MonthNamesNominative[Month.Value]
                     );
                 }
 
-                if (_year != null)
+                if (Year != null)
                 {
-                    if (_month != null)
-                        sb.Append(_isDecade ? ", " : " ");
+                    if (Month != null)
+                        sb.Append(IsDecade ? ", " : " ");
 
-                    sb.Append(Year);
+                    sb.Append(ReadableYear);
                 }
 
                 return sb.ToString();
@@ -57,16 +77,16 @@ namespace Bonsai.Code.Tools
         }
 
         /// <summary>
-        /// Year component of the date.
+        /// Readable year component of the date.
         /// </summary>
-        public string Year
+        public string ReadableYear
         {
             get
             {
-                if (_year == null)
+                if (Year == null)
                     return null;
 
-                return _year + (_isDecade ? "-е" : "");
+                return Year + (IsDecade ? "-е" : "");
             }
         }
 
@@ -77,10 +97,10 @@ namespace Bonsai.Code.Tools
         {
             get
             {
-                if (_day == null || _month == null)
+                if (Day == null || Month == null)
                     return null;
 
-                return new DateTime(_year ?? DateTime.Now.Year, _month.Value, _day.Value);
+                return new DateTime(Year ?? DateTime.Now.Year, Month.Value, Day.Value);
             }
         }
 
@@ -88,28 +108,26 @@ namespace Bonsai.Code.Tools
         /// Returns the number of years since the date.
         /// Returns null for future years.
         /// </summary>
-        public string Age
+        public string GetAge(DateTime? relative = null)
         {
-            get
-            {
-                var now = DateTime.Now;
-                if (!(now.Year > _year))
-                    return null;
+            var now = relative ?? DateTime.Now;
 
-                var years = now.Year - _year.Value - 1;
+            if (!(now.Year > Year))
+                return null;
 
-                if (_isDecade)
-                    return $"{years - 10}..{years + 1} {GetAgeWord(years + 1)}";
+            var years = now.Year - Year.Value - 1;
 
-                if (now.Month == _month && _day == null)
-                    return $"{years}..{years + 1} {GetAgeWord(years + 1)}";
+            if (IsDecade)
+                return $"{years - 10}..{years + 1} {GetAgeWord(years + 1)}";
 
-                // account for after-birthday
-                if (now.Month > _month || (now.Month == _month && now.Day > _day))
-                    years++;
+            if (now.Month == Month && Day == null)
+                return $"{years}..{years + 1} {GetAgeWord(years + 1)}";
 
-                return $"{years} {GetAgeWord(years)}";
-            }
+            // account for after-birthday
+            if (now.Month > Month || (now.Month == Month && now.Day > Day))
+                years++;
+
+            return $"{years} {GetAgeWord(years)}";
         }
 
         #endregion
@@ -124,25 +142,10 @@ namespace Bonsai.Code.Tools
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
         );
 
-        private FuzzyDate(int? year, int? month, int? day, bool isDecade = false)
-        {
-            if (day != null && month == null)
-                throw new ArgumentException("When day is specified, month must also be specified.");
-
-            // ReSharper disable once ObjectCreationAsStatement
-            // invokes internal validation
-            new DateTime(year ?? 2000, month ?? 1, day ?? 1);
-
-            _year = year;
-            _month = month;
-            _day = day;
-            _isDecade = isDecade;
-        }
-
         /// <summary>
         /// Parses a fuzzy date from a string.
         /// </summary>
-        public static FuzzyDate FromString(string str)
+        public static FuzzyDate Parse(string str)
         {
             if (str == null)
                 throw new ArgumentNullException(nameof(str));
@@ -151,15 +154,15 @@ namespace Bonsai.Code.Tools
             if(!match.Success)
                 throw new ArgumentException("Date string was not in correct format!", nameof(str));
 
-            var year = Parse(match.Groups["year"].Value);
-            var month = Parse(match.Groups["month"].Value);
-            var day = Parse(match.Groups["day"].Value);
+            var year = ParseInt(match.Groups["year"].Value);
+            var month = ParseInt(match.Groups["month"].Value);
+            var day = ParseInt(match.Groups["day"].Value);
             var isDecade = false;
 
             if (year == null)
             {
                 // parse 199? as 1990
-                year = Parse(match.Groups["year"].Value.Replace('?', '0'));
+                year = ParseInt(match.Groups["year"].Value.Replace('?', '0'));
                 isDecade = year != null;
             }
 
@@ -213,7 +216,7 @@ namespace Bonsai.Code.Tools
         /// <summary>
         /// Attempts to parse an integer value from a string.
         /// </summary>
-        private static int? Parse(string str)
+        private static int? ParseInt(string str)
         {
             if (int.TryParse(str, out var result))
                 return result;
@@ -252,18 +255,18 @@ namespace Bonsai.Code.Tools
         {
             var sb = new StringBuilder();
 
-            if (_year == null)
+            if (Year == null)
                 sb.Append("????");
-            else if (_isDecade)
-                sb.Append((_year.Value / 10) + "?");
+            else if (IsDecade)
+                sb.Append((Year.Value / 10) + "?");
             else
-                sb.Append(_year.Value);
+                sb.Append(Year.Value);
 
             sb.Append(".");
-            sb.Append(_month == null ? "??" : _month.ToString());
+            sb.Append(Month == null ? "??" : Month.ToString());
 
             sb.Append(".");
-            sb.Append(_day == null ? "??" : _day.ToString());
+            sb.Append(Day == null ? "??" : Day.ToString());
 
             return sb.ToString();
         }

@@ -1,4 +1,6 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Templates
+﻿using Bonsai.Code.Tools;
+
+namespace Bonsai.Code.DomainModel.Facts.Templates
 {
     /// <summary>
     /// The template for specifying a relation between two entities.
@@ -8,5 +10,7 @@
         public string Name { get; set; }
 
         public string ObjectKey { get; set; }
+
+        public FuzzyRange? Range { get; set; }
     }
 }

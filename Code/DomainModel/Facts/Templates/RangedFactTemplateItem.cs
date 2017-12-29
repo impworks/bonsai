@@ -7,14 +7,6 @@ namespace Bonsai.Code.DomainModel.Facts.Templates
     /// </summary>
     public class RangedFactTemplateItem
     {
-        /// <summary>
-        /// Start of the duration.
-        /// </summary>
-        public FuzzyDate? RangeStart { get; set; }
-
-        /// <summary>
-        /// End of the duration.
-        /// </summary>
-        public FuzzyDate? RangeEnd { get; set; }
+        public FuzzyRange Range { get; set; }
     }
 }
