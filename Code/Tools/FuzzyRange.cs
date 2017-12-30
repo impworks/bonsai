@@ -88,8 +88,16 @@ namespace Bonsai.Code.Tools
         {
             get
             {
-                // todo!
-                return "";
+                if (RangeStart == null && RangeEnd == null)
+                    return null;
+
+                if (RangeEnd == null)
+                    return "с " + RangeStart;
+
+                if (RangeStart == null)
+                    return "по " + RangeEnd;
+
+                return RangeStart + " — " + RangeEnd;
             }
         }
 
@@ -105,7 +113,7 @@ namespace Bonsai.Code.Tools
             if(string.IsNullOrEmpty(raw))
                 return new FuzzyRange(null, null);
 
-            var parts = raw.Split("...");
+            var parts = raw.Split("-");
             if(parts.Length != 2)
                 throw new ArgumentException("Incorrect range format.");
 
@@ -121,7 +129,7 @@ namespace Bonsai.Code.Tools
 
         public override string ToString()
         {
-            return $"{RangeStart}...{RangeEnd}";
+            return $"{RangeStart}-{RangeEnd}";
         }
 
         #endregion
