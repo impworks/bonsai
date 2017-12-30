@@ -5,13 +5,14 @@ using Bonsai.Areas.Front.ViewModels;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Templates;
 using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Services;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 
-namespace Bonsai.Code.Services
+namespace Bonsai.Areas.Front.Logic
 {
     /// <summary>
     /// Page management service.
@@ -78,7 +79,7 @@ namespace Bonsai.Code.Services
                 {
                     Type = tag.Media.Type,
                     MediaKey = tag.Media.Key,
-                    // todo: year
+                    Year = FuzzyDate.Parse(tag.Media.Date).ReadableYear
                 });
             }
 

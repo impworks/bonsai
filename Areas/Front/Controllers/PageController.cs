@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Bonsai.Code.Services;
+using Bonsai.Areas.Front.Logic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers

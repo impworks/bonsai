@@ -1,4 +1,5 @@
-﻿using Bonsai.Code.Services;
+﻿using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.Services;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Builder;
