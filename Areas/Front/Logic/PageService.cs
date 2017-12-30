@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels;
@@ -79,6 +80,7 @@ namespace Bonsai.Areas.Front.Logic
                 {
                     Type = tag.Media.Type,
                     MediaKey = tag.Media.Key,
+                    ThumbnailUrl = Path.ChangeExtension(tag.Media.FilePath, ".thumb.png"),
                     Year = FuzzyDate.Parse(tag.Media.Date).ReadableYear
                 });
             }

@@ -8,7 +8,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// The root controller for pages.
     /// </summary>
     [Area("Front")]
-    [Route("")]
+    [Route("p")]
     public class PageController: Controller
     {
         public PageController(PageService pages)

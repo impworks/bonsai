@@ -3,6 +3,22 @@
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
     ViewBag.PageModel = Model;
+    ViewBag.Title = Model.Title + " &mdash; Медиа";
+
+    var groups = Model.Media.GroupBy(x => x.Year);
 }
 
-<p>Media</p>
+@foreach (var group in groups)
+{
+    <div class="media-group">
+        <h3>@group.Key</h3>
+        @foreach (var elem in group)
+        {
+            <div class="media-wrapper">
+                <a href="@Url.Action("View", "Media", new { key = elem.MediaKey })" class="media-link" data-media="@elem.MediaKey">
+                    <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@group.Key)"/>
+                </a>
+            </div>
+        }
+    </div>
+}

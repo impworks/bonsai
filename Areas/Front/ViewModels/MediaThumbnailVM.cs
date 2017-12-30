@@ -13,6 +13,11 @@ namespace Bonsai.Areas.Front.ViewModels
         public string MediaKey { get; set; }
 
         /// <summary>
+        /// URL of the media's thumbnail.
+        /// </summary>
+        public string ThumbnailUrl { get; set; }
+
+        /// <summary>
         /// Type of the media. 
         /// </summary>
         public MediaType Type { get; set; }
