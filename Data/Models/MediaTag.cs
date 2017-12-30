@@ -11,33 +11,33 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Surrogate ID.
         /// </summary>
-        public virtual Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Tagged media.
         /// </summary>
-        public virtual Media Media { get; set; }
+        public Media Media { get; set; }
 
         /// <summary>
         /// Tagged entity link.
         /// </summary>
-        public virtual Page Object { get; set; }
+        public Page Object { get; set; }
 
         /// <summary>
         /// Type of media tag.
         /// </summary>
-        public virtual MediaTagType Type { get; set; }
+        public MediaTagType Type { get; set; }
 
         /// <summary>
         /// Name or title of the tagged entity.
         /// </summary>
         [StringLength(500)]
-        public virtual string ObjectTitle { get; set; }
+        public string ObjectTitle { get; set; }
 
         /// <summary>
         /// Semicolon-separated coordinates of the tag.
         /// </summary>
         [StringLength(100)]
-        public virtual string Coordinates { get; set; }
+        public string Coordinates { get; set; }
     }
 }

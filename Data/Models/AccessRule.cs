@@ -10,21 +10,21 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Surrogate ID.
         /// </summary>
-        public virtual  Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// User whose access is controlled.
         /// </summary>
-        public virtual AppUser User { get; set; }
+        public AppUser User { get; set; }
 
         /// <summary>
         /// Allowed or restricted page.
         /// </summary>
-        public virtual Page Page { get; set; }
+        public Page Page { get; set; }
 
         /// <summary>
         /// Access flag.
         /// </summary>
-        public virtual bool AllowEditing { get; set; }
+        public bool AllowEditing { get; set; }
     }
 }

@@ -11,39 +11,39 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Surrogate ID.
         /// </summary>
-        public virtual Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// The first entity in the relation.
         /// </summary>
-        public virtual Page Subject { get; set; }
+        public Page Subject { get; set; }
 
         /// <summary>
         /// The second entity in the relation.
         /// </summary>
-        public virtual Page Object { get; set; }
+        public Page Object { get; set; }
 
         /// <summary>
         /// Name or title of the second entity.
         /// </summary>
         [StringLength(200)]
-        public virtual string ObjectTitle { get; set; }
+        public string ObjectTitle { get; set; }
 
         /// <summary>
         /// Hard-set type of relationship (null for inferred relations).
         /// </summary>
-        public virtual RelationType? Type { get; set; }
+        public RelationType? Type { get; set; }
 
         /// <summary>
         /// Timespan of the relation.
         /// </summary>
-        [StringLength(100)]
-        public virtual string Duration { get; set; }
+        [StringLength(30)]
+        public string Duration { get; set; }
 
         /// <summary>
         /// Readable title of the relation.
         /// </summary>
         [StringLength(200)]
-        public virtual string Title { get; set; }
+        public string Title { get; set; }
     }
 }
