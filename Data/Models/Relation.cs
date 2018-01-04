@@ -30,9 +30,14 @@ namespace Bonsai.Data.Models
         public string ObjectTitle { get; set; }
 
         /// <summary>
-        /// Hard-set type of relationship (null for inferred relations).
+        /// Direct type of relationship (for explicitly specified relations).
         /// </summary>
         public RelationType? Type { get; set; }
+
+        /// <summary>
+        /// Relation path as comma-separated relatiom types (for inferred relations).
+        /// </summary>
+        public string Path { get; set; }
 
         /// <summary>
         /// Timespan of the relation.
