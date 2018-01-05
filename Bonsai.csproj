@@ -12,7 +12,7 @@
     <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Areas\Front\Views\Home\" />
     <Folder Include="Data\Migrations\" />
-    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\assets\" />
   </ItemGroup>
 
   <ItemGroup>
