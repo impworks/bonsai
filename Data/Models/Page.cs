@@ -17,6 +17,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Page title.
         /// </summary>
+        [Required]
         [StringLength(200)]
         public string Title { get; set; }
 
@@ -24,6 +25,7 @@ namespace Bonsai.Data.Models
         /// Url-friendly key that is generated from title or entered by the user.
         /// </summary>
         [Key]
+        [Required]
         [StringLength(200)]
         public string Key { get; set; }
 

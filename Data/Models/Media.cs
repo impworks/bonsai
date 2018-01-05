@@ -18,6 +18,7 @@ namespace Bonsai.Data.Models
         /// Url-friendly key generated from surrogate ID.
         /// </summary>
         [Key]
+        [Required]
         [StringLength(30)]
         public string Key { get; set; }
 
@@ -29,12 +30,14 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Path to the file on the server.
         /// </summary>
+        [Required]
         [StringLength(300)]
         public string FilePath { get; set; }
 
         /// <summary>
         /// Media creation date.
         /// </summary>
+        [Required]
         [StringLength(100)]
         public string Date { get; set; }
 

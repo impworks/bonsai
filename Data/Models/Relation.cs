@@ -16,16 +16,19 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// The first entity in the relation.
         /// </summary>
+        [Required]
         public Page Subject { get; set; }
 
         /// <summary>
         /// The second entity in the relation.
         /// </summary>
+        [Required]
         public Page Object { get; set; }
 
         /// <summary>
         /// Name or title of the second entity.
         /// </summary>
+        [Required]
         [StringLength(200)]
         public string ObjectTitle { get; set; }
 
@@ -37,6 +40,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Relation path as comma-separated relatiom types (for inferred relations).
         /// </summary>
+        [Required]
         public string Path { get; set; }
 
         /// <summary>
@@ -48,6 +52,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Readable title of the relation.
         /// </summary>
+        [Required]
         [StringLength(200)]
         public string Title { get; set; }
     }

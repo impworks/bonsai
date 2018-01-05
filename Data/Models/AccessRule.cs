@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bonsai.Data.Models
 {
@@ -15,11 +16,13 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// User whose access is controlled.
         /// </summary>
+        [Required]
         public AppUser User { get; set; }
 
         /// <summary>
         /// Allowed or restricted page.
         /// </summary>
+        [Required]
         public Page Page { get; set; }
 
         /// <summary>

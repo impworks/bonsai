@@ -16,6 +16,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// The title of the website. Displayed in the top bar and browser title.
         /// </summary>
+        [Required]
         [StringLength(200)]
         public string Title { get; set; }
 

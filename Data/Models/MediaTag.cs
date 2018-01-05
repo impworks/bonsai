@@ -16,11 +16,13 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Tagged media.
         /// </summary>
+        [Required]
         public Media Media { get; set; }
 
         /// <summary>
         /// Tagged entity link.
         /// </summary>
+        [Required]
         public Page Object { get; set; }
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Name or title of the tagged entity.
         /// </summary>
+        [Required]
         [StringLength(500)]
         public string ObjectTitle { get; set; }
 

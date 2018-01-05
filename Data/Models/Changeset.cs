@@ -21,6 +21,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// User that has authored the edit.
         /// </summary>
+        [Required]
         public AppUser Author { get; set; }
 
         /// <summary>
@@ -31,16 +32,19 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// The diff of the entity's changes.
         /// </summary>
+        [Required]
         public string SourceDiff { get; set; }
 
         /// <summary>
         /// IDs of entities that have been transitively affected by the change.
         /// </summary>
+        [Required]
         public string AffectedEntityIds { get; set; }
 
         /// <summary>
         /// The diff of all other entities' changes.
         /// </summary>
+        [Required]
         public string AffectedDiff { get; set; }
     }
 }
