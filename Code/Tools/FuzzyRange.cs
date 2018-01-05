@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Bonsai.Code.Tools
 {
@@ -130,6 +131,29 @@ namespace Bonsai.Code.Tools
         public override string ToString()
         {
             return $"{RangeStart}-{RangeEnd}";
+        }
+
+        #endregion
+
+
+        #region JsonConverter
+
+        public class FuzzyRangeJsonConverter : JsonConverter
+        {
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                writer.WriteValue(value.ToString());
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                return FuzzyRange.Parse(reader.ReadAsString());
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(FuzzyRange);
+            }
         }
 
         #endregion

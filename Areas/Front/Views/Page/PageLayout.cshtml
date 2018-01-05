@@ -5,9 +5,9 @@
     var pageVm = (PageVMBase) ViewBag.PageModel;
     var actions = new[]
     {
-        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key})},
-        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key})},
-        new {Title = "Факты", Active = pageVm is PageFactsVM, Url = Url.Action("Facts", new {key = pageVm.Key})}
+        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Title})},
+        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Title})},
+        new {Title = "Факты", Active = pageVm is PageFactsVM, Url = Url.Action("Facts", new {key = pageVm.Title})}
     };
 }
 

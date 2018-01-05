@@ -1,0 +1,14 @@
+﻿{
+  "Common.Name": {
+    "Values": [
+      {
+        "FirstName": "Иван",
+        "LastName": "Иванов",
+        "MiddleName": "Иванович",
+        "Range": "01.04.2000-"
+      }
+    ]
+  },
+  "Birth.Date": "01.04.2000",
+  "Birth.Place": "Москва"
+}

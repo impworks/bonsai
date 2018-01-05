@@ -9,8 +9,6 @@ namespace Bonsai.Code.DomainModel.Facts.Templates
     {
         public string Name { get; set; }
 
-        public string ObjectKey { get; set; }
-
         public FuzzyRange? Range { get; set; }
     }
 }

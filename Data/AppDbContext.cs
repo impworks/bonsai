@@ -30,20 +30,26 @@ namespace Bonsai.Data
             builder.Entity<AppUser>()
                    .HasMany(x => x.Changes).WithOne(x => x.Author);
 
-            builder.Entity<Changeset>()
-                   .HasOne(x => x.Author).WithMany();
-
             builder.Entity<AccessRule>()
                    .HasOne(x => x.Page).WithMany();
 
             builder.Entity<AccessRule>()
                 .HasOne(x => x.User).WithMany();
 
+            builder.Entity<Changeset>()
+                   .HasOne(x => x.Author).WithMany();
+
+            builder.Entity<Page>()
+                   .HasIndex(x => x.Title).IsUnique(true);
+
             builder.Entity<Relation>()
                    .HasOne(x => x.Subject).WithMany(x => x.Relations);
 
             builder.Entity<Relation>()
                    .HasOne(x => x.Object).WithMany();
+
+            builder.Entity<Media>()
+                   .HasIndex(x => x.Key).IsUnique(true);
 
             builder.Entity<MediaTag>()
                    .HasOne(x => x.Media).WithMany(x => x.Tags);

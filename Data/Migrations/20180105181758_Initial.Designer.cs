@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180105145310_Initial")]
+    [Migration("20180105181758_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,8 +31,7 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("AppUserId");
 
-                    b.Property<string>("PageKey")
-                        .IsRequired();
+                    b.Property<Guid>("PageId");
 
                     b.Property<string>("UserId")
                         .IsRequired();
@@ -41,7 +40,7 @@ namespace Bonsai.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("PageKey");
+                    b.HasIndex("PageId");
 
                     b.HasIndex("UserId");
 
@@ -148,9 +147,8 @@ namespace Bonsai.Data.Migrations
 
             modelBuilder.Entity("Bonsai.Data.Models.Media", b =>
                 {
-                    b.Property<string>("Key")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(30);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Date")
                         .IsRequired()
@@ -164,11 +162,16 @@ namespace Bonsai.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(300);
 
-                    b.Property<Guid>("Id");
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.Property<int>("Type");
 
-                    b.HasKey("Key");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
 
                     b.ToTable("Media");
                 });
@@ -181,38 +184,29 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Coordinates")
                         .HasMaxLength(100);
 
-                    b.Property<string>("MediaKey")
-                        .IsRequired();
+                    b.Property<Guid>("MediaId");
 
-                    b.Property<string>("ObjectKey")
-                        .IsRequired();
-
-                    b.Property<string>("ObjectTitle")
-                        .IsRequired()
-                        .HasMaxLength(500);
+                    b.Property<Guid>("ObjectId");
 
                     b.Property<int>("Type");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MediaKey");
+                    b.HasIndex("MediaId");
 
-                    b.HasIndex("ObjectKey");
+                    b.HasIndex("ObjectId");
 
                     b.ToTable("MediaTags");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Page", b =>
                 {
-                    b.Property<string>("Key")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(200);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Facts");
-
-                    b.Property<Guid>("Id");
 
                     b.Property<int>("PageType");
 
@@ -220,7 +214,10 @@ namespace Bonsai.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.HasKey("Key");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Pages");
                 });
@@ -233,18 +230,12 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Duration")
                         .HasMaxLength(30);
 
-                    b.Property<string>("ObjectKey")
-                        .IsRequired();
-
-                    b.Property<string>("ObjectTitle")
-                        .IsRequired()
-                        .HasMaxLength(200);
+                    b.Property<Guid>("ObjectId");
 
                     b.Property<string>("Path")
                         .IsRequired();
 
-                    b.Property<string>("SubjectKey")
-                        .IsRequired();
+                    b.Property<Guid>("SubjectId");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -254,9 +245,9 @@ namespace Bonsai.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectKey");
+                    b.HasIndex("ObjectId");
 
-                    b.HasIndex("SubjectKey");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Relations");
                 });
@@ -376,7 +367,7 @@ namespace Bonsai.Data.Migrations
 
                     b.HasOne("Bonsai.Data.Models.Page", "Page")
                         .WithMany()
-                        .HasForeignKey("PageKey")
+                        .HasForeignKey("PageId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Bonsai.Data.Models.AppUser", "User")
@@ -401,12 +392,12 @@ namespace Bonsai.Data.Migrations
                 {
                     b.HasOne("Bonsai.Data.Models.Media", "Media")
                         .WithMany("Tags")
-                        .HasForeignKey("MediaKey")
+                        .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Bonsai.Data.Models.Page", "Object")
                         .WithMany("MediaTags")
-                        .HasForeignKey("ObjectKey")
+                        .HasForeignKey("ObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -414,12 +405,12 @@ namespace Bonsai.Data.Migrations
                 {
                     b.HasOne("Bonsai.Data.Models.Page", "Object")
                         .WithMany()
-                        .HasForeignKey("ObjectKey")
+                        .HasForeignKey("ObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Bonsai.Data.Models.Page", "Subject")
                         .WithMany("Relations")
-                        .HasForeignKey("SubjectKey")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

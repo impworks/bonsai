@@ -14,103 +14,103 @@ namespace Bonsai.Code.DomainModel.Facts
             [PageType.Person] = new[]
             {
                 new FactDefinitionGroup(
-                    "common",
+                    "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("photo", "Фото"),
-                    new FactDefinition<NameFactTemplate>("name", "Имя")
+                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
+                    new FactDefinition<NameFactTemplate>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
-                    "birth",
+                    "Birth",
                     "Рождение",
-                    new FactDefinition<DateFactTemplate>("date", "Дата рождения"),
-                    new FactDefinition<StringFactTemplate>("place", "Место рождения")
+                    new FactDefinition<DateFactTemplate>("Date", "Дата рождения"),
+                    new FactDefinition<StringFactTemplate>("Place", "Место рождения")
                 ),
                 new FactDefinitionGroup(
-                    "death",
+                    "Death",
                     "Смерть",
-                    new FactDefinition<DateFactTemplate>("date", "Дата смерти"),
-                    new FactDefinition<StringFactTemplate>("place", "Место смерти"),
-                    new FactDefinition<StringFactTemplate>("cause", "Причина смерти"),
-                    new FactDefinition<StringFactTemplate>("burial", "Место захоронения")
+                    new FactDefinition<DateFactTemplate>("Date", "Дата смерти"),
+                    new FactDefinition<StringFactTemplate>("Place", "Место смерти"),
+                    new FactDefinition<StringFactTemplate>("Cause", "Причина смерти"),
+                    new FactDefinition<StringFactTemplate>("Burial", "Место захоронения")
                 ),
                 new FactDefinitionGroup(
-                    "bio",
+                    "Bio",
                     "Биология",
-                    new FactDefinition<GenderFactTemplate>("gender", "Пол"),
-                    new FactDefinition<BloodTypeFactTemplate>("blood", "Группа крови"),
-                    new FactDefinition<StringFactTemplate>("eyes", "Цвет глаз"),
-                    new FactDefinition<StringFactTemplate>("hair", "Цвет волос")
+                    new FactDefinition<GenderFactTemplate>("Gender", "Пол"),
+                    new FactDefinition<BloodTypeFactTemplate>("Blood", "Группа крови"),
+                    new FactDefinition<StringFactTemplate>("Eyes", "Цвет глаз"),
+                    new FactDefinition<StringFactTemplate>("Hair", "Цвет волос")
                 ),
                 new FactDefinitionGroup(
-                    "person",
+                    "Person",
                     "Личность",
-                    new FactDefinition<LanguageFactTemplate>("language", "Язык"),
-                    new FactDefinition<SkillFactTemplate>("skill", "Умение"),
-                    new FactDefinition<StringFactTemplate>("religion", "Религия")
+                    new FactDefinition<LanguageFactTemplate>("Language", "Язык"),
+                    new FactDefinition<SkillFactTemplate>("Skill", "Умение"),
+                    new FactDefinition<StringFactTemplate>("Religion", "Религия")
                 )
             },
 
             [PageType.Pet] = new[]
             {
                 new FactDefinitionGroup(
-                    "common",
+                    "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("photo", "Фото"),
-                    new FactDefinition<StringFactTemplate>("name", "Имя")
+                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
+                    new FactDefinition<StringFactTemplate>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
-                    "birth",
+                    "Birth",
                     "Рождение",
-                    new FactDefinition<DateFactTemplate>("date", "Дата рождения"),
-                    new FactDefinition<StringFactTemplate>("place", "Место рождения")
+                    new FactDefinition<DateFactTemplate>("Date", "Дата рождения"),
+                    new FactDefinition<StringFactTemplate>("Place", "Место рождения")
                 ),
                 new FactDefinitionGroup(
-                    "death",
+                    "Death",
                     "Смерть",
-                    new FactDefinition<DateFactTemplate>("date", "Дата смерти"),
-                    new FactDefinition<StringFactTemplate>("place", "Место смерти"),
-                    new FactDefinition<StringFactTemplate>("cause", "Причина смерти"),
-                    new FactDefinition<StringFactTemplate>("burial", "Место захоронения")
+                    new FactDefinition<DateFactTemplate>("Date", "Дата смерти"),
+                    new FactDefinition<StringFactTemplate>("Place", "Место смерти"),
+                    new FactDefinition<StringFactTemplate>("Cause", "Причина смерти"),
+                    new FactDefinition<StringFactTemplate>("Burial", "Место захоронения")
                 ),
                 new FactDefinitionGroup(
-                    "bio",
+                    "Bio",
                     "Биология",
-                    new FactDefinition<GenderFactTemplate>("gender", "Пол"),
-                    new FactDefinition<StringFactTemplate>("species", "Вид"),
-                    new FactDefinition<StringFactTemplate>("breed", "Порода"),
-                    new FactDefinition<StringFactTemplate>("color", "Окрас")
+                    new FactDefinition<GenderFactTemplate>("Gender", "Пол"),
+                    new FactDefinition<StringFactTemplate>("Species", "Вид"),
+                    new FactDefinition<StringFactTemplate>("Breed", "Порода"),
+                    new FactDefinition<StringFactTemplate>("Color", "Окрас")
                 )
             },
 
             [PageType.Location] = new[]
             {
                 new FactDefinitionGroup(
-                    "common",
+                    "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("photo", "Фото"),
-                    new FactDefinition<StringFactTemplate>("name", "Название")
+                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
+                    new FactDefinition<StringFactTemplate>("Name", "Название")
                 ),
                 new FactDefinitionGroup(
-                    "place",
+                    "Place",
                     "Место",
-                    new FactDefinition<StringFactTemplate>("location", "Расположение"),
-                    new FactDefinition<DateFactTemplate>("opening", "Открытие"),
-                    new FactDefinition<DateFactTemplate>("shutdown", "Закрытие")
+                    new FactDefinition<StringFactTemplate>("Location", "Расположение"),
+                    new FactDefinition<DateFactTemplate>("Opening", "Открытие"),
+                    new FactDefinition<DateFactTemplate>("Shutdown", "Закрытие")
                 )
             },
 
             [PageType.Event] = new[]
             {
                 new FactDefinitionGroup(
-                    "common",
+                    "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("photo", "Фото"),
-                    new FactDefinition<StringFactTemplate>("name", "Название")
+                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
+                    new FactDefinition<StringFactTemplate>("Name", "Название")
                 ),
                 new FactDefinitionGroup(
-                    "event",
+                    "Event",
                     "Событие",
-                    new FactDefinition<DateFactTemplate>("date", "Дата")
+                    new FactDefinition<DateFactTemplate>("Date", "Дата")
                 )
             },
 

@@ -26,13 +26,6 @@ namespace Bonsai.Data.Models
         public Page Object { get; set; }
 
         /// <summary>
-        /// Name or title of the second entity.
-        /// </summary>
-        [Required]
-        [StringLength(200)]
-        public string ObjectTitle { get; set; }
-
-        /// <summary>
         /// Direct type of relationship (for explicitly specified relations).
         /// </summary>
         public RelationType? Type { get; set; }

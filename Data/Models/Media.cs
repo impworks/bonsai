@@ -17,7 +17,6 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Url-friendly key generated from surrogate ID.
         /// </summary>
-        [Key]
         [Required]
         [StringLength(30)]
         public string Key { get; set; }

@@ -45,7 +45,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(r => r.Object)
-                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .FirstOrDefaultAsync(x => x.Title == key)
                                 .ConfigureAwait(false);
 
             if (page == null)
@@ -67,7 +67,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .FirstOrDefaultAsync(x => x.Title == key)
                                 .ConfigureAwait(false);
 
             if (page == null)
@@ -100,7 +100,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(t => t.Object)
-                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .FirstOrDefaultAsync(x => x.Title == key)
                                 .ConfigureAwait(false);
 
             if (page == null)
@@ -127,7 +127,6 @@ namespace Bonsai.Areas.Front.Logic
             where T : PageVMBase
         {
             vm.Title = page.Title;
-            vm.Key = page.Key;
 
             return vm;
         }
@@ -142,8 +141,7 @@ namespace Bonsai.Areas.Front.Logic
 
             RelationFactTemplate Converter(Relation r) => new RelationFactTemplate
             {
-                Name = r.ObjectTitle,
-                ObjectKey = r.Object.Key,
+                Name = r.Object.Title,
                 Range = FuzzyRange.Parse(r.Duration)
             };
 
@@ -153,7 +151,7 @@ namespace Bonsai.Areas.Front.Logic
             foreach (var relGroup in RelationGroups.List)
             {
                 var facts = rels.Where(x => relGroup.Types.Contains(x.Key))
-                                .Select(x => x.OrderBy(y => y.ObjectTitle))
+                                .Select(x => x.OrderBy(y => y.Object.Title))
                                 .SelectMany(x => x)
                                 .Select(x => new FactVM {Data = Converter(x), TemplatePath = templatePath, Title = x.Title})
                                 .ToList();

@@ -22,14 +22,6 @@ namespace Bonsai.Data.Models
         public string Title { get; set; }
 
         /// <summary>
-        /// Url-friendly key that is generated from title or entered by the user.
-        /// </summary>
-        [Key]
-        [Required]
-        [StringLength(200)]
-        public string Key { get; set; }
-
-        /// <summary>
         /// Type of the entity described by this page.
         /// </summary>
         public PageType PageType { get; set; }

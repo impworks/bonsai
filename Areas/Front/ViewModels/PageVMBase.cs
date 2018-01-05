@@ -9,10 +9,5 @@
         /// Title of the page (displayed in the header).
         /// </summary>
         public string Title { get; set; }
-
-        /// <summary>
-        /// Canonical URL of the current page.
-        /// </summary>
-        public string Key { get; set; }
     }
 }

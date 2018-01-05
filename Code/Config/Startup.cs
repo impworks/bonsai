@@ -1,7 +1,10 @@
 ﻿using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.Services;
+using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Data.Utils;
+using Bonsai.Data.Utils.Seed;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +41,14 @@ namespace Bonsai.Code.Config
                     .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
 
-            services.AddMvc().AddControllersAsServices();
+            services.AddMvc()
+                    .AddControllersAsServices()
+                    .AddJsonOptions(opts =>
+                    {
+                        opts.SerializerSettings.Converters.Add(new FuzzyDate.FuzzyDateJsonConverter());
+                        opts.SerializerSettings.Converters.Add(new FuzzyRange.FuzzyRangeJsonConverter());
+                    });
+
             services.AddRouting(opts =>
             {
                 opts.AppendTrailingSlash = false;
@@ -61,6 +71,15 @@ namespace Bonsai.Code.Config
 
         public void Configure(IApplicationBuilder app)
         {
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<AppDbContext>();
+                context.EnsureDatabaseCreated();
+
+                if(Environment.IsDevelopment())
+                    context.EnsureSeeded();
+            }
+
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

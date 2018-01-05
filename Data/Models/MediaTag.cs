@@ -31,13 +31,6 @@ namespace Bonsai.Data.Models
         public MediaTagType Type { get; set; }
 
         /// <summary>
-        /// Name or title of the tagged entity.
-        /// </summary>
-        [Required]
-        [StringLength(500)]
-        public string ObjectTitle { get; set; }
-
-        /// <summary>
         /// Semicolon-separated coordinates of the tag.
         /// </summary>
         [StringLength(100)]

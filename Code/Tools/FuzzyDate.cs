@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Bonsai.Code.Tools
 {
@@ -269,6 +270,28 @@ namespace Bonsai.Code.Tools
             sb.Append(Day == null ? "??" : Day.ToString());
 
             return sb.ToString();
+        }
+
+        #endregion
+
+        #region JsonConverter
+
+        public class FuzzyDateJsonConverter : JsonConverter
+        {
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                writer.WriteValue(value.ToString());
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                return FuzzyDate.Parse(reader.ReadAsString());
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(FuzzyDate);
+            }
         }
 
         #endregion
