@@ -22,6 +22,13 @@ namespace Bonsai.Data.Models
         public string Title { get; set; }
 
         /// <summary>
+        /// Page key (title, url-encoded).
+        /// </summary>
+        [Required]
+        [StringLength(200)]
+        public string Key { get; set; }
+
+        /// <summary>
         /// Type of the entity described by this page.
         /// </summary>
         public PageType PageType { get; set; }

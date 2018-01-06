@@ -85,6 +85,7 @@ namespace Bonsai.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Facts = table.Column<string>(type: "text", nullable: true),
+                    Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     PageType = table.Column<int>(type: "int4", nullable: false),
                     Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                 },
@@ -397,9 +398,9 @@ namespace Bonsai.Data.Migrations
                 column: "ObjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pages_Title",
+                name: "IX_Pages_Key",
                 table: "Pages",
-                column: "Title",
+                column: "Key",
                 unique: true);
 
             migrationBuilder.CreateIndex(

@@ -40,7 +40,7 @@ namespace Bonsai.Data
                    .HasOne(x => x.Author).WithMany();
 
             builder.Entity<Page>()
-                   .HasIndex(x => x.Title).IsUnique(true);
+                   .HasIndex(x => x.Key).IsUnique(true);
 
             builder.Entity<Relation>()
                    .HasOne(x => x.Subject).WithMany(x => x.Relations);

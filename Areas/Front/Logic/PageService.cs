@@ -45,7 +45,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(r => r.Object)
-                                .FirstOrDefaultAsync(x => x.Title == key)
+                                .FirstOrDefaultAsync(x => x.Key == key)
                                 .ConfigureAwait(false);
 
             if (page == null)
@@ -67,7 +67,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Title == key)
+                                .FirstOrDefaultAsync(x => x.Key == key)
                                 .ConfigureAwait(false);
 
             if (page == null)
@@ -100,7 +100,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.Relations)
                                 .ThenInclude(t => t.Object)
-                                .FirstOrDefaultAsync(x => x.Title == key)
+                                .FirstOrDefaultAsync(x => x.Key == key)
                                 .ConfigureAwait(false);
 
             if (page == null)
@@ -127,6 +127,7 @@ namespace Bonsai.Areas.Front.Logic
             where T : PageVMBase
         {
             vm.Title = page.Title;
+            vm.Key = page.Key;
 
             return vm;
         }
@@ -141,7 +142,8 @@ namespace Bonsai.Areas.Front.Logic
 
             RelationFactTemplate Converter(Relation r) => new RelationFactTemplate
             {
-                Name = r.Object.Title,
+                Title = r.Object.Title,
+                Key = r.Object.Key,
                 Range = FuzzyRange.Parse(r.Duration)
             };
 

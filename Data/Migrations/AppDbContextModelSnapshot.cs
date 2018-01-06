@@ -207,6 +207,10 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("Facts");
 
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
                     b.Property<int>("PageType");
 
                     b.Property<string>("Title")
@@ -215,7 +219,7 @@ namespace Bonsai.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Title")
+                    b.HasIndex("Key")
                         .IsUnique();
 
                     b.ToTable("Pages");

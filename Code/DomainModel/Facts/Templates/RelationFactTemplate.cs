@@ -7,7 +7,9 @@ namespace Bonsai.Code.DomainModel.Facts.Templates
     /// </summary>
     public class RelationFactTemplate: IFactTemplate
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
+
+        public string Key { get; set; }
 
         public FuzzyRange? Range { get; set; }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -24,7 +25,11 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}")]
         public async Task<ActionResult> Description(string key)
         {
-            var vm = await _pages.GetPageDescriptionAsync(key)
+            var encKey = PageHelper.EncodeTitle(key);
+            if (encKey != key)
+                return RedirectToActionPermanent("Description", new {key = encKey});
+
+            var vm = await _pages.GetPageDescriptionAsync(encKey)
                                  .ConfigureAwait(false);
             return View(vm);
         }
@@ -35,7 +40,11 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}/facts")]
         public async Task<ActionResult> Facts(string key)
         {
-            var vm = await _pages.GetPageFactsAsync(key)
+            var encKey = PageHelper.EncodeTitle(key);
+            if (encKey != key)
+                return RedirectToActionPermanent("Facts", new { key = encKey });
+
+            var vm = await _pages.GetPageFactsAsync(encKey)
                                  .ConfigureAwait(false);
             return View(vm);
         }
@@ -47,7 +56,11 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}/media")]
         public async Task<ActionResult> Media(string key)
         {
-            var vm = await _pages.GetPageMediaAsync(key)
+            var encKey = PageHelper.EncodeTitle(key);
+            if (encKey != key)
+                return RedirectToActionPermanent("Media", new { key = encKey });
+
+            var vm = await _pages.GetPageMediaAsync(encKey)
                                  .ConfigureAwait(false);
             return View(vm);
         }

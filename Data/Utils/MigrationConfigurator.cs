@@ -1,10 +1,9 @@
 ﻿using System.IO;
-using Bonsai.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Bonsai.Code.Config
+namespace Bonsai.Data.Utils
 {
     /// <summary>
     /// Configures the design-time instance of the data context (for migrations).

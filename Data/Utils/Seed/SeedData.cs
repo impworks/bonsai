@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Bonsai.Code.Utils;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Data.Utils.Seed
@@ -17,10 +18,14 @@ namespace Bonsai.Data.Utils.Seed
         {
             if (!context.Pages.Any())
             {
+                var pageId = Guid.NewGuid();
+                var pageTitle = "Иван Иванов";
+
                 context.Pages.Add(new Page
                 {
-                    Id = Guid.NewGuid(),
-                    Title = "Иван Иванов",
+                    Id = pageId,
+                    Title = pageTitle,
+                    Key = PageHelper.EncodeTitle(pageTitle),
                     Description = File.ReadAllText(@".\Data\Utils\Seed\SampleDescription.md"),
                     Facts = File.ReadAllText(@".\Data\Utils\Seed\SampleFacts.json")
                 });
