@@ -5,7 +5,7 @@ namespace Bonsai.Areas.Front.ViewModels
     /// <summary>
     /// Descriptions of the media's 
     /// </summary>
-    public class PageMediaVM: PageVMBase
+    public class PageMediaVM: PageTitleVM
     {
         /// <summary>
         /// The list of media item thumbnails for current page.

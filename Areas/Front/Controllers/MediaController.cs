@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Bonsai.Areas.Front.Logic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -11,13 +11,23 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("m")]
     public class MediaController: Controller
     {
+        public MediaController(MediaService media)
+        {
+            _media = media;
+        }
+
+        private readonly MediaService _media;
+
         /// <summary>
         /// Displays media and details.
         /// </summary>
         [Route("{key}")]
-        public async Task<ActionResult> View(string key)
+        public async Task<ActionResult> ViewMedia(string key)
         {
-            throw new NotImplementedException();
+            var vm = await _media.GetMediaAsync(key)
+                                    .ConfigureAwait(false);
+
+            return View(vm);
         }
     }
 }

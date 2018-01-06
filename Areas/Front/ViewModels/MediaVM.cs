@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Bonsai.Code.Tools;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Front.ViewModels
@@ -10,9 +10,14 @@ namespace Bonsai.Areas.Front.ViewModels
     public class MediaVM
     {
         /// <summary>
-        /// URL of the media file.
+        /// URL of the media file to display inline.
         /// </summary>
-        public string FileUrl { get; set; }
+        public string MediaPath { get; set; }
+
+        /// <summary>
+        /// URL of the full-sized media (for photos).
+        /// </summary>
+        public string FullPath { get; set; }
 
         /// <summary>
         /// Type of the media (photo, video, etc.).
@@ -32,16 +37,16 @@ namespace Bonsai.Areas.Front.ViewModels
         /// <summary>
         /// Date of the media file's creation.
         /// </summary>
-        public DateTime? Date { get; set; }
+        public FuzzyDate? Date { get; set; }
 
         /// <summary>
         /// Related location.
         /// </summary>
-        public PageLinkVM Location { get; set; }
+        public PageTitleVM Location { get; set; }
 
         /// <summary>
         /// Related event.
         /// </summary>
-        public PageLinkVM Event { get; set; }
+        public PageTitleVM Event { get; set; }
     }
 }

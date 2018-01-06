@@ -144,16 +144,34 @@ namespace Bonsai.Code.Tools
         );
 
         /// <summary>
+        /// Safely parses a FuzzyDate.
+        /// </summary>
+        public static FuzzyDate? TryParse(string raw)
+        {
+            if (string.IsNullOrEmpty(raw))
+                return null;
+
+            try
+            {
+                return Parse(raw);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Parses a fuzzy date from a string.
         /// </summary>
-        public static FuzzyDate Parse(string str)
+        public static FuzzyDate Parse(string raw)
         {
-            if (str == null)
-                throw new ArgumentNullException(nameof(str));
+            if (string.IsNullOrEmpty(raw))
+                throw new ArgumentNullException(nameof(raw));
 
-            var match = FormatRegex.Match(str);
+            var match = FormatRegex.Match(raw);
             if(!match.Success)
-                throw new ArgumentException("Date string was not in correct format!", nameof(str));
+                throw new ArgumentException("Date string was not in correct format!", nameof(raw));
 
             var year = ParseInt(match.Groups["year"].Value);
             var month = ParseInt(match.Groups["month"].Value);

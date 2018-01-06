@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 namespace Bonsai.Areas.Front.Logic
 {
     /// <summary>
-    /// Page management service.
+    /// Page displayer service.
     /// </summary>
     public class PageService
     {
@@ -80,7 +80,7 @@ namespace Bonsai.Areas.Front.Logic
                 {
                     Type = tag.Media.Type,
                     MediaKey = tag.Media.Key,
-                    ThumbnailUrl = Path.ChangeExtension(tag.Media.FilePath, ".thumb.png"),
+                    ThumbnailUrl = Path.ChangeExtension(tag.Media.FilePath, ".thumb.jpg"),
                     Year = FuzzyDate.Parse(tag.Media.Date).ReadableYear
                 });
             }
@@ -124,7 +124,7 @@ namespace Bonsai.Areas.Front.Logic
         /// Sets additional properties on a page view model.
         /// </summary>
         private T Configure<T>(Page page, T vm)
-            where T : PageVMBase
+            where T : PageTitleVM
         {
             vm.Title = page.Title;
             vm.Key = page.Key;

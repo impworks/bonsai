@@ -10,11 +10,11 @@ namespace Bonsai.Areas.Front.ViewModels
         /// <summary>
         /// Tagged entity.
         /// </summary>
-        public PageLinkVM Page { get; set; }
+        public PageTitleVM Page { get; set; }
 
         /// <summary>
         /// Tag section in photo coordinates (or null for other media types).
         /// </summary>
-        public Rectangle? Rect { get; set; }
+        public RectangleF? Rect { get; set; }
     }
 }

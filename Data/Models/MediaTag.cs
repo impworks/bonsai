@@ -22,8 +22,12 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Tagged entity link.
         /// </summary>
-        [Required]
         public Page Object { get; set; }
+
+        /// <summary>
+        /// Explicit title for tags that don't reference an object.
+        /// </summary>
+        public string ObjectTitle { get; set; }
 
         /// <summary>
         /// Type of media tag.

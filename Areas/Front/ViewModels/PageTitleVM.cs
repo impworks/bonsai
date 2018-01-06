@@ -3,7 +3,7 @@
     /// <summary>
     /// Base view model for all page sections.
     /// </summary>
-    public class PageVMBase
+    public class PageTitleVM
     {
         /// <summary>
         /// Title of the page (displayed in the header).

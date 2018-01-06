@@ -185,7 +185,9 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<Guid>("MediaId");
 
-                    b.Property<Guid>("ObjectId");
+                    b.Property<Guid?>("ObjectId");
+
+                    b.Property<string>("ObjectTitle");
 
                     b.Property<int>("Type");
 
@@ -400,8 +402,7 @@ namespace Bonsai.Data.Migrations
 
                     b.HasOne("Bonsai.Data.Models.Page", "Object")
                         .WithMany("MediaTags")
-                        .HasForeignKey("ObjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ObjectId");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>

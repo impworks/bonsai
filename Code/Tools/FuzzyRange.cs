@@ -107,12 +107,30 @@ namespace Bonsai.Code.Tools
         #region Parsing
 
         /// <summary>
+        /// Safely parses a FuzzyRange.
+        /// </summary>
+        public static FuzzyRange? TryParse(string raw)
+        {
+            if (string.IsNullOrEmpty(raw))
+                return null;
+
+            try
+            {
+                return Parse(raw);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Parses the range from a serialized representation.
         /// </summary>
         public static FuzzyRange Parse(string raw)
         {
             if(string.IsNullOrEmpty(raw))
-                return new FuzzyRange(null, null);
+                throw new ArgumentNullException(nameof(raw));
 
             var parts = raw.Split("-");
             if(parts.Length != 2)

@@ -270,7 +270,8 @@ namespace Bonsai.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Coordinates = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     MediaId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ObjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ObjectId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ObjectTitle = table.Column<string>(type: "text", nullable: true),
                     Type = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>
@@ -287,7 +288,7 @@ namespace Bonsai.Data.Migrations
                         column: x => x.ObjectId,
                         principalTable: "Pages",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
