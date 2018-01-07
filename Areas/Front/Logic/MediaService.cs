@@ -41,11 +41,13 @@ namespace Bonsai.Areas.Front.Logic
             if (media == null)
                 throw new KeyNotFoundException();
 
+            var descr = await _markdown.CompileAsync(media.Description).ConfigureAwait(false);
+
             var vm = new MediaVM
             {
                 Type = media.Type,
                 Title = media.Title,
-                Description = _markdown.Compile(media.Description),
+                Description = descr,
                 Date = FuzzyDate.TryParse(media.Date),
                 Tags = GetMediaTagsVMs(media.Tags).ToList(),
                 Event = GetPageTitle(media.Tags.FirstOrDefault(x => x.Type == MediaTagType.Event)),

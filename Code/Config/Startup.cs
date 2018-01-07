@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +56,9 @@ namespace Bonsai.Code.Config
                 opts.AppendTrailingSlash = false;
                 opts.LowercaseUrls = true;
             });
+
+            services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
 
             services.AddTransient<AppDbContext>();
             services.AddTransient<AppConfigService>();

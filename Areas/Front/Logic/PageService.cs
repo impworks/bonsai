@@ -52,9 +52,10 @@ namespace Bonsai.Areas.Front.Logic
                 throw new KeyNotFoundException();
 
             // todo: main block
+            var descr = await _markdown.CompileAsync(page.Description).ConfigureAwait(false);
             return Configure(page, new PageDescriptionVM
             {
-                Description = _markdown.Compile(page.Description)
+                Description = descr
             });
         }
 
