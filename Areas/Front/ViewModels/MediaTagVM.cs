@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace Bonsai.Areas.Front.ViewModels
 {
@@ -7,6 +8,11 @@ namespace Bonsai.Areas.Front.ViewModels
     /// </summary>
     public class MediaTagVM
     {
+        /// <summary>
+        /// Unique ID of the tag (for cross-highlighting).
+        /// </summary>
+        public Guid TagId { get; set; }
+
         /// <summary>
         /// Tagged entity.
         /// </summary>

@@ -44,6 +44,7 @@ namespace Bonsai.Areas.Front.Logic
             var vm = new MediaVM
             {
                 Type = media.Type,
+                Title = media.Title,
                 Description = _markdown.Compile(media.Description),
                 Date = FuzzyDate.TryParse(media.Date),
                 Tags = GetMediaTagsVMs(media.Tags).ToList(),
@@ -109,6 +110,7 @@ namespace Bonsai.Areas.Front.Logic
 
                 yield return new MediaTagVM
                 {
+                    TagId = tag.Id,
                     Page = GetPageTitle(tag),
                     Rect = ParseRectangle(tag.Coordinates)
                 };

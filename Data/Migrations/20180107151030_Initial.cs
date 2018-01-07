@@ -66,11 +66,12 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Date = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Facts = table.Column<string>(type: "text", nullable: true),
                     FilePath = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
                     Key = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
                     Type = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>

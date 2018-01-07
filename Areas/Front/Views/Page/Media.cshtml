@@ -10,12 +10,12 @@
 
 @foreach (var group in groups)
 {
-    <div class="media-group">
+    <div class="media-thumb-group">
         <h3 id="@group.Key">@group.Key</h3>
         @foreach (var elem in group)
         {
-            <div class="media-wrapper">
-                <a href="@Url.Action("View", "Media", new { key = elem.MediaKey })" class="media-link" data-media="@elem.MediaKey">
+            <div class="media-thumb-wrapper">
+                <a href="@Url.Action("View", "Media", new { key = elem.MediaKey })" class="media-thumb-link" data-media="@elem.MediaKey">
                     <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@group.Key)"/>
                 </a>
             </div>

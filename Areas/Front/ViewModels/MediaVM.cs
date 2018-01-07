@@ -20,6 +20,11 @@ namespace Bonsai.Areas.Front.ViewModels
         public string FullPath { get; set; }
 
         /// <summary>
+        /// Title of the document (for documents).
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
         /// Type of the media (photo, video, etc.).
         /// </summary>
         public MediaType Type { get; set; }

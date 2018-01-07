@@ -37,8 +37,13 @@ namespace Bonsai.Data.Models
         /// Media creation date.
         /// </summary>
         [Required]
-        [StringLength(100)]
+        [StringLength(30)]
         public string Date { get; set; }
+
+        /// <summary>
+        /// Title of the media (for documents).
+        /// </summary>
+        public string Title { get; set; }
 
         /// <summary>
         /// Markdown description of the media file.

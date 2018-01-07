@@ -151,7 +151,7 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("Date")
                         .IsRequired()
-                        .HasMaxLength(100);
+                        .HasMaxLength(30);
 
                     b.Property<string>("Description");
 
@@ -164,6 +164,8 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(30);
+
+                    b.Property<string>("Title");
 
                     b.Property<int>("Type");
 
