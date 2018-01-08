@@ -136,8 +136,8 @@ namespace Bonsai.Code.Tools
             if(parts.Length != 2)
                 throw new ArgumentException("Incorrect range format.");
 
-            var from = string.IsNullOrEmpty(parts[0]) ? FuzzyDate.Parse(parts[0]) : (FuzzyDate?) null;
-            var to = string.IsNullOrEmpty(parts[1]) ? FuzzyDate.Parse(parts[1]) : (FuzzyDate?)null;
+            var from = !string.IsNullOrEmpty(parts[0]) ? FuzzyDate.Parse(parts[0]) : (FuzzyDate?) null;
+            var to = !string.IsNullOrEmpty(parts[1]) ? FuzzyDate.Parse(parts[1]) : (FuzzyDate?)null;
 
             return new FuzzyRange(from, to);
         }
@@ -165,7 +165,7 @@ namespace Bonsai.Code.Tools
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                return FuzzyRange.Parse(reader.ReadAsString());
+                return FuzzyRange.Parse(reader.Value.ToString());
             }
 
             public override bool CanConvert(Type objectType)

@@ -1,4 +1,5 @@
-﻿using Bonsai.Areas.Front.Logic;
+﻿using System.Collections.Generic;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.Services;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Bonsai.Code.Config
 {
@@ -47,8 +49,20 @@ namespace Bonsai.Code.Config
                     .AddControllersAsServices()
                     .AddJsonOptions(opts =>
                     {
-                        opts.SerializerSettings.Converters.Add(new FuzzyDate.FuzzyDateJsonConverter());
-                        opts.SerializerSettings.Converters.Add(new FuzzyRange.FuzzyRangeJsonConverter());
+                        var convs = new List<JsonConverter>
+                        {
+                            new FuzzyDate.FuzzyDateJsonConverter(),
+                            new FuzzyRange.FuzzyRangeJsonConverter()
+                        };
+
+                        convs.ForEach(opts.SerializerSettings.Converters.Add);
+
+                        JsonConvert.DefaultSettings = () =>
+                        {
+                            var settings = new JsonSerializerSettings();
+                            convs.ForEach(settings.Converters.Add);
+                            return settings;
+                        };
                     });
 
             services.AddRouting(opts =>

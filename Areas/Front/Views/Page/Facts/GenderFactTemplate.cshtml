@@ -1,14 +1,10 @@
-﻿@model Bonsai.Code.DomainModel.Facts.Templates.GenderFactTemplate
-@if (Model.IsMale == null)
-{
-    <span>Не указано</span>
-}
-else if (Model.IsMale == true)
-{
-    <span>Мужской</span>
-}
-else if (Model.IsMale == false)
-{
-    <span>Женский</span>
-}
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@model GenderFactModel
+
+
+<div class="fact">
+    <div class="fact-title">Пол</div>
+    <div class="fact-value">@(Model.IsMale ? "Мужской" : "Женский")</div>
+</div>
+
 

@@ -6,14 +6,11 @@
     var actions = new[]
     {
         new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key})},
-        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key})},
-        new {Title = "Факты", Active = pageVm is PageFactsVM, Url = Url.Action("Facts", new {key = pageVm.Key})}
+        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key})}
     };
 }
 
-<h2>@pageVm.Title</h2>
-
-<ul class="nav nav-pills">
+<ul class="nav nav-pills pull-right">
     @foreach (var action in actions)
     {
         <li>
@@ -28,5 +25,8 @@
         </li>
     }
 </ul>
+<div class="clearfix"></div>
+
+<h2>@pageVm.Title</h2>
 
 @RenderBody()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Code.DomainModel.Facts.Models;
 
 namespace Bonsai.Areas.Front.ViewModels
 {
@@ -8,6 +9,11 @@ namespace Bonsai.Areas.Front.ViewModels
     public class FactGroupVM
     {
         /// <summary>
+        /// ID of the fact group.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Readable fact group title.
         /// </summary>
         public string Title { get; set; }
@@ -15,6 +21,6 @@ namespace Bonsai.Areas.Front.ViewModels
         /// <summary>
         /// The set of fact data.
         /// </summary>
-        public IEnumerable<FactVM> Facts { get; set; }
+        public ICollection<FactModelBase> Facts { get; set; }
     }
 }

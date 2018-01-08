@@ -1,17 +1,19 @@
-﻿using Bonsai.Code.DomainModel.Facts.Templates;
+﻿using System;
+using Bonsai.Code.DomainModel.Facts.Models;
 
 namespace Bonsai.Code.DomainModel.Facts
 {
     /// <summary>
     /// Blueprint of a fact's template and editor.
     /// </summary>
-    public class FactDefinition<TTemplate> : IFactDefinition
-        where TTemplate: IFactTemplate
+    public class FactDefinition<T> : IFactDefinition
+        where T: FactModelBase
     {
         public FactDefinition(string id, string title)
         {
             Id = id;
             Title = title;
+            Kind = typeof(T);
         }
 
         /// <summary>
@@ -25,22 +27,29 @@ namespace Bonsai.Code.DomainModel.Facts
         public string Title { get; }
 
         /// <summary>
-        /// Returns the path for display template.
+        /// Type of the fact's kind.
         /// </summary>
-        public string ViewTemplatePath => GetTemplatePath("~/Areas/Front/Views/Page/Facts/");
+        public Type Kind { get; }
+    }
+
+    /// <summary>
+    /// Shared interface for untyped fact definitions.
+    /// </summary>
+    public interface IFactDefinition
+    {
+        /// <summary>
+        /// Unique ID for referencing the fact.
+        /// </summary>
+        string Id { get; }
 
         /// <summary>
-        /// Returns the path for editor template.
+        /// Readable title.
         /// </summary>
-        public string EditTemplatePath => GetTemplatePath("~/Areas/Admin/Views/Editor/Facts/");
+        string Title { get; }
 
         /// <summary>
-        /// Returns the path for current template.
+        /// Type of the fact's kind.
         /// </summary>
-        private string GetTemplatePath(string prefixPath)
-        {
-            var itemName = typeof(TTemplate).Name;
-            return prefixPath + itemName + ".cshtml";
-        }
+        Type Kind { get; }
     }
 }

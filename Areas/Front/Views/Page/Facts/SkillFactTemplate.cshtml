@@ -1,16 +1,23 @@
-﻿@using Bonsai.Code.Tools
-@model Bonsai.Code.DomainModel.Facts.Templates.SkillFactTemplate
-    
-<div>
-    @foreach (var item in Model.Values)
-    {
-        <div class="fact-item">
-            <span class="fact-main">@item.Language</span>
-            <span class="fact-extra">@item.Proficiency.GetEnumDescription()</span>
-            @if (!item.Range.IsEmpty)
-            {
-                <span class="fact-range" title="@item.Range.ReadableRange">@item.Range.ReadableRange</span>
-            }
-        </div>    
-    }
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Bonsai.Code.Tools
+@model SkillFactModel
+
+<div class="fact">
+    <div class="fact-title">@(Model.Values.Length == 1 ? "Навык" : "Навыки")</div>
+    <div class="fact-value">
+        @foreach (var item in Model.Values)
+        {
+            <div class="fact-item">
+                <span class="fact-item-main">@item.Name</span>
+                @if (item.Proficiency != null)
+                {
+                    <span class="fact-item-extra">@item.Proficiency.Value.GetEnumDescription()</span>
+                }
+                @if (!item.Range.IsEmpty)
+                {
+                    <span class="fact-item-range" title="@item.Range.ReadableRange">@item.Range.ShortReadableRange</span>
+                }
+            </div>
+        }
+    </div>
 </div>

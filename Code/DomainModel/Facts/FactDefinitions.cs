@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Bonsai.Code.DomainModel.Facts.Templates;
+using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Code.DomainModel.Facts
@@ -16,37 +16,37 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
-                    new FactDefinition<NameFactTemplate>("Name", "Имя")
+                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
+                    new FactDefinition<NameFactModel>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
                     "Birth",
                     "Рождение",
-                    new FactDefinition<DateFactTemplate>("Date", "Дата рождения"),
-                    new FactDefinition<StringFactTemplate>("Place", "Место рождения")
+                    new FactDefinition<DateFactModel>("Date", "Дата рождения"),
+                    new FactDefinition<StringFactModel>("Place", "Место рождения")
                 ),
                 new FactDefinitionGroup(
                     "Death",
                     "Смерть",
-                    new FactDefinition<DateFactTemplate>("Date", "Дата смерти"),
-                    new FactDefinition<StringFactTemplate>("Place", "Место смерти"),
-                    new FactDefinition<StringFactTemplate>("Cause", "Причина смерти"),
-                    new FactDefinition<StringFactTemplate>("Burial", "Место захоронения")
+                    new FactDefinition<DateFactModel>("Date", "Дата смерти"),
+                    new FactDefinition<StringFactModel>("Place", "Место смерти"),
+                    new FactDefinition<StringFactModel>("Cause", "Причина смерти"),
+                    new FactDefinition<StringFactModel>("Burial", "Место захоронения")
                 ),
                 new FactDefinitionGroup(
                     "Bio",
                     "Биология",
-                    new FactDefinition<GenderFactTemplate>("Gender", "Пол"),
-                    new FactDefinition<BloodTypeFactTemplate>("Blood", "Группа крови"),
-                    new FactDefinition<StringFactTemplate>("Eyes", "Цвет глаз"),
-                    new FactDefinition<StringFactTemplate>("Hair", "Цвет волос")
+                    new FactDefinition<GenderFactModel>("Gender", "Пол"),
+                    new FactDefinition<BloodTypeFactModel>("Blood", "Группа крови"),
+                    new FactDefinition<StringFactModel>("Eyes", "Цвет глаз"),
+                    new FactDefinition<StringFactModel>("Hair", "Цвет волос")
                 ),
                 new FactDefinitionGroup(
                     "Person",
                     "Личность",
-                    new FactDefinition<LanguageFactTemplate>("Language", "Язык"),
-                    new FactDefinition<SkillFactTemplate>("Skill", "Умение"),
-                    new FactDefinition<StringFactTemplate>("Religion", "Религия")
+                    new FactDefinition<LanguageFactModel>("Language", "Язык"),
+                    new FactDefinition<SkillFactModel>("Skill", "Умение"),
+                    new FactDefinition<StringFactModel>("Religion", "Религия")
                 )
             },
 
@@ -55,30 +55,30 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
-                    new FactDefinition<StringFactTemplate>("Name", "Имя")
+                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
+                    new FactDefinition<StringFactModel>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
                     "Birth",
                     "Рождение",
-                    new FactDefinition<DateFactTemplate>("Date", "Дата рождения"),
-                    new FactDefinition<StringFactTemplate>("Place", "Место рождения")
+                    new FactDefinition<DateFactModel>("Date", "Дата рождения"),
+                    new FactDefinition<StringFactModel>("Place", "Место рождения")
                 ),
                 new FactDefinitionGroup(
                     "Death",
                     "Смерть",
-                    new FactDefinition<DateFactTemplate>("Date", "Дата смерти"),
-                    new FactDefinition<StringFactTemplate>("Place", "Место смерти"),
-                    new FactDefinition<StringFactTemplate>("Cause", "Причина смерти"),
-                    new FactDefinition<StringFactTemplate>("Burial", "Место захоронения")
+                    new FactDefinition<DateFactModel>("Date", "Дата смерти"),
+                    new FactDefinition<StringFactModel>("Place", "Место смерти"),
+                    new FactDefinition<StringFactModel>("Cause", "Причина смерти"),
+                    new FactDefinition<StringFactModel>("Burial", "Место захоронения")
                 ),
                 new FactDefinitionGroup(
                     "Bio",
                     "Биология",
-                    new FactDefinition<GenderFactTemplate>("Gender", "Пол"),
-                    new FactDefinition<StringFactTemplate>("Species", "Вид"),
-                    new FactDefinition<StringFactTemplate>("Breed", "Порода"),
-                    new FactDefinition<StringFactTemplate>("Color", "Окрас")
+                    new FactDefinition<GenderFactModel>("Gender", "Пол"),
+                    new FactDefinition<StringFactModel>("Species", "Вид"),
+                    new FactDefinition<StringFactModel>("Breed", "Порода"),
+                    new FactDefinition<StringFactModel>("Color", "Окрас")
                 )
             },
 
@@ -87,15 +87,15 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
-                    new FactDefinition<StringFactTemplate>("Name", "Название")
+                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
+                    new FactDefinition<StringFactModel>("Name", "Название")
                 ),
                 new FactDefinitionGroup(
                     "Place",
                     "Место",
-                    new FactDefinition<StringFactTemplate>("Location", "Расположение"),
-                    new FactDefinition<DateFactTemplate>("Opening", "Открытие"),
-                    new FactDefinition<DateFactTemplate>("Shutdown", "Закрытие")
+                    new FactDefinition<StringFactModel>("Location", "Расположение"),
+                    new FactDefinition<DateFactModel>("Opening", "Открытие"),
+                    new FactDefinition<DateFactModel>("Shutdown", "Закрытие")
                 )
             },
 
@@ -104,13 +104,13 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactTemplate>("Photo", "Фото"),
-                    new FactDefinition<StringFactTemplate>("Name", "Название")
+                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
+                    new FactDefinition<StringFactModel>("Name", "Название")
                 ),
                 new FactDefinitionGroup(
                     "Event",
                     "Событие",
-                    new FactDefinition<DateFactTemplate>("Date", "Дата")
+                    new FactDefinition<DateFactModel>("Date", "Дата")
                 )
             },
 

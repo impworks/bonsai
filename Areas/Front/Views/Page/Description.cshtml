@@ -6,4 +6,25 @@
     ViewBag.Title = Model.Title;
 }
 
+<div class="page-facts">
+    @if (Model.PhotoFact != null)
+    {
+        @Html.Partial(Model.PhotoFact.ViewTemplatePath, Model.PhotoFact)
+    }
+    @if (Model.NameFact != null)
+    {
+        @Html.Partial(Model.NameFact.ViewTemplatePath, Model.NameFact)
+    }
+    @foreach (var group in Model.RelationFacts.Concat(Model.PersonalFacts))
+    {
+        <div class="fact-group">
+            <div class="fact-group-title">@group.Title</div>
+            @foreach (var fact in group.Facts)
+            {
+                @Html.Partial(fact.ViewTemplatePath, fact)
+            }
+        </div>
+    }
+</div>
+
 @Html.Raw(Model.Description)

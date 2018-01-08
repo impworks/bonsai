@@ -5,10 +5,14 @@
         "FirstName": "Иван",
         "LastName": "Иванов",
         "MiddleName": "Иванович",
-        "Range": "01.04.2000-"
+        "Range": "2000.04.01-"
       }
     ]
   },
-  "Birth.Date": "01.04.2000",
-  "Birth.Place": "Москва"
+  "Birth.Date": {
+    "Value": "2000.04.01"
+  },
+  "Birth.Place": {
+    "Value": "Москва"
+  }
 }

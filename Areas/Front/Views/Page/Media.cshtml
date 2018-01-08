@@ -8,17 +8,24 @@
     var groups = Model.Media.GroupBy(x => x.Year);
 }
 
-@foreach (var group in groups)
+@if (Model.Media.Any())
 {
-    <div class="media-thumb-group">
-        <h3 id="@group.Key">@group.Key</h3>
-        @foreach (var elem in group)
-        {
-            <div class="media-thumb-wrapper">
-                <a href="@Url.Action("View", "Media", new { key = elem.MediaKey })" class="media-thumb-link" data-media="@elem.MediaKey">
-                    <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@group.Key)"/>
-                </a>
-            </div>
-        }
-    </div>
+    foreach (var group in groups)
+    {
+        <div class="media-thumb-group">
+            <h3 id="@group.Key">@group.Key</h3>
+            @foreach (var elem in group)
+            {
+                <div class="media-thumb-wrapper">
+                    <a href="@Url.Action("ViewMedia", "Media", new {key = elem.MediaKey})" class="media-thumb-link" data-media="@elem.MediaKey">
+                        <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@group.Key)"/>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info">Ни одного медиа-файла не найдено.</div>
 }

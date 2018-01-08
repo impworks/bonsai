@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels;
 using Bonsai.Code.DomainModel.Facts;
-using Bonsai.Code.DomainModel.Facts.Templates;
-using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.Services;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Areas.Front.Logic
@@ -29,11 +29,6 @@ namespace Bonsai.Areas.Front.Logic
         private readonly AppDbContext _db;
         private readonly MarkdownService _markdown;
 
-        /// <summary>
-        /// List of specially handled facts which should not be displayed on the facts page.
-        /// </summary>
-        private static readonly string[] ExcludedFacts = {"common.photo"};
-
         #region Public methods
 
         /// <summary>
@@ -51,11 +46,20 @@ namespace Bonsai.Areas.Front.Logic
             if (page == null)
                 throw new KeyNotFoundException();
 
-            // todo: main block
-            var descr = await _markdown.CompileAsync(page.Description).ConfigureAwait(false);
+            var descr = await _markdown.CompileAsync(page.Description)
+                                       .ConfigureAwait(false);
+
+            var factGroups = GetPersonalFacts(page).ToList();
+
             return Configure(page, new PageDescriptionVM
             {
-                Description = descr
+                Description = descr,
+                PhotoFact = GetFactModel<PhotoFactModel>(factGroups, "Common", "Photo"),
+                NameFact = GetFactModel<NameFactModel>(factGroups, "Common", "Name"),
+                PersonalFacts = factGroups.Where(x => x.Id != "Common").ToList(),
+
+                // todo: relation facts (grouping, ordering)
+                RelationFacts = new List<FactGroupVM>()
             });
         }
 
@@ -92,31 +96,6 @@ namespace Bonsai.Areas.Front.Logic
             });
         }
 
-        /// <summary>
-        /// Returns the list of fact groups.
-        /// </summary>
-        public async Task<PageFactsVM> GetPageFactsAsync(string key)
-        {
-            var page = await _db.Pages
-                                .AsNoTracking()
-                                .Include(p => p.Relations)
-                                .ThenInclude(t => t.Object)
-                                .FirstOrDefaultAsync(x => x.Key == key)
-                                .ConfigureAwait(false);
-
-            if (page == null)
-                throw new KeyNotFoundException();
-
-            var groups = GetPersonalFacts(page)
-                .Concat(GetRelationFacts(page))
-                .ToList();
-
-            return Configure(page, new PageFactsVM
-            {
-                FactGroups = groups
-            });
-        }
-
         #endregion
 
         #region Helper methods
@@ -134,43 +113,6 @@ namespace Bonsai.Areas.Front.Logic
         }
 
         /// <summary>
-        /// Returns the list of fact groups based converted from relations.
-        /// </summary>
-        private IEnumerable<FactGroupVM> GetRelationFacts(Page page)
-        {
-            if (page.Relations.Count == 0)
-                yield break;
-
-            RelationFactTemplate Converter(Relation r) => new RelationFactTemplate
-            {
-                Title = r.Object.Title,
-                Key = r.Object.Key,
-                Range = FuzzyRange.Parse(r.Duration)
-            };
-
-            var templatePath = new FactDefinition<RelationFactTemplate>(null, null).ViewTemplatePath;
-            var rels = page.Relations.GroupBy(x => x.Type).ToList();
-
-            foreach (var relGroup in RelationGroups.List)
-            {
-                var facts = rels.Where(x => relGroup.Types.Contains(x.Key))
-                                .Select(x => x.OrderBy(y => y.Object.Title))
-                                .SelectMany(x => x)
-                                .Select(x => new FactVM {Data = Converter(x), TemplatePath = templatePath, Title = x.Title})
-                                .ToList();
-
-                if (facts.Count > 0)
-                {
-                    yield return new FactGroupVM
-                    {
-                        Title = relGroup.Title,
-                        Facts = facts
-                    };
-                }
-            }
-        }
-
-        /// <summary>
         /// Returns the list of personal facts for a page.
         /// </summary>
         private IEnumerable<FactGroupVM> GetPersonalFacts(Page page)
@@ -182,22 +124,19 @@ namespace Bonsai.Areas.Front.Logic
 
             foreach (var group in FactDefinitions.FactGroups[page.PageType])
             {
-                var factsVms = new List<FactVM>();
+                var factsVms = new List<FactModelBase>();
 
                 foreach (var fact in group.Facts)
                 {
                     var key = group.Id + "." + fact.Id;
                     var factInfo = pageFacts[key];
 
-                    if (factInfo == null || ExcludedFacts.Contains(key))
+                    if (factInfo == null)
                         continue;
 
-                    factsVms.Add(new FactVM
-                    {
-                        Title = fact.Title,
-                        TemplatePath = fact.ViewTemplatePath,
-                        Data = factInfo
-                    });
+                    var vm = (FactModelBase) JsonConvert.DeserializeObject(factInfo.ToString(), fact.Kind);
+                    vm.Definition = fact;
+                    factsVms.Add(vm);
                 }
 
                 if (factsVms.Count > 0)
@@ -209,6 +148,16 @@ namespace Bonsai.Areas.Front.Logic
                     };
                 }
             }
+        }
+
+        /// <summary>
+        /// Finds a fact in the list of groups.
+        /// </summary>
+        /// <returns></returns>
+        private T GetFactModel<T>(IEnumerable<FactGroupVM> groups, string groupId, string factId)
+            where T : FactModelBase
+        {
+            return groups.FirstOrDefault(x => x.Id == groupId)?.Facts.FirstOrDefault(x => x.Definition.Id == factId) as T;
         }
 
         #endregion

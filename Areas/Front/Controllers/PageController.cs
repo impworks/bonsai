@@ -34,21 +34,6 @@ namespace Bonsai.Areas.Front.Controllers
             return View(vm);
         }
 
-        /// <summary>
-        /// Displays the facts information.
-        /// </summary>
-        [Route("{key}/facts")]
-        public async Task<ActionResult> Facts(string key)
-        {
-            var encKey = PageHelper.EncodeTitle(key);
-            if (encKey != key)
-                return RedirectToActionPermanent("Facts", new { key = encKey });
-
-            var vm = await _pages.GetPageFactsAsync(encKey)
-                                 .ConfigureAwait(false);
-            return View(vm);
-        }
-
 
         /// <summary>
         /// Displays the related media files.
