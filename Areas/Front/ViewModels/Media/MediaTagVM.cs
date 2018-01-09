@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using Bonsai.Areas.Front.ViewModels.Page;
 
-namespace Bonsai.Areas.Front.ViewModels
+namespace Bonsai.Areas.Front.ViewModels.Media
 {
     /// <summary>
     /// A single tag on the photo.

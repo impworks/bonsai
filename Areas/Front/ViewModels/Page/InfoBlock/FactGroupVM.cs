@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Bonsai.Code.DomainModel.Facts.Models;
 
-namespace Bonsai.Areas.Front.ViewModels
+namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
 {
     /// <summary>
     /// Group of related facts.

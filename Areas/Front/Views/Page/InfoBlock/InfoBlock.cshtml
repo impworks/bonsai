@@ -1,0 +1,58 @@
+﻿@using Bonsai.Areas.Front.ViewModels.Page
+@using Bonsai.Areas.Front.ViewModels.Page.InfoBlock
+@model InfoBlockVM
+
+@{
+    var pageVm = (PageTitleVM) ViewBag.PageModel;
+}
+
+<div class="page-info">
+    @if (Model.Photo != null)
+    {
+        <div class="fact-group">
+            <img class="page-photo" src="@Model.Photo.ThumbnailUrl" alt="@pageVm.Title" />
+        </div>
+    }
+    @if (Model.Name!= null)
+    {
+        <div class="fact-group">
+            @Html.Partial(Model.Name.ViewTemplatePath, Model.Name)
+        </div>
+    }
+    @foreach (var group in Model.RelationGroups)
+    {
+        <div class="relation-group">
+            <div class="relation-group-title">
+                @group.Title
+            </div>
+            @foreach (var rel in group.Relations)
+            {
+                <div class="relation-title">@rel.Title</div>
+                <div class="relation-value">
+                    <ul class="relations-list">
+                        @foreach (var relPage in rel.Pages)
+                        {
+                            <li>
+                                <a href="@Url.Action("Description", "Page", new { key = relPage.Key })">@relPage.Title</a>
+                                @if (!relPage.RelationRange.IsEmpty)
+                                {
+                                    <span class="relation-range">@relPage.RelationRange.ReadableRange</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    }
+    @foreach (var group in Model.PersonalFacts)
+    {
+        <div class="fact-group">
+            <div class="fact-group-title">@group.Title</div>
+            @foreach (var fact in group.Facts)
+            {
+                @Html.Partial(fact.ViewTemplatePath, fact)
+            }
+        </div>
+    }
+</div>

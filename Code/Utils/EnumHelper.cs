@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace Bonsai.Code.Tools
+namespace Bonsai.Code.Utils
 {
     /// <summary>
     /// Various extension / helper methods for enum values.

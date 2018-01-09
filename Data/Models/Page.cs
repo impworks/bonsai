@@ -44,6 +44,11 @@ namespace Bonsai.Data.Models
         public string Facts { get; set; }
 
         /// <summary>
+        /// Denormalized gender value for relation calculations (where applicable & known).
+        /// </summary>
+        public bool? Gender { get; set; }
+
+        /// <summary>
         /// Relations from this page to others.
         /// </summary>
         public ICollection<Relation> Relations { get; set; }
@@ -52,5 +57,10 @@ namespace Bonsai.Data.Models
         /// Media tags.
         /// </summary>
         public ICollection<MediaTag> MediaTags { get; set; }
+
+        /// <summary>
+        /// Photograph for info block.
+        /// </summary>
+        public Media MainPhoto { get; set; }
     }
 }

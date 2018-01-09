@@ -51,11 +51,6 @@ namespace Bonsai.Data.Models
         public string Description { get; set; }
 
         /// <summary>
-        /// Serialized collection of facts related to current media.
-        /// </summary>
-        public string Facts { get; set; }
-
-        /// <summary>
         /// Tagged entities on the media.
         /// </summary>
         public ICollection<MediaTag> Tags { get; set; }

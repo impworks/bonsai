@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Areas.Front.ViewModels.Media;
 
-namespace Bonsai.Areas.Front.ViewModels
+namespace Bonsai.Areas.Front.ViewModels.Page
 {
     /// <summary>
     /// Descriptions of the media's 

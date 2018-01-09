@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180107151030_Initial")]
+    [Migration("20180109151145_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,8 +156,6 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Facts");
-
                     b.Property<string>("FilePath")
                         .IsRequired()
                         .HasMaxLength(300);
@@ -212,9 +210,13 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("Facts");
 
+                    b.Property<bool?>("Gender");
+
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(200);
+
+                    b.Property<Guid?>("MainPhotoId");
 
                     b.Property<int>("PageType");
 
@@ -227,6 +229,8 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("Key")
                         .IsUnique();
 
+                    b.HasIndex("MainPhotoId");
+
                     b.ToTable("Pages");
                 });
 
@@ -238,18 +242,13 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Duration")
                         .HasMaxLength(30);
 
-                    b.Property<Guid>("ObjectId");
+                    b.Property<bool>("IsInferred");
 
-                    b.Property<string>("Path")
-                        .IsRequired();
+                    b.Property<Guid>("ObjectId");
 
                     b.Property<Guid>("SubjectId");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<int?>("Type");
+                    b.Property<int>("Type");
 
                     b.HasKey("Id");
 
@@ -406,6 +405,13 @@ namespace Bonsai.Data.Migrations
                     b.HasOne("Bonsai.Data.Models.Page", "Object")
                         .WithMany("MediaTags")
                         .HasForeignKey("ObjectId");
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.Page", b =>
+                {
+                    b.HasOne("Bonsai.Data.Models.Media", "MainPhoto")
+                        .WithMany()
+                        .HasForeignKey("MainPhotoId");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>

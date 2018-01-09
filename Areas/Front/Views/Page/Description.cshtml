@@ -1,4 +1,4 @@
-﻿@using Bonsai.Areas.Front.ViewModels
+﻿@using Bonsai.Areas.Front.ViewModels.Page
 @model PageDescriptionVM
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
@@ -6,25 +6,5 @@
     ViewBag.Title = Model.Title;
 }
 
-<div class="page-facts">
-    @if (Model.PhotoFact != null)
-    {
-        @Html.Partial(Model.PhotoFact.ViewTemplatePath, Model.PhotoFact)
-    }
-    @if (Model.NameFact != null)
-    {
-        @Html.Partial(Model.NameFact.ViewTemplatePath, Model.NameFact)
-    }
-    @foreach (var group in Model.RelationFacts.Concat(Model.PersonalFacts))
-    {
-        <div class="fact-group">
-            <div class="fact-group-title">@group.Title</div>
-            @foreach (var fact in group.Facts)
-            {
-                @Html.Partial(fact.ViewTemplatePath, fact)
-            }
-        </div>
-    }
-</div>
-
+@Html.Partial("InfoBlock/InfoBlock", Model.InfoBlock)
 @Html.Raw(Model.Description)

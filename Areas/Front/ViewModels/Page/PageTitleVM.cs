@@ -1,4 +1,4 @@
-﻿namespace Bonsai.Areas.Front.ViewModels
+﻿namespace Bonsai.Areas.Front.ViewModels.Page
 {
     /// <summary>
     /// Base view model for all page sections.

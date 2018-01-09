@@ -26,27 +26,20 @@ namespace Bonsai.Data.Models
         public Page Object { get; set; }
 
         /// <summary>
-        /// Direct type of relationship (for explicitly specified relations).
+        /// Type of the relation.
         /// </summary>
-        public RelationType? Type { get; set; }
+        public RelationType Type { get; set; }
 
         /// <summary>
-        /// Relation path as comma-separated relatiom types (for inferred relations).
+        /// Flag indicating that the relation is automatically inferred.
+        /// Inferred relations are flushed and re-generated each time an admin updates the relation list.
         /// </summary>
-        [Required]
-        public string Path { get; set; }
+        public bool IsInferred { get; set; }
 
         /// <summary>
         /// Timespan of the relation.
         /// </summary>
         [StringLength(30)]
         public string Duration { get; set; }
-
-        /// <summary>
-        /// Readable title of the relation.
-        /// </summary>
-        [Required]
-        [StringLength(200)]
-        public string Title { get; set; }
     }
 }

@@ -9,14 +9,13 @@ namespace Bonsai.Code.DomainModel.Facts
     /// </summary>
     public static class FactDefinitions
     {
-        public static Dictionary<PageType, FactDefinitionGroup[]> FactGroups = new Dictionary<PageType, FactDefinitionGroup[]>
+        public static Dictionary<PageType, FactDefinitionGroup[]> Groups = new Dictionary<PageType, FactDefinitionGroup[]>
         {
             [PageType.Person] = new[]
             {
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
                     new FactDefinition<NameFactModel>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
@@ -55,7 +54,6 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
                     new FactDefinition<StringFactModel>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
@@ -87,7 +85,6 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
                     new FactDefinition<StringFactModel>("Name", "Название")
                 ),
                 new FactDefinitionGroup(
@@ -104,7 +101,6 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Common",
                     "Общее",
-                    new FactDefinition<PhotoFactModel>("Photo", "Фото"),
                     new FactDefinition<StringFactModel>("Name", "Название")
                 ),
                 new FactDefinitionGroup(

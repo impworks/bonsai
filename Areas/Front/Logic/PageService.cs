@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels;
+using Bonsai.Areas.Front.ViewModels.Media;
+using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.Services;
@@ -46,20 +49,13 @@ namespace Bonsai.Areas.Front.Logic
             if (page == null)
                 throw new KeyNotFoundException();
 
-            var descr = await _markdown.CompileAsync(page.Description)
-                                       .ConfigureAwait(false);
-
-            var factGroups = GetPersonalFacts(page).ToList();
+            var descr = await _markdown.CompileAsync(page.Description).ConfigureAwait(false);
+            var infoBlock = await GetInfoBlockAsync(page).ConfigureAwait(false);
 
             return Configure(page, new PageDescriptionVM
             {
                 Description = descr,
-                PhotoFact = GetFactModel<PhotoFactModel>(factGroups, "Common", "Photo"),
-                NameFact = GetFactModel<NameFactModel>(factGroups, "Common", "Name"),
-                PersonalFacts = factGroups.Where(x => x.Id != "Common").ToList(),
-
-                // todo: relation facts (grouping, ordering)
-                RelationFacts = new List<FactGroupVM>()
+                InfoBlock = infoBlock
             });
         }
 
@@ -113,6 +109,22 @@ namespace Bonsai.Areas.Front.Logic
         }
 
         /// <summary>
+        /// Returns the data for the page's main block.
+        /// </summary>
+        private async Task<InfoBlockVM> GetInfoBlockAsync(Page page)
+        {
+            var factGroups = GetPersonalFacts(page).ToList();
+
+            return new InfoBlockVM
+            {
+                Name = GetFactModel<NameFactModel>(factGroups, "Common", "Name"),
+                PersonalFacts = factGroups.Where(x => x.Id != "Common").ToList(),
+                // todo: photo
+                // todo: relations
+            };
+        }
+
+        /// <summary>
         /// Returns the list of personal facts for a page.
         /// </summary>
         private IEnumerable<FactGroupVM> GetPersonalFacts(Page page)
@@ -122,7 +134,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var pageFacts = JObject.Parse(page.Facts);
 
-            foreach (var group in FactDefinitions.FactGroups[page.PageType])
+            foreach (var group in FactDefinitions.Groups[page.PageType])
             {
                 var factsVms = new List<FactModelBase>();
 
@@ -153,11 +165,12 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Finds a fact in the list of groups.
         /// </summary>
-        /// <returns></returns>
-        private T GetFactModel<T>(IEnumerable<FactGroupVM> groups, string groupId, string factId)
+        private static T GetFactModel<T>(IEnumerable<FactGroupVM> groups, string groupId, string factId)
             where T : FactModelBase
         {
-            return groups.FirstOrDefault(x => x.Id == groupId)?.Facts.FirstOrDefault(x => x.Definition.Id == factId) as T;
+            return groups.FirstOrDefault(x => x.Id == groupId)
+                         ?.Facts.FirstOrDefault(x => x.Definition.Id == factId)
+                         as T;
         }
 
         #endregion

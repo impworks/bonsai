@@ -153,7 +153,6 @@ namespace Bonsai.Code.Tools
 
         #endregion
 
-
         #region JsonConverter
 
         public class FuzzyRangeJsonConverter : JsonConverter

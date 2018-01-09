@@ -1,6 +1,6 @@
 ﻿using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Front.ViewModels
+namespace Bonsai.Areas.Front.ViewModels.Media
 {
     /// <summary>
     /// Details about a media item's thumbnail.

@@ -68,7 +68,6 @@ namespace Bonsai.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Date = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Facts = table.Column<string>(type: "text", nullable: true),
                     FilePath = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
                     Key = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
                     Title = table.Column<string>(type: "text", nullable: true),
@@ -77,22 +76,6 @@ namespace Bonsai.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Media", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pages",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Facts = table.Column<string>(type: "text", nullable: true),
-                    Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    PageType = table.Column<int>(type: "int4", nullable: false),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -232,6 +215,30 @@ namespace Bonsai.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Pages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Facts = table.Column<string>(type: "text", nullable: true),
+                    Gender = table.Column<bool>(type: "bool", nullable: true),
+                    Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    MainPhotoId = table.Column<Guid>(type: "uuid", nullable: true),
+                    PageType = table.Column<int>(type: "int4", nullable: false),
+                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pages_Media_MainPhotoId",
+                        column: x => x.MainPhotoId,
+                        principalTable: "Media",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccessRules",
                 columns: table => new
                 {
@@ -298,11 +305,10 @@ namespace Bonsai.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Duration = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
+                    IsInferred = table.Column<bool>(type: "bool", nullable: false),
                     ObjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Path = table.Column<string>(type: "text", nullable: false),
                     SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    Type = table.Column<int>(type: "int4", nullable: true)
+                    Type = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -406,6 +412,11 @@ namespace Bonsai.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pages_MainPhotoId",
+                table: "Pages",
+                column: "MainPhotoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Relations_ObjectId",
                 table: "Relations",
                 column: "ObjectId");
@@ -455,10 +466,10 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Media");
+                name: "Pages");
 
             migrationBuilder.DropTable(
-                name: "Pages");
+                name: "Media");
         }
     }
 }

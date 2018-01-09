@@ -1,5 +1,6 @@
 ﻿@using System.Drawing
-@model Bonsai.Areas.Front.ViewModels.MediaVM
+@using Bonsai.Areas.Front.ViewModels.Media
+@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 
 <img src="@Model.MediaPath" class="media-photo" alt="@(Model.Title ?? "Фото")"/>
 @foreach (var tag in Model.Tags)

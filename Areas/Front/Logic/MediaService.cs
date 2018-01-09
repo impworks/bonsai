@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels;
+using Bonsai.Areas.Front.ViewModels.Media;
+using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
@@ -68,6 +72,8 @@ namespace Bonsai.Areas.Front.Logic
             return vm;
         }
 
+        #region Private helpers
+
         /// <summary>
         /// Maps a media tag to a page description.
         /// </summary>
@@ -78,8 +84,8 @@ namespace Bonsai.Areas.Front.Logic
 
             return new PageTitleVM
             {
-                Title = tag.Object.Title,
-                Key = tag.Object.Key
+                Title = tag.Object?.Title ?? tag.ObjectTitle,
+                Key = tag.Object?.Key
             };
         }
 
@@ -118,5 +124,31 @@ namespace Bonsai.Areas.Front.Logic
                 };
             }
         }
+
+        #endregion
+
+        #region Static helpers
+
+        /// <summary>
+        /// Gets the file path for a media frame of specified size.
+        /// </summary>
+        public static string GetSizedMediaPath(string fullPath, MediaSize size)
+        {
+            if (size == MediaSize.Original)
+                return fullPath;
+
+            if (size == MediaSize.Large)
+                return Path.ChangeExtension(fullPath, ".lg.jpg");
+
+            if (size == MediaSize.Medium)
+                return Path.ChangeExtension(fullPath, ".md.jpg");
+
+            if (size == MediaSize.Small)
+                return Path.ChangeExtension(fullPath, ".sm.jpg");
+
+            throw new ArgumentOutOfRangeException(nameof(size), "Unexpected media size!");
+        }
+
+        #endregion
     }
 }

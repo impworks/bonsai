@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Tools;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Front.ViewModels
+namespace Bonsai.Areas.Front.ViewModels.Media
 {
     /// <summary>
     /// Details of a single media file.
