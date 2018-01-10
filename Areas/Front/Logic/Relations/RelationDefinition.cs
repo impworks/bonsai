@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Bonsai.Areas.Front.Logic.Relations
 {
@@ -9,38 +10,49 @@ namespace Bonsai.Areas.Front.Logic.Relations
     /// </summary>
     public class RelationDefinition
     {
-        public RelationDefinition(string rawPath, string singularName, string pluralName = null, bool isRanged = false)
+        public RelationDefinition(string rawPaths, string singularNames, string pluralName = null, RelationDurationDisplayMode? durationMode = null)
         {
-            OriginalRawPath = rawPath;
-            Path = rawPath.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => new RelationPathSegment(x)).ToList();
-            SingularName = singularName;
-            PluralName = pluralName;
-            IsRanged = isRanged;
+            _singularNames = singularNames.Split('|');
+            _pluralName = pluralName;
+
+            RawPaths = rawPaths;
+            DurationDisplayMode = durationMode;
+            Paths = Regex.Split(rawPaths, "(?=[+-])").Select(x => new RelationPath(x)).ToList();
         }
+
+        private readonly string[] _singularNames;
+        private readonly string _pluralName;
 
         /// <summary>
         /// Path for current node.
         /// </summary>
-        public string OriginalRawPath { get; }
+        public string RawPaths { get; }
 
         /// <summary>
         /// Parsed path.
         /// </summary>
-        public IReadOnlyList<RelationPathSegment> Path { get; }
+        public IReadOnlyList<RelationPath> Paths { get; }
 
         /// <summary>
-        /// Corresponding name for a single item.
+        /// The mode for displaying a range.
         /// </summary>
-        public string SingularName { get; }
+        public RelationDurationDisplayMode? DurationDisplayMode { get; }
 
         /// <summary>
-        /// Corresponding name for a group of items.
+        /// Returns the corresponding name for a possibly unspecified gender.
         /// </summary>
-        public string PluralName { get; }
+        public string GetName(int count, bool? isMale)
+        {
+            if (count > 1)
+                return _pluralName;
 
-        /// <summary>
-        /// Flag indicating that the relation has an actuality range.
-        /// </summary>
-        public bool IsRanged { get; }
+            if (isMale == null && _singularNames.Length > 2)
+                return _singularNames[2];
+
+            if (isMale == false && _singularNames.Length > 1)
+                return _singularNames[1];
+
+            return _singularNames[0];
+        }
     }
 }
