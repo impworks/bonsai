@@ -20,9 +20,9 @@ namespace Bonsai.Areas.Front.Logic
     /// <summary>
     /// Media displayer service.
     /// </summary>
-    public class MediaService
+    public class MediaPresenterService
     {
-        public MediaService(AppDbContext db, MarkdownService markdown)
+        public MediaPresenterService(AppDbContext db, MarkdownService markdown)
         {
             _db = db;
             _markdown = markdown;

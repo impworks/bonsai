@@ -43,10 +43,10 @@ namespace Bonsai.Data
                    .HasIndex(x => x.Key).IsUnique(true);
 
             builder.Entity<Relation>()
-                   .HasOne(x => x.Subject).WithMany(x => x.Relations);
+                   .HasOne(x => x.Source).WithMany(x => x.Relations).HasForeignKey(x => x.SourceId);
 
             builder.Entity<Relation>()
-                   .HasOne(x => x.Object).WithMany();
+                   .HasOne(x => x.Destination).WithMany().HasForeignKey(x => x.DestinationId);
 
             builder.Entity<Media>()
                    .HasIndex(x => x.Key).IsUnique(true);

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Areas.Front.ViewModels;
+using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
@@ -21,16 +21,18 @@ namespace Bonsai.Areas.Front.Logic
     /// <summary>
     /// Page displayer service.
     /// </summary>
-    public class PageService
+    public class PagePresenterService
     {
-        public PageService(AppDbContext db, MarkdownService markdown)
+        public PagePresenterService(AppDbContext db, MarkdownService markdown, RelationsPresenterService relations)
         {
             _db = db;
             _markdown = markdown;
+            _relations = relations;
         }
 
         private readonly AppDbContext _db;
         private readonly MarkdownService _markdown;
+        private readonly RelationsPresenterService _relations;
 
         #region Public methods
 
@@ -41,8 +43,6 @@ namespace Bonsai.Areas.Front.Logic
         {
             var page = await _db.Pages
                                 .AsNoTracking()
-                                .Include(p => p.Relations)
-                                .ThenInclude(r => r.Object)
                                 .FirstOrDefaultAsync(x => x.Key == key)
                                 .ConfigureAwait(false);
 
@@ -114,13 +114,14 @@ namespace Bonsai.Areas.Front.Logic
         private async Task<InfoBlockVM> GetInfoBlockAsync(Page page)
         {
             var factGroups = GetPersonalFacts(page).ToList();
+            var relations = await _relations.GetRelationsForPage(page.Id).ConfigureAwait(false);
 
             return new InfoBlockVM
             {
                 Name = GetFactModel<NameFactModel>(factGroups, "Common", "Name"),
                 PersonalFacts = factGroups.Where(x => x.Id != "Common").ToList(),
+                RelationGroups = relations,
                 // todo: photo
-                // todo: relations
             };
         }
 

@@ -17,13 +17,23 @@ namespace Bonsai.Data.Models
         /// The first entity in the relation.
         /// </summary>
         [Required]
-        public Page Subject { get; set; }
+        public Page Source { get; set; }
+
+        /// <summary>
+        /// ID of the source page.
+        /// </summary>
+        public Guid SourceId { get; set; }
 
         /// <summary>
         /// The second entity in the relation.
         /// </summary>
         [Required]
-        public Page Object { get; set; }
+        public Page Destination { get; set; }
+
+        /// <summary>
+        /// ID of the second page.
+        /// </summary>
+        public Guid DestinationId { get; set; }
 
         /// <summary>
         /// Type of the relation.
@@ -31,10 +41,9 @@ namespace Bonsai.Data.Models
         public RelationType Type { get; set; }
 
         /// <summary>
-        /// Flag indicating that the relation is automatically inferred.
-        /// Inferred relations are flushed and re-generated each time an admin updates the relation list.
+        /// Flag indicating that the relation is automatically generated from an inverse relation specified by an administrator.
         /// </summary>
-        public bool IsInferred { get; set; }
+        public bool IsComplementary { get; set; }
 
         /// <summary>
         /// Timespan of the relation.

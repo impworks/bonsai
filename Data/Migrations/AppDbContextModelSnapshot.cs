@@ -238,22 +238,22 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid>("DestinationId");
+
                     b.Property<string>("Duration")
                         .HasMaxLength(30);
 
-                    b.Property<bool>("IsInferred");
+                    b.Property<bool>("IsComplementary");
 
-                    b.Property<Guid>("ObjectId");
-
-                    b.Property<Guid>("SubjectId");
+                    b.Property<Guid>("SourceId");
 
                     b.Property<int>("Type");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectId");
+                    b.HasIndex("DestinationId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SourceId");
 
                     b.ToTable("Relations");
                 });
@@ -415,14 +415,14 @@ namespace Bonsai.Data.Migrations
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>
                 {
-                    b.HasOne("Bonsai.Data.Models.Page", "Object")
+                    b.HasOne("Bonsai.Data.Models.Page", "Destination")
                         .WithMany()
-                        .HasForeignKey("ObjectId")
+                        .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Bonsai.Data.Models.Page", "Subject")
+                    b.HasOne("Bonsai.Data.Models.Page", "Source")
                         .WithMany("Relations")
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

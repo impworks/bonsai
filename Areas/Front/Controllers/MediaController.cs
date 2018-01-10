@@ -11,12 +11,12 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("m")]
     public class MediaController: Controller
     {
-        public MediaController(MediaService media)
+        public MediaController(MediaPresenterService media)
         {
             _media = media;
         }
 
-        private readonly MediaService _media;
+        private readonly MediaPresenterService _media;
 
         /// <summary>
         /// Displays media and details.

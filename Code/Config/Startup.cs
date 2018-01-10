@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Code.Services;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
@@ -20,6 +22,7 @@ using Newtonsoft.Json;
 
 namespace Bonsai.Code.Config
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -37,6 +40,9 @@ namespace Bonsai.Code.Config
         public IConfiguration Configuration { get; }
         public IHostingEnvironment Environment { get; }
 
+        /// <summary>
+        /// Registers all required services in the dependency injection container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
@@ -75,9 +81,11 @@ namespace Bonsai.Code.Config
             services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
 
             services.AddTransient<AppDbContext>();
-            services.AddTransient<AppConfigService>();
-            services.AddTransient<PageService>();
             services.AddTransient<MarkdownService>();
+            services.AddTransient<AppConfigService>();
+            services.AddTransient<RelationsPresenterService>();
+            services.AddTransient<PagePresenterService>();
+            services.AddTransient<MediaPresenterService>();
 
             if (Environment.IsProduction())
             {
@@ -88,6 +96,9 @@ namespace Bonsai.Code.Config
             }
         }
 
+        /// <summary>
+        /// Configures the web framework pipeline.
+        /// </summary>
         public void Configure(IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

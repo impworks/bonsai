@@ -12,12 +12,12 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("p")]
     public class PageController: Controller
     {
-        public PageController(PageService pages)
+        public PageController(PagePresenterService pages)
         {
             _pages = pages;
         }
 
-        private readonly PageService _pages;
+        private readonly PagePresenterService _pages;
 
         /// <summary>
         /// Displays the page description.

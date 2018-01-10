@@ -304,24 +304,24 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DestinationId = table.Column<Guid>(type: "uuid", nullable: false),
                     Duration = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
-                    IsInferred = table.Column<bool>(type: "bool", nullable: false),
-                    ObjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IsComplementary = table.Column<bool>(type: "bool", nullable: false),
+                    SourceId = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Relations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Relations_Pages_ObjectId",
-                        column: x => x.ObjectId,
+                        name: "FK_Relations_Pages_DestinationId",
+                        column: x => x.DestinationId,
                         principalTable: "Pages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Relations_Pages_SubjectId",
-                        column: x => x.SubjectId,
+                        name: "FK_Relations_Pages_SourceId",
+                        column: x => x.SourceId,
                         principalTable: "Pages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -417,14 +417,14 @@ namespace Bonsai.Data.Migrations
                 column: "MainPhotoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Relations_ObjectId",
+                name: "IX_Relations_DestinationId",
                 table: "Relations",
-                column: "ObjectId");
+                column: "DestinationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Relations_SubjectId",
+                name: "IX_Relations_SourceId",
                 table: "Relations",
-                column: "SubjectId");
+                column: "SourceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

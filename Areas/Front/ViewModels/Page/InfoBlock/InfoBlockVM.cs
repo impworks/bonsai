@@ -22,11 +22,11 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
         /// <summary>
         /// Groups of inferred relations.
         /// </summary>
-        public ICollection<RelationGroupVM> RelationGroups { get; set; }
+        public IReadOnlyCollection<RelationGroupVM> RelationGroups { get; set; }
 
         /// <summary>
         /// Facts bound to this particular person (besides name & photo).
         /// </summary>
-        public ICollection<FactGroupVM> PersonalFacts { get; set; }
+        public IReadOnlyCollection<FactGroupVM> PersonalFacts { get; set; }
     }
 }
