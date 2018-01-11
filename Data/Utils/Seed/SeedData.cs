@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Bonsai.Code.Utils;
+﻿using System.Linq;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Data.Utils.Seed
@@ -14,24 +11,22 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Seeds sample data.
         /// </summary>
-        public static void EnsureSeeded(this AppDbContext context)
+        public static void EnsureSeeded(this AppDbContext db)
         {
-            if (!context.Pages.Any())
-            {
-                var pageId = Guid.NewGuid();
-                var pageTitle = "Иван Иванов";
+            if (db.Pages.Any())
+                return;
 
-                context.Pages.Add(new Page
-                {
-                    Id = pageId,
-                    Title = pageTitle,
-                    Key = PageHelper.EncodeTitle(pageTitle),
-                    Description = File.ReadAllText(@".\Data\Utils\Seed\SampleDescription.md"),
-                    Facts = File.ReadAllText(@".\Data\Utils\Seed\SampleFacts.json")
-                });
+            var ctx = new SeedContext(db);
 
-                context.SaveChanges();
-            }
+            var root = ctx.AddPage("Иван Иванов", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleFacts.json");
+            var dad = ctx.AddPage("Петр Иванов", true, "1960.02.03", "2010.03.02");
+            var mom = ctx.AddPage("Екатерина Иванова", false, "1965.03.04");
+
+            ctx.AddRelation(root, RelationType.Parent, dad);
+            ctx.AddRelation(mom, RelationType.Child, root);
+            ctx.AddRelation(mom, RelationType.Spouse, dad, "1987.02.02-2010.03.02");
+
+            db.SaveChanges();
         }
     }
 }

@@ -19,7 +19,9 @@
         Pet,
 
         Location,
+        LocationVisitor,
+
         Event,
-        Visitor
+        EventVisitor
     }
 }

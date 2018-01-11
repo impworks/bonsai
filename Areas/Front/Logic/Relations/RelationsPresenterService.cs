@@ -74,22 +74,19 @@ namespace Bonsai.Areas.Front.Logic.Relations
             new[]
             {
                 new RelationDefinition("Owner", "Владелец", "Владельцы", RelationDurationDisplayMode.RelationRange),
-            },
-
-            new[]
-            {
                 new RelationDefinition("Pet", "Питомец", "Питомцы"),
             },
 
             new []
             {
                 new RelationDefinition("Location", "Место", "Места"),
-                new RelationDefinition("Event", "Событие", "События"),
+                new RelationDefinition("LocationVisitor", "Гость", "Гости"),
             },
 
             new []
             {
-                new RelationDefinition("Visitor", "Гость", "Гости"), 
+                new RelationDefinition("Event", "Событие", "События"),
+                new RelationDefinition("EventVisitor", "Участник", "Участники"),
             }
         };
 
@@ -223,7 +220,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
             }
             
             // Finds pages matching the entire path from current page
-            IEnumerable<RelationTarget> GetMatchingPages(RelationPath path)
+            IEnumerable<RelationTarget> GetMatchingPages(RelationPath path, int pos)
             {
                 var root = ctx.Pages[guids[0]];
                 var currents = new List<RelationTarget> {new RelationTarget(root, null, new SinglyLinkedList<PageExcerpt>(root))};
@@ -234,7 +231,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                         break;
 
                     var segment = path.Segments[depth];
-                    var guidFilter = (depth + 1) < guids.Length && !path.IsExcluded
+                    var guidFilter = (depth + 1) < guids.Length && pos == 0
                         ? guids[depth + 1]
                         : (Guid?) null;
 
@@ -270,7 +267,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                   .Except(negPaths.Select(GetMatchingPages)
                                                   .SelectMany(x => x))
                                   .ToList();
-
+             
             if(!results.Any())
                 return null;
 

@@ -16,7 +16,7 @@ namespace Bonsai.Code.DomainModel.Facts.Models
         /// <summary>
         /// Returns the path for display template.
         /// </summary>
-        public string ViewTemplatePath => GetTemplatePath("~/Areas/Front/Views/Page/Facts/");
+        public string ViewTemplatePath => GetTemplatePath("~/Areas/Front/Views/Page/InfoBlock/");
 
         /// <summary>
         /// Returns the path for editor template.
