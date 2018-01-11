@@ -166,16 +166,18 @@ namespace Bonsai.Areas.Front.Logic.Relations
         private async Task<RelationContext> LoadRelationsContext()
         {
             var pages = await _db.Pages
-                            .Select(x => new PageExcerpt
-                            {
-                                Id = x.Id,
-                                Key = x.Key, 
-                                Title = x.Title,
-                                Type = x.PageType,
-                                Gender = x.Gender
-                            })
-                            .ToDictionaryAsync(x => x.Id, x => x)
-                            .ConfigureAwait(false);
+                                 .Select(x => new PageExcerpt
+                                 {
+                                     Id = x.Id,
+                                     Key = x.Key,
+                                     Title = x.Title,
+                                     Type = x.PageType,
+                                     Gender = x.Gender,
+                                     BirthDate = x.BirthDate,
+                                     DeathDate = x.DeathDate,
+                                 })
+                                 .ToDictionaryAsync(x => x.Id, x => x)
+                                 .ConfigureAwait(false);
 
             var relations = await _db.Relations
                                      .Select(x => new RelationExcerpt
@@ -197,6 +199,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         private RelationVM GetRelationVM(RelationContext ctx, RelationDefinition def, params Guid[] guids)
         {
+            // Performs one step from the current page along the relation path and returns matching pages
             IEnumerable<RelationTarget> Step(RelationTarget elem, RelationPathSegment segment, Guid? guidFilter)
             {
                 return from rel in ctx.Relations[elem.Page.Id]
@@ -207,8 +210,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
                        where !elem.VisitedPages.Contains(page)
                        select new RelationTarget(page, rel, elem.VisitedPages.Append(page));
             }
-
-            IEnumerable<RelationTarget> ProcessPath(RelationPath path)
+            
+            // Finds pages matching the entire path from current page
+            IEnumerable<RelationTarget> GetMatchingPages(RelationPath path)
             {
                 var root = ctx.Pages[guids[0]];
                 var currents = new List<RelationTarget> {new RelationTarget(root, null, new SinglyLinkedList<PageExcerpt>(root))};
@@ -219,7 +223,10 @@ namespace Bonsai.Areas.Front.Logic.Relations
                         break;
 
                     var segment = path.Segments[depth];
-                    var guidFilter = !path.IsExcluded && (depth + 1) < guids.Length ? guids[depth + 1] : (Guid?)null;
+                    var guidFilter = (depth + 1) < guids.Length && !path.IsExcluded
+                        ? guids[depth + 1]
+                        : (Guid?) null;
+
                     currents = currents.Select(x => Step(x, segment, guidFilter))
                                        .SelectMany(x => x)
                                        .ToList();
@@ -228,30 +235,45 @@ namespace Bonsai.Areas.Front.Logic.Relations
                 return currents;
             }
             
-            RelatedPageVM Convert(RelationTarget elem)
+            // Gets the range to display alongside the relation
+            FuzzyRange? GetRange(RelationTarget elem)
             {
-                return new RelatedPageVM
-                {
-                    Title = elem.Page.Title,
-                    Key = elem.Page.Key,
-                    RelationRange = FuzzyRange.Parse(elem.Relation.Duration)
-                };
+                if(def.DurationDisplayMode == RelationDurationDisplayMode.RelationRange)
+                    return FuzzyRange.TryParse(elem.Relation.Duration);
+
+                if(def.DurationDisplayMode == RelationDurationDisplayMode.Birth)
+                    return FuzzyRange.TryParse(elem.Page.BirthDate + "-");
+
+                if(def.DurationDisplayMode == RelationDurationDisplayMode.Life)
+                    return FuzzyRange.TryParse(elem.Page.BirthDate + "-" + elem.Page.DeathDate);
+
+                return null;
             }
 
-            var posPaths = def.Paths.Where(x => !x.IsExcluded).Select(ProcessPath);
-            var negPaths = def.Paths.Where(x => x.IsExcluded).Select(ProcessPath);
+            var posPaths = def.Paths.Where(x => !x.IsExcluded);
+            var negPaths = def.Paths.Where(x => x.IsExcluded);
 
-            var results = posPaths.Aggregate((a, b) => a.Concat(b))
-                                  .Except(negPaths.SelectMany(x => x))
+            // A+B-C means: all pages matching both paths A & B, but not matching path C
+            var results = posPaths.Select(GetMatchingPages)
+                                  .Aggregate((a, b) => a.Intersect(b))
+                                  .Except(negPaths.Select(GetMatchingPages)
+                                                  .SelectMany(x => x))
                                   .ToList();
 
-            return results.Any()
-                ? new RelationVM
-                {
-                    Title = def.GetName(results.Count, results[0].Page.Gender),
-                    Pages = results.Select(Convert).ToList()
-                }
-                : null;
+            if(!results.Any())
+                return null;
+
+            return new RelationVM
+            {
+                Title = def.GetName(results.Count, results[0].Page.Gender),
+                Pages = results.Select(elem => new RelatedPageVM
+                                {
+                                    Title = elem.Page.Title,
+                                    Key = elem.Page.Key,
+                                    RelationRange = GetRange(elem)
+                                })
+                               .ToList()
+            };
         }
 
         #endregion
@@ -268,6 +290,8 @@ namespace Bonsai.Areas.Front.Logic.Relations
             public string Key;
             public PageType Type;
             public bool? Gender;
+            public string BirthDate;
+            public string DeathDate;
 
             #region Equality members (auto-generated)
 
@@ -289,6 +313,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
             public string Duration;
         }
 
+        /// <summary>
+        /// Information about a page matching a relation path segment.
+        /// </summary>
         private class RelationTarget: IEquatable<RelationTarget>
         {
             public readonly PageExcerpt Page;
@@ -311,6 +338,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
             #endregion
         }
 
+        /// <summary>
+        /// Information about all known pages and relations.
+        /// </summary>
         private class RelationContext
         {
             public IReadOnlyDictionary<Guid, PageExcerpt> Pages;

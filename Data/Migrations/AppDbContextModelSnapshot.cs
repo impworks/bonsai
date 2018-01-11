@@ -205,6 +205,12 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("BirthDate")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("DeathDate")
+                        .HasMaxLength(30);
+
                     b.Property<string>("Description");
 
                     b.Property<string>("Facts");

@@ -49,6 +49,18 @@ namespace Bonsai.Data.Models
         public bool? Gender { get; set; }
 
         /// <summary>
+        /// Denormalized birth date for relation calculations (where applicable & known).
+        /// </summary>
+        [StringLength(30)]
+        public string BirthDate { get; set; }
+
+        /// <summary>
+        /// Denormalized death date for relation calculations (where applicable & known).
+        /// </summary>
+        [StringLength(30)]
+        public string DeathDate { get; set; }
+
+        /// <summary>
         /// Relations from this page to others.
         /// </summary>
         public ICollection<Relation> Relations { get; set; }
