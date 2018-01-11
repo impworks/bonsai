@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
-using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
-using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +40,7 @@ namespace Bonsai.Areas.Front.Logic
         public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
         {
             var page = await _db.Pages
+                                .Include(x => x.MainPhoto)
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync(x => x.Key == key)
                                 .ConfigureAwait(false);
@@ -74,21 +73,9 @@ namespace Bonsai.Areas.Front.Logic
             if (page == null)
                 throw new KeyNotFoundException();
 
-            var list = new List<MediaThumbnailVM>();
-            foreach (var tag in page.MediaTags)
-            {
-                list.Add(new MediaThumbnailVM
-                {
-                    Type = tag.Media.Type,
-                    MediaKey = tag.Media.Key,
-                    ThumbnailUrl = Path.ChangeExtension(tag.Media.FilePath, ".thumb.jpg"),
-                    Year = FuzzyDate.Parse(tag.Media.Date).ReadableYear
-                });
-            }
-
             return Configure(page, new PageMediaVM
             {
-                Media = list
+                Media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small))
             });
         }
 
@@ -119,9 +106,11 @@ namespace Bonsai.Areas.Front.Logic
             return new InfoBlockVM
             {
                 Name = GetFactModel<FactModelBase>(factGroups, "Common", "Name"),
+                Photo = MediaPresenterService.GetMediaThumbnail(page.MainPhoto, MediaSize.Medium),
+
                 PersonalFacts = factGroups.Where(x => x.Id != "Common").ToList(),
+
                 RelationGroups = relations,
-                // todo: photo
             };
         }
 

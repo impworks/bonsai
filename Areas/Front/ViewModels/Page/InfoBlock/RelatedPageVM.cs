@@ -1,6 +1,4 @@
-﻿using Bonsai.Code.Tools;
-
-namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
+﻿namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
 {
     /// <summary>
     /// A single related page.
@@ -10,6 +8,6 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
         /// <summary>
         /// Range of the relation (if applicable).
         /// </summary>
-        public FuzzyRange? Duration { get; set; }
+        public string Duration { get; set; }
     }
 }

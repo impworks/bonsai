@@ -13,12 +13,14 @@
             <img class="page-photo" src="@Model.Photo.ThumbnailUrl" alt="@pageVm.Title" />
         </div>
     }
+
     @if (Model.Name != null)
     {
         <div class="fact-group">
             @Html.Partial(Model.Name.ViewTemplatePath, Model.Name)
         </div>
     }
+
     @foreach (var group in Model.RelationGroups)
     {
         <div class="relation-group">
@@ -36,7 +38,7 @@
                                 <a href="@Url.Action("Description", "Page", new { key = relPage.Key })">@relPage.Title</a>
                                 @if (relPage.Duration != null)
                                 {
-                                    <span class="relation-range">@relPage.Duration.Value.ReadableRange</span>
+                                    <span class="relation-range">@relPage.Duration</span>
                                 }
                             </li>
                         }
@@ -45,6 +47,7 @@
             }
         </div>
     }
+
     @foreach (var group in Model.PersonalFacts)
     {
         <div class="fact-group">

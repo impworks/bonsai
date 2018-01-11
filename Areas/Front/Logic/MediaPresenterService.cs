@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Areas.Front.ViewModels;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
@@ -147,6 +146,23 @@ namespace Bonsai.Areas.Front.Logic
                 return Path.ChangeExtension(fullPath, ".sm.jpg");
 
             throw new ArgumentOutOfRangeException(nameof(size), "Unexpected media size!");
+        }
+
+        /// <summary>
+        /// Returns the photo model.
+        /// </summary>
+        public static MediaThumbnailVM GetMediaThumbnail(Media media, MediaSize size)
+        {
+            if (media == null)
+                return null;
+
+            return new MediaThumbnailVM
+            {
+                Type = media.Type,
+                MediaKey = media.Key,
+                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(media.FilePath, MediaSize.Small),
+                Year = FuzzyDate.Parse(media.Date).ReadableYear
+            };
         }
 
         #endregion
