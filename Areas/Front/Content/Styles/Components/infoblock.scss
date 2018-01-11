@@ -1,0 +1,42 @@
+﻿.page-info {
+    float: right;
+    background: #eeeeee;
+    padding: 10px;
+    margin: 10px;
+    border: #999999 1px solid;
+    width: 250px;
+
+    .relation-group, .fact-group  {
+        border: #cccccc 1px solid;
+        padding: 10px;
+
+        &:not(:last-of-type) {
+            margin-bottom: 10px;
+        }
+
+        .relations-list {
+            list-style: none;
+            margin-bottom: 0;
+            padding-left: 0;
+
+            li {
+                display: inline;
+            }
+
+            .relation-range {
+                display: inline-block;
+                opacity: 0.8;
+                font-size: 12px;
+            }
+        }
+
+        .relation-group-title, .fact-group-title {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .relation-title, .fact-title {
+            font-weight: 600;
+        }
+    }
+}
