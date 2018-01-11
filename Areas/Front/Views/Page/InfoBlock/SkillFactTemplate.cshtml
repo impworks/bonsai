@@ -1,10 +1,9 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
-@using Bonsai.Code.Tools
 @using Bonsai.Code.Utils
 @model SkillFactModel
 
 <div class="fact">
-    <div class="fact-title">@(Model.Values.Length == 1 ? "Навык" : "Навыки")</div>
+    <div class="fact-title">@Model.Definition.Title</div>
     <div class="fact-value">
         @foreach (var item in Model.Values)
         {
@@ -14,9 +13,9 @@
                 {
                     <span class="fact-item-extra">@item.Proficiency.Value.GetEnumDescription()</span>
                 }
-                @if (!item.Range.IsEmpty)
+                @if (item.Duration != null)
                 {
-                    <span class="fact-item-range" title="@item.Range.ReadableRange">@item.Range.ShortReadableRange</span>
+                    <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
                 }
             </div>
         }

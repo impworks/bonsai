@@ -5,7 +5,7 @@
     <div class="fact-title">@Model.RelationTitle</div>
     <div class="fact-value">
         <a href="@Url.Action("Description", "Page", new { key = Model.Key })">@Model.Name</a>
-        @if (Model.Range?.IsEmpty == false)
+        @if (Model.Range != null)
         {
             <span class="fact-range" title="@Model.Range.Value.ReadableRange">@Model.Range.Value.ShortReadableRange</span>
         }

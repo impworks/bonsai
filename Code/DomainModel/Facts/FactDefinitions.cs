@@ -44,7 +44,7 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Person",
                     "Личность",
                     new FactDefinition<LanguageFactModel>("Language", "Язык"),
-                    new FactDefinition<SkillFactModel>("Skill", "Умение"),
+                    new FactDefinition<SkillFactModel>("Skill", "Хобби"),
                     new FactDefinition<StringFactModel>("Religion", "Религия")
                 )
             },
@@ -91,8 +91,8 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Place",
                     "Место",
                     new FactDefinition<StringFactModel>("Location", "Расположение"),
-                    new FactDefinition<DateFactModel>("Opening", "Открытие"),
-                    new FactDefinition<DateFactModel>("Shutdown", "Закрытие")
+                    new FactDefinition<AnnotatedDateFactModel>("Opening", "Открытие"),
+                    new FactDefinition<AnnotatedDateFactModel>("Shutdown", "Закрытие")
                 )
             },
 

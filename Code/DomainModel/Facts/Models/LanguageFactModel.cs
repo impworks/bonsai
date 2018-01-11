@@ -16,7 +16,7 @@ namespace Bonsai.Code.DomainModel.Facts.Models
     /// <summary>
     /// Information about a single known language.
     /// </summary>
-    public class LanguageFactItem : RangedFactItem
+    public class LanguageFactItem : DurationFactItem
     {
         /// <summary>
         /// Name of the language.

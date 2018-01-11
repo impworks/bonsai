@@ -10,6 +10,6 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
         /// <summary>
         /// Range of the relation (if applicable).
         /// </summary>
-        public FuzzyRange? RelationRange { get; set; }
+        public FuzzyRange? Duration { get; set; }
     }
 }

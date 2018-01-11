@@ -13,6 +13,9 @@ namespace Bonsai.Code.Tools
 
         public FuzzyRange(FuzzyDate? from, FuzzyDate? to)
         {
+            if (from == null && to == null)
+                throw new ArgumentNullException(nameof(from), "At least one of the dates must be set.");
+
             RangeStart = from;
             RangeEnd = to;
         }
@@ -36,11 +39,6 @@ namespace Bonsai.Code.Tools
         #region Properties
 
         /// <summary>
-        /// Flag indicating that the range contains no meaningful information.
-        /// </summary>
-        public bool IsEmpty => RangeStart == null && RangeEnd == null;
-
-        /// <summary>
         /// Returns the short readable range description.
         /// </summary>
         public string ShortReadableRange
@@ -51,9 +49,6 @@ namespace Bonsai.Code.Tools
                 var yearEnd = RangeEnd?.Year;
                 var decadeStart = RangeStart?.IsDecade ?? false;
                 var decadeEnd = RangeEnd?.IsDecade ?? false;
-
-                if (yearStart == null && yearEnd == null)
-                    return null;
 
                 if (yearStart == yearEnd)
                     return "в " + yearStart.Value + (decadeStart ? "-х" : "");
@@ -164,12 +159,18 @@ namespace Bonsai.Code.Tools
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                return FuzzyRange.Parse(reader.Value.ToString());
+                var value = reader.Value.ToString();
+
+                if(objectType == typeof(FuzzyRange?))
+                    return FuzzyRange.TryParse(value);
+
+                return FuzzyRange.Parse(value);
             }
 
             public override bool CanConvert(Type objectType)
             {
-                return objectType == typeof(FuzzyRange);
+                return objectType == typeof(FuzzyRange)
+                       || objectType == typeof(FuzzyRange?);
             }
         }
 

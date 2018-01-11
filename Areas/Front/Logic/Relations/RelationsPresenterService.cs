@@ -80,6 +80,17 @@ namespace Bonsai.Areas.Front.Logic.Relations
             {
                 new RelationDefinition("Pet", "Питомец", "Питомцы"),
             },
+
+            new []
+            {
+                new RelationDefinition("Location", "Место", "Места"),
+                new RelationDefinition("Event", "Событие", "События"),
+            },
+
+            new []
+            {
+                new RelationDefinition("Visitor", "Гость", "Гости"), 
+            }
         };
 
         #endregion
@@ -270,7 +281,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                 {
                                     Title = elem.Page.Title,
                                     Key = elem.Page.Key,
-                                    RelationRange = GetRange(elem)
+                                    Duration = GetRange(elem)
                                 })
                                .ToList()
             };

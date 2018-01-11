@@ -20,6 +20,6 @@
 
         Location,
         Event,
-        Participant
+        Visitor
     }
 }

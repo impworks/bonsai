@@ -12,9 +12,9 @@
         {
             <div class="fact-item">
                 <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
-                @if (!item.Range.IsEmpty && !isSingle)
+                @if (item.Duration != null && !isSingle)
                 {
-                    <span class="fact-item-range" title="@item.Range.ReadableRange">@item.Range.ShortReadableRange</span>
+                    <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
                 }
             </div>
         }

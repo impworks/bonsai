@@ -118,7 +118,7 @@ namespace Bonsai.Areas.Front.Logic
 
             return new InfoBlockVM
             {
-                Name = GetFactModel<NameFactModel>(factGroups, "Common", "Name"),
+                Name = GetFactModel<FactModelBase>(factGroups, "Common", "Name"),
                 PersonalFacts = factGroups.Where(x => x.Id != "Common").ToList(),
                 RelationGroups = relations,
                 // todo: photo

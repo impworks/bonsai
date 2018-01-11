@@ -14,8 +14,11 @@ namespace Bonsai.Code.Tools
 
         public FuzzyDate(int? year, int? month, int? day, bool isDecade = false)
         {
+            if (day == null && month == null && year == null)
+                throw new ArgumentNullException(nameof(year), "At least one of the date components must be specified.");
+
             if (day != null && month == null)
-                throw new ArgumentException("When day is specified, month must also be specified.");
+                throw new ArgumentNullException(nameof(month), "When day is specified, month must also be specified.");
 
             // ReSharper disable once ObjectCreationAsStatement
             // invokes internal validation
@@ -40,6 +43,32 @@ namespace Bonsai.Code.Tools
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Short date format (day-month-year).
+        /// </summary>
+        public string ShortReadableDate
+        {
+            get
+            {
+                var sb = new StringBuilder();
+
+                sb.Append(Month == null ? "??" : Month.ToString());
+                sb.Append("/");
+
+                sb.Append(Day == null ? "??" : Day.ToString());
+                sb.Append("/");
+
+                if (Year == null)
+                    sb.Append("????");
+                else if (IsDecade)
+                    sb.Append((Year.Value / 10) + "?");
+                else
+                    sb.Append(Year.Value);
+
+                return sb.ToString();
+            }
+        }
 
         /// <summary>
         /// Full readable description of the date.
@@ -303,12 +332,18 @@ namespace Bonsai.Code.Tools
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                return FuzzyDate.Parse(reader.Value.ToString());
+                var value = reader.Value.ToString();
+
+                if(objectType == typeof(FuzzyDate?))
+                    return FuzzyDate.TryParse(value);
+
+                return FuzzyDate.Parse(value);
             }
 
             public override bool CanConvert(Type objectType)
             {
-                return objectType == typeof(FuzzyDate);
+                return objectType == typeof(FuzzyDate)
+                       || objectType == typeof(FuzzyDate?);
             }
         }
 

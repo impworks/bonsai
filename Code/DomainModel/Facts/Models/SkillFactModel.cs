@@ -16,7 +16,7 @@ namespace Bonsai.Code.DomainModel.Facts.Models
     /// <summary>
     /// Information about a single skill.
     /// </summary>
-    public class SkillFactItem : RangedFactItem
+    public class SkillFactItem : DurationFactItem
     {
         /// <summary>
         /// Name of the skill.

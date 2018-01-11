@@ -14,7 +14,7 @@
     /// <summary>
     /// A single recorded name with date ranges.
     /// </summary>
-    public class NameFactItem: RangedFactItem
+    public class NameFactItem: DurationFactItem
     {
         /// <summary>
         /// First name.

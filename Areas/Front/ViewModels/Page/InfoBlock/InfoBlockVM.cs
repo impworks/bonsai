@@ -17,7 +17,7 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
         /// <summary>
         /// The name fact (if specified).
         /// </summary>
-        public NameFactModel Name { get; set; }
+        public FactModelBase Name { get; set; }
 
         /// <summary>
         /// Groups of inferred relations.
