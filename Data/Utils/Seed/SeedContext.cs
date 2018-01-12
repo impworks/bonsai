@@ -51,16 +51,21 @@ namespace Bonsai.Data.Utils.Seed
                 }
             }
 
+            if (factsObj["Bio.Gender"] == null && gender != null)
+            {
+                factsObj["Bio.Gender"] = new JObject{ ["IsMale"] = gender.Value };
+            }
+
             if (birth != null)
             {
-                var birthData = factsObj["Birth"] ?? (factsObj["Birth"] = new JObject());
-                birthData["Date"] = birth;
+                var birthData = factsObj["Birth.Date"] ?? (factsObj["Birth.Date"] = new JObject());
+                birthData["Value"] = birth;
             }
 
             if (death != null)
             {
-                var deathData = factsObj["Death"] ?? (factsObj["Death"] = new JObject());
-                deathData["Date"] = death;
+                var deathData = factsObj["Death.Date"] ?? (factsObj["Death.Date"] = new JObject());
+                deathData["Value"] = death;
             }
 
             var page = new Page
@@ -69,9 +74,6 @@ namespace Bonsai.Data.Utils.Seed
                 Title = title,
                 Key = PageHelper.EncodeTitle(title),
                 PageType = type,
-                Gender = gender,
-                BirthDate = birth,
-                DeathDate = death,
                 Description = (File.Exists(descrFile) ? File.ReadAllText(descrFile) : descrSource) ?? title,
                 Facts = factsObj.ToString(Formatting.None),
             };

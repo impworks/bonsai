@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180111090755_Initial")]
+    [Migration("20180112153016_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -206,17 +206,9 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BirthDate")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("DeathDate")
-                        .HasMaxLength(30);
-
                     b.Property<string>("Description");
 
                     b.Property<string>("Facts");
-
-                    b.Property<bool?>("Gender");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -238,6 +230,30 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("MainPhotoId");
 
                     b.ToTable("Pages");
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.PageExcerpt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BirthDate");
+
+                    b.Property<string>("DeathDate");
+
+                    b.Property<bool?>("Gender");
+
+                    b.Property<string>("Key");
+
+                    b.Property<int>("PageType");
+
+                    b.Property<string>("ShortName");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PageExcerpts");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>

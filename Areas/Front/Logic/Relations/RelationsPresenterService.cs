@@ -117,7 +117,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         private IEnumerable<RelationGroupVM> GetParentsGroups(RelationContext ctx, Guid pageId)
         {
             var page = ctx.Pages[pageId];
-            if (page.Type != PageType.Person && page.Type != PageType.Pet)
+            if (page.PageType != PageType.Person && page.PageType != PageType.Pet)
                 yield break;
 
             var ids = new[] {pageId};
@@ -135,7 +135,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         private IEnumerable<RelationGroupVM> GetSpouseGroups(RelationContext ctx, Guid pageId)
         {
             var page = ctx.Pages[pageId];
-            if (page.Type != PageType.Person && page.Type != PageType.Pet)
+            if (page.PageType != PageType.Person && page.PageType != PageType.Pet)
                 yield break;
 
             var spouses = ctx.Relations[pageId].Where(x => x.Type == RelationType.Spouse);
@@ -173,17 +173,32 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         private async Task<RelationContext> LoadRelationsContext()
         {
-            var pages = await _db.Pages
-                                 .Select(x => new PageExcerpt
-                                 {
-                                     Id = x.Id,
-                                     Key = x.Key,
-                                     Title = x.Title,
-                                     Type = x.PageType,
-                                     Gender = x.Gender,
-                                     BirthDate = x.BirthDate,
-                                     DeathDate = x.DeathDate,
-                                 })
+            var pages = await _db.PageExcerpts
+                                 .FromSql(@"
+                                    SELECT
+                                        t.""Id"",
+                                        t.""Title"",
+                                        t.""Key"",
+                                        t.""PageType"",
+                                        t.""BirthDate"",
+                                        t.""DeathDate"",
+                                        t.""Gender"",
+                                        COALESCE(t.""Nickname"", CONCAT(t.""FirstName"", ' ', t.""LastName"")) AS ""ShortName""
+                                    FROM (
+                                        SELECT
+                                            p.""Id"",
+                                            p.""Title"",
+                                            p.""Key"",
+                                            p.""PageType"",
+                                            p.""Facts""::json#>>'{{Main.Name,Values,-1,FirstName}}' AS ""FirstName"",
+                                            p.""Facts""::json#>>'{{Main.Name,Values,-1,LastName}}' AS ""LastName"",
+                                            p.""Facts""::json#>>'{{Main.Name,Value}}' AS ""Nickname"",
+                                            p.""Facts""::json#>>'{{Birth,Date}}' AS ""BirthDate"",
+                                            p.""Facts""::json#>>'{{Death,Date}}' AS ""DeathDate"",
+                                            CAST(p.""Facts""::json#>>'{{Bio.Gender,IsMale}}' AS BOOLEAN) AS ""Gender""
+                                        FROM ""Pages"" AS p
+                                    ) AS t
+                                  ")
                                  .ToDictionaryAsync(x => x.Id, x => x)
                                  .ConfigureAwait(false);
 
@@ -276,7 +291,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                 Title = def.GetName(results.Count, results[0].Page.Gender),
                 Pages = results.Select(elem => new RelatedPageVM
                                 {
-                                    Title = elem.Page.Title,
+                                    Title = elem.Page.ShortName ?? elem.Page.Title,
                                     Key = elem.Page.Key,
                                     Duration = GetRange(elem)
                                 })
@@ -287,39 +302,6 @@ namespace Bonsai.Areas.Front.Logic.Relations
         #endregion
 
         #region Data classes
-
-        /// <summary>
-        /// Basic information about a page.
-        /// </summary>
-        private class PageExcerpt: IEquatable<PageExcerpt>
-        {
-            public Guid Id;
-            public string Title;
-            public string Key;
-            public PageType Type;
-            public bool? Gender;
-            public string BirthDate;
-            public string DeathDate;
-
-            #region Equality members (auto-generated)
-
-            public bool Equals(PageExcerpt other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Id.Equals(other.Id));
-            public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((PageExcerpt) obj));
-            public override int GetHashCode() => Id.GetHashCode();
-
-            #endregion
-        }
-
-        /// <summary>
-        /// Basic information about a relation between two pages.
-        /// </summary>
-        private class RelationExcerpt
-        {
-            public Guid SourceId;
-            public Guid DestinationId;
-            public RelationType Type;
-            public string Duration;
-        }
 
         /// <summary>
         /// Information about a page matching a relation path segment.

@@ -219,11 +219,8 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    BirthDate = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
-                    DeathDate = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Facts = table.Column<string>(type: "text", nullable: true),
-                    Gender = table.Column<bool>(type: "bool", nullable: true),
                     Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     MainPhotoId = table.Column<Guid>(type: "uuid", nullable: true),
                     PageType = table.Column<int>(type: "int4", nullable: false),
