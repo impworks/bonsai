@@ -15,31 +15,34 @@
     }
 
     @Html.Partial("InfoBlock/FactGroupList", Model.Facts.Where(x => x.Definition.IsMain))
-
-    @foreach (var group in Model.RelationGroups)
+    
+    @if (Model.RelationGroups.Any())
     {
-        <div class="relation-group">
-            <div class="relation-group-title">
-                @group.Title
-            </div>
-            @foreach (var rel in group.Relations)
+        <div class="fact-group">
+            <div class="fact-group-title">Родственники</div>
+            @foreach (var group in Model.RelationGroups)
             {
-                <div class="relation">
-                <div class="relation-title">@rel.Title</div>
-                    <div class="relation-value">
-                        <ul class="relations-list">
-                            @foreach (var relPage in rel.Pages)
-                            {
-                                <li>
-                                    <a href="@Url.Action("Description", "Page", new { key = relPage.Key })">@relPage.Title</a>
-                                    @if (relPage.Duration != null)
+                <div class="relation-group">
+                    @foreach (var rel in group.Relations)
+                    {
+                        <div class="relation">
+                            <div class="relation-title">@rel.Title</div>
+                            <div class="relation-value">
+                                <ul class="relations-list">
+                                    @foreach (var relPage in rel.Pages)
                                     {
-                                        <span class="relation-range">@relPage.Duration</span>
+                                        <li>
+                                            <a href="@Url.Action("Description", "Page", new {key = relPage.Key})">@relPage.Title</a>
+                                            @if (relPage.Duration != null)
+                                            {
+                                                <span class="relation-range">@relPage.Duration</span>
+                                            }
+                                        </li>
                                     }
-                                </li>
-                            }
-                        </ul>
-                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                    }
                 </div>
             }
         </div>

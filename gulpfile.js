@@ -1,4 +1,5 @@
-﻿var gulp = require('gulp'),
+﻿/// <binding ProjectOpened='front.watch' />
+var gulp = require('gulp'),
     gutil = require('gulp-util'),
     sass = require('gulp-sass'),
     concatcss = require('gulp-concat-css'),
@@ -26,12 +27,18 @@ var config = {
         ]
     },
     front: {
-        styles: [
-            './Areas/Front/Content/Styles/style.scss'
-        ],
-        scripts: [
-            './Areas/Front/Content/Scripts/front.js'
-        ]
+        styles: {
+            root: './Areas/Front/Content/Styles/styles.scss',
+            all: [
+                './Areas/Front/Content/Styles/**/*.scss'
+            ]
+        },
+        scripts: {
+            root: './Areas/Front/Content/Scripts/front.js',
+            all: [
+                './Areas/Front/Content/Scripts/**/*.js'
+            ]
+        }
     },
     assets: {
         root: './wwwroot/assets/'
@@ -43,14 +50,14 @@ var config = {
 // ================
 
 gulp.task('front.styles', function() {
-    gulp.src(config.front.styles)
+    gulp.src(config.front.styles.root)
         .pipe(sass())
         .pipe(concatcss('front.css'))
         .pipe(gulp.dest(config.assets.root));
 });
 
 gulp.task('front.scripts', function () {
-    gulp.src(config.front.scripts)
+    gulp.src(config.front.scripts.root)
         .pipe(concatjs('front.js'))
         .pipe(gulp.dest(config.assets.root));
 });
@@ -59,12 +66,12 @@ gulp.task('front', ['front.styles', 'front.scripts']);
 
 gulp.task('front.watch', function() {
     watch(
-        config.front.styles,
+        config.front.styles.all,
         function () { gulp.start('front.styles'); }
     );
 
     watch(
-        config.front.scripts,
+        config.front.scripts.all,
         function () { gulp.start('front.scripts'); }
     );
 });

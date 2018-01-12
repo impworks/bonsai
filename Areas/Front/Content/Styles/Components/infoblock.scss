@@ -1,12 +1,12 @@
 ﻿.page-info {
     float: right;
-    background: #eeeeee;
+    background: #fcfcfc;
     padding: 10px;
     margin: 10px;
     border: #999999 1px solid;
     width: 300px;
 
-    .relation-group, .fact-group {
+    .fact-group {
         border: #cccccc 1px solid;
         padding: 10px;
 
@@ -14,23 +14,35 @@
             margin-bottom: 10px;
         }
 
-        .relations-list {
-            list-style: none;
-            margin-bottom: 0;
-            padding-left: 0;
+        .relation-group {
+            border-bottom: #cccccc 1px solid;
+            margin: 0 -10px;
+            padding: 10px;
 
-            li {
-                display: block;
+            &:last-of-type {
+                border-bottom: 0;
+                margin-bottom: -10px;
             }
 
-            .relation-range {
-                display: inline-block;
-                opacity: 0.8;
-                font-size: 12px;
+
+            .relations-list {
+                list-style: none;
+                margin-bottom: 0;
+                padding-left: 0;
+
+                li {
+                    display: block;
+                }
+
+                .relation-range {
+                    display: inline-block;
+                    opacity: 0.8;
+                    font-size: 12px;
+                }
             }
         }
 
-        .relation-group-title, .fact-group-title {
+        .fact-group-title {
             text-align: center;
             font-weight: bold;
             margin-top: -5px;
