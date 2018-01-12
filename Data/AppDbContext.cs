@@ -21,7 +21,6 @@ namespace Bonsai.Data
         public virtual DbSet<Media> Media => Set<Media>();
         public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
         public virtual DbSet<Page> Pages => Set<Page>();
-        public virtual DbSet<PageExcerpt> PageExcerpts => Set<PageExcerpt>();
         public virtual DbSet<Relation> Relations => Set<Relation>();
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -231,28 +231,6 @@ namespace Bonsai.Data.Migrations
                     b.ToTable("Pages");
                 });
 
-            modelBuilder.Entity("Bonsai.Data.Models.PageExcerpt", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("BirthDate");
-
-                    b.Property<string>("DeathDate");
-
-                    b.Property<bool?>("Gender");
-
-                    b.Property<string>("Key");
-
-                    b.Property<int>("PageType");
-
-                    b.Property<string>("ShortName");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-                });
-
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>
                 {
                     b.Property<Guid>("Id")

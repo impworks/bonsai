@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql;
 
 namespace Bonsai.Data.Utils
 {
@@ -33,6 +35,14 @@ namespace Bonsai.Data.Utils
                                .Select(m => m.Key);
 
             return !total.Except(applied).Any();
+        }
+
+        /// <summary>
+        /// Creates a new connection from existing context.
+        /// </summary>
+        public static IDbConnection GetConnection(this AppDbContext context)
+        {
+            return new NpgsqlConnection(context.Database.GetDbConnection().ConnectionString);
         }
     }
 }

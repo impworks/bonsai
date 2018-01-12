@@ -6,6 +6,8 @@ using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Data.Utils;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Front.Logic.Relations
@@ -13,7 +15,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
     /// <summary>
     /// The service for calculating relations between pages.
     /// </summary>
-    public class RelationsPresenterService
+    public partial class RelationsPresenterService
     {
         public RelationsPresenterService(AppDbContext db)
         {
@@ -173,8 +175,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         private async Task<RelationContext> LoadRelationsContext()
         {
-            var pages = await _db.PageExcerpts
-                                 .FromSql(@"
+            using (var conn = _db.GetConnection())
+            {
+                var pages = await conn.QueryAsync<PageExcerpt>(@"
                                     SELECT
                                         t.""Id"",
                                         t.""Title"",
@@ -190,31 +193,34 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                             p.""Title"",
                                             p.""Key"",
                                             p.""PageType"",
-                                            p.""Facts""::json#>>'{{Main.Name,Values,-1,FirstName}}' AS ""FirstName"",
-                                            p.""Facts""::json#>>'{{Main.Name,Values,-1,LastName}}' AS ""LastName"",
-                                            p.""Facts""::json#>>'{{Main.Name,Value}}' AS ""Nickname"",
-                                            p.""Facts""::json#>>'{{Birth,Date}}' AS ""BirthDate"",
-                                            p.""Facts""::json#>>'{{Death,Date}}' AS ""DeathDate"",
-                                            CAST(p.""Facts""::json#>>'{{Bio.Gender,IsMale}}' AS BOOLEAN) AS ""Gender""
+                                            p.""Facts""::json#>>'{Main.Name,Values,-1,FirstName}' AS ""FirstName"",
+                                            p.""Facts""::json#>>'{Main.Name,Values,-1,LastName}' AS ""LastName"",
+                                            p.""Facts""::json#>>'{Main.Name,Value}' AS ""Nickname"",
+                                            p.""Facts""::json#>>'{Birth,Date}' AS ""BirthDate"",
+                                            p.""Facts""::json#>>'{Death,Date}' AS ""DeathDate"",
+                                            CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender""
                                         FROM ""Pages"" AS p
                                     ) AS t
-                                  ")
-                                 .ToDictionaryAsync(x => x.Id, x => x)
-                                 .ConfigureAwait(false);
+                                  ").ConfigureAwait(false);
 
-            var relations = await _db.Relations
-                                     .Select(x => new RelationExcerpt
-                                     {
-                                         SourceId = x.SourceId,
-                                         DestinationId = x.DestinationId,
-                                         Duration = x.Duration,
-                                         Type = x.Type
-                                     })
-                                     .GroupBy(x => x.SourceId)
-                                     .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList())
-                                     .ConfigureAwait(false);
+                var relations = await _db.Relations
+                                         .Select(x => new RelationExcerpt
+                                         {
+                                             SourceId = x.SourceId,
+                                             DestinationId = x.DestinationId,
+                                             Duration = x.Duration,
+                                             Type = x.Type
+                                         })
+                                         .GroupBy(x => x.SourceId)
+                                         .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>)x.ToList())
+                                         .ConfigureAwait(false);
 
-            return new RelationContext {Pages = pages, Relations = relations};
+                return new RelationContext
+                {
+                    Pages = pages.ToDictionary(x => x.Id, x => x),
+                    Relations = relations
+                };
+            }
         }
 
         /// <summary>
@@ -297,44 +303,6 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                 })
                                .ToList()
             };
-        }
-
-        #endregion
-
-        #region Data classes
-
-        /// <summary>
-        /// Information about a page matching a relation path segment.
-        /// </summary>
-        private class RelationTarget: IEquatable<RelationTarget>
-        {
-            public readonly PageExcerpt Page;
-            public readonly RelationExcerpt Relation;
-            public readonly SinglyLinkedList<PageExcerpt> VisitedPages;
-
-            public RelationTarget(PageExcerpt page, RelationExcerpt relation, SinglyLinkedList<PageExcerpt> visitedPages)
-            {
-                Page = page;
-                Relation = relation;
-                VisitedPages = visitedPages;
-            }
-
-            #region Equality members (auto-generated)
-
-            public bool Equals(RelationTarget other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Page.Equals(other.Page));
-            public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((RelationTarget) obj));
-            public override int GetHashCode() => Page.GetHashCode();
-
-            #endregion
-        }
-
-        /// <summary>
-        /// Information about all known pages and relations.
-        /// </summary>
-        private class RelationContext
-        {
-            public IReadOnlyDictionary<Guid, PageExcerpt> Pages;
-            public IReadOnlyDictionary<Guid, IReadOnlyList<RelationExcerpt>> Relations;
         }
 
         #endregion
