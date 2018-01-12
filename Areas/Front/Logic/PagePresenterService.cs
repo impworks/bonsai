@@ -105,11 +105,8 @@ namespace Bonsai.Areas.Front.Logic
 
             return new InfoBlockVM
             {
-                Name = GetFactModel<FactModelBase>(factGroups, "Common", "Name"),
                 Photo = MediaPresenterService.GetMediaThumbnail(page.MainPhoto, MediaSize.Medium),
-
-                PersonalFacts = factGroups.Where(x => x.Id != "Common").ToList(),
-
+                Facts = factGroups,
                 RelationGroups = relations,
             };
         }
@@ -145,22 +142,11 @@ namespace Bonsai.Areas.Front.Logic
                 {
                     yield return new FactGroupVM
                     {
-                        Title = group.Title,
+                        Definition = group,
                         Facts = factsVms
                     };
                 }
             }
-        }
-
-        /// <summary>
-        /// Finds a fact in the list of groups.
-        /// </summary>
-        private static T GetFactModel<T>(IEnumerable<FactGroupVM> groups, string groupId, string factId)
-            where T : FactModelBase
-        {
-            return groups.FirstOrDefault(x => x.Id == groupId)
-                         ?.Facts.FirstOrDefault(x => x.Definition.Id == factId)
-                         as T;
         }
 
         #endregion

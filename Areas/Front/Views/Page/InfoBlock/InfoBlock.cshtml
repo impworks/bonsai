@@ -14,12 +14,7 @@
         </div>
     }
 
-    @if (Model.Name != null)
-    {
-        <div class="fact-group">
-            @Html.Partial(Model.Name.ViewTemplatePath, Model.Name)
-        </div>
-    }
+    @Html.Partial("InfoBlock/FactGroupList", Model.Facts.Where(x => x.Definition.IsMain))
 
     @foreach (var group in Model.RelationGroups)
     {
@@ -48,14 +43,5 @@
         </div>
     }
 
-    @foreach (var group in Model.PersonalFacts)
-    {
-        <div class="fact-group">
-            <div class="fact-group-title">@group.Title</div>
-            @foreach (var fact in group.Facts)
-            {
-                @Html.Partial(fact.ViewTemplatePath, fact)
-            }
-        </div>
-    }
+    @Html.Partial("InfoBlock/FactGroupList", Model.Facts.Where(x => x.Definition.IsMain == false))
 </div>

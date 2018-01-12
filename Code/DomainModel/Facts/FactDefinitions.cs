@@ -14,27 +14,31 @@ namespace Bonsai.Code.DomainModel.Facts
             [PageType.Person] = new[]
             {
                 new FactDefinitionGroup(
-                    "Common",
-                    "Общее",
+                    "Main",
+                    "Основное",
+                    true,
                     new FactDefinition<NameFactModel>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
                     "Birth",
                     "Рождение",
-                    new FactDefinition<DateFactModel>("Date", "Дата рождения"),
-                    new FactDefinition<StringFactModel>("Place", "Место рождения")
+                    true,
+                    new FactDefinition<DateFactModel>("Date", "Дата рождения", "Дата"),
+                    new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
                 ),
                 new FactDefinitionGroup(
                     "Death",
                     "Смерть",
-                    new FactDefinition<DateFactModel>("Date", "Дата смерти"),
-                    new FactDefinition<StringFactModel>("Place", "Место смерти"),
-                    new FactDefinition<StringFactModel>("Cause", "Причина смерти"),
+                    true,
+                    new FactDefinition<DateFactModel>("Date", "Дата смерти", "Дата"),
+                    new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
+                    new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
                     new FactDefinition<StringFactModel>("Burial", "Место захоронения")
                 ),
                 new FactDefinitionGroup(
                     "Bio",
                     "Биология",
+                    false,
                     new FactDefinition<GenderFactModel>("Gender", "Пол"),
                     new FactDefinition<BloodTypeFactModel>("Blood", "Группа крови"),
                     new FactDefinition<StringFactModel>("Eyes", "Цвет глаз"),
@@ -43,6 +47,7 @@ namespace Bonsai.Code.DomainModel.Facts
                 new FactDefinitionGroup(
                     "Person",
                     "Личность",
+                    false,
                     new FactDefinition<LanguageFactModel>("Language", "Язык"),
                     new FactDefinition<SkillFactModel>("Skill", "Хобби"),
                     new FactDefinition<StringFactModel>("Religion", "Религия")
@@ -52,27 +57,31 @@ namespace Bonsai.Code.DomainModel.Facts
             [PageType.Pet] = new[]
             {
                 new FactDefinitionGroup(
-                    "Common",
-                    "Общее",
+                    "Main",
+                    "Основное",
+                    true,
                     new FactDefinition<StringFactModel>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
                     "Birth",
                     "Рождение",
-                    new FactDefinition<DateFactModel>("Date", "Дата рождения"),
-                    new FactDefinition<StringFactModel>("Place", "Место рождения")
+                    true,
+                    new FactDefinition<DateFactModel>("Date", "Дата рождения", "Дата"),
+                    new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
                 ),
                 new FactDefinitionGroup(
                     "Death",
                     "Смерть",
-                    new FactDefinition<DateFactModel>("Date", "Дата смерти"),
-                    new FactDefinition<StringFactModel>("Place", "Место смерти"),
-                    new FactDefinition<StringFactModel>("Cause", "Причина смерти"),
+                    true,
+                    new FactDefinition<DateFactModel>("Date", "Дата смерти", "Дата"),
+                    new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
+                    new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
                     new FactDefinition<StringFactModel>("Burial", "Место захоронения")
                 ),
                 new FactDefinitionGroup(
                     "Bio",
                     "Биология",
+                    true,
                     new FactDefinition<GenderFactModel>("Gender", "Пол"),
                     new FactDefinition<StringFactModel>("Species", "Вид"),
                     new FactDefinition<StringFactModel>("Breed", "Порода"),
@@ -83,13 +92,10 @@ namespace Bonsai.Code.DomainModel.Facts
             [PageType.Location] = new[]
             {
                 new FactDefinitionGroup(
-                    "Common",
-                    "Общее",
-                    new FactDefinition<StringFactModel>("Name", "Название")
-                ),
-                new FactDefinitionGroup(
-                    "Place",
-                    "Место",
+                    "Main",
+                    "Основное",
+                    true,
+                    new FactDefinition<StringFactModel>("Name", "Название"),
                     new FactDefinition<StringFactModel>("Location", "Расположение"),
                     new FactDefinition<AnnotatedDateFactModel>("Opening", "Открытие"),
                     new FactDefinition<AnnotatedDateFactModel>("Shutdown", "Закрытие")
@@ -99,13 +105,10 @@ namespace Bonsai.Code.DomainModel.Facts
             [PageType.Event] = new[]
             {
                 new FactDefinitionGroup(
-                    "Common",
-                    "Общее",
-                    new FactDefinition<StringFactModel>("Name", "Название")
-                ),
-                new FactDefinitionGroup(
-                    "Event",
-                    "Событие",
+                    "Main",
+                    "Основное",
+                    true,
+                    new FactDefinition<StringFactModel>("Name", "Название"),
                     new FactDefinition<DateFactModel>("Date", "Дата")
                 )
             },

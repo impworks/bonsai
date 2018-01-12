@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Bonsai.Areas.Front.ViewModels.Media;
-using Bonsai.Code.DomainModel.Facts.Models;
 
 namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
 {
@@ -15,18 +14,13 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
         public MediaThumbnailVM Photo { get; set; }
 
         /// <summary>
-        /// The name fact (if specified).
+        /// Facts about the person.
         /// </summary>
-        public FactModelBase Name { get; set; }
+        public IReadOnlyCollection<FactGroupVM> Facts { get; set; }
 
         /// <summary>
         /// Groups of inferred relations.
         /// </summary>
         public IReadOnlyCollection<RelationGroupVM> RelationGroups { get; set; }
-
-        /// <summary>
-        /// Facts bound to this particular person (besides name & photo).
-        /// </summary>
-        public IReadOnlyCollection<FactGroupVM> PersonalFacts { get; set; }
     }
 }

@@ -63,7 +63,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
             new []
             {
                 new RelationDefinition("Child-Spouse Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
-                new RelationDefinition("Child Child", "Внук|Внучка|Внук", "Дети", RelationDurationDisplayMode.Birth),
+                new RelationDefinition("Child Child", "Внук|Внучка|Внук", "Внуки", RelationDurationDisplayMode.Birth),
             },
             new[]
             {

@@ -9,10 +9,11 @@ namespace Bonsai.Code.DomainModel.Facts
     public class FactDefinition<T> : IFactDefinition
         where T: FactModelBase
     {
-        public FactDefinition(string id, string title)
+        public FactDefinition(string id, string title, string shortTitle = null)
         {
             Id = id;
             Title = title;
+            ShortTitle = shortTitle ?? title;
             Kind = typeof(T);
         }
 
@@ -25,6 +26,11 @@ namespace Bonsai.Code.DomainModel.Facts
         /// Readable title.
         /// </summary>
         public string Title { get; }
+
+        /// <summary>
+        /// Short title for displaying in the info block.
+        /// </summary>
+        public string ShortTitle { get; }
 
         /// <summary>
         /// Type of the fact's kind.
@@ -46,6 +52,11 @@ namespace Bonsai.Code.DomainModel.Facts
         /// Readable title.
         /// </summary>
         string Title { get; }
+
+        /// <summary>
+        /// Short title for displaying in the info block.
+        /// </summary>
+        string ShortTitle { get; }
 
         /// <summary>
         /// Type of the fact's kind.

@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Bonsai.Areas.Front.ViewModels.Page.InfoBlock.FactGroupVM>
+
+@foreach (var group in Model)
+{
+    <div class="fact-group">
+        <div class="fact-group-title">@group.Definition.Title</div>
+        @foreach (var fact in group.Facts)
+        {
+            @Html.Partial(fact.ViewTemplatePath, fact)
+        }
+    </div> 
+}

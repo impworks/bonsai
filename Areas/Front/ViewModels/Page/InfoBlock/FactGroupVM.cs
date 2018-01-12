@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 
 namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
@@ -9,14 +10,9 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
     public class FactGroupVM
     {
         /// <summary>
-        /// ID of the fact group.
+        /// Definition of the group.
         /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Readable fact group title.
-        /// </summary>
-        public string Title { get; set; }
+        public FactDefinitionGroup Definition { get; set; }
 
         /// <summary>
         /// The set of fact data.
