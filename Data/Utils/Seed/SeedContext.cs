@@ -3,6 +3,8 @@ using System.IO;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils;
 using Bonsai.Data.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Data.Utils.Seed
 {
@@ -26,6 +28,41 @@ namespace Bonsai.Data.Utils.Seed
             var descrFile = @".\Data\Utils\Seed\" + descrSource;
             var factsFile = @".\Data\Utils\Seed\" + factsSource;
 
+            var factsObj = JObject.Parse(File.Exists(factsFile) ? File.ReadAllText(factsFile) : factsSource ?? "{}");
+
+            if (factsObj["Main.Name"] == null)
+            {
+                if (type == PageType.Person)
+                {
+                    var titleParts = title.Split(' ');
+                    var nameData = new JObject {["Range"] = $"{birth}-{death}"};
+                    if (titleParts.Length > 0) nameData["LastName"] = titleParts[0];
+                    if (titleParts.Length > 1) nameData["FirstName"] = titleParts[1];
+                    if (titleParts.Length > 2) nameData["MiddleName"] = titleParts[2];
+
+                    factsObj["Main.Name"] = new JObject
+                    {
+                        ["Values"] = new JArray {nameData}
+                    };
+                }
+                else
+                {
+                    factsObj["Main.Name"] = new JObject { ["Value"] = title };
+                }
+            }
+
+            if (birth != null)
+            {
+                var birthData = factsObj["Birth"] ?? (factsObj["Birth"] = new JObject());
+                birthData["Date"] = birth;
+            }
+
+            if (death != null)
+            {
+                var deathData = factsObj["Death"] ?? (factsObj["Death"] = new JObject());
+                deathData["Date"] = death;
+            }
+
             var page = new Page
             {
                 Id = Guid.NewGuid(),
@@ -36,7 +73,7 @@ namespace Bonsai.Data.Utils.Seed
                 BirthDate = birth,
                 DeathDate = death,
                 Description = (File.Exists(descrFile) ? File.ReadAllText(descrFile) : descrSource) ?? title,
-                Facts = (File.Exists(factsFile) ? File.ReadAllText(factsFile) : factsSource) ?? "{}",
+                Facts = factsObj.ToString(Formatting.None),
             };
             _db.Pages.Add(page);
             return page;
@@ -74,6 +111,14 @@ namespace Bonsai.Data.Utils.Seed
             }
 
             return rel;
+        }
+
+        /// <summary>
+        /// Commits the entities to the database.
+        /// </summary>
+        public void Save()
+        {
+            _db.SaveChanges();
         }
     }
 }

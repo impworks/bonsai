@@ -1,5 +1,5 @@
 ﻿{
-  "Common.Name": {
+  "Main.Name": {
     "Values": [
       {
         "FirstName": "Иван",
@@ -8,9 +8,6 @@
         "Range": "2000.04.01-"
       }
     ]
-  },
-  "Birth.Date": {
-    "Value": "2000.04.01"
   },
   "Birth.Place": {
     "Value": "Москва"
