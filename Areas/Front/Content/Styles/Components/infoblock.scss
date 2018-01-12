@@ -6,7 +6,7 @@
     border: #999999 1px solid;
     width: 300px;
 
-    .relation-group, .fact-group  {
+    .relation-group, .fact-group {
         border: #cccccc 1px solid;
         padding: 10px;
 
@@ -20,7 +20,7 @@
             padding-left: 0;
 
             li {
-                display: inline;
+                display: block;
             }
 
             .relation-range {
@@ -33,10 +33,30 @@
         .relation-group-title, .fact-group-title {
             text-align: center;
             font-weight: bold;
+            margin-top: -5px;
+            margin-bottom: 5px;
         }
 
         .relation-title, .fact-title {
             font-weight: 600;
+        }
+
+        .fact, .relation {
+            .fact-title, .relation-title {
+                float: left;
+                display: inline-block;
+                width: 90px;
+            }
+
+            .fact-value, .relation-value {
+                float: left;
+            }
+
+            &:after {
+                display: block;
+                content: ' ';
+                clear: both;
+            }
         }
     }
 }
