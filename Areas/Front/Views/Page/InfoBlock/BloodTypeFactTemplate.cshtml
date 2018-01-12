@@ -1,14 +1,13 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
 @model BloodTypeFactModel
 
-
 <div class="fact">
     <div class="fact-title">@Model.Definition.ShortTitle</div>
-    <div class="fact-value">
-        @Model.Type
+    <div class="fact-value" style="white-space: normal">
+        <span>@Model.Type</span>
         @if (Model.RhesusFactor is bool rf)
         {
-            <text>@(rf ? "+" : "-")</text>
+            <span>@(rf ? "+" : "-")</span>
         }
     </div>
 </div>

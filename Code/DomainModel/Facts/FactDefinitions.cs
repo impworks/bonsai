@@ -40,7 +40,7 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Биология",
                     false,
                     new FactDefinition<GenderFactModel>("Gender", "Пол"),
-                    new FactDefinition<BloodTypeFactModel>("Blood", "Группа крови"),
+                    new FactDefinition<BloodTypeFactModel>("Blood", "Группа крови", "Гр. крови"),
                     new FactDefinition<StringFactModel>("Eyes", "Цвет глаз"),
                     new FactDefinition<StringFactModel>("Hair", "Цвет волос")
                 ),

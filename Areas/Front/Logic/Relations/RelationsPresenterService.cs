@@ -58,38 +58,34 @@ namespace Bonsai.Areas.Front.Logic.Relations
         };
 
         /// <summary>
-        /// Other relations for 
+        /// Other relations for family members.
         /// </summary>
-        public static RelationDefinition[][] OtherRelationGroups =
+        public static RelationDefinition[] OtherRelativeRelations =
         {
-            new []
-            {
-                new RelationDefinition("Child-Spouse Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
-                new RelationDefinition("Child Child", "Внук|Внучка|Внук", "Внуки", RelationDurationDisplayMode.Birth),
-            },
-            new[]
-            {
-                new RelationDefinition("Friend", "Друг", "Друзья"),
-                new RelationDefinition("Colleague", "Коллега", "Коллеги"),
-            },
+            new RelationDefinition("Child-Spouse Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
+            new RelationDefinition("Child Child", "Внук|Внучка|Внук", "Внуки", RelationDurationDisplayMode.Birth),
+            new RelationDefinition("Pet", "Питомец", "Питомцы"),
+        };
 
-            new[]
-            {
-                new RelationDefinition("Owner", "Владелец", "Владельцы", RelationDurationDisplayMode.RelationRange),
-                new RelationDefinition("Pet", "Питомец", "Питомцы"),
-            },
+        /// <summary>
+        /// Relations for other people.
+        /// </summary>
+        private static RelationDefinition[] NonRelativeRelations =
+        {
+            new RelationDefinition("Friend", "Друг", "Друзья"),
+            new RelationDefinition("Colleague", "Коллега", "Коллеги"),
+            new RelationDefinition("Owner", "Владелец", "Владельцы", RelationDurationDisplayMode.RelationRange),
+            new RelationDefinition("EventVisitor", "Участник", "Участники"),
+            new RelationDefinition("LocationVisitor", "Гость", "Гости"),
+        };
 
-            new []
-            {
-                new RelationDefinition("Location", "Место", "Места"),
-                new RelationDefinition("LocationVisitor", "Гость", "Гости"),
-            },
-
-            new []
-            {
-                new RelationDefinition("Event", "Событие", "События"),
-                new RelationDefinition("EventVisitor", "Участник", "Участники"),
-            }
+        /// <summary>
+        /// Relations for non-human pages.
+        /// </summary>
+        private static RelationDefinition[] NonHumanRelations =
+        {
+            new RelationDefinition("Location", "Место", "Места"),
+            new RelationDefinition("Event", "Событие", "События"),
         };
 
         #endregion
@@ -99,14 +95,34 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// <summary>
         /// Returns the list of all inferred relation groups for the page.
         /// </summary>
-        public async Task<IReadOnlyList<RelationGroupVM>> GetRelationsForPage(Guid pageId)
+        public async Task<IReadOnlyList<RelationCategoryVM>> GetRelationsForPage(Guid pageId)
         {
             var ctx = await LoadRelationsContext().ConfigureAwait(false);
 
-            return GetParentsGroups(ctx, pageId)
-                   .Concat(GetSpouseGroups(ctx, pageId))
-                   .Concat(GetOtherGroups(ctx, pageId))
-                   .ToList();
+            var cats = new []
+            {
+                new RelationCategoryVM
+                {
+                    Title = "Родственники",
+                    IsMain = true,
+                    Groups = GetGroups(ctx, pageId, ParentRelations)
+                        .Concat(GetSpouseGroups(ctx, pageId))
+                        .Concat(GetGroups(ctx, pageId, OtherRelativeRelations))
+                        .ToList()
+                },
+                new RelationCategoryVM
+                {
+                    Title = "Люди",
+                    Groups = GetGroups(ctx, pageId, NonRelativeRelations).ToList(),
+                },
+                new RelationCategoryVM
+                {
+                    Title = "Страницы",
+                    Groups = GetGroups(ctx, pageId, NonHumanRelations).ToList(),
+                }
+            };
+
+            return cats.Where(x => x.Groups.Any()).ToList();
         }
 
         #endregion
@@ -116,14 +132,10 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// <summary>
         /// Returns the relation groups with parents and siblings.
         /// </summary>
-        private IEnumerable<RelationGroupVM> GetParentsGroups(RelationContext ctx, Guid pageId)
+        private IEnumerable<RelationGroupVM> GetGroups(RelationContext ctx, Guid pageId, RelationDefinition[] defs)
         {
-            var page = ctx.Pages[pageId];
-            if (page.PageType != PageType.Person && page.PageType != PageType.Pet)
-                yield break;
-
             var ids = new[] {pageId};
-            var relations = ParentRelations.Select(x => GetRelationVM(ctx, x, ids))
+            var relations = defs.Select(x => GetRelationVM(ctx, x, ids))
                                            .Where(x => x != null)
                                            .ToList();
 
@@ -147,23 +159,6 @@ namespace Bonsai.Areas.Front.Logic.Relations
                 var relations = SpouseDefinitions.Select(x => GetRelationVM(ctx, x, ids))
                                                  .Where(x => x != null)
                                                  .ToList();
-
-                if (relations.Any())
-                    yield return new RelationGroupVM {Relations = relations};
-            }
-        }
-
-        /// <summary>
-        /// Returns the secondary relation groups.
-        /// </summary>
-        private IEnumerable<RelationGroupVM> GetOtherGroups(RelationContext ctx, Guid pageId)
-        {
-            foreach (var groupDef in OtherRelationGroups)
-            {
-                var ids = new[] {pageId};
-                var relations = groupDef.Select(x => GetRelationVM(ctx, x, ids))
-                                        .Where(x => x != null)
-                                        .ToList();
 
                 if (relations.Any())
                     yield return new RelationGroupVM {Relations = relations};

@@ -8,11 +8,6 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
     public class RelationGroupVM
     {
         /// <summary>
-        /// Title of the relations group.
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
         /// Relations in the group.
         /// </summary>
         public ICollection<RelationVM> Relations { get; set; }

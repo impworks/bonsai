@@ -23,7 +23,7 @@ namespace Bonsai.Data.Utils.Seed
             var ctx = new SeedContext(db);
 
             // parents
-            var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleFacts.json");
+            var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleHumanFacts.json");
             var dad = ctx.AddPage("Иванов Петр Михайлович", true, "1960.02.03", "2010.03.02");
             var mom = ctx.AddPage("Иванова Екатерина Валерьевна", false, "1965.03.04");
 
@@ -47,7 +47,7 @@ namespace Bonsai.Data.Utils.Seed
             ctx.AddRelation(w1, RelationType.Parent, w1m);
 
             // pet
-            var cat = ctx.AddPage("Барсик", true, "2014.05.06", type: PageType.Pet, descrSource: "Персидский кот");
+            var cat = ctx.AddPage("Барсик", true, "2014.05.06", type: PageType.Pet, descrSource: "Пушистый персидский кот!", factsSource: "SamplePetFacts.json");
             ctx.AddRelation(cat, RelationType.Owner, root);
             ctx.AddRelation(cat, RelationType.Owner, w1);
 

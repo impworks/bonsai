@@ -62,6 +62,11 @@
 
             .fact-value, .relation-value {
                 float: left;
+
+                .fact-item-extra {
+                    opacity: 0.8;
+                    font-size: 12px;
+                }
             }
 
             &:after {

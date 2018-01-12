@@ -1,0 +1,37 @@
+﻿{
+  "Main.Name": {
+    "Values": [
+      {
+        "FirstName": "Иван",
+        "LastName": "Иванов",
+        "MiddleName": "Иванович",
+        "Range": "2000.04.01-"
+      }
+    ]
+  },
+  "Birth.Place": {
+    "Value": "Москва"
+  },
+  "Bio.Hair": {
+    "Value": "Блондин"
+  },
+  "Bio.Blood": {
+    "Type": "A",
+    "RhesusFactor": true
+  },
+  "Person.Language": {
+    "Values": [
+      {
+        "Name": "Русский",
+        "Proficiency": "Native"
+      },
+      {
+        "Name": "Английский",
+        "Proficiency": "Intermediate"
+      }
+    ]
+  },
+  "Person.Religion": {
+    "Value": "Атеизм" 
+  }
+}

@@ -21,6 +21,6 @@ namespace Bonsai.Areas.Front.ViewModels.Page.InfoBlock
         /// <summary>
         /// Groups of inferred relations.
         /// </summary>
-        public IReadOnlyCollection<RelationGroupVM> RelationGroups { get; set; }
+        public IReadOnlyCollection<RelationCategoryVM> RelationGroups { get; set; }
     }
 }

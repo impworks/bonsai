@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Bonsai.Areas.Front.ViewModels.Page.InfoBlock.RelationCategoryVM>
+    
+@foreach (var cat in Model)
+{
+    <div class="fact-group">
+        <div class="fact-group-title">@cat.Title</div>
+        @foreach (var group in cat.Groups)
+        {
+            <div class="relation-group">
+                @foreach (var rel in group.Relations)
+                {
+                    <div class="relation">
+                        <div class="relation-title">@rel.Title</div>
+                        <div class="relation-value">
+                            <ul class="relations-list">
+                                @foreach (var relPage in rel.Pages)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Description", "Page", new {key = relPage.Key})">@relPage.Title</a>
+                                        @if (relPage.Duration != null)
+                                        {
+                                            <span class="relation-range">@relPage.Duration</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}

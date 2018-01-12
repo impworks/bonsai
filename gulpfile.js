@@ -28,7 +28,7 @@ var config = {
     },
     front: {
         styles: {
-            root: './Areas/Front/Content/Styles/styles.scss',
+            root: './Areas/Front/Content/Styles/style.scss',
             all: [
                 './Areas/Front/Content/Styles/**/*.scss'
             ]

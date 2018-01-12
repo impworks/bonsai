@@ -1,0 +1,14 @@
+﻿{
+  "Birth.Place": {
+    "Value": "Москва"
+  },
+  "Bio.Species": {
+    "Value": "Кот"
+  },
+  "Bio.Breed": {
+    "Value": "Персидский"
+  },
+  "Bio.Color": {
+    "Value": "Кремовый"
+  }
+}
