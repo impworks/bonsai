@@ -42,17 +42,17 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         public static RelationDefinition[] SpouseDefinitions =
         {
-            new RelationDefinition("Spouse:m", "Муж", null, RelationDurationDisplayMode.RelationRange), 
-            new RelationDefinition("Spouse:f", "Жена", null, RelationDurationDisplayMode.RelationRange),
-            new RelationDefinition("Spouse Child+Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
-            new RelationDefinition("Spouse:m Parent:m", "Свекр"),
-            new RelationDefinition("Spouse:m Parent:f", "Свекровь"),
-            new RelationDefinition("Spouse:f Parent:m", "Тесть"),
-            new RelationDefinition("Spouse:f Parent:f", "Теща"),
-            new RelationDefinition("Spouse:m Parent Child:m", "Деверь", "Девери"),
-            new RelationDefinition("Spouse:m Parent Child:f", "Золовка", "Золовки"),
-            new RelationDefinition("Spouse:f Parent Child:m", "Шурин", "Шурины"),
-            new RelationDefinition("Spouse:f Parent Child:f", "Свояченица", "Свояченицы")
+            new RelationDefinition("!Spouse:m", "Муж", null, RelationDurationDisplayMode.RelationRange), 
+            new RelationDefinition("!Spouse:f", "Жена", null, RelationDurationDisplayMode.RelationRange),
+            new RelationDefinition("!Spouse Child+Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
+            new RelationDefinition("!Spouse:m Parent:m", "Свекр"),
+            new RelationDefinition("!Spouse:m Parent:f", "Свекровь"),
+            new RelationDefinition("!Spouse:f Parent:m", "Тесть"),
+            new RelationDefinition("!Spouse:f Parent:f", "Теща"),
+            new RelationDefinition("!Spouse:m Parent Child:m", "Деверь", "Девери"),
+            new RelationDefinition("!Spouse:m Parent Child:f", "Золовка", "Золовки"),
+            new RelationDefinition("!Spouse:f Parent Child:m", "Шурин", "Шурины"),
+            new RelationDefinition("!Spouse:f Parent Child:f", "Свояченица", "Свояченицы")
         };
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
             }
             
             // Finds pages matching the entire path from current page
-            IEnumerable<RelationTarget> GetMatchingPages(RelationPath path, int pos)
+            IEnumerable<RelationTarget> GetMatchingPages(RelationPath path)
             {
                 var root = ctx.Pages[guids[0]];
                 var currents = new List<RelationTarget> {new RelationTarget(root, null, new SinglyLinkedList<PageExcerpt>(root))};
@@ -231,7 +231,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                         break;
 
                     var segment = path.Segments[depth];
-                    var guidFilter = (depth + 1) < guids.Length && pos == 0
+                    var guidFilter = path.IsBound && (depth + 1) < guids.Length
                         ? guids[depth + 1]
                         : (Guid?) null;
 

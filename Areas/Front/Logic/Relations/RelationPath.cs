@@ -12,8 +12,12 @@ namespace Bonsai.Areas.Front.Logic.Relations
         public RelationPath(string rawPath)
         {
             IsExcluded = rawPath[0] == '-';
-            Segments = rawPath.TrimStart('+', '-')
-                              .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            rawPath = rawPath.TrimStart('+', '-');
+
+            IsBound = rawPath[0] == '!';
+            rawPath = rawPath.TrimStart('!');
+
+            Segments = rawPath.Split(' ', StringSplitOptions.RemoveEmptyEntries)
                               .Select(x => new RelationPathSegment(x))
                               .ToList();
         }
@@ -22,6 +26,11 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// Flag indicating that the current path segment must be excluded from the resulting selection.
         /// </summary>
         public bool IsExcluded { get; }
+
+        /// <summary>
+        /// Flag indicating that the path is bound by a particular pre-defined node (spouse-based grouping).
+        /// </summary>
+        public bool IsBound { get; }
 
         /// <summary>
         /// Required path segments.
