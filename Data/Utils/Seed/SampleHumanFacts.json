@@ -32,6 +32,8 @@
     ]
   },
   "Person.Religion": {
-    "Value": "Атеизм" 
+    "Values": [
+      { "Value": "Атеизм" }
+    ]
   }
 }

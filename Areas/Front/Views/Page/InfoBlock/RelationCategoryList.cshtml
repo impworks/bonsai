@@ -19,7 +19,7 @@
                                         <a href="@Url.Action("Description", "Page", new {key = relPage.Key})">@relPage.Title</a>
                                         @if (relPage.Duration != null)
                                         {
-                                            <span class="relation-range">@relPage.Duration</span>
+                                            <span class="relation-range" title="@relPage.Duration.Value.ReadableRange">@relPage.Duration.Value.ShortReadableRange</span>
                                         }
                                     </li>
                                 }

@@ -88,12 +88,12 @@ namespace Bonsai.Code.Tools
                     return null;
 
                 if (RangeEnd == null)
-                    return "с " + RangeStart;
+                    return "с " + RangeStart.Value.ReadableDate;
 
                 if (RangeStart == null)
-                    return "по " + RangeEnd;
+                    return "по " + RangeEnd.Value.ReadableDate;
 
-                return RangeStart + " — " + RangeEnd;
+                return RangeStart.Value.ReadableDate + " — " + RangeEnd.Value.ReadableDate;
             }
         }
 

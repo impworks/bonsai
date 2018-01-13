@@ -260,16 +260,16 @@ namespace Bonsai.Areas.Front.Logic.Relations
             }
             
             // Gets the range to display alongside the relation
-            string GetRange(RelationTarget elem)
+            FuzzyRange? GetRange(RelationTarget elem)
             {
                 if(def.DurationDisplayMode == RelationDurationDisplayMode.RelationRange)
-                    return FuzzyRange.TryParse(elem.Relation.Duration)?.ShortReadableRange;
+                    return FuzzyRange.TryParse(elem.Relation.Duration);
 
                 if(def.DurationDisplayMode == RelationDurationDisplayMode.Birth)
-                    return FuzzyDate.TryParse(elem.Page.BirthDate)?.ShortReadableDate;
+                    return FuzzyRange.TryParse(elem.Page.BirthDate + "-");
 
                 if(def.DurationDisplayMode == RelationDurationDisplayMode.Life)
-                    return FuzzyRange.TryParse(elem.Page.BirthDate + "-" + elem.Page.DeathDate)?.ShortReadableRange;
+                    return FuzzyRange.TryParse(elem.Page.BirthDate + "-" + elem.Page.DeathDate);
 
                 return null;
             }
