@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Data.Utils.Seed
@@ -13,17 +14,15 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public static void EnsureSeeded(this AppDbContext db)
         {
-            db.Pages.RemoveRange(db.Pages.ToList());
-            db.Relations.RemoveRange(db.Relations.ToList());
-            db.SaveChanges();
-
-            // if (db.Pages.Any())
-            //     return;
+            // warning! this REMOVES ALL DATA AND FILES
+            ClearPreviousData(db);
 
             var ctx = new SeedContext(db);
 
-            // parents
             var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleHumanFacts.json");
+            root.MainPhoto = ctx.AddPhoto("1.png");
+
+            // parents
             var dad = ctx.AddPage("Иванов Петр Михайлович", true, "1960.02.03", "2010.03.02");
             var mom = ctx.AddPage("Иванова Екатерина Валерьевна", false, "1965.03.04");
 
@@ -52,6 +51,22 @@ namespace Bonsai.Data.Utils.Seed
             ctx.AddRelation(cat, RelationType.Owner, w1);
 
             ctx.Save();
+        }
+
+        /// <summary>
+        /// Removes all previous records and files.
+        /// </summary>
+        private static void ClearPreviousData(AppDbContext db)
+        {
+            foreach(var file in Directory.EnumerateFiles(@".\wwwroot\media"))
+                File.Delete(file);
+
+            db.MediaTags.RemoveRange(db.MediaTags.ToList());
+            db.Media.RemoveRange(db.Media.ToList());
+            db.Pages.RemoveRange(db.Pages.ToList());
+            db.Relations.RemoveRange(db.Relations.ToList());
+
+            db.SaveChanges();
         }
     }
 }

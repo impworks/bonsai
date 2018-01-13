@@ -151,7 +151,7 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the photo model.
         /// </summary>
-        public static MediaThumbnailVM GetMediaThumbnail(Media media, MediaSize size)
+        public static MediaThumbnailVM GetMediaThumbnail(Media media, MediaSize size = MediaSize.Small)
         {
             if (media == null)
                 return null;
@@ -160,8 +160,8 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Type = media.Type,
                 MediaKey = media.Key,
-                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(media.FilePath, MediaSize.Small),
-                Year = FuzzyDate.Parse(media.Date).ReadableYear
+                ThumbnailUrl = GetSizedMediaPath(media.FilePath, size),
+                Year = FuzzyDate.TryParse(media.Date)?.ReadableYear
             };
         }
 

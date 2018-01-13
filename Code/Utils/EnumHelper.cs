@@ -50,5 +50,16 @@ namespace Bonsai.Code.Utils
         {
             return GetEnumDescriptions<T>()[enumValue];
         }
+
+        /// <summary>
+        /// Returns the list of enum values.
+        /// </summary>
+        public static IReadOnlyList<T> GetEnumValues<T>()
+            where T: struct
+        {
+            return Enum.GetValues(typeof(T))
+                       .Cast<T>()
+                       .ToList();
+        }
     }
 }

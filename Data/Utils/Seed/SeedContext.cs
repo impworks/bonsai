@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils;
 using Bonsai.Data.Models;
@@ -113,6 +117,57 @@ namespace Bonsai.Data.Utils.Seed
             }
 
             return rel;
+        }
+
+        /// <summary>
+        /// Creates a new media file.
+        /// </summary>
+        public Media AddPhoto(string source, string date = null, string description = null)
+        {
+            var id = Guid.NewGuid();
+            var key = PageHelper.GetMediaKey(id);
+            var newName = key + Path.GetExtension(source);
+            var sourcePath = @".\Data\Utils\Seed\Media\" + source;
+            var diskPath = @".\wwwroot\media\" + newName;
+            var webPath = "~/media/" + newName;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(diskPath));
+
+            var paths = EnumHelper.GetEnumValues<MediaSize>()
+                                  .Select(x => MediaPresenterService.GetSizedMediaPath(diskPath, x));
+
+            foreach(var path in paths)
+                File.Copy(sourcePath, path);
+
+            var media = new Media
+            {
+                Id = id,
+                Type = MediaType.Photo,
+                Key = key,
+                FilePath = webPath,
+                Date = date,
+                Description = description,
+                Tags = new List<MediaTag>()
+            };
+            _db.Media.Add(media);
+            return media;
+        }
+
+        /// <summary>
+        /// Adds a tag to the media.
+        /// </summary>
+        public MediaTag AddMediaTag(Media media, Page page, MediaTagType type = MediaTagType.DepictedEntity, string coords = null)
+        {
+            var tag = new MediaTag
+            {
+                Id = Guid.NewGuid(),
+                Media = media,
+                Object = page,
+                Type = type,
+                Coordinates = coords
+            };
+            _db.MediaTags.Add(tag);
+            return tag;
         }
 
         /// <summary>

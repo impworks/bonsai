@@ -9,8 +9,8 @@
 <div class="page-info">
     @if (Model.Photo != null)
     {
-        <div class="fact-group">
-            <img class="page-photo" src="@Model.Photo.ThumbnailUrl" alt="@pageVm.Title" />
+        <div class="fact-group fact-group-sublime">
+            <img class="page-photo" src="@Url.Content(Model.Photo.ThumbnailUrl)" alt="@pageVm.Title" />
         </div>
     }
 
