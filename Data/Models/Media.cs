@@ -36,7 +36,6 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Media creation date.
         /// </summary>
-        [Required]
         [StringLength(30)]
         public string Date { get; set; }
 

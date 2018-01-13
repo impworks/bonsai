@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Bonsai.Code.Utils
 {
@@ -21,6 +22,26 @@ namespace Bonsai.Code.Utils
         public static string EncodeTitle(string title)
         {
             return InvalidChars.Replace(title, "_");
+        }
+
+        /// <summary>
+        /// Converts the GUID to an equivalent shorter media key.
+        /// </summary>
+        public static string GetMediaKey(Guid id)
+        {
+            return Convert.ToBase64String(id.ToByteArray())
+                          .TrimEnd('=')
+                          .Replace('+', '-')
+                          .Replace('/', '_');
+        }
+
+        /// <summary>
+        /// Converts the media key to the original GUID.
+        /// </summary>
+        public static Guid GetMediaId(string key)
+        {
+            var line = key.Replace('-', '+').Replace('_', '/');
+            return new Guid(Convert.FromBase64String(line + "=="));
         }
     }
 }

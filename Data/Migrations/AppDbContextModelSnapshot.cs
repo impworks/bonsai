@@ -150,7 +150,6 @@ namespace Bonsai.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Date")
-                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<string>("Description");
@@ -168,9 +167,6 @@ namespace Bonsai.Data.Migrations
                     b.Property<int>("Type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
 
                     b.ToTable("Media");
                 });

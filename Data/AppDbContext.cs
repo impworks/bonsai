@@ -48,9 +48,6 @@ namespace Bonsai.Data
             builder.Entity<Relation>()
                    .HasOne(x => x.Destination).WithMany().HasForeignKey(x => x.DestinationId);
 
-            builder.Entity<Media>()
-                   .HasIndex(x => x.Key).IsUnique(true);
-
             builder.Entity<MediaTag>()
                    .HasOne(x => x.Media).WithMany(x => x.Tags);
 

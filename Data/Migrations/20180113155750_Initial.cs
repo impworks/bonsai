@@ -66,7 +66,7 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
+                    Date = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     FilePath = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
                     Key = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
@@ -387,12 +387,6 @@ namespace Bonsai.Data.Migrations
                 name: "IX_Changes_AuthorId",
                 table: "Changes",
                 column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Media_Key",
-                table: "Media",
-                column: "Key",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MediaTags_MediaId",
