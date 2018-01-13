@@ -50,7 +50,8 @@ namespace Bonsai.Code.DomainModel.Facts
                     false,
                     new FactDefinition<LanguageFactModel>("Language", "Язык"),
                     new FactDefinition<SkillFactModel>("Skill", "Хобби"),
-                    new FactDefinition<StringFactModel>("Religion", "Религия")
+                    new FactDefinition<StringListFactModel>("Profession", "Профессия"),
+                    new FactDefinition<StringListFactModel>("Religion", "Религия")
                 )
             },
 

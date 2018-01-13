@@ -1,0 +1,18 @@
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@model StringListFactModel
+
+<div class="fact">
+    <div class="fact-title">@Model.Definition.ShortTitle</div>
+    <div class="fact-value">
+        @foreach (var item in Model.Values)
+        {
+            <div class="fact-item">
+                <span class="fact-item-main">@item.Value</span>
+                @if (item.Duration != null)
+                {
+                    <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
+                }
+            </div>
+        }
+    </div>
+</div>

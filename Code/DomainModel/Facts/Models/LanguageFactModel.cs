@@ -29,6 +29,10 @@ namespace Bonsai.Code.DomainModel.Facts.Models
         public LanguageProficiency? Proficiency { get; set; }
     }
 
+    /// <summary>
+    /// The proficiency in the specified language.
+    /// </summary>
+    // ReSharper disable UnusedMember.Global
     public enum LanguageProficiency
     {
         [Description("Базовый")]

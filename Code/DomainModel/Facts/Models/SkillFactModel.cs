@@ -29,6 +29,10 @@ namespace Bonsai.Code.DomainModel.Facts.Models
         public SkillProficiency? Proficiency { get; set; }
     }
 
+    /// <summary>
+    /// The proficiency in current skill or hobby.
+    /// </summary>
+    // ReSharper disable UnusedMember.Global
     public enum SkillProficiency
     {
         [Description("Новичок")]
