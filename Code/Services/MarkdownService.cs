@@ -38,6 +38,9 @@ namespace Bonsai.Code.Services
         /// </summary>
         public async Task<string> CompileAsync(string markdown)
         {
+            if (string.IsNullOrEmpty(markdown))
+                return null;
+
             var body = Markdown.ToHtml(markdown, _pipeline);
             body = await ProcessLinksAsync(body).ConfigureAwait(false);
 

@@ -74,7 +74,7 @@ namespace Bonsai.Code.Config
             services.AddRouting(opts =>
             {
                 opts.AppendTrailingSlash = false;
-                opts.LowercaseUrls = true;
+                opts.LowercaseUrls = false;
             });
 
             services.AddScoped<IActionContextAccessor, ActionContextAccessor>();

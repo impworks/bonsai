@@ -100,7 +100,7 @@ namespace Bonsai.Areas.Front.Logic
                 if (string.IsNullOrEmpty(str))
                     return null;
 
-                var coords = str.Split(',')
+                var coords = str.Split(';')
                                 .Select(x => float.Parse(x, CultureInfo.InvariantCulture))
                                 .ToList();
 
