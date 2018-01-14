@@ -1,6 +1,4 @@
-﻿@using Bonsai.Areas.Front.ViewModels
-@using Bonsai.Areas.Front.ViewModels.Page
-@model Bonsai.Areas.Front.ViewModels.Page.PageMediaVM
+﻿@model Bonsai.Areas.Front.ViewModels.Page.PageMediaVM
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
     ViewBag.PageModel = Model;
@@ -14,7 +12,7 @@
     foreach (var group in groups)
     {
         <div class="media-thumb-group">
-            <h3 id="@group.Key">@group.Key</h3>
+            <h3 class="media-group-title" id="@group.Key">@group.Key</h3>
             @foreach (var elem in group)
             {
                 <div class="media-thumb-wrapper">

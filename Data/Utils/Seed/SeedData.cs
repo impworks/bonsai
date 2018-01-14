@@ -20,7 +20,11 @@ namespace Bonsai.Data.Utils.Seed
             var ctx = new SeedContext(db);
 
             var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleHumanFacts.json");
-            root.MainPhoto = ctx.AddPhoto("1.png");
+            root.MainPhoto = ctx.AddPhoto("1.jpg");
+            var pic1 = ctx.AddPhoto("2.jpg", "2015.09.01");
+            var pic2 = ctx.AddPhoto("3.jpg", "2015.09.05");
+            ctx.AddMediaTag(pic1, root, MediaTagType.DepictedEntity, "0.1;0.3;0.1;0.3");
+            ctx.AddMediaTag(pic2, root, MediaTagType.DepictedEntity, "0.2;0.4;0.1;0.4");
 
             // parents
             var dad = ctx.AddPage("Иванов Петр Михайлович", true, "1960.02.03", "2010.03.02");

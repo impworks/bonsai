@@ -10,6 +10,7 @@ using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
 using Bonsai.Code.Tools;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -35,10 +36,11 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<MediaVM> GetMediaAsync(string key)
         {
+            var id = PageHelper.GetMediaId(key);
             var media = await _db.Media
                                  .Include(x => x.Tags)
                                  .ThenInclude(x => x.Object)
-                                 .FirstOrDefaultAsync(x => x.Key == key)
+                                 .FirstOrDefaultAsync(x => x.Id == id)
                                  .ConfigureAwait(false);
 
             if (media == null)
@@ -60,7 +62,7 @@ namespace Bonsai.Areas.Front.Logic
             if (media.Type == MediaType.Photo || media.Type == MediaType.Document)
             {
                 vm.FullPath = media.FilePath;
-                vm.MediaPath = Path.ChangeExtension(media.FilePath, ".sm.jpg");
+                vm.MediaPath = GetSizedMediaPath(media.FilePath, MediaSize.Large);
             }
             else
             {

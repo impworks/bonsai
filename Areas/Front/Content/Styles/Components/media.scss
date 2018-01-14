@@ -1,8 +1,22 @@
-﻿.media-group {
+﻿.media-thumb-group {
     margin-bottom: 10px;
 
-    h3 {
+    .media-group-title {
+        color: #999;
         margin-top: 10px;
         margin-bottom: 0;
+    }
+
+    .media-thumb-wrapper {
+        display: inline-block;
+        margin: 10px;
+        width: 200px;
+        padding: 10px;
+        border: #cccccc 1px solid;
+        vertical-align: top;
+
+        img {
+            width: 100%;
+        }
     }
 }
