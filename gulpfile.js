@@ -34,7 +34,6 @@ var config = {
             ]
         },
         scripts: {
-            root: './Areas/Front/Content/Scripts/front.js',
             all: [
                 './Areas/Front/Content/Scripts/**/*.js'
             ]
@@ -57,7 +56,7 @@ gulp.task('front.styles', function() {
 });
 
 gulp.task('front.scripts', function () {
-    gulp.src(config.front.scripts.root)
+    gulp.src(config.front.scripts.all)
         .pipe(concatjs('front.js'))
         .pipe(gulp.dest(config.assets.root));
 });

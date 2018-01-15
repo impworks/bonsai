@@ -1,8 +1,8 @@
 ﻿$(function () {
-    // media
     var prefix = 'media-';
     var selector = 'a.media-thumb-link';
 
+    // sets the current media hash depending on an item
     function updateHash(elem) {
         if (elem == null) {
             history.pushState(
@@ -17,6 +17,7 @@
         window.location.hash = prefix + id;
     }
 
+    // enables media popups for thumbnails
     var allLinks = $('body').magnificPopup({
         delegate: selector,
         key: 'media-popup',
@@ -46,6 +47,7 @@
         }
     });
 
+    // opens the media popup if the URL contains a hash
     var hash = window.location.hash;
     if (hash !== null && hash.substr(1, prefix.length) === prefix) {
         var media = hash.substr(prefix.length + 1);

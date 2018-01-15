@@ -27,7 +27,7 @@
                         @foreach (var tag in Model.Tags)
                         {
                             <li>
-                                <a href="@Url.Action("Description", "Page", new {key = tag.Page.Key})" data-tag-id="@tag.TagId">@tag.Page.Title</a>
+                                <a href="@Url.Action("Description", "Page", new {key = tag.Page.Key})" class="media-tag-link" data-tag-id="@tag.TagId">@tag.Page.Title</a>
                             </li>
                         }
                     </ul>

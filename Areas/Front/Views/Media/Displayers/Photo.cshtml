@@ -7,11 +7,15 @@
     }
 }
 
-<img src="@Url.Content(Model.MediaPath)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
-@foreach (var tag in Model.Tags)
-{
-    if (tag.Rect is RectangleF r)
+<div class="photo-wrapper">
+    <img src="@Url.Content(Model.MediaPath)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
+    @foreach (var tag in Model.Tags)
     {
-        <div class="photo-tag" style="top: @Size(r.Top); left: @Size(r.Left); right: @Size(r.Right); bottom: @Size(r.Bottom)" data-tag-id="@tag.TagId"></div>
+        if (tag.Rect is RectangleF r)
+        {
+            <a class="photo-tag" href="@Url.Action("Description", "Page", new { key = tag.Page.Key })"
+               style="top: @Size(r.Top); left: @Size(r.Left); right: @Size(r.Right); bottom: @Size(r.Bottom)"
+               title="@tag.Page.Title" data-tag-id="@tag.TagId" data-placement="bottom"></a>
+        }
     }
-}
+</div>
