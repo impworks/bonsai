@@ -7,11 +7,11 @@
     }
 }
 
-<img src="@Url.Content(Model.MediaPath)" class="media-photo" alt="@(Model.Title ?? "Фото")"/>
+<img src="@Url.Content(Model.MediaPath)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
 @foreach (var tag in Model.Tags)
-        {
-            if (tag.Rect is RectangleF r)
-            {
+{
+    if (tag.Rect is RectangleF r)
+    {
         <div class="photo-tag" style="top: @Size(r.Top); left: @Size(r.Left); right: @Size(r.Right); bottom: @Size(r.Bottom)" data-tag-id="@tag.TagId"></div>
     }
 }
