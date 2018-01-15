@@ -54,6 +54,10 @@ namespace Bonsai.Data.Utils.Seed
             var v1 = ctx.AddPage("Отпуск 2015", type: PageType.Event);
             var l1 = ctx.AddPage("Греция", type: PageType.Location);
 
+            ctx.AddRelation(v1, RelationType.EventVisitor, w1);
+            ctx.AddRelation(v1, RelationType.EventVisitor, c1);
+            ctx.AddRelation(v1, RelationType.EventVisitor, c2);
+
             // photos
             var pic1 = ctx.AddPhoto("2.jpg", "2015.09.01");
             ctx.AddMediaTag(pic1, root, MediaTagType.DepictedEntity, "0.35;0.07;0.1;0.15");

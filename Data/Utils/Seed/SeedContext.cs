@@ -90,6 +90,13 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public Relation AddRelation(Page source, RelationType type, Page target, string duration = null, bool createComplimentary = true)
         {
+            var isAllowed = RelationHelper.AllowedRelations
+                                          .Any(x => x.SourceType == source.PageType
+                                                    && x.TargetType == target.PageType
+                                                    && x.RelationTypes.Contains(type));
+            if(!isAllowed)
+                throw new ArgumentException("This relation is not allowed!");
+
             var rel = new Relation
             {
                 Id = Guid.NewGuid(),

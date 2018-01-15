@@ -226,7 +226,10 @@ namespace Bonsai.Areas.Front.Logic.Relations
             // Performs one step from the current page along the relation path and returns matching pages
             IEnumerable<RelationTarget> Step(RelationTarget elem, RelationPathSegment segment, Guid? guidFilter)
             {
-                return from rel in ctx.Relations[elem.Page.Id]
+                if(!ctx.Relations.TryGetValue(elem.Page.Id, out var rels))
+                    return Enumerable.Empty<RelationTarget>();
+
+                return from rel in rels
                        where rel.Type == segment.Type
                        where guidFilter == null || rel.DestinationId == guidFilter
                        let page = ctx.Pages[rel.DestinationId]
