@@ -62,8 +62,10 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         private static void ClearPreviousData(AppDbContext db)
         {
-            foreach(var file in Directory.EnumerateFiles(@".\wwwroot\media"))
-                File.Delete(file);
+            var mediaDir = @".\wwwroot\media";
+            if(Directory.Exists(mediaDir))
+                foreach(var file in Directory.EnumerateFiles(mediaDir))
+                    File.Delete(file);
 
             db.MediaTags.RemoveRange(db.MediaTags.ToList());
             db.Media.RemoveRange(db.Media.ToList());
