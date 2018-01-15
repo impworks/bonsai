@@ -27,7 +27,7 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Creates a new page.
         /// </summary>
-        public Page AddPage(string title, bool? gender, string birth = null, string death = null, PageType type = PageType.Person, string descrSource = null, string factsSource = null)
+        public Page AddPage(string title, bool? gender = null, string birth = null, string death = null, PageType type = PageType.Person, string descrSource = null, string factsSource = null)
         {
             var descrFile = @".\Data\Utils\Seed\" + descrSource;
             var factsFile = @".\Data\Utils\Seed\" + factsSource;
@@ -158,6 +158,18 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public MediaTag AddMediaTag(Media media, Page page, MediaTagType type = MediaTagType.DepictedEntity, string coords = null)
         {
+            var ptype = page.PageType;
+
+            if(type == MediaTagType.DepictedEntity)
+                if(ptype != PageType.Person && ptype != PageType.Pet && ptype != PageType.Other)
+                    throw new ArgumentException("Only Pet, Person and Other types can be marked as DepictedEntity.");
+
+            if(type == MediaTagType.Location && ptype != PageType.Location)
+                throw new ArgumentException("Only Location page can be marked as Location.");
+
+            if(type == MediaTagType.Event && ptype != PageType.Event)
+                throw new ArgumentException("Only Event page can be marked as Event.");
+
             var tag = new MediaTag
             {
                 Id = Guid.NewGuid(),

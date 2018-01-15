@@ -104,7 +104,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .Select(x => float.Parse(x, CultureInfo.InvariantCulture))
                                 .ToList();
 
-                return RectangleF.FromLTRB(
+                return new RectangleF(
                     coords[0],
                     coords[1],
                     coords[2],

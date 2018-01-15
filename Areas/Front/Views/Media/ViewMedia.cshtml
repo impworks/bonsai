@@ -37,6 +37,13 @@
         @if (showSecondColumn)
         {
             <div class="media-meta-column">
+                @if (Model.Date != null)
+                {
+                    <div class="meta-block">
+                        <strong>Дата:</strong>
+                        <span>@Model.Date.Value.ReadableDate</span>
+                    </div>
+                }
                 @if (Model.Event != null)
                 {
                     <div class="meta-block">
@@ -55,7 +62,7 @@
                 {
                     <div class="meta-block">
                         <strong>Оригинал:</strong>
-                        <a href="@Url.Content(Model.FullPath)">Скачать</a>
+                        <a href="@Url.Content(Model.FullPath)" target="_blank">Скачать</a>
                     </div>
                 }
             </div>
