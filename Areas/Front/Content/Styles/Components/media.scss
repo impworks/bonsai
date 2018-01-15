@@ -20,3 +20,55 @@
         }
     }
 }
+
+.media-block {
+    background: #fff;
+    max-width: 1024px;
+    margin: 20px auto;
+    position: relative;
+    padding: 20px 30px;
+    text-align: left;
+
+    .media-wrapper {
+        margin-bottom: 20px;
+        text-align: center;
+        position: relative;
+
+        img {
+            max-width: 100%;
+        }
+
+        .photo-tag {
+            position: absolute;
+            display: block;
+            border: 2px solid hsla(0, 0, 100%, 0.45);
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), inset 0 0 1px 0 rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+        }
+    }
+
+    .media-meta {
+        &:after {
+            display: block;
+            clear: both;
+            content: ' ';
+        }
+
+        .media-meta-column {
+            float: left;
+            width: 50%;
+            margin: 0;
+            padding: 10px;
+
+            .media-tags {
+                list-style: none;
+                margin-bottom: 0;
+                padding-left: 0;
+
+                li {
+                    display: block;
+                }
+            }
+        }
+    }
+}

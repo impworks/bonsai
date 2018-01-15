@@ -1,12 +1,17 @@
 ﻿@using System.Drawing
-@using Bonsai.Areas.Front.ViewModels.Media
 @model Bonsai.Areas.Front.ViewModels.Media.MediaVM
-
-<img src="@Model.MediaPath" class="media-photo" alt="@(Model.Title ?? "Фото")"/>
-@foreach (var tag in Model.Tags)
-{
-    if (tag.Rect is RectangleF r)
+@functions {
+    string Size(float s)
     {
-        <div class="photo-tag" style="top: @r.Top; left: @r.Left; right: @r.Right; bottom: @r.Bottom" data-tag-id="@tag.TagId"></div>
+        return (s * 100.0f).ToString(System.Globalization.CultureInfo.InvariantCulture) + "%";
+    }
+}
+
+<img src="@Url.Content(Model.MediaPath)" class="media-photo" alt="@(Model.Title ?? "Фото")"/>
+@foreach (var tag in Model.Tags)
+        {
+            if (tag.Rect is RectangleF r)
+            {
+        <div class="photo-tag" style="top: @Size(r.Top); left: @Size(r.Left); right: @Size(r.Right); bottom: @Size(r.Bottom)" data-tag-id="@tag.TagId"></div>
     }
 }

@@ -1,75 +1,71 @@
-﻿@using Bonsai.Areas.Front.ViewModels.Media
-@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
+﻿@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 
 @{
     var showFirstColumn = Model.Tags.Any();
     var showSecondColumn = Model.FullPath != null
                            || Model.Event != null
                            || Model.Location != null;
-
-    if (!ViewBag.IsEmbedded)
-    {
-        Layout = "~/Areas/Front/Views/Layout.cshtml";
-    }
 }
 
-@if (!string.IsNullOrEmpty(Model.Title))
-{
-    <h3>@Model.Title</h3>
-}
-
-<div class="media-wrapper">
-    @await Html.PartialAsync("Displayers/" + Model.Type + ".cshtml")
-</div>
-
-<div class="media-meta">
-    @if (showFirstColumn)
+<div class="media-block">
+    @if (!string.IsNullOrEmpty(Model.Title))
     {
-        <div class="media-meta-column">
-            <div class="meta-block">
-                <strong>Изображены:</strong>
-                <ul class="media-tags">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <li>
-                            <a href="@Url.Action("Description", "Page", new {key = tag.Page.Key})" data-tag-id="@tag.TagId">@tag.Page.Title</a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
+        <h3>@Model.Title</h3>
     }
-    @if (showSecondColumn)
-    {
-        <div class="media-meta-column">
-            @if (Model.Event != null)
-            {
-                <div class="meta-block">
-                    <strong>Событие:</strong>
-                    <a href="@Url.Action("Description", "Page", new { key = Model.Event.Key })">@Model.Event.Title</a>
-                </div>
-            }
-            @if (Model.Location != null)
-            {
-                <div class="meta-block">
-                    <strong>Место:</strong>
-                    <a href="@Url.Action("Description", "Page", new { key = Model.Location.Key })">@Model.Location.Title</a>
-                </div>
-            }
-            @if (Model.FullPath != null)
-            {
-                <div class="meta-block">
-                    <strong>Оригинал:</strong>
-                    <a href="@Url.Content(Model.FullPath)">Скачать</a>
-                </div>
-            }
-        </div>
-    }
-</div>
 
-@if (!string.IsNullOrEmpty(Model.Description))
-{
-    <div class="media-description">
-        @Html.Raw(Model.Description)
+    <div class="media-wrapper">
+        @await Html.PartialAsync("Displayers/" + Model.Type + ".cshtml")
     </div>
-}
+
+    <div class="media-meta">
+        @if (showFirstColumn)
+        {
+            <div class="media-meta-column">
+                <div class="meta-block">
+                    <strong>Изображены:</strong>
+                    <ul class="media-tags">
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <li>
+                                <a href="@Url.Action("Description", "Page", new {key = tag.Page.Key})" data-tag-id="@tag.TagId">@tag.Page.Title</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        @if (showSecondColumn)
+        {
+            <div class="media-meta-column">
+                @if (Model.Event != null)
+                {
+                    <div class="meta-block">
+                        <strong>Событие:</strong>
+                        <a href="@Url.Action("Description", "Page", new { key = Model.Event.Key })">@Model.Event.Title</a>
+                    </div>
+                }
+                @if (Model.Location != null)
+                {
+                    <div class="meta-block">
+                        <strong>Место:</strong>
+                        <a href="@Url.Action("Description", "Page", new { key = Model.Location.Key })">@Model.Location.Title</a>
+                    </div>
+                }
+                @if (Model.FullPath != null)
+                {
+                    <div class="meta-block">
+                        <strong>Оригинал:</strong>
+                        <a href="@Url.Content(Model.FullPath)">Скачать</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <div class="media-description">
+            @Html.Raw(Model.Description)
+        </div>
+    }
+</div>

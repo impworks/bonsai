@@ -9,15 +9,15 @@
 
 @if (Model.Media.Any())
 {
-    foreach (var group in groups)
+    @foreach (var group in groups)
     {
         <div class="media-thumb-group">
             <h3 class="media-group-title" id="@group.Key">@group.Key</h3>
             @foreach (var elem in group)
             {
                 <div class="media-thumb-wrapper">
-                    <a href="@Url.Action("ViewMedia", "Media", new {key = elem.MediaKey})" class="media-thumb-link" data-media="@elem.MediaKey">
-                        <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@group.Key)"/>
+                    <a href="@Url.Action("ViewMedia", "Media", new {key = elem.MediaKey, embedded = true})" class="media-thumb-link" data-media="@elem.MediaKey">
+                        <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@group.Key)" />
                     </a>
                 </div>
             }

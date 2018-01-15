@@ -22,12 +22,10 @@ namespace Bonsai.Areas.Front.Controllers
         /// Displays media and details.
         /// </summary>
         [Route("{key}")]
-        public async Task<ActionResult> ViewMedia(string key, [FromQuery]bool embedded = false)
+        public async Task<ActionResult> ViewMedia(string key)
         {
-            ViewBag.IsEmbedded = embedded;
-
             var vm = await _media.GetMediaAsync(key)
-                                    .ConfigureAwait(false);
+                                 .ConfigureAwait(false);
 
             return View(vm);
         }
