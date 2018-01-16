@@ -7,7 +7,7 @@ namespace Bonsai.Code.Tools
     /// <summary>
     /// A range between two fuzzy dates.
     /// </summary>
-    public struct FuzzyRange
+    public struct FuzzyRange: IEquatable<FuzzyRange>, IComparable<FuzzyRange>
     {
         #region Constructor
 
@@ -135,6 +135,63 @@ namespace Bonsai.Code.Tools
             var to = !string.IsNullOrEmpty(parts[1]) ? FuzzyDate.Parse(parts[1]) : (FuzzyDate?)null;
 
             return new FuzzyRange(from, to);
+        }
+
+        #endregion
+
+        #region IEquatable implementation
+
+        public bool Equals(FuzzyRange other)
+        {
+            return RangeStart.Equals(other.RangeStart) && RangeEnd.Equals(other.RangeEnd);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is FuzzyRange && Equals((FuzzyRange)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (RangeStart.GetHashCode() * 397) ^ RangeEnd.GetHashCode();
+            }
+        }
+
+        public static bool operator ==(FuzzyRange left, FuzzyRange right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(FuzzyRange left, FuzzyRange right)
+        {
+            return !left.Equals(right);
+        }
+
+        #endregion
+
+        #region IComparable implementation
+
+        /// <summary>
+        /// Compares two FuzzyRanges for sorting.
+        /// </summary>
+        public int CompareTo(FuzzyRange other)
+        {
+            if (RangeEnd.HasValue != other.RangeEnd.HasValue)
+                return RangeEnd.HasValue ? 1 : -1;
+
+            if (RangeEnd is FuzzyDate thisEnd && other.RangeEnd is FuzzyDate otherEnd && thisEnd != otherEnd)
+                return thisEnd.CompareTo(otherEnd);
+
+            if (RangeStart.HasValue != other.RangeStart.HasValue)
+                return RangeStart.HasValue ? 1 : -1;
+
+            if(RangeStart is FuzzyDate thisStart && other.RangeStart is FuzzyDate otherStart)
+                return thisStart.CompareTo(otherStart);
+
+            return 0;
         }
 
         #endregion

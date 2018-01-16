@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -8,7 +9,7 @@ namespace Bonsai.Code.Tools
     /// <summary>
     /// A date with possibly unknown parts.
     /// </summary>
-    public struct FuzzyDate
+    public struct FuzzyDate: IEquatable<FuzzyDate>, IComparable<FuzzyDate>
     {
         #region Constructor
 
@@ -24,21 +25,42 @@ namespace Bonsai.Code.Tools
             // invokes internal validation
             new DateTime(year ?? 2000, month ?? 1, day ?? 1);
 
+            IsDecade = isDecade;
             Year = year;
             Month = month;
             Day = day;
-            IsDecade = isDecade;
+
+            _stringValue = RenderString(year, month, day, isDecade);
         }
 
         #endregion
 
         #region Fields
 
+        /// <summary>
+        /// Year component of the date.
+        /// </summary>
         public readonly int? Year;
+
+        /// <summary>
+        /// Month component of the date.
+        /// </summary>
         public readonly int? Month;
+
+        /// <summary>
+        /// Day component of the date.
+        /// </summary>
         public readonly int? Day;
 
+        /// <summary>
+        /// Flag indicating that the year is approximate.
+        /// </summary>
         public readonly bool IsDecade;
+
+        /// <summary>
+        /// Canonically formatted date.
+        /// </summary>
+        private readonly string _stringValue;
 
         #endregion
 
@@ -294,29 +316,79 @@ namespace Bonsai.Code.Tools
 
         #endregion
 
+        #region IEquatable implementation
+
+        public bool Equals(FuzzyDate other)
+        {
+            return _stringValue == other._stringValue;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is FuzzyDate date && Equals(date);
+        }
+
+        public override int GetHashCode()
+        {
+            return _stringValue.GetHashCode();
+        }
+
+        public static bool operator ==(FuzzyDate left, FuzzyDate right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(FuzzyDate left, FuzzyDate right)
+        {
+            return !left.Equals(right);
+        }
+
+        #endregion
+
+        #region IComparable implementation
+
+        /// <summary>
+        /// Compares two dates for sorting.
+        /// </summary>
+        public int CompareTo(FuzzyDate other)
+        {
+            return string.Compare(_stringValue, other._stringValue, CultureInfo.InvariantCulture, CompareOptions.None);
+        }
+
+        #endregion
+
         #region ToString
 
         /// <summary>
-        /// Formats the date back to original string.
+        /// Creates the canonical formatting of the date.
         /// </summary>
-        public override string ToString()
+        private static string RenderString(int? year, int? month, int? day, bool isDecade)
         {
             var sb = new StringBuilder();
 
-            if (Year == null)
+            if (year == null)
                 sb.Append("????");
-            else if (IsDecade)
-                sb.Append((Year.Value / 10) + "?");
+            else if (isDecade)
+                sb.Append(year.Value / 10 + "?");
             else
-                sb.Append(Year.Value);
+                sb.Append(year.Value);
 
             sb.Append(".");
-            sb.Append(Month == null ? "??" : Month.ToString());
+            sb.Append(month?.ToString() ?? "??");
 
             sb.Append(".");
-            sb.Append(Day == null ? "??" : Day.ToString());
+            sb.Append(day?.ToString() ?? "??");
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns the canonically formatted date.
+        /// </summary>
+        public override string ToString()
+        {
+            return _stringValue;
         }
 
         #endregion
