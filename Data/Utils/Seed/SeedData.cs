@@ -70,6 +70,9 @@ namespace Bonsai.Data.Utils.Seed
             var pic2 = ctx.AddPhoto("3.jpg", "2015.09.05");
             ctx.AddMediaTag(pic2, root, MediaTagType.DepictedEntity, "0.2;0.4;0.1;0.4");
 
+            var pic3 = ctx.AddPhoto("3.jpg", null);
+            ctx.AddMediaTag(pic3, root, MediaTagType.DepictedEntity, "0.2;0.4;0.1;0.4");
+
             ctx.Save();
         }
 

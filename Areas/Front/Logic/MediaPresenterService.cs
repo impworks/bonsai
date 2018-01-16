@@ -163,7 +163,7 @@ namespace Bonsai.Areas.Front.Logic
                 Type = media.Type,
                 MediaKey = media.Key,
                 ThumbnailUrl = GetSizedMediaPath(media.FilePath, size),
-                Year = FuzzyDate.TryParse(media.Date)?.ReadableYear
+                Date = FuzzyDate.TryParse(media.Date)
             };
         }
 

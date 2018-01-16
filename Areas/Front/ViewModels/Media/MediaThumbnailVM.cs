@@ -1,4 +1,5 @@
-﻿using Bonsai.Data.Models;
+﻿using Bonsai.Code.Tools;
+using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Front.ViewModels.Media
 {
@@ -23,8 +24,8 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         public MediaType Type { get; set; }
 
         /// <summary>
-        /// Year of the media's origin.
+        /// Date of the media's origin.
         /// </summary>
-        public string Year { get; set; }
+        public FuzzyDate? Date { get; set; }
     }
 }
