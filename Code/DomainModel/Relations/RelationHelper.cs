@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Code.DomainModel.Relations
@@ -34,7 +35,7 @@ namespace Bonsai.Code.DomainModel.Relations
         /// <summary>
         /// List of allowed relations.
         /// </summary>
-        public readonly static RelationBinding[] AllowedRelations = new[]
+        public static readonly RelationBinding[] RelationBindingsMap =
         {
             new RelationBinding(PageType.Person, PageType.Person, new[]
             {
@@ -53,5 +54,18 @@ namespace Bonsai.Code.DomainModel.Relations
             new RelationBinding(PageType.Person, PageType.Event, new[] {RelationType.Event}),
             new RelationBinding(PageType.Event, PageType.Person, new[] {RelationType.EventVisitor})
         };
+
+        /// <summary>
+        /// Checks if the relation is allowed.
+        /// </summary>
+        public static bool IsRelationAllowed(PageType source, PageType target, RelationType relation)
+        {
+            if (relation == RelationType.Other)
+                return source == PageType.Other || target == PageType.Other;
+
+            return RelationBindingsMap.Any(x => x.SourceType == source
+                                                && x.TargetType == target
+                                                && x.RelationTypes.Contains(relation));
+        }
     }
 }

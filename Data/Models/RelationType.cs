@@ -22,6 +22,8 @@
         LocationVisitor,
 
         Event,
-        EventVisitor
+        EventVisitor,
+
+        Other
     }
 }

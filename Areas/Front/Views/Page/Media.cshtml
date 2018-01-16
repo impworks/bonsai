@@ -9,7 +9,7 @@
 
 @if (Model.Media.Any())
 {
-    @foreach (var group in groups)
+    foreach (var group in groups)
     {
         <div class="media-thumb-group">
             <h3 class="media-group-title" id="@group.Key">@group.Key</h3>
