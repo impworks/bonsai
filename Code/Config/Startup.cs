@@ -8,6 +8,7 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
+using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -94,6 +95,9 @@ namespace Bonsai.Code.Config
                     opts.Filters.Add(new RequireHttpsAttribute());
                 });
             }
+
+            SqlMapper.AddTypeHandler(new FuzzyDate.FuzzyDateTypeHandler());
+            SqlMapper.AddTypeHandler(new FuzzyDate.NullableFuzzyDateTypeHandler());
         }
 
         /// <summary>

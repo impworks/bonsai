@@ -152,7 +152,10 @@ namespace Bonsai.Areas.Front.Logic.Relations
             if (page.PageType != PageType.Person && page.PageType != PageType.Pet)
                 yield break;
 
-            var spouses = ctx.Relations[pageId].Where(x => x.Type == RelationType.Spouse);
+            var spouses = ctx.Relations[pageId]
+                             .Where(x => x.Type == RelationType.Spouse)
+                             .OrderBy(x => x.Duration);
+
             foreach (var spouse in spouses)
             {
                 var ids = new[] {pageId, spouse.DestinationId};
@@ -191,8 +194,8 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                             p.""Facts""::json#>>'{Main.Name,Values,-1,FirstName}' AS ""FirstName"",
                                             p.""Facts""::json#>>'{Main.Name,Values,-1,LastName}' AS ""LastName"",
                                             p.""Facts""::json#>>'{Main.Name,Value}' AS ""Nickname"",
-                                            p.""Facts""::json#>>'{Birth,Date}' AS ""BirthDate"",
-                                            p.""Facts""::json#>>'{Death,Date}' AS ""DeathDate"",
+                                            p.""Facts""::json#>>'{Birth.Date,Value}' AS ""BirthDate"",
+                                            p.""Facts""::json#>>'{Death.Date,Value}' AS ""DeathDate"",
                                             CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender""
                                         FROM ""Pages"" AS p
                                     ) AS t
@@ -203,7 +206,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                          {
                                              SourceId = x.SourceId,
                                              DestinationId = x.DestinationId,
-                                             Duration = x.Duration,
+                                             Duration = FuzzyRange.TryParse(x.Duration),
                                              Type = x.Type
                                          })
                                          .GroupBy(x => x.SourceId)
@@ -265,8 +268,8 @@ namespace Bonsai.Areas.Front.Logic.Relations
             // Gets the range to display alongside the relation
             FuzzyRange? GetRange(RelationTarget elem)
             {
-                if(def.DurationDisplayMode == RelationDurationDisplayMode.RelationRange)
-                    return FuzzyRange.TryParse(elem.Relation.Duration);
+                if (def.DurationDisplayMode == RelationDurationDisplayMode.RelationRange)
+                    return elem.Relation.Duration;
 
                 if(def.DurationDisplayMode == RelationDurationDisplayMode.Birth)
                     return FuzzyRange.TryParse(elem.Page.BirthDate + "-");
@@ -293,12 +296,13 @@ namespace Bonsai.Areas.Front.Logic.Relations
             return new RelationVM
             {
                 Title = def.GetName(results.Count, results[0].Page.Gender),
-                Pages = results.Select(elem => new RelatedPageVM
-                                {
-                                    Title = elem.Page.ShortName ?? elem.Page.Title,
-                                    Key = elem.Page.Key,
-                                    Duration = GetRange(elem)
-                                })
+                Pages = results.OrderBy(x => x.Page.BirthDate)
+                               .Select(elem => new RelatedPageVM
+                               {
+                                   Title = elem.Page.ShortName ?? elem.Page.Title,
+                                   Key = elem.Page.Key,
+                                   Duration = GetRange(elem)
+                               })
                                .ToList()
             };
         }

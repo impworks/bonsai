@@ -2,14 +2,13 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
 
 namespace Bonsai.Code.Tools
 {
     /// <summary>
     /// A date with possibly unknown parts.
     /// </summary>
-    public struct FuzzyDate: IEquatable<FuzzyDate>, IComparable<FuzzyDate>
+    public partial struct FuzzyDate: IEquatable<FuzzyDate>, IComparable<FuzzyDate>
     {
         #region Constructor
 
@@ -389,34 +388,6 @@ namespace Bonsai.Code.Tools
         public override string ToString()
         {
             return _stringValue;
-        }
-
-        #endregion
-
-        #region JsonConverter
-
-        public class FuzzyDateJsonConverter : JsonConverter
-        {
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                writer.WriteValue(value.ToString());
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                var value = reader.Value.ToString();
-
-                if(objectType == typeof(FuzzyDate?))
-                    return FuzzyDate.TryParse(value);
-
-                return FuzzyDate.Parse(value);
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(FuzzyDate)
-                       || objectType == typeof(FuzzyDate?);
-            }
         }
 
         #endregion

@@ -23,8 +23,8 @@ namespace Bonsai.Areas.Front.Logic.Relations
             public string Key { get; set; }
             public PageType PageType { get; set; }
             public bool? Gender { get; set; }
-            public string BirthDate { get; set; }
-            public string DeathDate { get; set; }
+            public FuzzyDate? BirthDate { get; set; }
+            public FuzzyDate? DeathDate { get; set; }
             public string ShortName { get; set; }
 
             #region Equality members (auto-generated)
@@ -71,7 +71,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
             public Guid SourceId { get; set; }
             public Guid DestinationId { get; set; }
             public RelationType Type { get; set; }
-            public string Duration { get; set; }
+            public FuzzyRange? Duration { get; set; }
         }
 
         /// <summary>
