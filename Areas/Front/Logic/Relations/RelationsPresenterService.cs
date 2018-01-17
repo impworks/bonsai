@@ -271,11 +271,13 @@ namespace Bonsai.Areas.Front.Logic.Relations
                 if (def.DurationDisplayMode == RelationDurationDisplayMode.RelationRange)
                     return elem.Relation.Duration;
 
-                if(def.DurationDisplayMode == RelationDurationDisplayMode.Birth)
-                    return FuzzyRange.TryParse(elem.Page.BirthDate + "-");
+                if (def.DurationDisplayMode == RelationDurationDisplayMode.Birth)
+                    if (elem.Page.BirthDate != null)
+                        return new FuzzyRange(elem.Page.BirthDate, null);
 
-                if(def.DurationDisplayMode == RelationDurationDisplayMode.Life)
-                    return FuzzyRange.TryParse(elem.Page.BirthDate + "-" + elem.Page.DeathDate);
+                if (def.DurationDisplayMode == RelationDurationDisplayMode.Life)
+                    if(elem.Page.BirthDate != null || elem.Page.DeathDate != null)
+                        return new FuzzyRange(elem.Page.BirthDate, elem.Page.DeathDate);
 
                 return null;
             }
@@ -310,3 +312,4 @@ namespace Bonsai.Areas.Front.Logic.Relations
         #endregion
     }
 }
+

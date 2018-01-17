@@ -374,10 +374,10 @@ namespace Bonsai.Code.Tools
                 sb.Append(year.Value);
 
             sb.Append(".");
-            sb.Append(month?.ToString() ?? "??");
+            sb.Append(month?.ToString("D2") ?? "??");
 
             sb.Append(".");
-            sb.Append(day?.ToString() ?? "??");
+            sb.Append(day?.ToString("D2") ?? "??");
 
             return sb.ToString();
         }
