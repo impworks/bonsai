@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
@@ -71,6 +72,14 @@ namespace Bonsai.Areas.Front.Logic
             }
 
             return vm;
+        }
+
+        /// <summary>
+        /// Returns the last X uploaded media files (for front page).
+        /// </summary>
+        public async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMedia(int count)
+        {
+            throw new NotImplementedException();
         }
 
         #region Private helpers

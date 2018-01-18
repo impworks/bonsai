@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
+using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Facts;
@@ -77,6 +79,14 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small))
             });
+        }
+
+        /// <summary>
+        /// Returns the last X updated pages (for front page).
+        /// </summary>
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPages(int count)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
