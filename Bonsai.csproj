@@ -10,7 +10,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Views\" />
-    <Folder Include="Areas\Front\Views\Home\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Utils\Seed\Media\" />
     <Folder Include="wwwroot\assets\" />

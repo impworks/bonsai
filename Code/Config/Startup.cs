@@ -87,6 +87,7 @@ namespace Bonsai.Code.Config
             services.AddTransient<RelationsPresenterService>();
             services.AddTransient<PagePresenterService>();
             services.AddTransient<MediaPresenterService>();
+            services.AddTransient<CalendarPresenterService>();
 
             if (Environment.IsProduction())
             {
