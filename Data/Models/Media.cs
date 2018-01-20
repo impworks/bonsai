@@ -53,5 +53,15 @@ namespace Bonsai.Data.Models
         /// Tagged entities on the media.
         /// </summary>
         public ICollection<MediaTag> Tags { get; set; }
+
+        /// <summary>
+        /// Date of the media's upload to the server.
+        /// </summary>
+        public DateTimeOffset UploadDate { get; set; }
+
+        /// <summary>
+        /// Reference to the user who has uploaded this media.
+        /// </summary>
+        public AppUser UploaderAuthor { get; set; }
     }
 }

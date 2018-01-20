@@ -30,6 +30,9 @@ namespace Bonsai.Data
             builder.Entity<AppUser>()
                    .HasMany(x => x.Changes).WithOne(x => x.Author);
 
+            builder.Entity<AppUser>()
+                   .HasOne(x => x.Page).WithMany().IsRequired(false);
+
             builder.Entity<AccessRule>()
                    .HasOne(x => x.Page).WithMany();
 
@@ -47,6 +50,9 @@ namespace Bonsai.Data
 
             builder.Entity<Relation>()
                    .HasOne(x => x.Destination).WithMany().HasForeignKey(x => x.DestinationId);
+
+            builder.Entity<Media>()
+                   .HasOne(x => x.UploaderAuthor).WithMany().IsRequired(false);
 
             builder.Entity<MediaTag>()
                    .HasOne(x => x.Media).WithMany(x => x.Tags);

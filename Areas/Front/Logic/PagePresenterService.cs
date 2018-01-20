@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels.Home;
+using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
+using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -86,7 +87,26 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPages(int count)
         {
-            throw new NotImplementedException();
+            return await _db.Pages
+                            .OrderByDescending(x => x.LastUpdateDate)
+                            .Take(count)
+                            .Select(x => new PageTitleExtendedVM
+                            {
+                                Title = x.Title,
+                                Key = x.Key,
+                                UpdatedDate = x.LastUpdateDate,
+                                Image = x.MainPhoto != null
+                                    ? new MediaThumbnailVM
+                                    {
+                                        Type = x.MainPhoto.Type,
+                                        MediaKey = x.MainPhoto.Key,
+                                        ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small),
+                                        Date = FuzzyDate.TryParse(x.MainPhoto.Date)
+                                    }
+                                    : null
+                            })
+                            .ToListAsync()
+                            .ConfigureAwait(false);
         }
 
         #endregion

@@ -42,8 +42,7 @@ namespace Bonsai.Data.Models
         /// Serialized collection of facts related to current entity.
         /// </summary>
         public string Facts { get; set; }
-
-
+        
         /// <summary>
         /// Relations from this page to others.
         /// </summary>
@@ -58,5 +57,15 @@ namespace Bonsai.Data.Models
         /// Photograph for info block.
         /// </summary>
         public Media MainPhoto { get; set; }
+
+        /// <summary>
+        /// Date of the page's creation.
+        /// </summary>
+        public DateTimeOffset CreateDate { get; set; }
+
+        /// <summary>
+        /// Date of the page's last revision.
+        /// </summary>
+        public DateTimeOffset LastUpdateDate { get; set; }
     }
 }

@@ -9,6 +9,11 @@ namespace Bonsai.Data.Models
     public class AppUser: IdentityUser
     {
         /// <summary>
+        /// User's own page.
+        /// </summary>
+        public Page Page { get; set; }
+
+        /// <summary>
         /// Changes created by this user.
         /// </summary>
         public ICollection<Changeset> Changes { get; set; }

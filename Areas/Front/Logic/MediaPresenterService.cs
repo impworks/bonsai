@@ -79,7 +79,19 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMedia(int count)
         {
-            throw new NotImplementedException();
+            return await _db.Media
+                            .OrderByDescending(x => x.UploadDate)
+                            .Take(count)
+                            .Select(x => new MediaThumbnailExtendedVM
+                            {
+                                Type = x.Type,
+                                MediaKey = x.Key,
+                                ThumbnailUrl = GetSizedMediaPath(x.FilePath, MediaSize.Small),
+                                Date = FuzzyDate.TryParse(x.Date),
+                                UploadDate = x.UploadDate
+                            })
+                            .ToListAsync()
+                            .ConfigureAwait(false);
         }
 
         #region Private helpers
