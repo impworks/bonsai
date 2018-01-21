@@ -11,6 +11,12 @@ namespace Bonsai.Code.Tools
     {
         #region Constructor
 
+        public FuzzyRange(DateTime? from, DateTime? to)
+            : this(from == null ? (FuzzyDate?) null : new FuzzyDate(from.Value), to == null ? (FuzzyDate?)null : new FuzzyDate(to.Value))
+        {
+            
+        }
+
         public FuzzyRange(FuzzyDate? from, FuzzyDate? to)
         {
             if (from == null && to == null)

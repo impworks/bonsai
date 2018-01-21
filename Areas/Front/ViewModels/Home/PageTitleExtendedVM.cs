@@ -1,5 +1,4 @@
 ﻿using System;
-using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 
 namespace Bonsai.Areas.Front.ViewModels.Home
@@ -12,7 +11,7 @@ namespace Bonsai.Areas.Front.ViewModels.Home
         /// <summary>
         /// Page's main image.
         /// </summary>
-        public MediaThumbnailVM Image { get; set; }
+        public string MainPhotoPath { get; set; }
 
         /// <summary>
         /// Last update.

@@ -12,6 +12,12 @@ namespace Bonsai.Code.Tools
     {
         #region Constructor
 
+        public FuzzyDate(DateTime date)
+            : this(date.Year, date.Month, date.Day)
+        {
+            
+        }
+
         public FuzzyDate(int? year, int? month, int? day, bool isDecade = false)
         {
             if (day == null && month == null && year == null)

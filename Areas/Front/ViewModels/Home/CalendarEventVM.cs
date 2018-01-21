@@ -8,6 +8,11 @@ namespace Bonsai.Areas.Front.ViewModels.Home
     public class CalendarEventVM
     {
         /// <summary>
+        /// Number of the day.
+        /// </summary>
+        public int? Day { get; set; }
+
+        /// <summary>
         /// Title of the event.
         /// </summary>
         public string Title { get; set; }
