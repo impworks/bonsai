@@ -139,6 +139,40 @@ namespace Bonsai.Code.Tools
 
         #endregion
 
+        #region Helper methods
+
+        /// <summary>
+        /// Checks if the date is inside the range.
+        /// </summary>
+        public bool Contains(FuzzyDate? date)
+        {
+            if (RangeStart == null || RangeEnd == null || date == null)
+                return false;
+
+            return RangeStart.Value.CompareTo(date.Value) <= 0
+                   && RangeEnd.Value.CompareTo(date.Value) >= 0;
+        }
+
+        /// <summary>
+        /// Checks if the range completely contains another range.
+        /// </summary>
+        public bool Contains(FuzzyRange range)
+        {
+            return Contains(range.RangeStart)
+                   && Contains(range.RangeEnd);
+        }
+
+        /// <summary>
+        /// Checks if the range overlaps another range.
+        /// </summary>
+        public bool Overlaps(FuzzyRange range)
+        {
+            return Contains(range.RangeStart)
+                   || Contains(range.RangeEnd);
+        }
+
+        #endregion
+
         #region IEquatable implementation
 
         public bool Equals(FuzzyRange other)
