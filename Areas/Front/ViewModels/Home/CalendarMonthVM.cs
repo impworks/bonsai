@@ -26,5 +26,10 @@ namespace Bonsai.Areas.Front.ViewModels.Home
         /// List of calendar days / weeks.
         /// </summary>
         public IReadOnlyList<IReadOnlyList<CalendarDayVM>> Weeks { get; set; }
+
+        /// <summary>
+        /// Events without a certain date.
+        /// </summary>
+        public IReadOnlyList<CalendarEventVM> FuzzyEvents { get; set; }
     }
 }

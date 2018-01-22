@@ -31,12 +31,17 @@ namespace Bonsai.Areas.Front.Logic
 
             var range = GetDisplayedRange(year, month);
             var events = GetPageEvents(year, month, context)
-                .Concat(GetRelationEvents(year, month, context))
-                .ToList();
+                         .Concat(GetRelationEvents(year, month, context))
+                         .ToList();
 
-            // todo
-
-            throw new NotImplementedException();
+            return new CalendarMonthVM
+            {
+                Month = month,
+                Year = year,
+                MonthName = new DateTime(year, month, 1).ToString("MMMM"),
+                Weeks = GetMonthGrid(range.from, range.to, month, events),
+                FuzzyEvents = events.Where(x => x.Day == null).ToList()
+            };
         }
 
         #region Private helpers
@@ -143,7 +148,7 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Gets the range for displaying the events.
         /// </summary>
-        private FuzzyRange GetDisplayedRange(int year, int month)
+        private (DateTime from, DateTime to) GetDisplayedRange(int year, int month)
         {
             var firstMonthDay = new DateTime(year, month, 1);
             var firstWeekDay = firstMonthDay.DayOfWeek;
@@ -155,7 +160,39 @@ namespace Bonsai.Areas.Front.Logic
             var daysAfterLast = 7 - (lastWeekDay != DayOfWeek.Sunday ? (int) lastWeekDay : 0);
             var lastDay = lastMonthDay.AddDays(daysAfterLast);
 
-            return new FuzzyRange(firstDay, lastDay);
+            return (firstDay, lastDay);
+        }
+
+        /// <summary>
+        /// Gets the grid of days for current range.
+        /// </summary>
+        private IReadOnlyList<IReadOnlyList<CalendarDayVM>> GetMonthGrid(DateTime from, DateTime to, int month, IEnumerable<CalendarEventVM> events)
+        {
+            var curr = from;
+            var weeks = new List<List<CalendarDayVM>>();
+            var cache = events.Where(x => x.Day != null)
+                              .GroupBy(x => x.Day.Value)
+                              .ToDictionary(x => x.Key, x => x);
+
+            while (curr != to)
+            {
+                var week = new List<CalendarDayVM>();
+                for (var i = 0; i < 7; i++)
+                {
+                    var day = new CalendarDayVM { Day = curr.Day };
+                    if (curr.Month == month)
+                    {
+                        day.IsActive = true;
+                        day.Events = cache[curr.Day].ToList();
+                    }
+
+                    week.Add(day);
+                    curr = curr.AddDays(1);
+                }
+                weeks.Add(week);
+            }
+
+            return weeks;
         }
 
         /// <summary>

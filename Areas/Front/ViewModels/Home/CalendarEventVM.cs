@@ -18,6 +18,11 @@ namespace Bonsai.Areas.Front.ViewModels.Home
         public string Title { get; set; }
 
         /// <summary>
+        /// Event type.
+        /// </summary>
+        public CalendarEventType Type { get; set; }
+
+        /// <summary>
         /// Links to related pages.
         /// </summary>
         public IReadOnlyList<PageTitleExtendedVM> RelatedPages { get; set; }

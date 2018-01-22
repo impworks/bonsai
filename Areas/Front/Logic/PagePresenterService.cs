@@ -95,14 +95,8 @@ namespace Bonsai.Areas.Front.Logic
                                 Title = x.Title,
                                 Key = x.Key,
                                 UpdatedDate = x.LastUpdateDate,
-                                Image = x.MainPhoto != null
-                                    ? new MediaThumbnailVM
-                                    {
-                                        Type = x.MainPhoto.Type,
-                                        MediaKey = x.MainPhoto.Key,
-                                        ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small),
-                                        Date = FuzzyDate.TryParse(x.MainPhoto.Date)
-                                    }
+                                MainPhotoPath = x.MainPhoto != null
+                                    ? MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small)
                                     : null
                             })
                             .ToListAsync()
