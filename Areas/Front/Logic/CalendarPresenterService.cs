@@ -46,38 +46,53 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         private IEnumerable<CalendarEventVM> GetPageEvents(int year, int month, RelationContext context)
         {
+            var maxDate = new FuzzyDate(new DateTime(year, month, 1).AddMonths(1).AddSeconds(-1));
+
             foreach (var page in context.Pages.Values)
             {
-                if (page.DeathDate is FuzzyDate death && death.Month == month && !(year < death.Year))
+                if (page.BirthDate is FuzzyDate birth)
                 {
-                    var title = year == death.Year
-                        ? "Дата смерти"
-                        : death.Year == null
-                            ? "Годовщина смерти"
-                            : (year - death.Year.Value) + "-ая годовщина смерти";
+                    var showBirth = birth.Month == month
+                                    && (birth.Year == null || birth.Year <= year)
+                                    && (page.DeathDate == null || page.DeathDate >= maxDate);
 
-                    yield return new CalendarEventVM
+                    if (showBirth)
                     {
-                        Day = death.Day,
-                        Title = title,
-                        RelatedPages = new [] { Map(page) }
-                    };
+                        var title = (year == birth.Year && !birth.IsDecade)
+                            ? "Дата рождения"
+                            : (birth.Year == null || birth.IsDecade)
+                                ? "День рождения"
+                                : $"День рождения ({year - birth.Year.Value})";
+
+                        yield return new CalendarEventVM
+                        {
+                            Day = birth.Day,
+                            Title = title,
+                            RelatedPages = new[] { Map(page) }
+                        };
+                    }
                 }
 
-                else if (page.BirthDate is FuzzyDate birth && birth.Month == month && !(year > birth.Year))
+                if (page.DeathDate is FuzzyDate death)
                 {
-                    var title = year == birth.Year
-                        ? "Дата рождения"
-                        : birth.Year == null
-                            ? "День рождения"
-                            : $"День рождения ({year - birth.Year.Value})";
+                    var showDeath = death.Month == month
+                                    && (death.Year == null || death.Year <= year);
 
-                    yield return new CalendarEventVM
+                    if (showDeath)
                     {
-                        Day = birth.Day,
-                        Title = title,
-                        RelatedPages = new[] { Map(page) }
-                    };
+                        var title = (year == death.Year && !death.IsDecade)
+                            ? "Дата смерти"
+                            : (death.Year == null || death.IsDecade)
+                                ? "Годовщина смерти"
+                                : (year - death.Year.Value) + "-ая годовщина смерти";
+
+                        yield return new CalendarEventVM
+                        {
+                            Day = death.Day,
+                            Title = title,
+                            RelatedPages = new[] {Map(page)}
+                        };
+                    }
                 }
             }
         }
@@ -87,7 +102,42 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         private IEnumerable<CalendarEventVM> GetRelationEvents(int year, int month, RelationContext context)
         {
-            yield break;
+            var visited = new HashSet<string>();
+            var maxDate = new FuzzyDate(new DateTime(year, month, 1).AddMonths(1).AddSeconds(-1));
+
+            foreach (var rel in context.Relations.SelectMany(x => x.Value))
+            {
+                if (!(rel.Duration is FuzzyRange duration) || !(duration.RangeStart is FuzzyDate start) || start.Month != month)
+                    continue;
+
+                if (duration.RangeEnd is FuzzyDate end && end <= maxDate)
+                    continue;
+
+                var hash = string.Concat(rel.SourceId.ToString(), rel.DestinationId.ToString(), duration.ToString());
+                if (visited.Contains(hash))
+                    continue;
+
+                var inverseHash = string.Concat(rel.DestinationId.ToString(), rel.SourceId.ToString(), duration.ToString());
+                visited.Add(hash);
+                visited.Add(inverseHash);
+
+                var title = (year == start.Year && !start.IsDecade)
+                    ? "Дата свадьбы"
+                    : (start.Year == null || start.IsDecade)
+                        ? "Годовщина свадьбы"
+                        : (year - start.Year.Value) + "-ая годовщина свадьбы";
+
+                yield return new CalendarEventVM
+                {
+                    Day = start.Day,
+                    Title = title,
+                    RelatedPages = new[]
+                    {
+                        Map(context.Pages[rel.SourceId]),
+                        Map(context.Pages[rel.DestinationId])
+                    }
+                };
+            }
         }
 
         /// <summary>

@@ -361,6 +361,54 @@ namespace Bonsai.Code.Tools
             return string.Compare(_stringValue, other._stringValue, CultureInfo.InvariantCulture, CompareOptions.None);
         }
 
+        public static bool operator >=(FuzzyDate first, FuzzyDate second)
+        {
+            return first.CompareTo(second) >= 1;
+        }
+
+        public static bool operator <=(FuzzyDate first, FuzzyDate second)
+        {
+            return first.CompareTo(second) <= 1;
+        }
+
+        public static bool operator >(FuzzyDate first, FuzzyDate second)
+        {
+            return first.CompareTo(second) > 1;
+        }
+
+        public static bool operator <(FuzzyDate first, FuzzyDate second)
+        {
+            return first.CompareTo(second) < 1;
+        }
+
+        public static bool operator >=(FuzzyDate? first, FuzzyDate? second)
+        {
+            return first != null
+                   && second != null
+                   && first.Value.CompareTo(second.Value) >= 1;
+        }
+
+        public static bool operator <=(FuzzyDate? first, FuzzyDate? second)
+        {
+            return first != null
+                   && second != null
+                   && first.Value.CompareTo(second.Value) <= 1;
+        }
+
+        public static bool operator >(FuzzyDate? first, FuzzyDate? second)
+        {
+            return first != null
+                   && second != null
+                   && first.Value.CompareTo(second.Value) > 1;
+        }
+
+        public static bool operator <(FuzzyDate? first, FuzzyDate? second)
+        {
+            return first != null
+                   && second != null
+                   && first.Value.CompareTo(second.Value) < 1;
+        }
+
         #endregion
 
         #region ToString
