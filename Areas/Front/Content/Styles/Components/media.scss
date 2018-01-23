@@ -6,18 +6,17 @@
         margin-top: 10px;
         margin-bottom: 0;
     }
+}
 
-    .media-thumb-wrapper {
-        display: inline-block;
-        margin: 10px;
-        width: 200px;
-        padding: 10px;
-        border: #cccccc 1px solid;
-        vertical-align: top;
+.media-thumb-wrapper {
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+    border: #cccccc 1px solid;
+    vertical-align: top;
 
-        img {
-            width: 100%;
-        }
+    img {
+        width: 100%;
     }
 }
 

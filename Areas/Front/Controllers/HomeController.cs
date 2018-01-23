@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -9,7 +10,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Route("")]
     [Area("Front")]
-    public class HomeController: Controller
+    public class HomeController : Controller
     {
         public HomeController(PagePresenterService pages, MediaPresenterService media, CalendarPresenterService calendar)
         {
@@ -27,11 +28,21 @@ namespace Bonsai.Areas.Front.Controllers
         /// It is currently empty.
         /// </summary>
         [Route("")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            // todo: last updated pages, media, date calendar, etc.
+            var count = 5;
+            var lastPages = await _pages.GetLastUpdatedPagesAsync(count)
+                                        .ConfigureAwait(false);
+            var lastMedia = await _media.GetLastUploadedMediaAsync(count)
+                                        .ConfigureAwait(false);
 
-            return View();
+            var vm = new HomeVM
+            {
+                LastUpdatedPages = lastPages,
+                LastUploadedMedia = lastMedia
+            };
+
+            return View(vm);
         }
 
         /// <summary>

@@ -9,21 +9,25 @@
                       .OrderByDescending(x => x.Key);
 }
 
-@if (Model.Media.Any())
+@if(Model.Media.Any())
 {
-    foreach (var group in groups)
+    foreach(var group in groups)
     {
         var key = group.Key ?? "Давно";
         <div class="media-thumb-group">
             <h3 class="media-group-title" id="@key">@key</h3>
-            @foreach (var elem in group.OrderByDescending(x => x.Date))
-            {
-                <div class="media-thumb-wrapper">
-                    <a href="@Url.Action("ViewMedia", "Media", new {key = elem.MediaKey, embedded = true})" class="media-thumb-link" data-media="@elem.MediaKey">
-                        <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@(elem.Date?.ShortReadableDate ?? "Дата неизвестна"))" />
-                    </a>
-                </div>
-            }
+            <ul class="list-inline">
+                @foreach(var elem in group.OrderByDescending(x => x.Date))
+                {
+                    <li class="list-inline-item">
+                        <div class="media-thumb-wrapper">
+                            <a href="@Url.Action("ViewMedia", "Media", new { key = elem.MediaKey })" class="media-thumb-link" data-media="@elem.MediaKey">
+                                <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@(elem.Date?.ShortReadableDate ?? "Дата неизвестна"))" />
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
         </div>
     }
 }

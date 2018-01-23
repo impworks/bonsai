@@ -85,7 +85,7 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the last X updated pages (for front page).
         /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPages(int count)
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
         {
             return await _db.Pages
                             .OrderByDescending(x => x.LastUpdateDate)

@@ -80,6 +80,8 @@ namespace Bonsai.Data.Utils.Seed
                 PageType = type,
                 Description = (File.Exists(descrFile) ? File.ReadAllText(descrFile) : descrSource) ?? title,
                 Facts = factsObj.ToString(Formatting.None),
+                CreateDate = DateTimeOffset.Now,
+                LastUpdateDate = DateTimeOffset.Now
             };
             _db.Pages.Add(page);
             return page;
@@ -150,7 +152,8 @@ namespace Bonsai.Data.Utils.Seed
                 FilePath = webPath,
                 Date = date,
                 Description = description,
-                Tags = new List<MediaTag>()
+                Tags = new List<MediaTag>(),
+                UploadDate = DateTimeOffset.Now
             };
             _db.Media.Add(media);
             return media;

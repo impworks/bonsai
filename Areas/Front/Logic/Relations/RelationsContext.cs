@@ -64,9 +64,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                             p.""Facts""::json#>>'{Birth.Date,Value}' AS ""BirthDate"",
                                             p.""Facts""::json#>>'{Death.Date,Value}' AS ""DeathDate"",
                                             CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender"",
-                                            m.FilePath AS ""MainPhotoPath""
+                                            m.""FilePath"" AS ""MainPhotoPath""
                                         FROM ""Pages"" AS p
-                                        LEFT JOIN ""Media"" AS m ON m.Id = p.MainPhotoId
+                                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId""
                                     ) AS t
                                   ").ConfigureAwait(false);
 

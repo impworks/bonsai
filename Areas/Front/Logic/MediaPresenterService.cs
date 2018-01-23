@@ -77,7 +77,7 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the last X uploaded media files (for front page).
         /// </summary>
-        public async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMedia(int count)
+        public async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMediaAsync(int count)
         {
             return await _db.Media
                             .OrderByDescending(x => x.UploadDate)
