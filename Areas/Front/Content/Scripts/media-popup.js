@@ -49,7 +49,7 @@
 
     // opens the media popup if the URL contains a hash
     var hash = window.location.hash;
-    if (hash !== null && hash.substr(1, prefix.length) === prefix) {
+    if (hash != null && hash.substr(1, prefix.length) === prefix) {
         var media = hash.substr(prefix.length + 1);
         var elem = $(selector + '[data-media="' + media + '"]');
         var pos = allLinks.find(selector).index(elem);
