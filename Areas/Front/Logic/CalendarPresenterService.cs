@@ -108,7 +108,7 @@ namespace Bonsai.Areas.Front.Logic
         private IEnumerable<CalendarEventVM> GetRelationEvents(int year, int month, RelationContext context)
         {
             var visited = new HashSet<string>();
-            var maxDate = new FuzzyDate(new DateTime(year, month, 1).AddMonths(1).AddSeconds(-1));
+            var maxDate = new FuzzyDate(CreateDate(year, month).AddMonths(1).AddSeconds(-1));
 
             foreach (var rel in context.Relations.SelectMany(x => x.Value))
             {
@@ -150,7 +150,7 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         private (DateTime from, DateTime to) GetDisplayedRange(int year, int month)
         {
-            var firstMonthDay = new DateTime(year, month, 1);
+            var firstMonthDay = CreateDate(year, month);
             var firstWeekDay = firstMonthDay.DayOfWeek;
             var daysBeforeFirst = firstWeekDay != DayOfWeek.Sunday ? (int) firstWeekDay - 1 : 6;
             var firstDay = firstMonthDay.AddDays(-daysBeforeFirst);
@@ -164,6 +164,20 @@ namespace Bonsai.Areas.Front.Logic
         }
 
         /// <summary>
+        /// Returns a proper DateTime, falling back to current month.
+        /// </summary>
+        private DateTime CreateDate(int year, int month)
+        {
+            if(month < 1 || month > 12)
+            {
+                var now = DateTime.Now;
+                return new DateTime(now.Year, now.Month, 1);
+            }
+
+            return new DateTime(year, month, 1);
+        }
+
+        /// <summary>
         /// Gets the grid of days for current range.
         /// </summary>
         private IReadOnlyList<IReadOnlyList<CalendarDayVM>> GetMonthGrid(DateTime from, DateTime to, int month, IEnumerable<CalendarEventVM> events)
@@ -172,9 +186,9 @@ namespace Bonsai.Areas.Front.Logic
             var weeks = new List<List<CalendarDayVM>>();
             var cache = events.Where(x => x.Day != null)
                               .GroupBy(x => x.Day.Value)
-                              .ToDictionary(x => x.Key, x => x);
+                              .ToDictionary(x => x.Key, x => x.ToList());
 
-            while (curr != to)
+            while (curr < to)
             {
                 var week = new List<CalendarDayVM>();
                 for (var i = 0; i < 7; i++)
@@ -183,12 +197,15 @@ namespace Bonsai.Areas.Front.Logic
                     if (curr.Month == month)
                     {
                         day.IsActive = true;
-                        day.Events = cache[curr.Day].ToList();
+
+                        if (cache.TryGetValue(curr.Day, out var dayEvents))
+                            day.Events = dayEvents;
                     }
 
                     week.Add(day);
                     curr = curr.AddDays(1);
                 }
+
                 weeks.Add(week);
             }
 

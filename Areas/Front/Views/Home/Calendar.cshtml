@@ -1,1 +1,67 @@
-﻿<span>Calendar</span>
+﻿@using Bonsai.Areas.Front.ViewModels.Home
+@using Bonsai.Code.Utils
+@model Bonsai.Areas.Front.ViewModels.Home.CalendarMonthVM
+@{
+    var date = new DateTime(Model.Year, Model.Month, 1);
+    var prev = date.AddMonths(-1);
+    var next = date.AddMonths(1);
+    var weekDays = new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" };
+}
+
+<table class="calendar">
+    <thead>
+        <tr>
+            <th colspan="7">
+                <h5 class="calendar-title">
+                    <a href="#" class="cmd-calendar-show" data-year="@prev.Year" data-month="@prev.Month" title="Предыдущий месяц">&laquo;</a>
+                    <span>@Model.MonthName @Model.Year</span>
+                    <a href="#" class="cmd-calendar-show" data-year="@next.Year" data-month="@next.Month" title="Следующий месяц">&raquo;</a>
+                </h5>
+            </th>
+        </tr>
+        <tr>
+            @foreach(var weekDay in weekDays)
+            {
+                <th>@weekDay</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var week in Model.Weeks)
+        {
+            <tr>
+                @foreach(var day in week)
+                {
+                    <td class="calendar-day @(day.IsActive ? "" : "calendar-day-inactive")">
+                        <div class="calendar-day-number">@day.Day</div>
+                        @if(day.Events == null)
+                        {
+                            continue;
+                        }
+                        @foreach(var evt in day.Events)
+                        {
+                            <div class="calendar-event" title="@evt.Title">
+
+                                <div class="page-image" style="background-image: url(@Url.Content(StringHelper.Coalesce(evt.RelatedPages[0].MainPhotoPath, "~/assets/img/unknown-user.png")))"></div>
+
+                                <div class="calendar-event-details">
+                                    <h6 class="calendar-event-details-title">@evt.Title</h6>
+                                    @foreach(var rp in evt.RelatedPages)
+                                    {
+                                        var imgPath = StringHelper.Coalesce(rp.MainPhotoPath, "~/assets/img/unknown-user.png");
+                                        <div class="calendar-event-details-link">
+                                            <div class="page-image" style="background-image: url(@Url.Content(imgPath))"></div>
+                                            <a href="@Url.Action("Description", "Page", new {key = rp.Key})">
+                                                <span class="title">@rp.Title</span>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

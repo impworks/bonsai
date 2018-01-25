@@ -1,8 +1,10 @@
-﻿.media-thumb-group {
+﻿@import '../variables.scss';
+
+.media-thumb-group {
     margin-bottom: 10px;
 
     .media-group-title {
-        color: #999;
+        color: $subtle-header-color;
         margin-top: 10px;
         margin-bottom: 0;
     }
@@ -12,7 +14,7 @@
     display: inline-block;
     width: 200px;
     padding: 10px;
-    border: #cccccc 1px solid;
+    border: $panel-inner-border;
     vertical-align: top;
 
     img {

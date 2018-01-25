@@ -1,0 +1,88 @@
+﻿@import '../variables.scss';
+
+.calendar {
+    border: 0;
+    border-collapse: collapse;
+    width: 100%;
+
+    th, td {
+        border: $panel-inner-border;
+        padding: 5px;
+        width: 14.285%;
+    }
+
+    thead {
+        background: $panel-color;
+
+        th {
+            text-align: center;
+        }
+
+        .calendar-title {
+            text-align: center;
+
+            a.cmd-calendar-show {
+                margin: 0 10px;
+                font-size: 42px;
+                line-height: 20px;
+                position: relative;
+                top: 4px;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            span {
+                display: inline-block;
+                text-align: center;
+                width: 250px;
+            }
+        }
+    }
+
+    tbody {
+        .calendar-day {
+            vertical-align: top;
+            height: 100px;
+
+            &.calendar-day-inactive {
+                opacity: 0.3;
+                background-color: $panel-color;
+            }
+
+            .calendar-day-number {
+                font-weight: bold;
+                color: $subtle-header-color;
+                margin-bottom: 5px;
+            }
+
+            .calendar-event {
+                display: inline-block;
+                margin-right: 5px;
+                cursor: pointer;
+
+                .page-image {
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .calendar-event-details {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.calendar-event-details {
+    .calendar-event-details-link {
+        display: block;
+        margin-top: 5px;
+
+        .title {
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+    }
+}
