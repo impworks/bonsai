@@ -40,7 +40,7 @@
                         }
                         @foreach(var evt in day.Events)
                         {
-                            <div class="calendar-event" title="@evt.Title">
+                            <div class="calendar-event">
 
                                 <div class="page-image" style="background-image: url(@Url.Content(StringHelper.Coalesce(evt.RelatedPages[0].MainPhotoPath, "~/assets/img/unknown-user.png")))"></div>
 

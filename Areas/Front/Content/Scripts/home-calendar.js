@@ -9,7 +9,6 @@
             container: 'body',
             trigger: 'manual',
             html: true,
-            template: '<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>',
             content: function () {
                 var $det = $(this).find('.calendar-event-details');
                 return $det.prop('outerHTML');
