@@ -1,5 +1,8 @@
-﻿@import 'Components/media.scss';
+﻿@import 'Components/common.scss';
+
+@import 'Components/media.scss';
 @import 'Components/infoblock.scss';
+@import 'Components/homepage.scss';
 @import 'Components/calendar.scss';
 
 .container-main {
@@ -8,13 +11,4 @@
 
 .page-header {
     margin-bottom: 30px;
-}
-
-.page-image {
-    display: inline-block;
-    background-size: cover;
-    background-repeat: no-repeat;
-    width: 24px;
-    height: 24px;
-    vertical-align: bottom;
 }

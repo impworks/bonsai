@@ -1,4 +1,5 @@
-﻿@model Bonsai.Areas.Front.ViewModels.Home.HomeVM
+﻿@addTagHelper *, Bonsai
+@model Bonsai.Areas.Front.ViewModels.Home.HomeVM
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
     ViewBag.Title = "Главная страница";
@@ -16,11 +17,13 @@
         {
             <div class="homepage-block">
                 <h3 class="homepage-title">Последние обновления</h3>
-                <ul class="list-unstyled">
+                <ul class="page-image-links">
                     @foreach(var elem in Model.LastUpdatedPages)
                     {
                         <li>
-                            <a href="@Url.Action("Description", "Page", new { key = elem.Key })" title="Обновлено: @elem.UpdatedDate.UtcDateTime.ToShortDateString()">@elem.Title</a>
+                            <page-image image="@elem.MainPhotoPath" />
+                            <a href="@Url.Action("Description", "Page", new {key = elem.Key})">@elem.Title</a>
+                            <small class="text-muted" title="@elem.UpdatedDate.ToLongDateString()">@elem.UpdatedDate.ToShortDateString()</small>
                         </li>
                     }
                 </ul>
@@ -29,9 +32,9 @@
         @if(Model.LastUploadedMedia.Any())
         {
             <div class="homepage-block">
-                <h3 class="homepage-title">Последние загрузки</h3>
+                <h3 class="homepage-title">Последние медиа-файлы</h3>
                 <ul class="list-inline">
-                    @foreach (var elem in Model.LastUploadedMedia)
+                    @foreach(var elem in Model.LastUploadedMedia)
                     {
                         <li class="list-inline-item">
                             <div class="media-thumb-wrapper">

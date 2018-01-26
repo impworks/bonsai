@@ -1,0 +1,22 @@
+﻿.page-image {
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    vertical-align: bottom;
+}
+
+.page-image-links {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+
+    li {
+        margin-top: 5px;
+
+        &:first-of-type {
+            margin-top: 0;
+        }
+    }
+}

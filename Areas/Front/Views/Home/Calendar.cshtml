@@ -1,5 +1,4 @@
-﻿@using Bonsai.Areas.Front.ViewModels.Home
-@using Bonsai.Code.Utils
+﻿@addTagHelper *, Bonsai
 @model Bonsai.Areas.Front.ViewModels.Home.CalendarMonthVM
 @{
     var date = new DateTime(Model.Year, Model.Month, 1);
@@ -38,24 +37,26 @@
                         {
                             continue;
                         }
+
                         @foreach(var evt in day.Events)
                         {
                             <div class="calendar-event">
 
-                                <div class="page-image" style="background-image: url(@Url.Content(StringHelper.Coalesce(evt.RelatedPages[0].MainPhotoPath, "~/assets/img/unknown-user.png")))"></div>
+                                <page-image image="@evt.RelatedPages[0].MainPhotoPath" />
 
                                 <div class="calendar-event-details">
                                     <h6 class="calendar-event-details-title">@evt.Title</h6>
-                                    @foreach(var rp in evt.RelatedPages)
-                                    {
-                                        var imgPath = StringHelper.Coalesce(rp.MainPhotoPath, "~/assets/img/unknown-user.png");
-                                        <div class="calendar-event-details-link">
-                                            <div class="page-image" style="background-image: url(@Url.Content(imgPath))"></div>
-                                            <a href="@Url.Action("Description", "Page", new {key = rp.Key})">
-                                                <span class="title">@rp.Title</span>
-                                            </a>
-                                        </div>
-                                    }
+                                    <ul class="page-image-links">
+                                        @foreach(var rp in evt.RelatedPages)
+                                        {
+                                            <li>
+                                                <page-image image="@rp.MainPhotoPath" />
+                                                <a href="@Url.Action("Description", "Page", new {key = rp.Key})">
+                                                    <span class="title">@rp.Title</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
                                 </div>
                             </div>
                         }

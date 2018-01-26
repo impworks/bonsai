@@ -16,6 +16,6 @@ namespace Bonsai.Areas.Front.ViewModels.Home
         /// <summary>
         /// Last update.
         /// </summary>
-        public DateTimeOffset UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

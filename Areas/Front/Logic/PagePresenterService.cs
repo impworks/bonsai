@@ -94,7 +94,7 @@ namespace Bonsai.Areas.Front.Logic
                             {
                                 Title = x.Title,
                                 Key = x.Key,
-                                UpdatedDate = x.LastUpdateDate,
+                                UpdatedDate = x.LastUpdateDate.LocalDateTime,
                                 MainPhotoPath = x.MainPhoto != null
                                     ? MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small)
                                     : null
