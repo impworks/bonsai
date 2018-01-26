@@ -17,8 +17,8 @@ namespace Bonsai.Data.Utils
         /// </summary>
         public static void EnsureDatabaseCreated(this AppDbContext context)
         {
-            if(!context.IsMigrated())
-                context.Database.Migrate();
+            // if(!context.IsMigrated())
+            //     context.Database.Migrate();
         }
 
         /// <summary>
