@@ -21,7 +21,7 @@ namespace Bonsai.Areas.Front.Controllers
         /// Returns the search results.
         /// </summary>
         [HttpGet]
-        public async Task<ActionContext> Search([FromQuery] string query)
+        public async Task<ActionResult> Search([FromQuery] string query)
         {
             var vm = await _search.SearchAsync(query).ConfigureAwait(false);
             return View(vm);

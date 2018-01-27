@@ -24,6 +24,9 @@ var config = {
             './node_modules/popper.js/dist/umd/popper.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/magnific-popup/dist/jquery.magnific-popup.js'
+        ],
+        fonts: [
+            './node_modules/font-awesome/fonts/*.*'
         ]
     },
     front: {
@@ -40,7 +43,9 @@ var config = {
         }
     },
     assets: {
-        root: './wwwroot/assets/'
+        styles: './wwwroot/assets/styles/',
+        scripts: './wwwroot/assets/scripts/',
+        fonts: './wwwroot/assets/fonts/'
     }
 };
 
@@ -52,13 +57,13 @@ gulp.task('front.styles', function() {
     gulp.src(config.front.styles.root)
         .pipe(sass())
         .pipe(concatcss('front.css'))
-        .pipe(gulp.dest(config.assets.root));
+        .pipe(gulp.dest(config.assets.styles));
 });
 
 gulp.task('front.scripts', function () {
     gulp.src(config.front.scripts.all)
         .pipe(concatjs('front.js'))
-        .pipe(gulp.dest(config.assets.root));
+        .pipe(gulp.dest(config.assets.scripts));
 });
 
 gulp.task('front', ['front.styles', 'front.scripts']);
@@ -81,9 +86,9 @@ gulp.task('front.watch', function() {
 
 gulp.task('vendor.styles', function () {
     gulp.src(config.vendor.styles)
-        .pipe(concatcss('vendor.css'))
+        .pipe(concatcss('vendor.css', { rebaseUrls: false }))
         .pipe(mincss())
-        .pipe(gulp.dest(config.assets.root));
+        .pipe(gulp.dest(config.assets.styles));
 });
 
 gulp.task('vendor.scripts', function () {
@@ -91,9 +96,14 @@ gulp.task('vendor.scripts', function () {
         .pipe(concatjs('vendor.js'))
         .pipe(minjs({  }))
         .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-        .pipe(gulp.dest(config.assets.root));
+        .pipe(gulp.dest(config.assets.scripts));
 });
 
-gulp.task('vendor', ['vendor.styles', 'vendor.scripts']);
+gulp.task('vendor.fonts', function() {
+    gulp.src(config.vendor.fonts)
+        .pipe(gulp.dest(config.assets.fonts));
+});
+
+gulp.task('vendor', ['vendor.styles', 'vendor.scripts', 'vendor.fonts']);
 
 gulp.task('build', ['vendor', 'front']);

@@ -8,14 +8,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@config.Title &mdash; @ViewBag.Title</title>
-    <link href="@Url.Content("~/assets/vendor.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/assets/front.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/styles/vendor.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/styles/front.css")" rel="stylesheet" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home")">@config.Title</a>
+                <a class="navbar-brand mr-auto" href="@Url.Action("Index", "Home")">@config.Title</a>
+                
+                <form class="form-inline my-0" method="get" action="@Url.Action("Search", "Search")">
+                    <div class="navbar-search">
+                        <input type="text" name="query" id="search-query" class="form-control form-control-sm navbar-search" placeholder="Поиск..." />
+                        <label for="search-query">
+                            <span class="fa fa-search"></span>
+                        </label>
+                    </div>
+                </form>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,7 +37,7 @@
         @RenderBody()
     </div>
 
-    <script src="@Url.Content("~/assets/vendor.js")"></script>
-    <script src="@Url.Content("~/assets/front.js")"></script>
+    <script src="@Url.Content("~/assets/scripts/vendor.js")"></script>
+    <script src="@Url.Content("~/assets/scripts/front.js")"></script>
 </body>
 </html>
