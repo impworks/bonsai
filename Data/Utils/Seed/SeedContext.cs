@@ -127,9 +127,9 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Creates a new media file.
         /// </summary>
-        public Media AddPhoto(string source, string date = null, string description = null)
+        public Media AddPhoto(string source, string date = null, string description = null, Guid? explicitId = null)
         {
-            var id = Guid.NewGuid();
+            var id = explicitId ?? Guid.NewGuid();
             var key = PageHelper.GetMediaKey(id);
             var newName = key + Path.GetExtension(source);
             var sourcePath = @".\Data\Utils\Seed\Media\" + source;

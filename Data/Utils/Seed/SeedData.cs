@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Bonsai.Data.Models;
 
@@ -59,7 +60,7 @@ namespace Bonsai.Data.Utils.Seed
             ctx.AddRelation(v1, RelationType.EventVisitor, c2);
 
             // photos
-            var pic1 = ctx.AddPhoto("2.jpg", "2015.09.01");
+            var pic1 = ctx.AddPhoto("2.jpg", "2015.09.01", explicitId: Guid.Parse("1c40e722-3ce7-49e0-90dd-8c83a6753c0f"));
             ctx.AddMediaTag(pic1, root, MediaTagType.DepictedEntity, "0.35;0.07;0.1;0.15");
             ctx.AddMediaTag(pic1, w1, MediaTagType.DepictedEntity, "0.15;0.12;0.1;0.15");
             ctx.AddMediaTag(pic1, c1, MediaTagType.DepictedEntity, "0.55;0.35;0.1;0.15");

@@ -1,0 +1,52 @@
+﻿@import '../variables.scss';
+
+h1, h2, h3, h4, h5, h6 {
+    display: block;
+
+    &:before {
+        display: block;
+        clear: left;
+        content: ' ';
+    }
+}
+
+.media-wrapper-inline {
+    border: $panel-border;
+    margin: 5px 10px;
+    padding: 10px;
+
+    &.left {
+        float: left;
+        margin-left: 0;
+    }
+
+    &.right {
+        float: right;
+        margin-right: 0;
+    }
+
+    &.large {
+        width: 300px;
+    }
+
+    &.medium {
+        width: 200px;
+    }
+
+    &.small {
+        width: 150px;
+    }
+
+    &.error {
+        width: 300px;
+        float: left;
+        margin-left: 0;
+        border: 1px $error-color solid;
+        color: $error-color;
+    }
+
+    img, a {
+        width: 100%;
+        display: block;
+    }
+}
