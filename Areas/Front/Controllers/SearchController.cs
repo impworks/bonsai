@@ -7,7 +7,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// <summary>
     /// The controller for searching for pages.
     /// </summary>
-    [Route("s")]
+    [Route("search")]
     public class SearchController: Controller
     {
         public SearchController(SearchPresenterService search)
