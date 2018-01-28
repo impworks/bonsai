@@ -73,25 +73,32 @@ namespace Bonsai.Code.Services
                                          .ToDictionaryAsync(x => x.Key, x => x.FilePath)
                                          .ConfigureAwait(false);
 
+            string Wrapper(string classes, string body) => $@"<div class=""media-inline-wrapper {classes}"">{body}.</div>";
+
             return MediaRegex.Replace(html, m =>
             {
                 var key = m.Groups["key"].Value;
 
                 if (!existingMedia.TryGetValue(key, out var rawPath))
-                    return $@"<div class=""media-inline-wrapper left error"">Медиа-файл '{key}' не найден.</div>";
+                    return Wrapper("error", $"Медиа-файл '{key}' не найден");
 
                 var args = m.Groups["options"].Value?.Split('|');
                 var details = GetMediaDetails(args);
+
+                if(details.Error)
+                    return Wrapper("error", details.Descr);
+
                 var link = _url.Action("ViewMedia", "Media", new {key = key});
                 var path = _url.Content(MediaPresenterService.GetSizedMediaPath(rawPath, MediaSize.Small));
 
-                return $@"
-                    <div class=""media-wrapper-inline {details.classes}"">
-                        <a href=""{link}"" class=""media-thumb-link"" data-media=""{key}"">
-                            <img src=""{path}"" />
-                        </a>
-                        <span>{details.descr}</span>
-                    </div>";
+                var body = $@"
+                    <a href=""{link}"" class=""media-thumb-link"" data-media=""{key}"">
+                        <img src=""{path}"" />
+                    </a>
+                    <span>{details.Descr}</span>
+                ";
+
+                return Wrapper(details.Classes, body);
             });
         }
 
@@ -130,53 +137,53 @@ namespace Bonsai.Code.Services
         /// <summary>
         /// Parses the media description.
         /// </summary>
-        private (string classes, string descr) GetMediaDetails(string[] args)
+        private (string Classes, string Descr, bool Error) GetMediaDetails(string[] args)
         {
-            (string, string) Error(string msg) => ("error", msg);
-
-            if (args == null || args.Length == 0)
-                return ("left", null);
+            (string, string, bool) Error(string msg) => (null, msg, true);
 
             string sizeClass = null;
             string alignClass = null;
             string descr = null;
 
-            foreach (var item in args)
+            if (args != null)
             {
-                if (item.StartsWith("size:"))
+                foreach (var item in args)
                 {
-                    var size = item.Substring("size:".Length);
-                    if (!MediaSizeClasses.Contains(size))
-                        return Error("Неизвестный размер медиа-файла.");
+                    if (item.StartsWith("size:"))
+                    {
+                        var size = item.Substring("size:".Length);
+                        if (!MediaSizeClasses.Contains(size))
+                            return Error("Неизвестный размер медиа-файла.");
 
-                    if (sizeClass != null)
-                        return Error("Размер указан более одного раза.");
+                        if (sizeClass != null)
+                            return Error("Размер указан более одного раза.");
 
-                    sizeClass = size;
-                    continue;
+                        sizeClass = size;
+                        continue;
+                    }
+
+                    if (item.StartsWith("align:"))
+                    {
+                        var align = item.Substring("align:".Length);
+                        if (!MediaAlignmentClasses.Contains(align))
+                            return Error("Неизвестное расположение медиа-файла.");
+
+                        if (alignClass != null)
+                            return Error("Расположение указано более одного раза.");
+
+                        alignClass = align;
+                        continue;
+                    }
+
+                    if (descr != null)
+                        return Error("Описание указано более одного раза.");
+
+                    descr = item;
                 }
-
-                if (item.StartsWith("align:"))
-                {
-                    var align = item.Substring("align:".Length);
-                    if (!MediaAlignmentClasses.Contains(align))
-                        return Error("Неизвестное расположение медиа-файла.");
-
-                    if (alignClass != null)
-                        return Error("Расположение указано более одного раза.");
-
-                    alignClass = align;
-                    continue;
-                }
-
-                if (descr != null)
-                    return Error("Описание указано более одного раза.");
-
-                descr = item;
             }
 
             var classes = (sizeClass ?? MediaSizeClasses[0]) + " " + (alignClass ?? MediaAlignmentClasses[0]);
-            return (classes, descr);
+            return (classes, descr, false);
         }
     }
 }
