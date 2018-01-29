@@ -7,7 +7,7 @@ namespace Bonsai.Code.Tools
     /// <summary>
     /// A range between two fuzzy dates.
     /// </summary>
-    public struct FuzzyRange: IEquatable<FuzzyRange>, IComparable<FuzzyRange>
+    public partial struct FuzzyRange: IEquatable<FuzzyRange>, IComparable<FuzzyRange>
     {
         #region Constructor
 
@@ -241,34 +241,6 @@ namespace Bonsai.Code.Tools
         public override string ToString()
         {
             return $"{RangeStart}-{RangeEnd}";
-        }
-
-        #endregion
-
-        #region JsonConverter
-
-        public class FuzzyRangeJsonConverter : JsonConverter
-        {
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                writer.WriteValue(value.ToString());
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                var value = reader.Value.ToString();
-
-                if(objectType == typeof(FuzzyRange?))
-                    return FuzzyRange.TryParse(value);
-
-                return FuzzyRange.Parse(value);
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(FuzzyRange)
-                       || objectType == typeof(FuzzyRange?);
-            }
         }
 
         #endregion

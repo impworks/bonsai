@@ -46,42 +46,9 @@ namespace Bonsai.Code.Config
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            ConfigureMvcServices(services);
+            ConfigureDatabaseServices(services);
 
-            services.AddIdentity<AppUser, IdentityRole>()
-                    .AddEntityFrameworkStores<AppDbContext>()
-                    .AddDefaultTokenProviders();
-
-            services.AddMvc()
-                    .AddControllersAsServices()
-                    .AddJsonOptions(opts =>
-                    {
-                        var convs = new List<JsonConverter>
-                        {
-                            new FuzzyDate.FuzzyDateJsonConverter(),
-                            new FuzzyRange.FuzzyRangeJsonConverter()
-                        };
-
-                        convs.ForEach(opts.SerializerSettings.Converters.Add);
-
-                        JsonConvert.DefaultSettings = () =>
-                        {
-                            var settings = new JsonSerializerSettings();
-                            convs.ForEach(settings.Converters.Add);
-                            return settings;
-                        };
-                    });
-
-            services.AddRouting(opts =>
-            {
-                opts.AppendTrailingSlash = false;
-                opts.LowercaseUrls = false;
-            });
-
-            services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
-
-            services.AddTransient<AppDbContext>();
             services.AddTransient<MarkdownService>();
             services.AddTransient<AppConfigService>();
             services.AddTransient<RelationsPresenterService>();
@@ -89,17 +56,6 @@ namespace Bonsai.Code.Config
             services.AddTransient<MediaPresenterService>();
             services.AddTransient<CalendarPresenterService>();
             services.AddTransient<SearchPresenterService>();
-
-            if (Environment.IsProduction())
-            {
-                services.Configure<MvcOptions>(opts =>
-                {
-                    opts.Filters.Add(new RequireHttpsAttribute());
-                });
-            }
-
-            SqlMapper.AddTypeHandler(new FuzzyDate.FuzzyDateTypeHandler());
-            SqlMapper.AddTypeHandler(new FuzzyDate.NullableFuzzyDateTypeHandler());
         }
 
         /// <summary>
@@ -130,6 +86,68 @@ namespace Bonsai.Code.Config
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
+        }
+
+        /// <summary>
+        /// Configures and registers MVC-related services.
+        /// </summary>
+        private void ConfigureMvcServices(IServiceCollection services)
+        {
+            services.AddMvc()
+                    .AddControllersAsServices()
+                    .AddJsonOptions(opts =>
+                    {
+                        var convs = new List<JsonConverter>
+                        {
+                            new FuzzyDate.FuzzyDateJsonConverter(),
+                            new FuzzyRange.FuzzyRangeJsonConverter()
+                        };
+
+                        convs.ForEach(opts.SerializerSettings.Converters.Add);
+
+                        JsonConvert.DefaultSettings = () =>
+                        {
+                            var settings = new JsonSerializerSettings();
+                            convs.ForEach(settings.Converters.Add);
+                            return settings;
+                        };
+                    });
+
+            services.AddRouting(opts =>
+            {
+                opts.AppendTrailingSlash = false;
+                opts.LowercaseUrls = false;
+            });
+
+            services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
+
+            if (Environment.IsProduction())
+            {
+                services.Configure<MvcOptions>(opts =>
+                {
+                    opts.Filters.Add(new RequireHttpsAttribute());
+                });
+            }
+
+            services.AddTransient<AppDbContext>();
+        }
+
+        /// <summary>
+        /// Configures and registers database-related services.
+        /// </summary>
+        private void ConfigureDatabaseServices(IServiceCollection services)
+        {
+            services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.GetConnectionString("Database")));
+
+            services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<AppDbContext>()
+                    .AddDefaultTokenProviders();
+
+            SqlMapper.AddTypeHandler(new FuzzyDate.FuzzyDateTypeHandler());
+            SqlMapper.AddTypeHandler(new FuzzyDate.NullableFuzzyDateTypeHandler());
+            SqlMapper.AddTypeHandler(new FuzzyRange.FuzzyRangeTypeHandler());
+            SqlMapper.AddTypeHandler(new FuzzyRange.NullableFuzzyRangeTypeHandler());
         }
     }
 }
