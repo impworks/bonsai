@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -19,6 +21,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nest;
 using Newtonsoft.Json;
 
 namespace Bonsai.Code.Config
@@ -48,6 +51,7 @@ namespace Bonsai.Code.Config
         {
             ConfigureMvcServices(services);
             ConfigureDatabaseServices(services);
+            ConfigureElasticServices(services);
 
             services.AddTransient<MarkdownService>();
             services.AddTransient<AppConfigService>();
@@ -148,6 +152,19 @@ namespace Bonsai.Code.Config
             SqlMapper.AddTypeHandler(new FuzzyDate.NullableFuzzyDateTypeHandler());
             SqlMapper.AddTypeHandler(new FuzzyRange.FuzzyRangeTypeHandler());
             SqlMapper.AddTypeHandler(new FuzzyRange.NullableFuzzyRangeTypeHandler());
+        }
+
+        /// <summary>
+        /// Registers ElasticSearch-related services.
+        /// </summary>
+        private void ConfigureElasticServices(IServiceCollection services)
+        {
+            var host = Configuration["ElasticSearch:Host"];
+            var settings = new ConnectionSettings(new Uri(host)).DisableAutomaticProxyDetection()
+                                                                .DisablePing();
+
+            services.AddScoped(s => new ElasticClient(settings));
+            services.AddScoped<ElasticService>();
         }
     }
 }
