@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
@@ -6,6 +7,7 @@ using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Markdig;
+using Markdig.Renderers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +23,7 @@ namespace Bonsai.Code.Services
             _db = context;
             _url = urlHelper;
 
-            _pipeline = new MarkdownPipelineBuilder()
+            _render = new MarkdownPipelineBuilder()
                 .UseAutoLinks()
                 .UseAutoIdentifiers()
                 .UseEmphasisExtras()
@@ -29,7 +31,7 @@ namespace Bonsai.Code.Services
                 .Build();
         }
 
-        private readonly MarkdownPipeline _pipeline;
+        private readonly MarkdownPipeline _render;
         private readonly AppDbContext _db;
         private readonly IUrlHelper _url;
 
@@ -47,12 +49,25 @@ namespace Bonsai.Code.Services
             if (string.IsNullOrEmpty(markdown))
                 return null;
 
-            var body = Markdown.ToHtml(markdown, _pipeline);
+            var body = Markdown.ToHtml(markdown, _render);
 
             body = await ProcessMediaAsync(body).ConfigureAwait(false);
             body = await ProcessLinksAsync(body).ConfigureAwait(false);
 
             return body;
+        }
+
+        /// <summary>
+        /// Removes all markdown text from the source.
+        /// </summary>
+        public static string Strip(string markdown)
+        {
+            var rendered = markdown;
+
+            rendered = MediaRegex.Replace(rendered, "");
+            rendered = LinkRegex.Replace(rendered, me => me.Groups["label"]?.Value ?? me.Groups["key"]?.Value ?? "");
+
+            return rendered;
         }
 
         /// <summary>

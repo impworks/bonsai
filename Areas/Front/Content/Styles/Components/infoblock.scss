@@ -12,12 +12,10 @@
         border: $panel-inner-border;
         padding: 10px;
 
+        @include spaced-list(10px);
+
         &.fact-group-sublime {
             padding: 0;
-        }
-
-        &:not(:last-of-type) {
-            margin-bottom: 10px;
         }
 
         .relation-group {
@@ -29,7 +27,6 @@
                 border-bottom: 0;
                 margin-bottom: -10px;
             }
-
 
             .relations-list {
                 list-style: none;

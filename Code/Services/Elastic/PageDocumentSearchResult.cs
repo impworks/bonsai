@@ -7,9 +7,8 @@ namespace Bonsai.Code.Services.Elastic
     /// </summary>
     public class PageDocumentSearchResult
     {
-        public Guid PageId { get; set; }
-
-        public double NormalizedScore { get; set; }
+        public Guid Id { get; set; }
+        public string Key { get; set; }
 
         public string HighlightedTitle { get; set; }
         public string HighlightedDescription { get; set; }

@@ -70,10 +70,11 @@ namespace Bonsai.Code.Config
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<AppDbContext>();
+                var elastic = scope.ServiceProvider.GetService<ElasticService>();
                 context.EnsureDatabaseCreated();
 
                 if(Environment.IsDevelopment())
-                    context.EnsureSeeded();
+                    SeedData.EnsureSeeded(context, elastic);
             }
 
             if (Environment.IsDevelopment())

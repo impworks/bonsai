@@ -15,7 +15,7 @@ namespace Bonsai
                 .UseStartup<Startup>()
                 .Build();
 
-            host.Run();
+           host.Run();
         }
     }
 }

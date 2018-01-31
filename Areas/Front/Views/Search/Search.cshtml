@@ -1,0 +1,45 @@
+﻿@addTagHelper *, Bonsai
+@model Bonsai.Areas.Front.ViewModels.Search.SearchVM
+@{
+    ViewBag.Title = "Поиск";
+    Layout = "~/Areas/Front/Views/Layout.cshtml";
+}
+
+@if(Model.Results.Any())
+{
+    <h3>Результаты поиска:</h3>
+
+    <ul class="search-results">
+        @foreach(var result in Model.Results)
+        {
+            var url = Url.Action("Description", "Page", new { key = result.Key });
+
+            <li class="search-result">
+                <a href="@url" class="search-image-wrapper">
+                    <page-image image="@result.MainPhotoPath" />
+                </a>
+                <div class="search-result-body">
+                    <a href="@url">
+                        <h5>@Html.Raw(result.Title)</h5>
+                    </a>
+                    <div class="search-description">
+                        @Html.Raw(result.DescriptionExcerpt)
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <div class="alert alert-info">
+        @if (Model.Query.Length < 3)
+        {
+            <text>Запрос слишком короткий. Введите как минимум три символа.</text>
+        }
+        else
+        {
+            <text>По вашему запросу ничего не найдено.</text>
+        }
+    </div>
+}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Bonsai.Code.Services.Elastic;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Data.Utils.Seed
@@ -13,12 +14,12 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Seeds sample data.
         /// </summary>
-        public static void EnsureSeeded(this AppDbContext db)
+        public static void EnsureSeeded(AppDbContext db, ElasticService elastic = null)
         {
             // warning! this REMOVES ALL DATA AND FILES
-            ClearPreviousData(db);
+            ClearPreviousData(db, elastic);
 
-            var ctx = new SeedContext(db);
+            var ctx = new SeedContext(db, elastic);
 
             var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleHumanFacts.json");
             root.MainPhoto = ctx.AddPhoto("1.jpg");
@@ -80,7 +81,7 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Removes all previous records and files.
         /// </summary>
-        private static void ClearPreviousData(AppDbContext db)
+        private static void ClearPreviousData(AppDbContext db, ElasticService elastic)
         {
             var mediaDir = @".\wwwroot\media";
             if(Directory.Exists(mediaDir))
@@ -93,6 +94,9 @@ namespace Bonsai.Data.Utils.Seed
             db.Relations.RemoveRange(db.Relations.ToList());
 
             db.SaveChanges();
+
+            elastic?.ClearPreviousData();
+            elastic?.EnsureIndexesCreated();
         }
     }
 }

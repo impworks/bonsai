@@ -1,0 +1,36 @@
+﻿@import '../variables.scss';
+
+.search-results {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+
+    .search-result {
+        display: flex;
+        -webkit-box-align: start;
+        align-items: flex-start;
+
+        @include clear-container;
+        @include spaced-list(10px);
+
+        .search-image-wrapper {
+            display: block;
+            margin-right: 30px;
+
+            .page-image {
+                width: 64px;
+                height: 64px;
+            }
+        }
+
+        .search-result-body {
+            flex: 1;
+            -webkit-box-flex: 1;
+
+            .h5 {
+                margin-top: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+}

@@ -5,6 +5,7 @@ using System.Linq;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils;
 using Bonsai.Data.Models;
 using Newtonsoft.Json;
@@ -17,12 +18,14 @@ namespace Bonsai.Data.Utils.Seed
     /// </summary>
     public class SeedContext
     {
-        public SeedContext(AppDbContext db)
+        public SeedContext(AppDbContext db, ElasticService elastic = null)
         {
             _db = db;
+            _elastic = elastic;
         }
 
         private readonly AppDbContext _db;
+        private readonly ElasticService _elastic;
 
         /// <summary>
         /// Creates a new page.
@@ -84,6 +87,9 @@ namespace Bonsai.Data.Utils.Seed
                 LastUpdateDate = DateTimeOffset.Now
             };
             _db.Pages.Add(page);
+
+            _elastic?.AddPageAsync(page).Wait();
+
             return page;
         }
 

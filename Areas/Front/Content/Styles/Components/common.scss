@@ -1,4 +1,6 @@
-﻿.page-image {
+﻿@import '../variables.scss';
+
+.page-image {
     display: inline-block;
     background-size: cover;
     background-repeat: no-repeat;
@@ -13,11 +15,7 @@
     margin-bottom: 0;
 
     li {
-        margin-top: 5px;
-
-        &:first-of-type {
-            margin-top: 0;
-        }
+        @include spaced-list(5px);
     }
 }
 

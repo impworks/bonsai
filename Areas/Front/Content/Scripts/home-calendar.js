@@ -38,7 +38,7 @@
             month = now.getMonth() + 1;
 
         var $wrapper = $('.calendar-wrapper'),
-            url = '/calendar/' + year + '/' + month;
+            url = '/util/cal/' + year + '/' + month;
 
         $.ajax(url).then(
             function (html) {

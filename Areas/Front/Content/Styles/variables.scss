@@ -7,3 +7,19 @@ $panel-inner-border-color: #cccccc;
 $panel-inner-border: $panel-inner-border-color 1px solid;
 
 $error-color: #990000;
+
+@mixin clear-container {
+    &:after {
+        content: ' ';
+        display: block;
+        clear: both;
+    }
+}
+
+@mixin spaced-list($margin) {
+    margin-top: $margin;
+
+    &:first-of-type {
+        margin-top: 0;
+    }
+}
