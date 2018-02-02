@@ -65,11 +65,6 @@ namespace Bonsai.Code.Services.Elastic
                         a.CharFilters(c =>
                             c.Mapping("filter_ru_e", z => z.Mappings("Ё => Е", "ё => е"))
                         )
-                        .Tokenizers(t =>
-                            t.NGram("n_gram", ng =>
-                                ng.MinGram(4).MaxGram(20)
-                            )
-                        )
                         .TokenFilters(t =>
                             t.Stop("stopwords_ru", st =>
                                 st.StopWords(STOP_WORDS.Split(','))
@@ -89,13 +84,13 @@ namespace Bonsai.Code.Services.Elastic
                         .Analyzers(an =>
                             an.Custom("index_ru", ac =>
                                 ac.CharFilters("html_strip", "filter_ru_e")
-                                .Tokenizer("n_gram")
-                                .Filters("stopwords_ru", "delim_ru", "stop", "lowercase") // todo: russian_morphology
+                                .Tokenizer("standard")
+                                .Filters("stopwords_ru", "delim_ru", "stop", "lowercase", "russian_morphology", "english_morphology")
                             )
                             .Custom("search_ru", ac =>
                                 ac.CharFilters("html_strip", "filter_ru_e")
                                 .Tokenizer("standard")
-                                .Filters("stopwords_ru", "delim_ru", "stop", "lowercase") // todo: russian_morphology
+                                .Filters("stopwords_ru", "delim_ru", "stop", "lowercase", "russian_morphology", "english_morphology") // todo: russian_morphology
                             )
                         )
                     )
@@ -161,11 +156,12 @@ namespace Bonsai.Code.Services.Elastic
                                     .Query(query)
                                     .Fuzziness(Fuzziness.EditDistance(1))
                           )
+                          || q.Prefix(f => f.Field(x => x.Title).Value(query))
                       )
                       .Skip(PAGE_SIZE * page)
                       .Take(PAGE_SIZE)
                       .Highlight(
-                          h => h.FragmentSize(100)
+                          h => h.FragmentSize(200)
                                 .PreTags("<b>")
                                 .PostTags("</b>")
                                 .BoundaryScanner(BoundaryScanner.Sentence)
