@@ -46,29 +46,5 @@ namespace Bonsai.Code.Utils
 
             return cmp == 0;
         }
-
-        /// <summary>
-        /// Finds the excerpt's position in the full string and marks it with ellipsises.
-        /// </summary>
-        public static string AddEllipsis(this string excerpt, string full)
-        {
-            var prepend = !excerpt.StartsWithPart(full, 10);
-            var append = !excerpt.EndsWithPart(full, 10);
-
-            if (!prepend && !append)
-                return excerpt;
-
-            var sb = new StringBuilder();
-
-            if (prepend)
-                sb.Append("...");
-
-            sb.Append(excerpt);
-
-            if(append)
-                sb.Append("...");
-
-            return sb.ToString();
-        }
     }
 }

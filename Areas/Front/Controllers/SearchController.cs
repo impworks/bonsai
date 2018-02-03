@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Page;
@@ -34,10 +35,12 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult> Search([FromQuery] string query)
+        public async Task<ActionResult> Search([FromQuery] string query, [FromQuery] int page = 0)
         {
-            var results = await _search.SearchAsync(query).ConfigureAwait(false);
-            var vm = new SearchVM {Query = query, Results = results};
+            page = Math.Max(0, page);
+
+            var results = await _search.SearchAsync(query, page).ConfigureAwait(false);
+            var vm = new SearchVM {Query = query, Page = page, Results = results};
             return View(vm);
         }
     }

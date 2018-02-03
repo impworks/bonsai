@@ -5,10 +5,19 @@
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 }
 
+<div>
+    <div class="pull-right">
+        <form class="form-inline" action="@Url.Action("Search", "Search")" method="get">
+            <input type="text" class="form-control" name="query" value="@Model.Query" />
+            <button class="btn btn-primary" type="submit">Поиск</button>
+        </form>
+    </div>
+    <h3>Результаты поиска:</h3>
+    <div class="clearfix"></div>
+</div>
+
 @if(Model.Results.Any())
 {
-    <h3>Результаты поиска:</h3>
-
     <ul class="search-results">
         @foreach(var result in Model.Results)
         {
@@ -33,7 +42,7 @@
 else
 {
     <div class="alert alert-info">
-        @if (Model.Query.Length < 3)
+        @if(Model.Query.Length < 3)
         {
             <text>Запрос слишком короткий. Введите как минимум три символа.</text>
         }
@@ -43,3 +52,32 @@ else
         }
     </div>
 }
+
+<div>
+    <div class="pull-right">
+        <ul class="pagination" role="group">
+            @if(Model.Page > 0)
+            {
+                <li class="page-item">
+                    <a href="@Url.Action("Search", "Search", new {query = Model.Query, page = Model.Page - 1})" title="Предыдущая страница" class="page-link">
+                        &laquo;
+                    </a>
+                </li>
+            }
+            <li class="page-item active">
+                <span class="page-link">
+                    Страница: @(Model.Page + 1)
+                </span>
+            </li>
+            @if(Model.Results.Any())
+            {
+                <li class="page-item">
+                    <a href="@Url.Action("Search", "Search", new {query = Model.Query, page = Model.Page + 1})" title="Следующая страница" class="page-link">
+                        &raquo;
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="clearfix"></div>
+</div>

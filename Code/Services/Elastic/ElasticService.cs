@@ -135,7 +135,16 @@ namespace Bonsai.Code.Services.Elastic
                     {
                         var hitValue = hitList.Highlights.First();
                         var rawHitValue = hitValue.Replace(PRE_TAG, "").Replace(POST_TAG, "");
-                        return rawHitValue.AddEllipsis(fallback);
+                        var startEllipsis = !rawHitValue.StartsWithPart(fallback, 10);
+                        var endEllipsis = !rawHitValue.EndsWithPart(fallback, 10);
+                        if (!startEllipsis && !endEllipsis)
+                            return hitValue;
+
+                        return string.Concat(
+                            startEllipsis ? "..." : "",
+                            hitValue,
+                            endEllipsis ? "..." : ""
+                        );
                     }
 
                     return fallback;
