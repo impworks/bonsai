@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Code.Utils;
 using Nest;
 using Page = Bonsai.Data.Models.Page;
 
@@ -122,15 +124,21 @@ namespace Bonsai.Code.Services.Elastic
         /// </summary>
         public async Task<IReadOnlyList<PageDocumentSearchResult>> SearchAsync(string query, int page = 0)
         {
+            const string PRE_TAG = "<b>";
+            const string POST_TAG = "</b>";
+
             PageDocumentSearchResult Map(IHit<PageDocument> hit)
             {
                 string GetHitValue(string fieldName, string fallback)
                 {
-                    var value = hit.Highlights.TryGetValue(fieldName.ToLower(), out var hi)
-                        ? hi.Highlights.FirstOrDefault()
-                        : null;
+                    if(hit.Highlights.TryGetValue(fieldName.ToLower(), out var hitList))
+                    {
+                        var hitValue = hitList.Highlights.First();
+                        var rawHitValue = hitValue.Replace(PRE_TAG, "").Replace(POST_TAG, "");
+                        return rawHitValue.AddEllipsis(fallback);
+                    }
 
-                    return value ?? fallback;
+                    return fallback;
                 }
 
                 return new PageDocumentSearchResult
@@ -162,8 +170,8 @@ namespace Bonsai.Code.Services.Elastic
                       .Take(PAGE_SIZE)
                       .Highlight(
                           h => h.FragmentSize(200)
-                                .PreTags("<b>")
-                                .PostTags("</b>")
+                                .PreTags(PRE_TAG)
+                                .PostTags(POST_TAG)
                                 .BoundaryScanner(BoundaryScanner.Sentence)
                                 .BoundaryScannerLocale("ru-RU")
                                 .Fields(

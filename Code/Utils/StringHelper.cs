@@ -1,11 +1,12 @@
 ﻿using System.Linq;
+using System.Text;
 
 namespace Bonsai.Code.Utils
 {
     /// <summary>
     /// Useful methods for working with strings.
     /// </summary>
-    public class StringHelper
+    public static class StringHelper
     {
         /// <summary>
         /// Returns the first non-empty string in the list.
@@ -13,6 +14,61 @@ namespace Bonsai.Code.Utils
         public static string Coalesce(params string[] items)
         {
             return items.FirstOrDefault(x => !string.IsNullOrEmpty(x));
+        }
+
+        /// <summary>
+        /// Checks if the two strings start with the same sequence.
+        /// </summary>
+        public static bool StartsWithPart(this string first, string second, int comparisonLength, bool ignoreCase = true)
+        {
+            if (comparisonLength > first.Length || comparisonLength > second.Length)
+                return string.Compare(first, second, ignoreCase) == 0;
+
+            return string.Compare(first, 0, second, 0, comparisonLength, ignoreCase) == 0;
+        }
+
+        /// <summary>
+        /// Checks if the two strings end with the same sequence.
+        /// </summary>
+        public static bool EndsWithPart(this string first, string second, int comparisonLength, bool ignoreCase = true)
+        {
+            if(comparisonLength > first.Length || comparisonLength > second.Length)
+                return string.Compare(first, second, ignoreCase) == 0;
+
+            var cmp = string.Compare(
+                first,
+                first.Length - comparisonLength,
+                second,
+                second.Length - comparisonLength,
+                comparisonLength,
+                ignoreCase
+            );
+
+            return cmp == 0;
+        }
+
+        /// <summary>
+        /// Finds the excerpt's position in the full string and marks it with ellipsises.
+        /// </summary>
+        public static string AddEllipsis(this string excerpt, string full)
+        {
+            var prepend = !excerpt.StartsWithPart(full, 10);
+            var append = !excerpt.EndsWithPart(full, 10);
+
+            if (!prepend && !append)
+                return excerpt;
+
+            var sb = new StringBuilder();
+
+            if (prepend)
+                sb.Append("...");
+
+            sb.Append(excerpt);
+
+            if(append)
+                sb.Append("...");
+
+            return sb.ToString();
         }
     }
 }
