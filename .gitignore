@@ -287,5 +287,7 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-wwwroot/assets/
+wwwroot/assets/fonts/
+wwwroot/assets/styles/
+wwwroot/assets/scripts/
 wwwroot/media/
