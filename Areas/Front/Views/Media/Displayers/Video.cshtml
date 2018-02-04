@@ -1,4 +1,10 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Media
 @model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 
-<span>Video</span>
+
+<div class="video-wrapper">
+    <video class="media-video" controls poster="@Url.Content(Model.PreviewPath)" preload="auto">
+        <source src="@Url.Content(Model.OriginalPath)" type="video/mp4" />
+        <div class="alert alert-warning">Ваш браузер не поддерживает просмотр видео.</div>
+    </video>
+</div>

@@ -52,6 +52,15 @@
                 cursor: pointer;
             }
         }
+
+        .video-wrapper {
+            width: 100%;
+
+            video {
+                max-width: 100%;
+                max-height: 600px;
+            }
+        }
     }
 
     .media-meta {

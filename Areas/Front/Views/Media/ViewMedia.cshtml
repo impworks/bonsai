@@ -2,7 +2,7 @@
 
 @{
     var showFirstColumn = Model.Tags.Any();
-    var showSecondColumn = Model.FullPath != null
+    var showSecondColumn = Model.OriginalPath != null
                            || Model.Event != null
                            || Model.Location != null;
 }
@@ -58,11 +58,11 @@
                         <a href="@Url.Action("Description", "Page", new { key = Model.Location.Key })">@Model.Location.Title</a>
                     </div>
                 }
-                @if (Model.FullPath != null)
+                @if (Model.OriginalPath != null)
                 {
                     <div class="meta-block">
                         <strong>Оригинал:</strong>
-                        <a href="@Url.Content(Model.FullPath)" target="_blank">Скачать</a>
+                        <a href="@Url.Content(Model.OriginalPath)" target="_blank">Скачать</a>
                     </div>
                 }
             </div>

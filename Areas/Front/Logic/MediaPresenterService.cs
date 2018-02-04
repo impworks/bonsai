@@ -49,7 +49,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var descr = await _markdown.CompileAsync(media.Description).ConfigureAwait(false);
 
-            var vm = new MediaVM
+            return new MediaVM
             {
                 Type = media.Type,
                 Title = media.Title,
@@ -57,21 +57,10 @@ namespace Bonsai.Areas.Front.Logic
                 Date = FuzzyDate.TryParse(media.Date),
                 Tags = GetMediaTagsVMs(media.Tags).ToList(),
                 Event = GetPageTitle(media.Tags.FirstOrDefault(x => x.Type == MediaTagType.Event)),
-                Location = GetPageTitle(media.Tags.FirstOrDefault(x => x.Type == MediaTagType.Location))
+                Location = GetPageTitle(media.Tags.FirstOrDefault(x => x.Type == MediaTagType.Location)),
+                OriginalPath = media.FilePath,
+                PreviewPath = GetSizedMediaPath(media.FilePath, MediaSize.Large)
             };
-
-            if (media.Type == MediaType.Photo || media.Type == MediaType.Document)
-            {
-                vm.FullPath = media.FilePath;
-                vm.MediaPath = GetSizedMediaPath(media.FilePath, MediaSize.Large);
-            }
-            else
-            {
-                vm.MediaPath = media.FilePath;
-                vm.FullPath = null;
-            }
-
-            return vm;
         }
 
         /// <summary>

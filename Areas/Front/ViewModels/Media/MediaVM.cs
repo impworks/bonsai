@@ -13,12 +13,12 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         /// <summary>
         /// URL of the media file to display inline.
         /// </summary>
-        public string MediaPath { get; set; }
+        public string PreviewPath { get; set; }
 
         /// <summary>
         /// URL of the full-sized media (for photos).
         /// </summary>
-        public string FullPath { get; set; }
+        public string OriginalPath { get; set; }
 
         /// <summary>
         /// Title of the document (for documents).

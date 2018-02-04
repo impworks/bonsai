@@ -5,7 +5,7 @@
 }
 
 <div class="photo-wrapper">
-    <img src="@Url.Content(Model.MediaPath)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
+    <img src="@Url.Content(Model.PreviewPath)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
     @foreach (var tag in Model.Tags)
     {
         if (tag.Rect is RectangleF r)

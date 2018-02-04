@@ -131,7 +131,7 @@ namespace Bonsai.Data.Utils.Seed
         }
 
         /// <summary>
-        /// Creates a new media file.
+        /// Creates a photo media record.
         /// </summary>
         public Media AddPhoto(string source, string date = null, string description = null, Guid? explicitId = null)
         {
@@ -154,6 +154,44 @@ namespace Bonsai.Data.Utils.Seed
             {
                 Id = id,
                 Type = MediaType.Photo,
+                Key = key,
+                FilePath = webPath,
+                Date = date,
+                Description = description,
+                Tags = new List<MediaTag>(),
+                UploadDate = DateTimeOffset.Now
+            };
+            _db.Media.Add(media);
+            return media;
+        }
+
+        /// <summary>
+        /// Adds a video media record.
+        /// </summary>
+        public Media AddVideo(string source, string date = null, string description = null, Guid? explicitId = null)
+        {
+            var id = explicitId ?? Guid.NewGuid();
+            var key = PageHelper.GetMediaKey(id);
+            var newName = key + Path.GetExtension(source);
+            var sourcePath = @".\Data\Utils\Seed\Media\" + source;
+            var diskPath = @".\wwwroot\media\" + newName;
+            var webPath = "~/media/" + newName;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(diskPath));
+
+            File.Copy(sourcePath, diskPath);
+
+            var paths = EnumHelper.GetEnumValues<MediaSize>()
+                                  .Where(x => x != MediaSize.Original)
+                                  .Select(x => MediaPresenterService.GetSizedMediaPath(diskPath, x));
+
+            foreach(var path in paths)
+                File.Copy(@".\Data\Utils\Seed\Media\video-preview.png", path);
+
+            var media = new Media
+            {
+                Id = id,
+                Type = MediaType.Video,
                 Key = key,
                 FilePath = webPath,
                 Date = date,

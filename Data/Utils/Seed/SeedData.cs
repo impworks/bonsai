@@ -75,6 +75,9 @@ namespace Bonsai.Data.Utils.Seed
             var pic3 = ctx.AddPhoto("3.jpg", null, "Описание для **фотографии** с тегами");
             ctx.AddMediaTag(pic3, root, MediaTagType.DepictedEntity, "0.2;0.4;0.1;0.4");
 
+            var vid1 = ctx.AddVideo("1.mp4", "2015.09.01", "Проверка видео");
+            ctx.AddMediaTag(vid1, root);
+
             ctx.Save();
         }
 

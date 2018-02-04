@@ -1,13 +1,12 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
+using JetBrains.Annotations;
 using Markdig;
-using Markdig.Renderers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,8 +34,9 @@ namespace Bonsai.Code.Services
         private readonly AppDbContext _db;
         private readonly IUrlHelper _url;
 
-        private static readonly Regex MediaRegex = new Regex(@"\[\[media:(?<key>[^\[|]+)(\|(?<options>[^\]]+))?\]\]");
-        private static readonly Regex LinkRegex = new Regex(@"\[\[(?<key>[^\[|]+)(\|(?<label>[^\]]+))?\]\]");
+        private static readonly Regex MediaRegex = Compile(@"\[\[media:(?<key>[^\[|]+)(\|(?<options>[^\]]+))?\]\]");
+        private static readonly Regex LinkRegex = Compile(@"\[\[(?<key>[^\[|]+)(\|(?<label>[^\]]+))?\]\]");
+        private static readonly Regex MarkupRegex = Compile(@"[*#|=_]+");
 
         private static string[] MediaSizeClasses = {"large", "medium", "small"};
         private static string[] MediaAlignmentClasses = {"left", "right"};
@@ -66,6 +66,7 @@ namespace Bonsai.Code.Services
 
             rendered = MediaRegex.Replace(rendered, "");
             rendered = LinkRegex.Replace(rendered, me => me.Groups["label"]?.Value ?? me.Groups["key"]?.Value ?? "");
+            rendered = MarkupRegex.Replace(rendered, "");
 
             return rendered;
         }
@@ -88,7 +89,7 @@ namespace Bonsai.Code.Services
                                          .ToDictionaryAsync(x => x.Key, x => x.FilePath)
                                          .ConfigureAwait(false);
 
-            string Wrapper(string classes, string body) => $@"<div class=""media-inline-wrapper {classes}"">{body}.</div>";
+            string Wrapper(string classes, string body) => $@"<div class=""media-wrapper-inline {classes}"">{body}.</div>";
 
             return MediaRegex.Replace(html, m =>
             {
@@ -199,6 +200,18 @@ namespace Bonsai.Code.Services
 
             var classes = (sizeClass ?? MediaSizeClasses[0]) + " " + (alignClass ?? MediaAlignmentClasses[0]);
             return (classes, descr, false);
+        }
+
+        /// <summary>
+        /// Compiles a regular expression with certain options.
+        /// </summary>
+        private static Regex Compile([RegexPattern] string pattern)
+        {
+            var options = RegexOptions.Compiled
+                          | RegexOptions.IgnoreCase
+                          | RegexOptions.CultureInvariant
+                          | RegexOptions.ExplicitCapture;
+            return new Regex(pattern, options);
         }
     }
 }
