@@ -23,7 +23,8 @@ var config = {
             './node_modules/jquery/dist/jquery.js',
             './node_modules/popper.js/dist/umd/popper.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
-            './node_modules/magnific-popup/dist/jquery.magnific-popup.js'
+            './node_modules/magnific-popup/dist/jquery.magnific-popup.js',
+            './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js'
         ],
         fonts: [
             './node_modules/font-awesome/fonts/*.*'

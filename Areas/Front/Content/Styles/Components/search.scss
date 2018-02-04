@@ -1,6 +1,7 @@
 ﻿@import '../variables.scss';
 
 .search-results {
+    margin-top: 20px;
     margin-bottom: 0;
     padding-left: 0;
     list-style: none;
@@ -11,15 +12,15 @@
         align-items: flex-start;
 
         @include clear-container;
-        @include spaced-list(10px);
+        @include spaced-list(20px);
 
         .search-image-wrapper {
             display: block;
             margin-right: 30px;
 
             .page-image {
-                width: 64px;
-                height: 64px;
+                width: 92px;
+                height: 92px;
             }
         }
 
@@ -33,4 +34,26 @@
             }
         }
     }
+}
+
+.autocomplete-suggestions {
+    border: 1px solid #999;
+    background: #FFF;
+    overflow: auto;
+
+    strong {
+        font-weight: normal;
+        color: #3399FF;
+    }
+}
+
+.autocomplete-suggestion {
+    padding: 2px 5px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.autocomplete-selected {
+    background: #F0F0F0;
 }

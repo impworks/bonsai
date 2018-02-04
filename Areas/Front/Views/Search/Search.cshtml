@@ -8,7 +8,7 @@
 <div>
     <div class="pull-right">
         <form class="form-inline" action="@Url.Action("Search", "Search")" method="get">
-            <input type="text" class="form-control" name="query" value="@Model.Query" />
+            <input type="text" class="form-control mr-sm-2" name="query" value="@Model.Query" />
             <button class="btn btn-primary" type="submit">Поиск</button>
         </form>
     </div>
@@ -42,7 +42,7 @@
 else
 {
     <div class="alert alert-info">
-        @if(Model.Query.Length < 3)
+        @if(!(Model.Query?.Length >= 3))
         {
             <text>Запрос слишком короткий. Введите как минимум три символа.</text>
         }
