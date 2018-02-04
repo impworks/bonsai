@@ -54,23 +54,25 @@
         );
     }
 
-    // toggle calendar on links
-    $('body').on('click', '.cmd-calendar-show', function (e) {
-        var $elem = $(this),
-            year = $elem.data('year'),
-            month = $elem.data('month');
+    if ($('.calendar-wrapper').length > 0) {
+        // toggle calendar on links
+        $('body').on('click', '.cmd-calendar-show', function(e) {
+            var $elem = $(this),
+                year = $elem.data('year'),
+                month = $elem.data('month');
 
-        loadCalendar(year, month);
+            loadCalendar(year, month);
 
-        e.preventDefault();
-    });
+            e.preventDefault();
+        });
 
-    // display default or selected calendar
-    var hash = window.location.hash;
-    if (hash != null && hash.substr(1, prefix.length) === prefix) {
-        var date = hash.substr(prefix.length + 1).split('-');
-        loadCalendar(date[0], date[1]);
-    } else {
-        loadCalendar();
+        // display default or selected calendar
+        var hash = window.location.hash;
+        if (hash != null && hash.substr(1, prefix.length) === prefix) {
+            var date = hash.substr(prefix.length + 1).split('-');
+            loadCalendar(date[0], date[1]);
+        } else {
+            loadCalendar();
+        }
     }
 });

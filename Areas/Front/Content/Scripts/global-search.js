@@ -16,10 +16,12 @@
             );
         },
         onSelect: function() {
-            setTimeout(function() {
+            setTimeout(
+                function () {
                     $('#search-query').closest('form').submit();
                 },
-            10);
+                10
+            );
         }
     });
 });
