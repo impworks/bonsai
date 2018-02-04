@@ -42,8 +42,9 @@
                 updateHash(null);
             },
             change: function () {
+                $('.tooltip').remove();
                 updateHash(this.currItem.el);
-            },
+            }
         }
     });
 
