@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
@@ -226,6 +228,19 @@ namespace Bonsai.Areas.Front.Logic.Relations
                 return null;
             }
 
+            PageTitleVM GetEventPageTitle(Guid? eventId)
+            {
+                if (eventId == null)
+                    return null;
+
+                var page = ctx.Pages[eventId.Value];
+                return new PageTitleVM
+                {
+                    Title = page.Title,
+                    Key = page.Key
+                };
+            }
+
             var posPaths = def.Paths.Where(x => !x.IsExcluded);
             var negPaths = def.Paths.Where(x => x.IsExcluded);
 
@@ -247,7 +262,8 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                {
                                    Title = elem.Page.ShortName ?? elem.Page.Title,
                                    Key = elem.Page.Key,
-                                   Duration = GetRange(elem)
+                                   Duration = GetRange(elem),
+                                   RelationEvent = GetEventPageTitle(elem.Relation.EventId)
                                })
                                .ToList()
             };

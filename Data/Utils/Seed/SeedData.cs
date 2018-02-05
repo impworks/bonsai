@@ -29,7 +29,7 @@ namespace Bonsai.Data.Utils.Seed
             var mom = ctx.AddPage("Иванова Екатерина Валерьевна", false, "1965.03.04");
 
             ctx.AddRelation(root, RelationType.Parent, dad);
-            ctx.AddRelation(mom, RelationType.Child, root);
+            ctx.AddRelation(mom, RelationType.Child, root); // sic! check inverted relations
             ctx.AddRelation(mom, RelationType.Spouse, dad, "1987.02.02-2010.03.02");
 
             // wife 1
@@ -38,27 +38,23 @@ namespace Bonsai.Data.Utils.Seed
             var c2 = ctx.AddPage("Семенова Екатерина Ивановна", false, "2013.04.01");
             var w1f = ctx.AddPage("Семенов Николай Вадимович", true, "1965.05.06");
             var w1m = ctx.AddPage("Семенова Ирина Алексеевна", false, "1967.06.07");
+            var wed = ctx.AddPage("Свадьба Петра Иванова и Анны Семеновой", type: PageType.Event, descrSource: "Свадьба состоялась 5 мая 2010 года.");
 
-            ctx.AddRelation(root, RelationType.Spouse, w1, "2010.05.05-");
-            ctx.AddRelation(root, RelationType.Child, c1);
-            ctx.AddRelation(root, RelationType.Child, c2);
-            ctx.AddRelation(w1, RelationType.Child, c1);
-            ctx.AddRelation(w1, RelationType.Child, c2);
-            ctx.AddRelation(w1, RelationType.Parent, w1f);
-            ctx.AddRelation(w1, RelationType.Parent, w1m);
+            ctx.AddRelation(root, RelationType.Spouse, w1, "2010.05.05-", wed);
+            ctx.AddRelations(root, RelationType.Child, c1, c2);
+            ctx.AddRelations(w1, RelationType.Child, c1, c2);
+            ctx.AddRelations(w1, RelationType.Parent, w1f, w1m);
+            ctx.AddRelations(wed, RelationType.EventVisitor, root, w1, mom, dad, w1f, w1m);
 
             // pet
             var cat = ctx.AddPage("Барсик", true, "2014.05.06", type: PageType.Pet, descrSource: "Пушистый персидский кот!", factsSource: "SamplePetFacts.json");
-            ctx.AddRelation(cat, RelationType.Owner, root);
-            ctx.AddRelation(cat, RelationType.Owner, w1);
+            ctx.AddRelations(cat, RelationType.Owner, root, w1);
 
             // events & locations
             var v1 = ctx.AddPage("Отпуск 2015", type: PageType.Event);
             var l1 = ctx.AddPage("Греция", type: PageType.Location);
 
-            ctx.AddRelation(v1, RelationType.EventVisitor, w1);
-            ctx.AddRelation(v1, RelationType.EventVisitor, c1);
-            ctx.AddRelation(v1, RelationType.EventVisitor, c2);
+            ctx.AddRelations(v1, RelationType.EventVisitor, w1, c1, c2);
 
             // photos
             var pic1 = ctx.AddPhoto("2.jpg", "2015.09.01", explicitId: Guid.Parse("1c40e722-3ce7-49e0-90dd-8c83a6753c0f"));

@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180120151550_Initial")]
+    [Migration("20180205133402_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -252,6 +252,8 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Duration")
                         .HasMaxLength(30);
 
+                    b.Property<Guid?>("EventId");
+
                     b.Property<bool>("IsComplementary");
 
                     b.Property<Guid>("SourceId");
@@ -261,6 +263,8 @@ namespace Bonsai.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DestinationId");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("SourceId");
 
@@ -442,6 +446,10 @@ namespace Bonsai.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Bonsai.Data.Models.Page", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId");
 
                     b.HasOne("Bonsai.Data.Models.Page", "Source")
                         .WithMany("Relations")

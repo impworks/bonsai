@@ -36,6 +36,16 @@ namespace Bonsai.Data.Models
         public Guid DestinationId { get; set; }
 
         /// <summary>
+        /// Related event (e.g. wedding).
+        /// </summary>
+        public Page Event { get; set; }
+
+        /// <summary>
+        /// ID of the related event.
+        /// </summary>
+        public Guid? EventId { get; set; }
+
+        /// <summary>
         /// Type of the relation.
         /// </summary>
         public RelationType Type { get; set; }

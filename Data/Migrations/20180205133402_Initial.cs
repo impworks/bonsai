@@ -262,6 +262,7 @@ namespace Bonsai.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DestinationId = table.Column<Guid>(type: "uuid", nullable: false),
                     Duration = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
+                    EventId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsComplementary = table.Column<bool>(type: "bool", nullable: false),
                     SourceId = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<int>(type: "int4", nullable: false)
@@ -275,6 +276,12 @@ namespace Bonsai.Data.Migrations
                         principalTable: "Pages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Relations_Pages_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Pages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Relations_Pages_SourceId",
                         column: x => x.SourceId,
@@ -380,6 +387,11 @@ namespace Bonsai.Data.Migrations
                 name: "IX_Relations_DestinationId",
                 table: "Relations",
                 column: "DestinationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relations_EventId",
+                table: "Relations",
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Relations_SourceId",

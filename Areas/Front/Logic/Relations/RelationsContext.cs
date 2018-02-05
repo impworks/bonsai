@@ -79,6 +79,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                          {
                                              SourceId = x.SourceId,
                                              DestinationId = x.DestinationId,
+                                             EventId = x.EventId,
                                              Duration = FuzzyRange.TryParse(x.Duration),
                                              Type = x.Type
                                          })
@@ -158,6 +159,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         {
             public Guid SourceId { get; set; }
             public Guid DestinationId { get; set; }
+            public Guid? EventId { get; set; }
             public RelationType Type { get; set; }
             public FuzzyRange? Duration { get; set; }
         }

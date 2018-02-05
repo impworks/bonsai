@@ -132,15 +132,15 @@ namespace Bonsai.Areas.Front.Logic
                         ? "Годовщина свадьбы"
                         : (year - start.Year.Value) + "-ая годовщина свадьбы";
 
+                var relatedPageIds = new [] {rel.SourceId, rel.DestinationId, rel.EventId};
+
                 yield return new CalendarEventVM
                 {
                     Day = start.Day,
                     Title = title,
-                    RelatedPages = new[]
-                    {
-                        Map(context.Pages[rel.SourceId]),
-                        Map(context.Pages[rel.DestinationId])
-                    }
+                    RelatedPages = relatedPageIds.Where(x => x != null)
+                                                 .Select(x => Map(context.Pages[x.Value]))
+                                                 .ToArray()
                 };
             }
         }

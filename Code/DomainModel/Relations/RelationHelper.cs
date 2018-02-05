@@ -67,5 +67,13 @@ namespace Bonsai.Code.DomainModel.Relations
                                                 && x.TargetType == target
                                                 && x.RelationTypes.Contains(relation));
         }
+
+        /// <summary>
+        /// Checks if the relation can have an event reference.
+        /// </summary>
+        public static bool IsRelationEventReferenceAllowed(RelationType relation)
+        {
+            return relation == RelationType.Spouse;
+        }
     }
 }

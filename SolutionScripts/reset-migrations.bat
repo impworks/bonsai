@@ -1,3 +1,5 @@
+@echo off
+
 cd ..
 del /f /q ".\Data\Migrations\*.cs"
 dotnet ef database drop -f

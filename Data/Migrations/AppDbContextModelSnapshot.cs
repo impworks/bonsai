@@ -251,6 +251,8 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Duration")
                         .HasMaxLength(30);
 
+                    b.Property<Guid?>("EventId");
+
                     b.Property<bool>("IsComplementary");
 
                     b.Property<Guid>("SourceId");
@@ -260,6 +262,8 @@ namespace Bonsai.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DestinationId");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("SourceId");
 
@@ -441,6 +445,10 @@ namespace Bonsai.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Bonsai.Data.Models.Page", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId");
 
                     b.HasOne("Bonsai.Data.Models.Page", "Source")
                         .WithMany("Relations")

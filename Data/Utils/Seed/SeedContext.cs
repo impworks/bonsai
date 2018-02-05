@@ -35,7 +35,11 @@ namespace Bonsai.Data.Utils.Seed
             var descrFile = @".\Data\Utils\Seed\" + descrSource;
             var factsFile = @".\Data\Utils\Seed\" + factsSource;
 
-            var factsObj = JObject.Parse(File.Exists(factsFile) ? File.ReadAllText(factsFile) : factsSource ?? "{}");
+            var factsObj = JObject.Parse(
+                File.Exists(factsFile)
+                    ? File.ReadAllText(factsFile)
+                    : factsSource ?? "{}"
+            );
 
             if (factsObj["Main.Name"] == null)
             {
@@ -96,38 +100,57 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Creates a new relation between two pages.
         /// </summary>
-        public Relation AddRelation(Page source, RelationType type, Page target, string duration = null, bool createComplimentary = true)
+        public Relation AddRelation(Page source, RelationType type, Page target, string duration = null, Page eventPage = null)
         {
             if(!RelationHelper.IsRelationAllowed(source.PageType, target.PageType, type))
                 throw new ArgumentException("This relation is not allowed!");
+
+            if (eventPage != null)
+            {
+                if(!RelationHelper.IsRelationEventReferenceAllowed(type))
+                    throw new ArgumentException("This relation cannot have an event reference.");
+
+                if(eventPage.PageType != PageType.Event)
+                    throw new ArgumentException("The related event page must have Event type.");
+            }
 
             var rel = new Relation
             {
                 Id = Guid.NewGuid(),
                 Source = source,
                 Destination = target,
+                Event = eventPage,
                 Type = type,
                 Duration = duration,
                 IsComplementary = false
             };
-
             _db.Relations.Add(rel);
 
-            if (createComplimentary)
+            var invRel = new Relation
             {
-                var invRel = new Relation
-                {
-                    Id = Guid.NewGuid(),
-                    Source = target,
-                    Destination = source,
-                    Type = RelationHelper.ComplementaryRelations[type],
-                    Duration = duration,
-                    IsComplementary = true
-                };
-                _db.Relations.Add(invRel);
-            }
+                Id = Guid.NewGuid(),
+                Source = target,
+                Destination = source,
+                Event = eventPage,
+                Type = RelationHelper.ComplementaryRelations[type],
+                Duration = duration,
+                IsComplementary = true
+            };
+            _db.Relations.Add(invRel);
 
             return rel;
+        }
+
+        /// <summary>
+        /// Adds a bulk of relations.
+        /// </summary>
+        public void AddRelations(Page source, RelationType type, params Page[] pages)
+        {
+            if(pages.Length == 0)
+                throw new ArgumentException("At least one target must be specified.");
+
+            foreach (var rel in pages)
+                AddRelation(source, type, rel);
         }
 
         /// <summary>

@@ -51,6 +51,9 @@ namespace Bonsai.Data
             builder.Entity<Relation>()
                    .HasOne(x => x.Destination).WithMany().HasForeignKey(x => x.DestinationId);
 
+            builder.Entity<Relation>()
+                   .HasOne(x => x.Event).WithMany().HasForeignKey(x => x.EventId);
+
             builder.Entity<Media>()
                    .HasOne(x => x.UploaderAuthor).WithMany().IsRequired(false);
 
