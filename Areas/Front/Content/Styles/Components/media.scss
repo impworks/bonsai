@@ -61,6 +61,14 @@
                 max-height: 600px;
             }
         }
+
+        .document-wrapper {
+            width: 100%;
+
+            img {
+                max-width: 100%;
+            }
+        }
     }
 
     .media-meta {

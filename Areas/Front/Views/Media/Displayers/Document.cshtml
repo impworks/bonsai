@@ -1,4 +1,6 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Media
 @model Bonsai.Areas.Front.ViewModels.Media.MediaVM
-
-<img src="@Model.PreviewPath" class="media-document" alt="@(Model.Title ?? "Документ")" />
+    
+<div class="document-wrapper">
+    <img src="@Model.PreviewPath" class="media-document" alt="@(Model.Title ?? "Документ")" />
+</div>

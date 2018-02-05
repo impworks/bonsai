@@ -135,72 +135,44 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public Media AddPhoto(string source, string date = null, string description = null, Guid? explicitId = null)
         {
-            var id = explicitId ?? Guid.NewGuid();
-            var key = PageHelper.GetMediaKey(id);
-            var newName = key + Path.GetExtension(source);
-            var sourcePath = @".\Data\Utils\Seed\Media\" + source;
-            var diskPath = @".\wwwroot\media\" + newName;
-            var webPath = "~/media/" + newName;
-
-            Directory.CreateDirectory(Path.GetDirectoryName(diskPath));
-
-            var paths = EnumHelper.GetEnumValues<MediaSize>()
-                                  .Select(x => MediaPresenterService.GetSizedMediaPath(diskPath, x));
-
-            foreach(var path in paths)
-                File.Copy(sourcePath, path);
-
-            var media = new Media
-            {
-                Id = id,
-                Type = MediaType.Photo,
-                Key = key,
-                FilePath = webPath,
-                Date = date,
-                Description = description,
-                Tags = new List<MediaTag>(),
-                UploadDate = DateTimeOffset.Now
-            };
-            _db.Media.Add(media);
-            return media;
+            return AddMedia(
+                MediaType.Photo,
+                source,
+                source,
+                date,
+                description,
+                explicitId
+            );
         }
 
         /// <summary>
-        /// Adds a video media record.
+        /// Creates a video media record.
         /// </summary>
         public Media AddVideo(string source, string date = null, string description = null, Guid? explicitId = null)
         {
-            var id = explicitId ?? Guid.NewGuid();
-            var key = PageHelper.GetMediaKey(id);
-            var newName = key + Path.GetExtension(source);
-            var sourcePath = @".\Data\Utils\Seed\Media\" + source;
-            var diskPath = @".\wwwroot\media\" + newName;
-            var webPath = "~/media/" + newName;
+            return AddMedia(
+                MediaType.Video,
+                source,
+                "video-preview.png",
+                date,
+                description,
+                explicitId
+            );
+        }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(diskPath));
-
-            File.Copy(sourcePath, diskPath);
-
-            var paths = EnumHelper.GetEnumValues<MediaSize>()
-                                  .Where(x => x != MediaSize.Original)
-                                  .Select(x => MediaPresenterService.GetSizedMediaPath(diskPath, x));
-
-            foreach(var path in paths)
-                File.Copy(@".\Data\Utils\Seed\Media\video-preview.png", path);
-
-            var media = new Media
-            {
-                Id = id,
-                Type = MediaType.Video,
-                Key = key,
-                FilePath = webPath,
-                Date = date,
-                Description = description,
-                Tags = new List<MediaTag>(),
-                UploadDate = DateTimeOffset.Now
-            };
-            _db.Media.Add(media);
-            return media;
+        /// <summary>
+        /// Creates a document media record.
+        /// </summary>
+        public Media AddDocument(string source, string date = null, string description = null, Guid? explicitId = null)
+        {
+            return AddMedia(
+                MediaType.Document,
+                source,
+                "doc-preview.png",
+                date,
+                description,
+                explicitId
+            );
         }
 
         /// <summary>
@@ -238,6 +210,46 @@ namespace Bonsai.Data.Utils.Seed
         public void Save()
         {
             _db.SaveChanges();
+        }
+
+        /// <summary>
+        /// Adds a generic media element.
+        /// </summary>
+        private Media AddMedia(MediaType type, string source, string preview = null, string date = null, string description = null, Guid? explicitId = null)
+        {
+            var id = explicitId ?? Guid.NewGuid();
+            var key = PageHelper.GetMediaKey(id);
+            var newName = key + Path.GetExtension(source);
+            var sourcePath = @".\Data\Utils\Seed\Media\" + source;
+            var diskPath = @".\wwwroot\media\" + newName;
+            var webPath = "~/media/" + newName;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(diskPath));
+
+            // copy original file
+            File.Copy(sourcePath, diskPath);
+
+            // copy previews
+            var paths = EnumHelper.GetEnumValues<MediaSize>()
+                                  .Where(x => x != MediaSize.Original)
+                                  .Select(x => MediaPresenterService.GetSizedMediaPath(diskPath, x));
+
+            foreach(var path in paths)
+                File.Copy(@".\Data\Utils\Seed\Media\" + preview, path);
+
+            var media = new Media
+            {
+                Id = id,
+                Type = type,
+                Key = key,
+                FilePath = webPath,
+                Date = date,
+                Description = description,
+                Tags = new List<MediaTag>(),
+                UploadDate = DateTimeOffset.Now
+            };
+            _db.Media.Add(media);
+            return media;
         }
     }
 }
