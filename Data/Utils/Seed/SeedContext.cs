@@ -26,15 +26,15 @@ namespace Bonsai.Data.Utils.Seed
 
         private readonly AppDbContext _db;
         private readonly ElasticService _elastic;
-        private readonly string RootPath = Path.Combine(".", "Data", "Utils", "Seed");
+        private readonly string RootPath = Path.Combine(Path.GetFullPath(Directory.GetCurrentDirectory()), "Data", "Utils", "Seed");
 
         /// <summary>
         /// Creates a new page.
         /// </summary>
         public Page AddPage(string title, bool? gender = null, string birth = null, string death = null, PageType type = PageType.Person, string descrSource = null, string factsSource = null)
         {
-            var descrFile = Path.Combine(RootPath, descrSource);
-            var factsFile = Path.Combine(RootPath, factsSource);
+            var descrFile = Path.Combine(RootPath, descrSource ?? "");
+            var factsFile = Path.Combine(RootPath, factsSource ?? "");
 
             var factsObj = JObject.Parse(
                 File.Exists(factsFile)
@@ -245,7 +245,7 @@ namespace Bonsai.Data.Utils.Seed
             var key = PageHelper.GetMediaKey(id);
             var newName = key + Path.GetExtension(source);
             var sourcePath = Path.Combine(RootPath, "Media", source);
-            var diskPath = Path.Combine(".", "wwwroot", "media", newName);
+            var diskPath = Path.Combine(Path.GetFullPath(Directory.GetCurrentDirectory()), "wwwroot", "media", newName);
             var webPath = "~/media/" + newName;
 
             Directory.CreateDirectory(Path.GetDirectoryName(diskPath));
