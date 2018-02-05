@@ -26,14 +26,15 @@ namespace Bonsai.Data.Utils.Seed
 
         private readonly AppDbContext _db;
         private readonly ElasticService _elastic;
+        private readonly string RootPath = Path.Combine(".", "Data", "Utils", "Seed");
 
         /// <summary>
         /// Creates a new page.
         /// </summary>
         public Page AddPage(string title, bool? gender = null, string birth = null, string death = null, PageType type = PageType.Person, string descrSource = null, string factsSource = null)
         {
-            var descrFile = @".\Data\Utils\Seed\" + descrSource;
-            var factsFile = @".\Data\Utils\Seed\" + factsSource;
+            var descrFile = Path.Combine(RootPath, descrSource);
+            var factsFile = Path.Combine(RootPath, factsSource);
 
             var factsObj = JObject.Parse(
                 File.Exists(factsFile)
@@ -243,8 +244,8 @@ namespace Bonsai.Data.Utils.Seed
             var id = explicitId ?? Guid.NewGuid();
             var key = PageHelper.GetMediaKey(id);
             var newName = key + Path.GetExtension(source);
-            var sourcePath = @".\Data\Utils\Seed\Media\" + source;
-            var diskPath = @".\wwwroot\media\" + newName;
+            var sourcePath = Path.Combine(RootPath, "Media", source);
+            var diskPath = Path.Combine(".", "wwwroot", "media", newName);
             var webPath = "~/media/" + newName;
 
             Directory.CreateDirectory(Path.GetDirectoryName(diskPath));
@@ -258,7 +259,7 @@ namespace Bonsai.Data.Utils.Seed
                                   .Select(x => MediaPresenterService.GetSizedMediaPath(diskPath, x));
 
             foreach(var path in paths)
-                File.Copy(@".\Data\Utils\Seed\Media\" + preview, path);
+                File.Copy(Path.Combine(RootPath, "Media", preview), path);
 
             var media = new Media
             {
