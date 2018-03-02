@@ -12,29 +12,38 @@
     <link href="@Url.Content("~/assets/styles/front.css")" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand mr-auto" href="@Url.Action("Index", "Home")">@config.Title</a>
-                
-                <form class="form-inline my-0" method="get" action="@Url.Action("Search", "Search")">
-                    <div class="navbar-search">
-                        <input type="text" name="query" id="search-query" class="form-control form-control-sm navbar-search" placeholder="Поиск..." />
-                        <label for="search-query">
-                            <span class="fa fa-search"></span>
-                        </label>
+    <div id="main-container">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <img src="/assets/img/logo.svg">
+                        </div>
+                        <div class="col">
+                            @config.Title
+                        </div>
                     </div>
+                </a>
+                <form class="search" method="get" action="@Url.Action("Search", "Search")">
+                    <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
                 </form>
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
-    </header>
-
-    <div class="container container-main">
-        @RenderBody()
+                <div class="account">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <img src="/assets/img/pawug.jpg">
+                        </div>
+                        <div class="col">
+                            Рашид Троицкий<br />
+                            <a href="">Выйти</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div id="page">
+            @RenderBody()
+        </div>      
     </div>
 
     <script src="@Url.Content("~/assets/scripts/vendor.js")"></script>

@@ -14,11 +14,6 @@ var gulp = require('gulp'),
 
 var config = {
     vendor: {
-        styles: [
-            './node_modules/bootstrap/dist/css/bootstrap.css',
-            './node_modules/magnific-popup/dist/magnific-popup.css',
-            './node_modules/font-awesome/css/font-awesome.css'
-        ],
         scripts: [
             './node_modules/jquery/dist/jquery.js',
             './node_modules/popper.js/dist/umd/popper.js',

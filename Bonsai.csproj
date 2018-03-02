@@ -12,7 +12,6 @@
     <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Utils\Seed\Media\" />
-    <Folder Include="wwwroot\assets\fonts\" />
     <Folder Include="wwwroot\media\" />
   </ItemGroup>
 
