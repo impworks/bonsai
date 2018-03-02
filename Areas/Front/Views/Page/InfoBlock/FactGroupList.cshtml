@@ -2,11 +2,12 @@
 
 @foreach (var group in Model)
 {
-    <div class="fact-group">
-        <h6 class="fact-group-title">@group.Definition.Title</h6>
+    <h6 class="fact-group-title">@group.Definition.Title</h6>
+    <table class="fact">
         @foreach (var fact in group.Facts)
         {
             @Html.Partial(fact.ViewTemplatePath, fact)
         }
-    </div> 
+    </table>
+    <hr />
 }

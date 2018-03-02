@@ -5,18 +5,16 @@
     var isSingle = Model.Values.Length == 1;
 }
 
-<div class="fact">
-    <div class="fact-title">@(isSingle ? "Имя" : "Имена")</div>
-    <div class="fact-value">
+<tr>
+    @*<div class="fact-title">@(isSingle ? "Имя" : "Имена")</div>*@
+    <td>
         @foreach (var item in Model.Values)
         {
-            <div class="fact-item">
-                <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
-                @if (item.Duration != null && !isSingle)
-                {
-                    <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
-                }
-            </div>
+            <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
+            @if (item.Duration != null && !isSingle)
+            {
+                <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
+            }
         }
-    </div>
-</div>
+    </td>
+</tr>

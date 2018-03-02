@@ -1,16 +1,8 @@
 ﻿@import '../variables.scss';
 
 .page-info {
-    float: right;
-    background: $panel-color;
-    padding: 10px;
-    margin: 10px;
-    border: $panel-border;
-    width: 300px;
 
     .fact-group {
-        border: $panel-inner-border;
-        padding: 10px;
 
         @include spaced-list(10px);
 
@@ -19,7 +11,6 @@
         }
 
         .relation-group {
-            border-bottom: $panel-inner-border;
             margin: 0 -10px;
             padding: 10px;
 
@@ -43,13 +34,6 @@
                     font-size: 12px;
                 }
             }
-        }
-
-        .fact-group-title {
-            text-align: center;
-            font-weight: bold;
-            margin-top: -5px;
-            margin-bottom: 5px;
         }
 
         .relation-title, .fact-title {

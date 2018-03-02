@@ -47,7 +47,7 @@ namespace Bonsai.Data.Utils.Seed
             ctx.AddRelations(wed, RelationType.EventVisitor, root, w1, mom, dad, w1f, w1m);
 
             // pet
-            var cat = ctx.AddPage("Барсик", true, "2014.05.06", type: PageType.Pet, descrSource: "Пушистый персидский кот!", factsSource: "SamplePetFacts.json");
+            var cat = ctx.AddPage("Барсик", true, "2014.05.06", type: PageType.Pet, descrSource: "<p class='caption'>Пушистый персидский кот</p><p>Ни в коем случае не давайте ему «Вискас»!</p>", factsSource: "SamplePetFacts.json");
             ctx.AddRelations(cat, RelationType.Owner, root, w1);
 
             // events & locations

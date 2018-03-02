@@ -31,19 +31,20 @@
 .sidebar {
     max-width: 18rem;
     overflow: hidden;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
     flex: 1 0 auto;
     background: #f5f5f5;
     border-right: 1px solid $color-border;
 
     h6 {
+        font-size: 1.1rem;
         color: #2f373a;
         font-weight: bold;
         text-transform: uppercase;
     }
 
     .profile-photo {
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
 
         img {
             border-radius: 100%;
@@ -54,11 +55,21 @@
         }
     }
 
-    .fact-group {
-        padding: 1rem 0;
+    h6 {
+        margin: 1rem 0 0.5rem;
+    }
 
-        &:not(:last-child) {
-            border-bottom: 1px solid $color-border;
+    table.fact {
+        width: 100%;
+        font-size: 0.9rem;
+
+        td, th {
+            padding: 0.3rem 0.5rem;
+            vertical-align: top;
+        }
+
+        th {
+            color: #2f373a;
         }
     }
 }
