@@ -20,13 +20,13 @@ header {
             padding: 0;
             color: #2f373a !important;
             line-height: 1;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: bold;
             font-family: 'PT Serif';
 
             img {
                 display: block;
-                $size: 2.4rem;
+                $size: 2.6rem;
                 width: $size;
                 height: $size;
                 margin-right: 1rem;
@@ -84,7 +84,6 @@ header {
         }
 
         .account {
-            font-size: 0.9rem;
             white-space: nowrap;
 
             img {
@@ -96,17 +95,16 @@ header {
             }
 
             a {
-                font-size: 0.7rem;
+                font-size: 0.8rem;
                 color: $color-caption;
             }
         }
     }
 }
 
-
 .autocomplete-suggestions {
     z-index: 100 !important;
-    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.07);
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1);
 
     .autocomplete-suggestion {
         background: #fff;

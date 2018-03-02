@@ -1,7 +1,7 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
 @model StringFactModel
 
-<div class="fact">
-    <div class="fact-title">@Model.Definition.ShortTitle</div>
-    <div class="fact-value">@Model.Value</div>
+<div class="row">
+    <div class="col-auto">@Model.Definition.ShortTitle</div>
+    <div class="col">@Model.Value</div>
 </div>

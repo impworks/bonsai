@@ -3,30 +3,34 @@
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 
-    var pageVm = (PageTitleVM) ViewBag.PageModel;
+    var pageVm = (PageTitleVM)ViewBag.PageModel;
     var actions = new[]
     {
-        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key})},
-        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key})}
-    };
+new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key})},
+new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key})}
+};
 }
 
-<ul class="nav nav-pills pull-right">
-    @foreach (var action in actions)
-    {
-        <li>
-            @if (action.Active)
-            {
-                <span class="nav-link active">@action.Title</span>
-            }
-            else
-            {
-                <a href="@action.Url" class="nav-link">@action.Title</a>
-            }
-        </li>
-    }
-</ul>
+@*
+    <ul class="nav nav-pills pull-right">
+        @foreach (var action in actions)
+        {
+            <li>
+                @if (action.Active)
+                {
+                    <span class="nav-link active">@action.Title</span>
+                }
+                else
+                {
+                    <a href="@action.Url" class="nav-link">@action.Title</a>
+                }
+            </li>
+        }
+    </ul>
 
-<h2 class="page-header">@pageVm.Title</h2>
+    <h2 class="page-header">@pageVm.Title</h2>
+*@
 
 @RenderBody()
+
+

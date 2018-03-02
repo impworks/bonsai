@@ -3,14 +3,15 @@
 @model InfoBlockVM
 
 @{
-    var pageVm = (PageTitleVM) ViewBag.PageModel;
+    var pageVm = (PageTitleVM)ViewBag.PageModel;
 }
 
-<div class="page-info">
+
+<div>
     @if (Model.Photo != null)
     {
-        <div class="fact-group fact-group-sublime">
-            <img class="page-photo" src="@Url.Content(Model.Photo.ThumbnailUrl)" alt="@pageVm.Title" />
+        <div class="profile-photo">
+            <img src="@Url.Content(Model.Photo.ThumbnailUrl)" alt="@pageVm.Title" />
         </div>
     }
 

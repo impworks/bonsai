@@ -3,7 +3,7 @@
 body, html {
     font-family: 'Open Sans';
     background: #efefef;
-    font-size: 18px;
+    font-size: 17px;
     color: #464646;
     height: 100%;
 }
@@ -19,5 +19,6 @@ body, html {
 }
 
 #page {
-    padding: 1.5rem;
+    flex: 1 0 auto;
+    position: relative;
 }

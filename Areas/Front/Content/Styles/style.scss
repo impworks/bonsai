@@ -3,9 +3,11 @@
 @import '../../../../node_modules/font-awesome/scss/font-awesome.scss';
 
 @import 'fonts.scss';
+@import 'variables.scss';
 
 @import 'Components/main.scss';
 @import 'Components/header.scss';
+@import 'Components/typography.scss';
 
 @import 'Components/common.scss';
 
@@ -25,3 +27,42 @@
 }*/
 
 
+
+.sidebar {
+    max-width: 18rem;
+    overflow: hidden;
+    padding: 1.5rem;
+    flex: 1 0 auto;
+    background: #f5f5f5;
+    border-right: 1px solid $color-border;
+
+    h6 {
+        color: #2f373a;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .profile-photo {
+        margin-bottom: 0.5rem;
+
+        img {
+            border-radius: 100%;
+            width: 11rem;
+            height: 11rem;
+            margin: auto;
+            display: block;
+        }
+    }
+
+    .fact-group {
+        padding: 1rem 0;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $color-border;
+        }
+    }
+}
+
+.content {
+    padding: 1rem 3rem;
+}

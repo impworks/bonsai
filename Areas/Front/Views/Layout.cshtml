@@ -12,7 +12,7 @@
     <link href="@Url.Content("~/assets/styles/front.css")" rel="stylesheet" />
 </head>
 <body>
-    <div id="main-container">
+    <div id="main-container" class="d-flex flex-column">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light">
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">
@@ -41,7 +41,7 @@
                 </div>
             </nav>
         </header>
-        <div id="page">
+        <div id="page" class="d-flex">
             @RenderBody()
         </div>      
     </div>
