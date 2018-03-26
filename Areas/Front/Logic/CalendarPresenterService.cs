@@ -157,7 +157,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var lastMonthDay = firstMonthDay.AddMonths(1).AddDays(-1);
             var lastWeekDay = lastMonthDay.DayOfWeek;
-            var daysAfterLast = 7 - (lastWeekDay != DayOfWeek.Sunday ? (int) lastWeekDay : 0);
+            var daysAfterLast = lastWeekDay != DayOfWeek.Sunday ? 7 - (int) lastWeekDay : 0;
             var lastDay = lastMonthDay.AddDays(daysAfterLast);
 
             return (firstDay, lastDay);
