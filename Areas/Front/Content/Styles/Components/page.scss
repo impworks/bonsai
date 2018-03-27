@@ -1,15 +1,5 @@
 ﻿@import '../variables.scss';
 
-h1, h2, h3, h4, h5, h6 {
-    display: block;
-
-    &:before {
-        display: block;
-        clear: left;
-        content: ' ';
-    }
-}
-
 .media-wrapper-inline {
     border: $panel-border;
     margin: 5px 10px;

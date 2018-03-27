@@ -16,63 +16,7 @@
 @import 'Components/homepage.scss';
 @import 'Components/calendar.scss';
 @import 'Components/page.scss';
-//@import 'Components/search.scss';
-
-/*.container-main {
-    margin-top: 30px;
-}
-
-.page-header {
-    margin-bottom: 30px;
-}*/
-
-
-
-.sidebar {
-    max-width: 18rem;
-    overflow: hidden;
-    padding: 1rem 1.5rem;
-    flex: 1 0 auto;
-    background: #f5f5f5;
-    border-right: 1px solid $color-border;
-
-    h6 {
-        font-size: 1.1rem;
-        color: #2f373a;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    .profile-photo {
-        margin-bottom: 1rem;
-
-        img {
-            border-radius: 100%;
-            width: 11rem;
-            height: 11rem;
-            margin: auto;
-            display: block;
-        }
-    }
-
-    h6 {
-        margin: 1rem 0 0.5rem;
-    }
-
-    table.fact {
-        width: 100%;
-        font-size: 0.9rem;
-
-        td, th {
-            padding: 0.3rem 0.5rem;
-            vertical-align: top;
-        }
-
-        th {
-            color: #2f373a;
-        }
-    }
-}
+@import 'Components/search.scss';
 
 .content {
     padding: 1rem 3rem;

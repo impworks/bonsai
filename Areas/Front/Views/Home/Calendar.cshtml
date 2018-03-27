@@ -7,62 +7,53 @@
     var weekDays = new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" };
 }
 
-<table class="calendar">
-    <thead>
-        <tr>
-            <th colspan="7">
-                <h5 class="calendar-title">
-                    <a href="#" class="cmd-calendar-show" data-year="@prev.Year" data-month="@prev.Month" title="Предыдущий месяц">&laquo;</a>
-                    <span>@Model.MonthName @Model.Year</span>
-                    <a href="#" class="cmd-calendar-show" data-year="@next.Year" data-month="@next.Month" title="Следующий месяц">&raquo;</a>
-                </h5>
-            </th>
-        </tr>
-        <tr>
-            @foreach(var weekDay in weekDays)
-            {
-                <th>@weekDay</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var week in Model.Weeks)
-        {
-            <tr>
-                @foreach(var day in week)
+<div class="row">
+    <div class="col-md-7 calendar">
+        <div class="calendar-header">
+            <a href="#" class="cmd-calendar-show" data-year="@prev.Year" data-month="@prev.Month" title="Предыдущий месяц">&laquo;</a>
+            <h2>@Model.MonthName @Model.Year</h2>
+            <a href="#" class="cmd-calendar-show" data-year="@next.Year" data-month="@next.Month" title="Следующий месяц">&raquo;</a>
+        </div>
+        <table class="calendar-table">
+            <thead>
+                <tr>
+                    @foreach (var weekDay in weekDays)
+                    {
+                        <th>@weekDay</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var week in Model.Weeks)
                 {
-                    <td class="calendar-day @(day.IsActive ? "" : "calendar-day-inactive")">
-                        <div class="calendar-day-number">@day.Day</div>
-                        @if(day.Events == null)
+                    <tr>
+                        @foreach (var day in week)
                         {
-                            continue;
-                        }
+                            <td class="calendar-day @(day.Day == 14 ? "calendar-day-selected" : "")">
+                                <a href="" class="calendar-day-number @(day.IsActive ? "" : "calendar-day-number-inactive")">@day.Day</a>
 
-                        @foreach(var evt in day.Events)
-                        {
-                            <div class="calendar-event">
+                                @if (day.Events == null)
+                                {
+                                    continue;
+                                }
 
-                                <page-image image="@evt.RelatedPages[0].MainPhotoPath" />
+                                <div class="calendar-event-markers">
 
-                                <div class="calendar-event-details">
-                                    <h6 class="calendar-event-details-title">@evt.Title</h6>
-                                    <ul class="page-image-links">
-                                        @foreach(var rp in evt.RelatedPages)
-                                        {
-                                            <li>
-                                                <page-image image="@rp.MainPhotoPath" />
-                                                <a href="@Url.Action("Description", "Page", new {key = rp.Key})">
-                                                    <span class="title">@rp.Title</span>
-                                                </a>
-                                            </li>
-                                        }
-                                    </ul>
+                                    @foreach (var evt in day.Events)
+                                    {
+                                        <div class="calendar-event-marker"></div>
+                                    }
                                 </div>
-                            </div>
+                            </td>
+
                         }
-                    </td>
+                    </tr>
                 }
-            </tr>
-        }
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-5 calendar-events">
+        <h2>14 March 2018</h2>
+        <p>Событий нет.</p>
+    </div>
+</div>

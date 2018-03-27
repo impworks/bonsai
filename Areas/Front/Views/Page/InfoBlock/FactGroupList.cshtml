@@ -3,7 +3,7 @@
 @foreach (var group in Model)
 {
     <h6 class="fact-group-title">@group.Definition.Title</h6>
-    <table class="fact">
+    <table class="fact-group">
         @foreach (var fact in group.Facts)
         {
             @Html.Partial(fact.ViewTemplatePath, fact)

@@ -31,6 +31,8 @@ new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Med
     <h2 class="page-header">@pageVm.Title</h2>
 *@
 
-@RenderBody()
+<div id="page" class="d-flex">
+    @RenderBody()
+</div>
 
 

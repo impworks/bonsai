@@ -1,12 +1,145 @@
 ﻿@import '../variables.scss';
 
-.calendar {
+.calendar-wrapper {
+    border-bottom: 1px solid $color-border;
+
+    h2 {
+        font-size: 2.08824rem;
+        margin-bottom: 0.2622rem;
+        padding-top: 0.7378rem;
+        line-height: 2;
+        font-weight: bold;
+        font-family: "PT Serif";
+    }
+
+    .cmd-calendar-show {
+        display: none;
+    }
+
+    .calendar {
+        padding-right: 0;
+
+        .calendar-header {
+
+            h2 {
+                text-align: center;
+            }
+        }
+
+        .calendar-table {
+            width: 100%;
+            text-align: center;
+            margin-bottom: -1px;
+            border-collapse: collapse;
+
+            th {
+                font-weight: normal;
+                text-transform: uppercase;
+                padding: 0 0 .5rem;
+                font-size: 0.8rem;
+            }
+
+            tbody {
+
+                .calendar-day {
+                    padding: 0;
+                    height: 6rem;
+                    width: 14.28571428571429%;
+                    position: relative;
+                    border: 1px solid $color-border;
+
+                    &.calendar-day-selected {
+                        background: linear-gradient(45deg, #94c11e, #36a23d);
+
+                        .calendar-day-number {
+                            color: #fff;
+                            border: 1px solid rgba(0,0,0, 0.2);
+                        }
+
+                        .calendar-event-markers .calendar-event-marker {
+                            background: #fff;
+                        }
+                    }
+
+                    &:first-child {
+                        border-left: 0;
+                    }
+
+                    &:last-child {
+                        border-right: 0;
+                    }
+
+                    &:not(.calendar-day-selected):hover {
+                        background: #f5f5f5;
+
+                        .calendar-day-number {
+                            border: 1px solid rgba(0,0,0, 0.1);
+                        }
+                    }
+
+                    .calendar-day-number {
+                        display: block;
+                        font-family: "PT Serif";
+                        font-size: 1.6rem;
+                        text-align: center;
+                        color: #2f373a;
+                        font-weight: bold;
+                        position: absolute;
+                        z-index: 2;
+                        left: -1px;
+                        padding-top: 2rem;
+                        top: -1px;
+                        height: calc(100% + 2px);
+                        width: calc(100% + 2px);
+                        border: 1px solid rgba(0,0,0,0);
+
+                        &:hover {
+                            text-decoration: none;
+                        }
+
+                        &.calendar-day-number-inactive {
+                            opacity: 0.3;
+                        }
+                    }
+
+                    .calendar-event-markers {
+                        position: absolute;
+                        bottom: 0.85rem;
+                        width: 100%;
+                        text-align: center;
+                        z-index: 1;
+                        left: 0;
+                        font-size: 0;
+
+                        .calendar-event-marker {
+                            display: inline-block;
+                            height: 8px;
+                            width: 8px;
+                            margin: 2px;
+                            background: #ccc;
+                            border-radius: 100%;
+                            background: linear-gradient(45deg, #94c11e, #36a23d);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .calendar-events {
+        background: #f5f5f5;
+        border-left: 1px solid $color-border;
+    }
+}
+
+
+.calendar2 {
     border: 0;
     border-collapse: collapse;
     width: 100%;
+    background: #fff;
 
     th, td {
-        border: $panel-inner-border;
         padding: 5px;
         width: 14.285%;
     }
@@ -45,6 +178,9 @@
         .calendar-day {
             vertical-align: top;
             height: 100px;
+            color: #2f373a;
+            font-weight: bold;
+            font-family: "PT Serif", serif;
 
             &.calendar-day-inactive {
                 opacity: 0.3;
@@ -52,8 +188,9 @@
             }
 
             .calendar-day-number {
+                text-align: center;
                 font-weight: bold;
-                color: $subtle-header-color;
+                font-size: 1.6rem;
                 margin-bottom: 5px;
             }
 

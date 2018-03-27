@@ -4,51 +4,46 @@
     Layout = "~/Areas/Front/Views/Layout.cshtml";
     ViewBag.Title = "Главная страница";
 }
-<div>
-    <div class="row">
-        <div class="col-md-7">
-            <h3 class="homepage-title">Календарь событий</h3>
-            <div class="calendar-wrapper">
-                Загрузка...
-            </div>
-        </div>
-        <div class="col-md-5">
-            @if (Model.LastUpdatedPages.Any())
-            {
-                <div class="homepage-block">
-                    <h3 class="homepage-title">Последние обновления</h3>
-                    <ul class="page-image-links">
-                        @foreach (var elem in Model.LastUpdatedPages)
-                        {
-                            <li>
-                                <page-image image="@elem.MainPhotoPath" />
-                                <a href="@Url.Action("Description", "Page", new {key = elem.Key})">@elem.Title</a>
-                                <small class="text-muted" title="@elem.UpdatedDate.ToLongDateString()">@elem.UpdatedDate.ToShortDateString()</small>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
-            @if (Model.LastUploadedMedia.Any())
-            {
-                <div class="homepage-block">
-                    <h3 class="homepage-title">Последние медиа-файлы</h3>
-                    <ul class="list-inline">
-                        @foreach (var elem in Model.LastUploadedMedia)
-                        {
-                            <li class="list-inline-item">
-                                <div class="media-thumb-wrapper">
-                                    <a href="@Url.Action("ViewMedia", "Media", new { key = elem.MediaKey })" class="media-thumb-link" data-media="@elem.MediaKey">
-                                        <img src="@Url.Content(elem.ThumbnailUrl)" alt="@(elem.Date?.ShortReadableDate ?? "Дата неизвестна")" />
-                                    </a>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
-        </div>
-    </div>
 
-    <p>Ссылка на <a href="@Url.Action("Description", "Page", new { key = "Иванов Иван Петрович" })">тестовую страничку</a>.</p>
+<div class="calendar-wrapper">
+    Загрузка...
 </div>
+
+@*<div class="col-md-5">
+        @if(Model.LastUpdatedPages.Any())
+        {
+            <div class="homepage-block">
+                <h3 class="homepage-title">Последние обновления</h3>
+                <ul class="page-image-links">
+                    @foreach(var elem in Model.LastUpdatedPages)
+                    {
+                        <li>
+                            <page-image image="@elem.MainPhotoPath" />
+                            <a href="@Url.Action("Description", "Page", new {key = elem.Key})">@elem.Title</a>
+                            <small class="text-muted" title="@elem.UpdatedDate.ToLongDateString()">@elem.UpdatedDate.ToShortDateString()</small>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        @if(Model.LastUploadedMedia.Any())
+        {
+            <div class="homepage-block">
+                <h3 class="homepage-title">Последние медиа-файлы</h3>
+                <ul class="list-inline">
+                    @foreach(var elem in Model.LastUploadedMedia)
+                    {
+                        <li class="list-inline-item">
+                            <div class="media-thumb-wrapper">
+                                <a href="@Url.Action("ViewMedia", "Media", new { key = elem.MediaKey })" class="media-thumb-link" data-media="@elem.MediaKey">
+                                    <img src="@Url.Content(elem.ThumbnailUrl)" alt="@(elem.Date?.ShortReadableDate ?? "Дата неизвестна")" />
+                                </a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+*@
+@* <p>Ссылка на <a href="@Url.Action("Description", "Page", new { key = "Иванов Иван Петрович" })">тестовую страничку</a>.</p> *@

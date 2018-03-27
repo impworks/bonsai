@@ -2,9 +2,9 @@
 @using Bonsai.Code.Utils
 @model LanguageFactModel
 
-<div class="fact">
-    <div class="fact-title">@(Model.Values.Length == 1 ? "Язык" : "Языки")</div>
-    <div class="fact-value">
+<tr class="fact">
+    <th class="fact-title">@(Model.Values.Length == 1 ? "Язык" : "Языки")</th>
+    <td class="fact-value">
         @foreach (var item in Model.Values)
         {
             <div class="fact-item">
@@ -19,5 +19,5 @@
                 }
             </div>
         }
-    </div>
-</div>
+    </td>
+</tr>
