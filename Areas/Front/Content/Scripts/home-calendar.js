@@ -3,7 +3,6 @@
 
     function registerEvents() {
         $('.calendar-event').popover('dispose');
-
         // configure event
         $('.calendar-event').popover({
             container: 'body',
@@ -26,6 +25,8 @@
                 $wrapper.popover('hide');
             }
         });
+
+        updateEventsHeight();
     }
 
     function loadCalendar(year, month, isRetry) {
@@ -52,6 +53,11 @@
                     loadCalendar(null, null, true);
             }
         );
+    }
+
+    function updateEventsHeight() {
+        var calendarHeight = $('.calendar-table').height();
+        $('.calendar-events .scroll').css('max-height', calendarHeight + 'px');
     }
 
     if ($('.calendar-wrapper').length > 0) {

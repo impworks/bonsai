@@ -10,9 +10,9 @@
 <div class="row">
     <div class="col-md-7 calendar">
         <div class="calendar-header">
-            <a href="#" class="cmd-calendar-show" data-year="@prev.Year" data-month="@prev.Month" title="Предыдущий месяц">&laquo;</a>
+            <a href="#" class="cmd-calendar-show" data-year="@prev.Year" data-month="@prev.Month">&larr;</a>
             <h2>@Model.MonthName @Model.Year</h2>
-            <a href="#" class="cmd-calendar-show" data-year="@next.Year" data-month="@next.Month" title="Следующий месяц">&raquo;</a>
+            <a href="#" class="cmd-calendar-show" data-year="@next.Year" data-month="@next.Month">&rarr;</a>
         </div>
         <table class="calendar-table">
             <thead>
@@ -29,8 +29,15 @@
                     <tr>
                         @foreach (var day in week)
                         {
-                            <td class="calendar-day @(day.Day == 14 ? "calendar-day-selected" : "")">
-                                <a href="" class="calendar-day-number @(day.IsActive ? "" : "calendar-day-number-inactive")">@day.Day</a>
+                            <td class="calendar-day @(day.Day == 14 ? "calendar-day-selected" : "") @(day.IsActive ? "" : "calendar-day-inactive")">
+
+                                @if (day.IsActive)
+                                {
+                                    <a href="" class="calendar-day-number">@day.Day</a>
+                                }
+                                else { 
+                                    <div class="calendar-day-number calendar-day-number-inactive">@day.Day</div>
+                                }
 
                                 @if (day.Events == null)
                                 {
@@ -53,7 +60,46 @@
         </table>
     </div>
     <div class="col-md-5 calendar-events">
-        <h2>14 March 2018</h2>
-        <p>Событий нет.</p>
+        <h2>События</h2>
+        <div class="scroll">
+            <div class="card">
+                <div class="list-group list-group-flush">
+                    <a href="" class="calendar-events-item list-group-item">
+                        <div class="media">
+                            <div class="calendar-events-item-icon mr-3">
+                                <div class="image" style="background-image: url(/assets/img/pawug.jpg);"></div>
+                            </div>
+                            <div class="media-body">
+                                <h6 class="m-0">Рашид Евгеньевич Троицкий</h6>
+                                <p class="calendar-events-item-name">День рождения (51)</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="" class="calendar-events-item list-group-item">
+                        <div class="media">
+                            <div class="calendar-events-item-icon mr-3">
+                                <div class="image half" style="background-image: url(/media/penLFNxkF0iWPYrfuozQEw.jpg);"></div>
+                                <div class="image half" style="background-image: url(/assets/img/unknown-user.png);"></div>
+                            </div>
+                            <div class="media-body">
+                                <h6 class="m-0">Петр Иванович Иванов, Анна Сергеевна Семенова</h6>
+                                <p class="calendar-events-item-name">Годовщина свадьбы (3)</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="" class="calendar-events-item list-group-item">
+                        <div class="media">
+                            <div class="calendar-events-item-icon mr-3">
+                                <div class="image" style="background-image: url(http://vkrizis.ru/wp-content/uploads/2018/03/sergey_mavrodi_001.jpg);"></div>
+                            </div>
+                            <div class="media-body">
+                                <h6 class="m-0">Сергей Пантелеевич Мавроди</h6>
+                                <p class="calendar-events-item-name">Годовщина смерти (1)</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
