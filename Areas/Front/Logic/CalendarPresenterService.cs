@@ -73,6 +73,7 @@ namespace Bonsai.Areas.Front.Logic
                         {
                             Day = birth.Day,
                             Title = title,
+                            Type = CalendarEventType.Birth,
                             RelatedPages = new[] { Map(page) }
                         };
                     }
@@ -95,6 +96,7 @@ namespace Bonsai.Areas.Front.Logic
                         {
                             Day = death.Day,
                             Title = title,
+                            Type = CalendarEventType.Death,
                             RelatedPages = new[] {Map(page)}
                         };
                     }
@@ -138,6 +140,7 @@ namespace Bonsai.Areas.Front.Logic
                 {
                     Day = start.Day,
                     Title = title,
+                    Type = CalendarEventType.Wedding,
                     RelatedPages = relatedPageIds.Where(x => x != null)
                                                  .Select(x => Map(context.Pages[x.Value]))
                                                  .ToArray()
