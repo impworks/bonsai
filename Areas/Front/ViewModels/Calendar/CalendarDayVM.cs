@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Bonsai.Areas.Front.ViewModels.Home
+namespace Bonsai.Areas.Front.ViewModels.Calendar
 {
     public class CalendarDayVM
     {

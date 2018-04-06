@@ -1,4 +1,4 @@
-﻿namespace Bonsai.Areas.Front.ViewModels.Home
+﻿namespace Bonsai.Areas.Front.ViewModels.Calendar
 {
     /// <summary>
     /// Type of calendar events.

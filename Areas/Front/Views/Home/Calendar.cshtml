@@ -1,5 +1,6 @@
 ﻿@addTagHelper *, Bonsai
-@model Bonsai.Areas.Front.ViewModels.Home.CalendarMonthVM
+@using Bonsai.Areas.Front.ViewModels.Calendar
+@model Bonsai.Areas.Front.ViewModels.Calendar.CalendarMonthVM
 @{
     var date = new DateTime(Model.Year, Model.Month, 1);
     var prev = date.AddMonths(-1);

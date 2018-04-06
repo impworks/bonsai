@@ -51,7 +51,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("~/util/cal/{year:int}/{month:int}")]
         public async Task<ActionResult> Calendar(int year, int month)
         {
-            var vm = await _calendar.GetEventsForMonthAsync(year, month)
+            var vm = await _calendar.GetMonthEventsAsync(year, month)
                                     .ConfigureAwait(false);
 
             return View(vm);

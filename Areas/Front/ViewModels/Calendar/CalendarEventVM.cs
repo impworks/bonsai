@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Areas.Front.ViewModels.Home;
 
-namespace Bonsai.Areas.Front.ViewModels.Home
+namespace Bonsai.Areas.Front.ViewModels.Calendar
 {
     /// <summary>
     /// Information about a calendar event.

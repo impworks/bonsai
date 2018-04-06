@@ -3,7 +3,7 @@
 @foreach (var cat in Model)
 {
     <h6>@cat.Title</h6>
-    @foreach (var group in cat.Groups)
+    foreach (var group in cat.Groups)
     {
         <div class="relation-group">
             @foreach (var rel in group.Relations)

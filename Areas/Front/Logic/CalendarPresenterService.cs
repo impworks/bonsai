@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
+using Bonsai.Areas.Front.ViewModels.Calendar;
 using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Code.Tools;
 using Bonsai.Data;
@@ -24,7 +25,7 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the events to display for the current month.
         /// </summary>
-        public async Task<CalendarMonthVM> GetEventsForMonthAsync(int year, int month)
+        public async Task<CalendarMonthVM> GetMonthEventsAsync(int year, int month)
         {
             var context = await RelationContext.LoadContextAsync(_db)
                                                .ConfigureAwait(false);
@@ -42,6 +43,20 @@ namespace Bonsai.Areas.Front.Logic
                 Weeks = GetMonthGrid(range.from, range.to, month, events),
                 FuzzyEvents = events.Where(x => x.Day == null).ToList()
             };
+        }
+
+        /// <summary>
+        /// Returns the events for a particular day (or fuzzy events for the month).
+        /// </summary>
+        public async Task<IReadOnlyList<CalendarEventVM>> GetDayEventsAsync(int year, int month, int? day)
+        {
+            var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
+            var events = GetPageEvents(year, month, context)
+                         .Concat(GetRelationEvents(year, month, context))
+                         .Where(x => x.Day == day)
+                         .ToList();
+
+            return events;
         }
 
         #region Private helpers

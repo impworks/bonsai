@@ -1,0 +1,60 @@
+﻿@addTagHelper *, Bonsai
+@using Bonsai.Areas.Front.ViewModels.Calendar
+@model Bonsai.Areas.Front.ViewModels.Calendar.CalendarMonthVM
+@{
+    var date = new DateTime(Model.Year, Model.Month, 1);
+    var prev = date.AddMonths(-1);
+    var next = date.AddMonths(1);
+    var weekDays = new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" };
+}
+
+<div class="calendar-header">
+    <a href="#" class="cmd-calendar-show" data-year="@prev.Year" data-month="@prev.Month">&larr;</a>
+    <h2>@Model.MonthName @Model.Year</h2>
+    <a href="#" class="cmd-calendar-show" data-year="@next.Year" data-month="@next.Month">&rarr;</a>
+</div>
+<table class="calendar-table">
+    <thead>
+        <tr>
+            @foreach(var weekDay in weekDays)
+            {
+                <th>@weekDay</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var week in Model.Weeks)
+        {
+            <tr>
+                @foreach(var day in week)
+                {
+                    <td class="calendar-day @(day.Day == 14 ? "calendar-day-selected" : "") @(day.IsActive ? "" : "calendar-day-inactive")">
+
+                        @if(day.IsActive)
+                        {
+                            <a href="" class="calendar-day-number">@day.Day</a>
+                        }
+                        else
+                        {
+                            <div class="calendar-day-number calendar-day-number-inactive">@day.Day</div>
+                        }
+
+                        @if(day.Events == null)
+                        {
+                            continue;
+                        }
+
+                        <div class="calendar-event-markers">
+
+                            @foreach(var _ in day.Events)
+                            {
+                                <div class="calendar-event-marker"></div>
+                            }
+                        </div>
+                    </td>
+
+                }
+            </tr>
+        }
+    </tbody>
+</table>

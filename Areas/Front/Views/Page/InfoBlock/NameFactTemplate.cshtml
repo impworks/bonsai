@@ -11,7 +11,7 @@
         @foreach (var item in Model.Values)
         {
             <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
-            @if (item.Duration != null && !isSingle)
+            if (item.Duration != null && !isSingle)
             {
                 <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
             }
