@@ -1,30 +1,42 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Calendar
 @model IReadOnlyList<Bonsai.Areas.Front.ViewModels.Calendar.CalendarEventVM>
 
-<h2>События</h2>
-<div class="scroll">
-    <div class="card">
-        <div class="list-group list-group-flush">
-            @foreach(var evt in Model)
-            {
-                var pageTitles = string.Join(", ", evt.RelatedPages.Select(x => x.Title));
-                var multiPage = evt.RelatedPages.Count > 1;
+<div class="calendar-events-header">
+    <h2>События</h2>
+    <p class="caption">число</p>
+</div>
+<div class="calendar-events-content">
 
-                <a href="" class="calendar-events-item list-group-item">
-                    <div class="media">
-                        <div class="calendar-events-item-icon mr-3">
-                            @foreach(var rp in evt.RelatedPages)
-                            {
-                                <div class="image @(multiPage ? "half" : "")" style="background-image: url(@Url.Content(rp.MainPhotoPath));"></div>
-                            }
+    <div class="card">
+        @if (Model.Count() > 0)
+        {
+            <div class="list-group list-group-flush">
+                @foreach (var evt in Model)
+                {
+                    var pageTitles = string.Join(", ", evt.RelatedPages.Select(x => x.Title));
+                    var multiPage = evt.RelatedPages.Count > 1;
+
+                    <a href="" class="calendar-events-item list-group-item">
+                        <div class="media">
+                            <div class="calendar-events-item-icon mr-3">
+                                @foreach (var rp in evt.RelatedPages)
+                                {
+                                    <div class="image @(multiPage ? "half" : "")" style="background-image: url(@Url.Content(rp.MainPhotoPath));"></div>
+                                }
+                            </div>
+                            <div class="media-body">
+                                <h6 class="m-0">@pageTitles</h6>
+                                <p class="calendar-events-item-name">@evt.Title</p>
+                            </div>
                         </div>
-                        <div class="media-body">
-                            <h6 class="m-0">@pageTitles</h6>
-                            <p class="calendar-events-item-name">@evt.Title</p>
-                        </div>
-                    </div>
-                </a>
-            }
-        </div>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <p>В этот день ничего не произошло.</p>
+        }
     </div>
-</div>>
+
+</div>

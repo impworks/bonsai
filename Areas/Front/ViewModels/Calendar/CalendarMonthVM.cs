@@ -23,6 +23,11 @@ namespace Bonsai.Areas.Front.ViewModels.Calendar
         public string MonthName { get; set; }
 
         /// <summary>
+        /// Current day's number (1-based).
+        /// </summary>
+        public int Day { get; set; }
+
+        /// <summary>
         /// List of calendar days / weeks.
         /// </summary>
         public IReadOnlyList<IReadOnlyList<CalendarDayVM>> Weeks { get; set; }
