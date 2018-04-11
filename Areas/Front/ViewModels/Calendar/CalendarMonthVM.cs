@@ -18,9 +18,9 @@ namespace Bonsai.Areas.Front.ViewModels.Calendar
         public int Month { get; set; }
 
         /// <summary>
-        /// Name of the current month.
+        /// Title (month + year).
         /// </summary>
-        public string MonthName { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Current day's number (1-based).

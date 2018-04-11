@@ -6,6 +6,7 @@ using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels.Calendar;
 using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Code.Tools;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 
 namespace Bonsai.Areas.Front.Logic
@@ -39,7 +40,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Month = month,
                 Year = year,
-                MonthName = new DateTime(year, month, 1).ToString("MMMM"),
+                Title = new FuzzyDate(year, month, null).ReadableDate.Capitalize(),
                 Weeks = GetMonthGrid(range.from, range.to, month, events),
                 FuzzyEvents = events.Where(x => x.Day == null).ToList()
             };
@@ -48,7 +49,7 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the events for a particular day (or fuzzy events for the month).
         /// </summary>
-        public async Task<IReadOnlyList<CalendarEventVM>> GetDayEventsAsync(int year, int month, int? day)
+        public async Task<CalendarDayVM> GetDayEventsAsync(int year, int month, int? day)
         {
             var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
             var events = GetPageEvents(year, month, context)
@@ -56,7 +57,13 @@ namespace Bonsai.Areas.Front.Logic
                          .Where(x => x.Day == day)
                          .ToList();
 
-            return events;
+            return new CalendarDayVM
+            {
+                IsActive = true,
+                Day = day,
+                Date = new FuzzyDate(year, month, day),
+                Events = events
+            };
         }
 
         #region Private helpers
@@ -144,21 +151,24 @@ namespace Bonsai.Areas.Front.Logic
                 visited.Add(inverseHash);
 
                 var title = (year == start.Year && !start.IsDecade)
-                    ? "Дата свадьбы"
+                    ? "День свадьбы"
                     : (start.Year == null || start.IsDecade)
-                        ? "Годовщина свадьбы"
-                        : (year - start.Year.Value) + "-ая годовщина свадьбы";
-
-                var relatedPageIds = new [] {rel.SourceId, rel.DestinationId, rel.EventId};
+                        ? "Годовщина"
+                        : (year - start.Year.Value) + "-ая годовщина";
 
                 yield return new CalendarEventVM
                 {
                     Day = start.Day,
                     Title = title,
                     Type = CalendarEventType.Wedding,
-                    RelatedPages = relatedPageIds.Where(x => x != null)
-                                                 .Select(x => Map(context.Pages[x.Value]))
-                                                 .ToArray()
+                    RelatedPages = new []
+                    {
+                        Map(context.Pages[rel.SourceId]),
+                        Map(context.Pages[rel.DestinationId])
+                    },
+                    RelatedEvent = rel.EventId == null
+                        ? null
+                        : Map(context.Pages[rel.EventId.Value])
                 };
             }
         }

@@ -24,8 +24,13 @@ namespace Bonsai.Areas.Front.ViewModels.Calendar
         public CalendarEventType Type { get; set; }
 
         /// <summary>
-        /// Links to related pages.
+        /// Links to related person pages.
         /// </summary>
         public IReadOnlyList<PageTitleExtendedVM> RelatedPages { get; set; }
+
+        /// <summary>
+        /// Link to the related event page.
+        /// </summary>
+        public PageTitleExtendedVM RelatedEvent { get; set; }
     }
 }

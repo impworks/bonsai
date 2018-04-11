@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Code.Tools;
 
 namespace Bonsai.Areas.Front.ViewModels.Calendar
 {
@@ -7,7 +8,12 @@ namespace Bonsai.Areas.Front.ViewModels.Calendar
         /// <summary>
         /// Day number (1-based).
         /// </summary>
-        public int Day { get; set; }
+        public int? Day { get; set; }
+
+        /// <summary>
+        /// Date of the day.
+        /// </summary>
+        public FuzzyDate Date { get; set; }
 
         /// <summary>
         /// Flag indicating that the day belongs to currently displayed month.

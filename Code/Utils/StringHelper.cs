@@ -46,5 +46,13 @@ namespace Bonsai.Code.Utils
 
             return cmp == 0;
         }
+
+        /// <summary>
+        /// Converts the first character of the string to upper case.
+        /// </summary>
+        public static string Capitalize(this string str)
+        {
+            return str.Substring(0, 1).ToUpper() + str.Substring(1);
+        }
     }
 }
