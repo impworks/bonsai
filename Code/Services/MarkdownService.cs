@@ -77,8 +77,9 @@ namespace Bonsai.Code.Services
         private async Task<string> ProcessMediaAsync(string html)
         {
             var keys = MediaRegex.Matches(html)
-                                .Select(x => x.Groups["key"].Value)
-                                .ToDictionary(x => x, PageHelper.GetMediaId);
+                                 .Select(x => x.Groups["key"].Value)
+                                 .Distinct()
+                                 .ToDictionary(x => x, PageHelper.GetMediaId);
 
             if (!keys.Any())
                 return html;
@@ -89,7 +90,7 @@ namespace Bonsai.Code.Services
                                          .ToDictionaryAsync(x => x.Key, x => x.FilePath)
                                          .ConfigureAwait(false);
 
-            string Wrapper(string classes, string body) => $@"<div class=""media-wrapper-inline {classes}"">{body}.</div>";
+            string Wrapper(string classes, string body) => $@"<div class=""media-wrapper-inline {classes}"">{body}</div>";
 
             return MediaRegex.Replace(html, m =>
             {
