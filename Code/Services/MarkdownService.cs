@@ -95,15 +95,14 @@ namespace Bonsai.Code.Services
             return MediaRegex.Replace(html, m =>
             {
                 var key = m.Groups["key"].Value;
-
-                if (!existingMedia.TryGetValue(key, out var rawPath))
-                    return Wrapper("error", $"Медиа-файл '{key}' не найден");
-
                 var args = m.Groups["options"].Value?.Split('|');
                 var details = GetMediaDetails(args);
 
+                if (!existingMedia.TryGetValue(key, out var rawPath))
+                    return Wrapper(details.Classes + " error", $"<p class='caption'>Медиа-файл <span class='break-word'>'{key}'</span> не найден.</p>");
+
                 if(details.Error)
-                    return Wrapper("error", details.Descr);
+                    return Wrapper("right error", $"<p class='caption'>{details.Descr}</p>");
 
                 var link = _url.Action("ViewMedia", "Media", new {key = key});
                 var path = _url.Content(MediaPresenterService.GetSizedMediaPath(rawPath, MediaSize.Small));
@@ -112,7 +111,7 @@ namespace Bonsai.Code.Services
                     <a href=""{link}"" class=""media-thumb-link"" data-media=""{key}"">
                         <img src=""{path}"" />
                     </a>
-                    <span>{details.Descr}</span>
+                    <p class='caption'>{details.Descr}</p>
                 ";
 
                 return Wrapper(details.Classes, body);

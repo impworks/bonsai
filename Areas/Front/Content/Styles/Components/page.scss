@@ -1,42 +1,67 @@
 ﻿@import '../variables.scss';
 
 .media-wrapper-inline {
-    border: $panel-border;
-    margin: 5px 10px;
-    padding: 10px;
+    display: block;
+    border: $color-border 1px solid;
+    border-radius: 0.2rem;
+    padding: 0.5rem;
+    margin: 1rem 0 0.4rem;
 
     &.left {
         float: left;
-        margin-left: 0;
+        margin-right: 1rem;
     }
 
     &.right {
         float: right;
-        margin-right: 0;
+        margin-left: 1rem;
     }
 
     &.large {
-        width: 300px;
+        width: 18rem;
     }
 
     &.medium {
-        width: 200px;
+        width: 12rem;
     }
 
     &.small {
-        width: 150px;
+        width: 9rem;
     }
 
     &.error {
-        width: 300px;
-        float: left;
-        margin-left: 0;
-        border: 1px $error-color solid;
-        color: $error-color;
+        width: 11rem;
+        background: #fcf5f4;
+        border: 1px #fad0c6 solid;
+
+        .caption {
+            color: $error-color;
+
+            .break-word {
+                word-wrap: break-word;
+            }
+        }
     }
 
     img, a {
         width: 100%;
         display: block;
+
+        &:focus {
+            outline: none;
+        }
+
+        & + .caption {
+            margin-top: 0.5rem;
+        }
+    }
+
+    .caption {
+        display: block;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+        font-size: 0.8rem;
+        color: #808080;
     }
 }

@@ -11,6 +11,7 @@
 
             .calendar-header {
                 position: relative;
+                padding-bottom: 0.5rem;
 
                 h2 {
                     text-align: center;
@@ -52,7 +53,7 @@
                 th {
                     font-weight: normal;
                     text-transform: uppercase;
-                    padding: 1rem 0 0.5rem;
+                    padding-bottom: 0.5rem;
                     font-size: 0.8rem;
                 }
 
@@ -153,12 +154,8 @@
             .calendar-events-header {
                 position: relative;
 
-                .caption {
-                    padding: 0;
-                    margin: 0;
-                    bottom: 0.5rem;
-                    right: 0;
-                    position: absolute;
+                h2 {
+                    margin-bottom: 0.65rem;
                 }
             }
 

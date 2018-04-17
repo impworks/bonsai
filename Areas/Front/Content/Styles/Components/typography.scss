@@ -4,6 +4,7 @@ h1, h2, h3, h4, h5, h6 {
     color: #2f373a;
     font-weight: bold;
     font-family: "PT Serif", serif;
+    clear: both;
 
     & + .caption {
         margin-top: -1rem;

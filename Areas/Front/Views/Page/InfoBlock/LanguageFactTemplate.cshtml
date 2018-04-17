@@ -11,7 +11,7 @@
                 <span class="fact-item-main">@item.Name</span>
                 @if (item.Proficiency != null)
                 {
-                    <span class="fact-item-extra">@item.Proficiency.Value.GetEnumDescription()</span>
+                    <span class="fact-item-extra">(@item.Proficiency.Value.GetEnumDescription())</span>
                 }
                 @if (item.Duration != null)
                 {

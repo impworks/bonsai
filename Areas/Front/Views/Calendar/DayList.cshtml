@@ -2,8 +2,7 @@
 @model CalendarDayVM
 
 <div class="calendar-events-header">
-    <h2>События</h2>
-    <p class="caption">@Model.Date.ReadableDate</p>
+    <h2><span class="fa fa-calendar-alt"></span>@Model.Date.ReadableDate</h2>
 </div>
 <div class="calendar-events-content">
 
@@ -15,8 +14,13 @@
                 {
                     var pageTitles = string.Join(", ", evt.RelatedPages.Select(x => x.Title));
                     var multiPage = evt.RelatedPages.Count > 1;
+                    var url = multiPage ? Url.Action("Description", "Page", new { key = evt.RelatedEvent.Key })
+                                        : Url.Action("Description", "Page", new { key = evt.RelatedPages[0].Key });
 
-                    <a href="" class="calendar-events-item list-group-item">
+                    var title = multiPage ? @evt.RelatedEvent.Title
+                                          : evt.RelatedPages[0].Title;
+
+                    <a href="@url" class="calendar-events-item list-group-item">
                         <div class="media">
                             <div class="calendar-events-item-icon mr-3">
                                 @foreach (var rp in evt.RelatedPages)
@@ -25,7 +29,7 @@
                                 }
                             </div>
                             <div class="media-body">
-                                <h6 class="m-0">@pageTitles</h6>
+                                <h6 class="m-0">@title</h6>
                                 <p class="calendar-events-item-name">@evt.Title</p>
                             </div>
                         </div>
