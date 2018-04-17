@@ -22,76 +22,117 @@
     }
 }
 
-.media-block {
-    background: #fff;
-    max-width: 1024px;
-    margin: 20px auto;
-    position: relative;
-    padding: 20px 30px;
-    text-align: left;
+.mfp-content {
+    width: auto !important;
 
-    .media-wrapper {
-        margin-bottom: 20px;
-        text-align: center;
+    .media-block {
+        background: #fff;
+        max-width: 1024px;
+        min-width: 800px;
+        margin: 1rem auto;
         position: relative;
+        padding: 2rem;
+        text-align: left;
+        border-radius: 0.2rem;
 
-        .photo-wrapper {
-            display: inline-block;
+        .media-wrapper {
+            text-align: center;
             position: relative;
 
-            img {
-                max-width: 100%;
-            }
+            .photo-wrapper {
+                display: inline-block;
+                position: relative;
 
-            .photo-tag {
-                opacity: 0;
-                position: absolute;
-                display: block;
-                border: 2px solid hsla(0, 0, 100%, 0.8);
-                box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), inset 0 0 1px 0 rgba(0, 0, 0, 0.4);
-                cursor: pointer;
-            }
-        }
+                img {
+                    max-width: 100%;
+                }
 
-        .video-wrapper {
-            width: 100%;
-
-            video {
-                max-width: 100%;
-                max-height: 600px;
-            }
-        }
-
-        .document-wrapper {
-            width: 100%;
-
-            img {
-                max-width: 100%;
-            }
-        }
-    }
-
-    .media-meta {
-        &:after {
-            display: block;
-            clear: both;
-            content: ' ';
-        }
-
-        .media-meta-column {
-            float: left;
-            width: 50%;
-            margin: 0;
-            padding: 10px;
-            padding-left: 0;
-
-            .media-tags {
-                list-style: none;
-                margin-bottom: 0;
-                padding-left: 0;
-
-                li {
+                .photo-tag {
+                    opacity: 0;
+                    position: absolute;
                     display: block;
+                    border: 2px solid hsla(0, 0, 100%, 0.8);
+                    box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), inset 0 0 1px 0 rgba(0, 0, 0, 0.4);
+                    cursor: pointer;
+                }
+            }
+
+            .video-wrapper {
+                width: 100%;
+
+                video {
+                    max-width: 100%;
+                    max-height: 600px;
+                }
+            }
+
+            .document-wrapper {
+                width: 100%;
+
+                img {
+                    max-width: 100%;
+                }
+            }
+        }
+
+        .mfp-close {
+            color: #808080;
+            width: 2.2rem;
+            height: 2.2rem;
+            font-size: 1.5rem;
+            line-height: 2.2rem;
+        }
+
+        .media-meta {
+            margin-top: 1.5rem;
+            line-height: 1.6;
+
+            @mixin gradient-underline($color) {
+                background-image: -webkit-linear-gradient(top,transparent 50%,$color 50%);
+                background-image: -moz-linear-gradient(top,transparent 50%,$color 50%);
+                background-image: -o-linear-gradient(top,transparent 50%,$color 50%);
+                background-image: linear-gradient(to bottom,transparent 50%,$color 50%);
+                background-position: 0 93%;
+                background-repeat: repeat-x;
+                background-size: 100% .15rem;
+            }
+
+            a {
+                color: #6aa120;
+                @include gradient-underline(#82bb36);
+                text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
+
+                &:hover {
+                    color: #f64b3b;
+                    text-decoration: none;
+                    @include gradient-underline(#f64b3b);
+                }
+            }
+
+            &:after {
+                display: block;
+                clear: both;
+                content: ' ';
+            }
+
+            .media-meta-column {
+
+                .media-meta-table {
+                    line-height: 1.6;
+
+                    td {
+                        padding-left: 1rem;
+                    }
+                }
+
+                .media-tags {
+                    list-style: none;
+                    margin-bottom: 0;
+                    padding-left: 0;
+
+                    li {
+                        display: block;
+                    }
                 }
             }
         }
