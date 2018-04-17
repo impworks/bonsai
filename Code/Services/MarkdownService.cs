@@ -34,7 +34,7 @@ namespace Bonsai.Code.Services
         private readonly AppDbContext _db;
         private readonly IUrlHelper _url;
 
-        private static readonly Regex MediaRegex = Compile(@"\[\[media:(?<key>[^\[|]+)(\|(?<options>[^\]]+))?\]\]");
+        private static readonly Regex MediaRegex = Compile(@"(?<tag><p>)?\[\[media:(?<key>[^\[|]+)(\|(?<options>[^\]]+))?\]\](?(tag)</p>|)");
         private static readonly Regex LinkRegex = Compile(@"\[\[(?<key>[^\[|]+)(\|(?<label>[^\]]+))?\]\]");
         private static readonly Regex MarkupRegex = Compile(@"[*#|=_]+");
 
