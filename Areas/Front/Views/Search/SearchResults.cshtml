@@ -1,0 +1,21 @@
+﻿@addTagHelper *, Bonsai
+@model IReadOnlyList<Bonsai.Areas.Front.ViewModels.Search.SearchResultVM>
+
+@foreach(var result in Model)
+{
+    var url = Url.Action("Description", "Page", new { key = result.Key });
+
+    <li class="search-result">
+        <a href="@url" class="search-image-wrapper">
+            <page-image image="@result.MainPhotoPath" />
+        </a>
+        <div class="search-result-body">
+            <a href="@url">
+                <h5>@Html.Raw(result.Title)</h5>
+            </a>
+            <div class="search-description">
+                @Html.Raw(result.DescriptionExcerpt)
+            </div>
+        </div>
+    </li>
+}

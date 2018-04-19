@@ -1,42 +1,15 @@
-﻿@addTagHelper *, Bonsai
-@model Bonsai.Areas.Front.ViewModels.Search.SearchVM
+﻿@model Bonsai.Areas.Front.ViewModels.Search.SearchVM
 @{
     ViewBag.Title = "Поиск";
+    ViewBag.SearchQuery = Model.Query;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 }
 
-<div>
-    <div class="pull-right">
-        <form class="form-inline" action="@Url.Action("Search", "Search")" method="get">
-            <input type="text" class="form-control mr-sm-2" name="query" value="@Model.Query" />
-            <button class="btn btn-primary" type="submit">Поиск</button>
-        </form>
-    </div>
-    <h3>Результаты поиска:</h3>
-    <div class="clearfix"></div>
-</div>
-
 @if(Model.Results.Any())
 {
+    <input type="hidden" id="search-query-hidden" value="@Model.Query" />
     <ul class="search-results">
-        @foreach(var result in Model.Results)
-        {
-            var url = Url.Action("Description", "Page", new { key = result.Key });
-
-            <li class="search-result">
-                <a href="@url" class="search-image-wrapper">
-                    <page-image image="@result.MainPhotoPath" />
-                </a>
-                <div class="search-result-body">
-                    <a href="@url">
-                        <h5>@Html.Raw(result.Title)</h5>
-                    </a>
-                    <div class="search-description">
-                        @Html.Raw(result.DescriptionExcerpt)
-                    </div>
-                </div>
-            </li>
-        }
+        @Html.Partial("SearchResults", Model.Results)
     </ul>
 }
 else
@@ -52,32 +25,3 @@ else
         }
     </div>
 }
-
-<div>
-    <div class="pull-right">
-        <ul class="pagination" role="group">
-            @if(Model.Page > 0)
-            {
-                <li class="page-item">
-                    <a href="@Url.Action("Search", "Search", new {query = Model.Query, page = Model.Page - 1})" title="Предыдущая страница" class="page-link">
-                        &laquo;
-                    </a>
-                </li>
-            }
-            <li class="page-item active">
-                <span class="page-link">
-                    Страница: @(Model.Page + 1)
-                </span>
-            </li>
-            @if(Model.Results.Any())
-            {
-                <li class="page-item">
-                    <a href="@Url.Action("Search", "Search", new {query = Model.Query, page = Model.Page + 1})" title="Следующая страница" class="page-link">
-                        &raquo;
-                    </a>
-                </li>
-            }
-        </ul>
-    </div>
-    <div class="clearfix"></div>
-</div>

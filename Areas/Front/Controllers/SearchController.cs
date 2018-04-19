@@ -35,13 +35,26 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult> Search([FromQuery] string query, [FromQuery] int page = 0)
+        public async Task<ActionResult> Search([FromQuery] string query)
         {
-            page = Math.Max(0, page);
-
-            var results = await _search.SearchAsync(query, page).ConfigureAwait(false);
-            var vm = new SearchVM {Query = query, Page = page, Results = results};
+            var results = await _search.SearchAsync(query).ConfigureAwait(false);
+            var vm = new SearchVM {Query = query, Results = results};
             return View(vm);
+        }
+
+        /// <summary>
+        /// Returns the search results.
+        /// </summary>
+        [HttpGet]
+        [Route("results")]
+        public async Task<ActionResult> SearchResults([FromQuery] string query, [FromQuery] int page = 0)
+        {
+            var results = await _search.SearchAsync(query, Math.Max(0, page)).ConfigureAwait(false);
+
+            if(results.Count > 0)
+                return View(results);
+
+            return NotFound();
         }
     }
 }
