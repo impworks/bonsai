@@ -159,7 +159,9 @@ namespace Bonsai.Areas.Front.Logic
 
                     var vm = (FactModelBase) JsonConvert.DeserializeObject(factInfo.ToString(), fact.Kind);
                     vm.Definition = fact;
-                    factsVms.Add(vm);
+
+                    if(!vm.IsHidden)
+                        factsVms.Add(vm);
                 }
 
                 if (factsVms.Count > 0)

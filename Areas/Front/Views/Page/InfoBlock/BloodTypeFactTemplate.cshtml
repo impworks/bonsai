@@ -2,7 +2,7 @@
 @model BloodTypeFactModel
 
 <tr class="fact">
-    <th class="fact-title">@Model.Definition.ShortTitle</th>
+    <th class="fact-title">@Model.ShortTitle</th>
     <td class="fact-value">
         <span>@Model.Type</span>
         @if (Model.RhesusFactor is bool rf)

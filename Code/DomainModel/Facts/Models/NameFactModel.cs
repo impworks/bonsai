@@ -1,34 +1,18 @@
 ﻿namespace Bonsai.Code.DomainModel.Facts.Models
 {
     /// <summary>
-    /// The template definition for a person's name.
+    /// The template for specifying a name of a pet, event or location.
     /// </summary>
     public class NameFactModel: FactModelBase
     {
         /// <summary>
-        /// The list of names.
+        /// Name as a string.
         /// </summary>
-        public NameFactItem[] Values { get; set; }
-    }
-
-    /// <summary>
-    /// A single recorded name with date ranges.
-    /// </summary>
-    public class NameFactItem: DurationFactItem
-    {
-        /// <summary>
-        /// First name.
-        /// </summary>
-        public string FirstName { get; set; }
+        public string Value { get; set; }
 
         /// <summary>
-        /// Middle name.
+        /// Should not be displayed.
         /// </summary>
-        public string MiddleName { get; set; }
-
-        /// <summary>
-        /// Last name.
-        /// </summary>
-        public string LastName { get; set; }
+        public override bool IsHidden => true;
     }
 }

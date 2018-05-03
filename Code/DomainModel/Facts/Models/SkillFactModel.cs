@@ -5,12 +5,8 @@ namespace Bonsai.Code.DomainModel.Facts.Models
     /// <summary>
     /// The template for specifying posessed skills.
     /// </summary>
-    public class SkillFactModel : FactModelBase
+    public class SkillFactModel : FactListModelBase<SkillFactItem>
     {
-        /// <summary>
-        /// List of known skills.
-        /// </summary>
-        public SkillFactItem[] Values { get; set; }
     }
 
     /// <summary>

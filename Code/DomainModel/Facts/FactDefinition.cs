@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Bonsai.Code.DomainModel.Facts.Models;
 
 namespace Bonsai.Code.DomainModel.Facts
@@ -13,8 +14,11 @@ namespace Bonsai.Code.DomainModel.Facts
         {
             Id = id;
             Title = title;
-            ShortTitle = shortTitle ?? title;
             Kind = typeof(T);
+
+            var parts = (shortTitle ?? title).Split('|');
+            ShortTitleSingle = parts.First();
+            ShortTitleMultiple = parts.Last();
         }
 
         /// <summary>
@@ -28,9 +32,14 @@ namespace Bonsai.Code.DomainModel.Facts
         public string Title { get; }
 
         /// <summary>
-        /// Short title for displaying in the info block.
+        /// Short title for displaying in the info block (with single value).
         /// </summary>
-        public string ShortTitle { get; }
+        public string ShortTitleSingle { get; }
+
+        /// <summary>
+        /// Short title for displaying in the info block (with multiple values).
+        /// </summary>
+        public string ShortTitleMultiple { get; }
 
         /// <summary>
         /// Type of the fact's kind.
@@ -56,7 +65,12 @@ namespace Bonsai.Code.DomainModel.Facts
         /// <summary>
         /// Short title for displaying in the info block.
         /// </summary>
-        string ShortTitle { get; }
+        string ShortTitleSingle { get; }
+
+        /// <summary>
+        /// Short title for displaying in the info block (with multiple values).
+        /// </summary>
+        string ShortTitleMultiple { get; }
 
         /// <summary>
         /// Type of the fact's kind.
