@@ -1,36 +1,40 @@
 ﻿@import '../variables.scss';
 
 .search-results {
-    margin-top: 20px;
-    margin-bottom: 0;
-    padding-left: 0;
-    list-style: none;
+    padding: 0.5rem 3rem;
 
     .search-result {
         display: flex;
         -webkit-box-align: start;
         align-items: flex-start;
+        padding-top: 0.61766rem;
 
-        @include clear-container;
-        @include spaced-list(20px);
+        &:not(:last-child) {
+            border-bottom: 1px solid $color-border;
+        }
 
         .search-image-wrapper {
             display: block;
-            margin-right: 30px;
+            overflow: hidden;
+            border-radius: 100%;
+            margin-right: 1.5rem;
+            margin-top: 0.51692rem;
+            margin-bottom: 1.38234rem;
 
             .page-image {
-                width: 92px;
-                height: 92px;
+                width: 6rem;
+                height: 6rem;
             }
         }
+
 
         .search-result-body {
             flex: 1;
             -webkit-box-flex: 1;
+            max-width: 100%;
 
-            .h5 {
-                margin-top: 0;
-                margin-bottom: 0.5rem;
+            h5 {
+                font-weight: normal;
             }
         }
     }

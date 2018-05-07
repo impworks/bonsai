@@ -4,24 +4,24 @@
     ViewBag.SearchQuery = Model.Query;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 }
+<div class="search-results">
+    <h1>Результаты поиска</h1>
 
-@if(Model.Results.Any())
-{
-    <input type="hidden" id="search-query-hidden" value="@Model.Query" />
-    <ul class="search-results">
+    @if (Model.Results.Any())
+    {
+        <input type="hidden" id="search-query-hidden" value="@Model.Query" />
         @Html.Partial("SearchResults", Model.Results)
-    </ul>
-}
-else
-{
-    <div class="alert alert-info">
-        @if(!(Model.Query?.Length >= 3))
+
+    }
+    else
+    {
+        @if (!(Model.Query?.Length >= 3))
         {
-            <text>Запрос слишком короткий. Введите как минимум три символа.</text>
+            <p>Запрос слишком короткий. Введите как минимум три символа.</p>
         }
         else
         {
-            <text>По вашему запросу ничего не найдено.</text>
+            <p>По вашему запросу ничего не найдено.</p>
         }
-    </div>
-}
+    }
+</div>
