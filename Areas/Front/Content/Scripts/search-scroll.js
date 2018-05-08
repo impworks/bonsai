@@ -40,7 +40,7 @@
     }
 
     function listenForScroll() {
-        var $elem = $wrapper.find('li.search-result:last-of-type');
+        var $elem = $wrapper.find('.search-result:last-of-type');
 
         if (isInView($elem)) {
             loadMore();
@@ -57,5 +57,7 @@
         $win.on('scroll', handler);
     }
 
-    listenForScroll();
+    if ($wrapper.length) {
+        listenForScroll();
+    }
 })

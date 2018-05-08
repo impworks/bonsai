@@ -7,10 +7,9 @@
 
     <div class="search-result">
         <a href="@url" class="search-image-wrapper">
-            <page-image image="@result.MainPhotoPath" />
+            <page-image image="@result.MainPhotoPath" type="@result.Type" />
         </a>
         <div class="search-result-body typography">
-
             <h5>
                 <a href="@url">
                     @Html.Raw(result.Title)

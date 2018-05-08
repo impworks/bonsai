@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Calendar
+@addTagHelper *, Bonsai
 @model CalendarDayVM
 
 <div class="calendar-events-header">
@@ -13,28 +14,24 @@
                 @foreach (var evt in Model.Events)
                 {
                     var pageTitles = string.Join(", ", evt.RelatedPages.Select(x => x.Title));
-                    var multiPage = evt.RelatedPages.Count > 1;
-                    var url = multiPage ? Url.Action("Description", "Page", new { key = evt.RelatedEvent.Key })
-                                        : Url.Action("Description", "Page", new { key = evt.RelatedPages[0].Key });
+                    var isMultiPage = evt.RelatedPages.Count > 1;
+                    var currPage = isMultiPage ? evt.RelatedEvent : evt.RelatedPages[0];
 
-                    var title = multiPage ? @evt.RelatedEvent.Title
-                                          : evt.RelatedPages[0].Title;
-
-                    <a href="@url" class="calendar-events-item list-group-item">
+                    <a href="@Url.Action("Description", "Page", new { key = currPage.Key })" class="calendar-events-item list-group-item">
                         <div class="media">
                             <div class="calendar-events-item-icon mr-3">
                                 @foreach (var rp in evt.RelatedPages)
                                 {
-                                    <div class="image @(multiPage ? "half" : "")" style="background-image: url(@Url.Content(rp.MainPhotoPath));"></div>
+                                    <page-image image="@rp.MainPhotoPath" class="@(isMultiPage ? "half" : "")" />
                                 }
+                                </div>
+                                <div class="media-body">
+                                    <h6 class="m-0">@currPage.Title</h6>
+                                    <p class="calendar-events-item-name">@evt.Title</p>
+                                </div>
                             </div>
-                            <div class="media-body">
-                                <h6 class="m-0">@title</h6>
-                                <p class="calendar-events-item-name">@evt.Title</p>
-                            </div>
-                        </div>
-                    </a>
-                }
+                        </a>
+                    }
             </div>
         }
         else
