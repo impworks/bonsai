@@ -96,7 +96,8 @@ namespace Bonsai.Areas.Front.Logic
             return new PageTitleVM
             {
                 Title = tag.Object?.Title ?? tag.ObjectTitle,
-                Key = tag.Object?.Key
+                Key = tag.Object?.Key,
+                Type = tag.Object?.PageType ?? PageType.Other
             };
         }
 

@@ -1,4 +1,5 @@
 ﻿using Bonsai.Code.Utils;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -28,11 +29,17 @@ namespace Bonsai.Areas.Front.TagHelpers
         public string FallbackImage { get; set; }
 
         /// <summary>
+        /// Type of the entity.
+        /// </summary>
+        public PageType? Type { get; set; }
+
+        /// <summary>
         /// Renders the tag.
         /// </summary>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var image = StringHelper.Coalesce(Image, FallbackImage, "~/assets/img/unknown-user.png");
+            var type = (Type ?? PageType.Person).ToString().ToLower();
+            var image = StringHelper.Coalesce(Image, FallbackImage, $"~/assets/img/unknown-{type}.png");
             var path = _url.Content(image);
 
             output.TagName = "div";

@@ -94,6 +94,7 @@ namespace Bonsai.Areas.Front.Logic
                             {
                                 Title = x.Title,
                                 Key = x.Key,
+                                Type = x.PageType,
                                 UpdatedDate = x.LastUpdateDate.LocalDateTime,
                                 MainPhotoPath = x.MainPhoto != null
                                     ? MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small)
@@ -115,6 +116,7 @@ namespace Bonsai.Areas.Front.Logic
         {
             vm.Title = page.Title;
             vm.Key = page.Key;
+            vm.Type = page.PageType;
 
             return vm;
         }

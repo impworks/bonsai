@@ -5,6 +5,7 @@ using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Search;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Data;
+using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Front.Logic
@@ -39,7 +40,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var details = await _db.Pages
                                    .Where(x => ids.Contains(x.Id))
-                                   .Select(x => new { x.Id, x.MainPhoto.FilePath, x.LastUpdateDate })
+                                   .Select(x => new { x.Id, x.MainPhoto.FilePath, x.LastUpdateDate, x.PageType })
                                    .ToDictionaryAsync(x => x.Id, x => x)
                                    .ConfigureAwait(false);
 
@@ -47,6 +48,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Key = x.Key,
                 Title = x.HighlightedTitle,
+                Type = details[x.Id].PageType,
                 DescriptionExcerpt = x.HighlightedDescription,
                 MainPhotoPath = details[x.Id].FilePath,
                 UpdatedDate = details[x.Id].LastUpdateDate.LocalDateTime,
@@ -67,7 +69,7 @@ namespace Bonsai.Areas.Front.Logic
             var results = await _elastic.SearchAutocompleteAsync(q)
                                         .ConfigureAwait(false);
 
-            return results.Select(x => new PageTitleVM {Title = x.HighlightedTitle, Key = x.Key})
+            return results.Select(x => new PageTitleVM {Title = x.HighlightedTitle, Key = x.Key, Type = PageType.Other})
                           .ToList();
         }
     }
