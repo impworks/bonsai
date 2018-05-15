@@ -1,38 +1,39 @@
 ﻿@using Bonsai.Areas.Front.ViewModels;
 @using Bonsai.Areas.Front.ViewModels.Page
+@model PageVMBase
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
-
+    ViewBag.PageModel = Model;
     var pageVm = (PageTitleVM)ViewBag.PageModel;
-    var actions = new[]
-    {
-new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key})},
-new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key})}
+    var actions = new[] {
+new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "far fa-newspaper"},
+new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "far fa-image"}
 };
 }
 
-@*
-    <ul class="nav nav-pills pull-right">
-        @foreach (var action in actions)
-        {
-            <li>
-                @if (action.Active)
-                {
-                    <span class="nav-link active">@action.Title</span>
-                }
-                else
-                {
-                    <a href="@action.Url" class="nav-link">@action.Title</a>
-                }
-            </li>
-        }
-    </ul>
-
-    <h2 class="page-header">@pageVm.Title</h2>
-*@
-
 <div id="page" class="d-flex">
-    @RenderBody()
+    <div class="sidebar col-3">
+        @Html.Partial("InfoBlock/InfoBlock", Model.InfoBlock)
+    </div>
+    <div class="content col">
+        <h1>@pageVm.Title</h1>
+        <ul class="nav nav-tabs">
+            @foreach (var action in actions)
+            {
+                <li class="nav-item">
+                    @if (action.Active)
+                    {
+                        <a class="nav-link active" href="@action.Url"><i class="@action.Icon"></i> @action.Title</a>
+                    }
+                    else
+                    {
+                        <a class="nav-link" href="@action.Url"><i class="@action.Icon"></i> @action.Title</a>
+                    }
+                </li>
+            }
+        </ul>
+        <div class="typography">
+            @RenderBody()
+        </div>
+    </div>
 </div>
-
-

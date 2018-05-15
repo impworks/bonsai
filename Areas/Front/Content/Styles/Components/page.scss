@@ -1,5 +1,17 @@
 ﻿@import '../variables.scss';
 
+.nav.nav-tabs {
+    margin: 1rem 0;
+
+    a {
+        color: #6aa120;
+
+        &:hover {
+            color: #f64b3b;
+        }
+    }
+}
+
 .media-wrapper-inline {
     display: block;
     border: $color-border 1px solid;

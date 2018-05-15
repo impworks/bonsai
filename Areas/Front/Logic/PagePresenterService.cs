@@ -52,13 +52,7 @@ namespace Bonsai.Areas.Front.Logic
                 throw new KeyNotFoundException();
 
             var descr = await _markdown.CompileAsync(page.Description).ConfigureAwait(false);
-            var infoBlock = await GetInfoBlockAsync(page).ConfigureAwait(false);
-
-            return Configure(page, new PageDescriptionVM
-            {
-                Description = descr,
-                InfoBlock = infoBlock
-            });
+            return await ConfigureAsync(page, new PageDescriptionVM { Description = descr }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -76,10 +70,8 @@ namespace Bonsai.Areas.Front.Logic
             if (page == null)
                 throw new KeyNotFoundException();
 
-            return Configure(page, new PageMediaVM
-            {
-                Media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small))
-            });
+            var media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
+            return await ConfigureAsync(page, new PageMediaVM { Media = media }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -111,12 +103,14 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Sets additional properties on a page view model.
         /// </summary>
-        private T Configure<T>(Page page, T vm)
-            where T : PageTitleVM
+        private async Task<T> ConfigureAsync<T>(Page page, T vm)
+            where T : PageVMBase
         {
             vm.Title = page.Title;
             vm.Key = page.Key;
             vm.Type = page.PageType;
+
+            vm.InfoBlock = await GetInfoBlockAsync(page).ConfigureAwait(false);            
 
             return vm;
         }

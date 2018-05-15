@@ -63,7 +63,6 @@ p {
 }
 
 .typography {
-    max-width: 45rem;
 
     @mixin gradient-underline($color) {
         background-image: -webkit-linear-gradient(top,transparent 50%,$color 50%);
@@ -77,13 +76,19 @@ p {
 
     a {
         color: #6aa120;
-        @include gradient-underline(#82bb36);
-        text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
 
         &:hover {
             color: #f64b3b;
             text-decoration: none;
-            @include gradient-underline(#f64b3b);
+        }
+
+        &:not(.nav-link) {
+            @include gradient-underline(#82bb36);
+            text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
+
+            &:hover {
+                @include gradient-underline(#f64b3b);
+            }
         }
     }
 }

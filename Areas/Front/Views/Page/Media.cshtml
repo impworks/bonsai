@@ -9,15 +9,15 @@
                       .OrderByDescending(x => x.Key);
 }
 
-@if(Model.Media.Any())
+@if (Model.Media.Any())
 {
-    foreach(var group in groups)
+    foreach (var group in groups)
     {
         var key = group.Key ?? "Давно";
         <div class="media-thumb-group">
-            <h3 class="media-group-title" id="@key">@key</h3>
+            <h3 id="@key">@key</h3>
             <ul class="list-inline">
-                @foreach(var elem in group.OrderByDescending(x => x.Date))
+                @foreach (var elem in group.OrderByDescending(x => x.Date))
                 {
                     <li class="list-inline-item">
                         <div class="media-thumb-wrapper">
@@ -33,5 +33,7 @@
 }
 else
 {
-    <div class="alert alert-info">Ни одного медиа-файла не найдено.</div>
+    <div class="alert alert-warning" role="alert">
+        Ни одного медиа-файла не найдено.
+    </div>
 }

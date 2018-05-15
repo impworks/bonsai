@@ -7,12 +7,4 @@
     var pageVm = (PageTitleVM)ViewBag.PageModel;
 }
 
-<div class="sidebar col-3">
-    @Html.Partial("InfoBlock/InfoBlock", Model.InfoBlock)
-</div>
-<div class="content col">
-    <div class="typography">
-        <h1>@pageVm.Title</h1>
-        @Html.Raw(Model.Description)
-    </div>
-</div>
+@Html.Raw(Model.Description)
