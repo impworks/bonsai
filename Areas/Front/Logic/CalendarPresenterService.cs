@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
+using Bonsai.Areas.Front.ViewModels.Calendar;
 using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Code.Tools;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 
 namespace Bonsai.Areas.Front.Logic
@@ -24,7 +26,7 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the events to display for the current month.
         /// </summary>
-        public async Task<CalendarMonthVM> GetEventsForMonthAsync(int year, int month)
+        public async Task<CalendarMonthVM> GetMonthEventsAsync(int year, int month)
         {
             var context = await RelationContext.LoadContextAsync(_db)
                                                .ConfigureAwait(false);
@@ -38,9 +40,29 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Month = month,
                 Year = year,
-                MonthName = new DateTime(year, month, 1).ToString("MMMM"),
+                Title = new FuzzyDate(year, month, null).ReadableDate.Capitalize(),
                 Weeks = GetMonthGrid(range.from, range.to, month, events),
                 FuzzyEvents = events.Where(x => x.Day == null).ToList()
+            };
+        }
+
+        /// <summary>
+        /// Returns the events for a particular day (or fuzzy events for the month).
+        /// </summary>
+        public async Task<CalendarDayVM> GetDayEventsAsync(int year, int month, int? day)
+        {
+            var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
+            var events = GetPageEvents(year, month, context)
+                         .Concat(GetRelationEvents(year, month, context))
+                         .Where(x => x.Day == day)
+                         .ToList();
+
+            return new CalendarDayVM
+            {
+                IsActive = true,
+                Day = day,
+                Date = new FuzzyDate(year, month, day),
+                Events = events
             };
         }
 
@@ -73,6 +95,7 @@ namespace Bonsai.Areas.Front.Logic
                         {
                             Day = birth.Day,
                             Title = title,
+                            Type = CalendarEventType.Birth,
                             RelatedPages = new[] { Map(page) }
                         };
                     }
@@ -95,6 +118,7 @@ namespace Bonsai.Areas.Front.Logic
                         {
                             Day = death.Day,
                             Title = title,
+                            Type = CalendarEventType.Death,
                             RelatedPages = new[] {Map(page)}
                         };
                     }
@@ -127,20 +151,24 @@ namespace Bonsai.Areas.Front.Logic
                 visited.Add(inverseHash);
 
                 var title = (year == start.Year && !start.IsDecade)
-                    ? "Дата свадьбы"
+                    ? "День свадьбы"
                     : (start.Year == null || start.IsDecade)
-                        ? "Годовщина свадьбы"
-                        : (year - start.Year.Value) + "-ая годовщина свадьбы";
-
-                var relatedPageIds = new [] {rel.SourceId, rel.DestinationId, rel.EventId};
+                        ? "Годовщина"
+                        : (year - start.Year.Value) + "-ая годовщина";
 
                 yield return new CalendarEventVM
                 {
                     Day = start.Day,
                     Title = title,
-                    RelatedPages = relatedPageIds.Where(x => x != null)
-                                                 .Select(x => Map(context.Pages[x.Value]))
-                                                 .ToArray()
+                    Type = CalendarEventType.Wedding,
+                    RelatedPages = new []
+                    {
+                        Map(context.Pages[rel.SourceId]),
+                        Map(context.Pages[rel.DestinationId])
+                    },
+                    RelatedEvent = rel.EventId == null
+                        ? null
+                        : Map(context.Pages[rel.EventId.Value])
                 };
             }
         }
@@ -221,6 +249,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Key = page.Key,
                 Title = page.Title,
+                Type = page.PageType,
                 MainPhotoPath = page.MainPhotoPath
             };
         }

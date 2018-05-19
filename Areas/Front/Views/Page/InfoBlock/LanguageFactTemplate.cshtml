@@ -2,16 +2,16 @@
 @using Bonsai.Code.Utils
 @model LanguageFactModel
 
-<div class="fact">
-    <div class="fact-title">@(Model.Values.Length == 1 ? "Язык" : "Языки")</div>
-    <div class="fact-value">
+<tr class="fact">
+    <th class="fact-title">@Model.ShortTitle</th>
+    <td class="fact-value">
         @foreach (var item in Model.Values)
         {
             <div class="fact-item">
                 <span class="fact-item-main">@item.Name</span>
                 @if (item.Proficiency != null)
                 {
-                    <span class="fact-item-extra">@item.Proficiency.Value.GetEnumDescription()</span>
+                    <span class="fact-item-extra">(@item.Proficiency.Value.GetEnumDescription())</span>
                 }
                 @if (item.Duration != null)
                 {
@@ -19,5 +19,5 @@
                 }
             </div>
         }
-    </div>
-</div>
+    </td>
+</tr>

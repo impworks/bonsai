@@ -1,0 +1,43 @@
+﻿@using Bonsai.Areas.Front.ViewModels.Calendar
+@addTagHelper *, Bonsai
+@model CalendarDayVM
+
+<div class="calendar-events-header">
+    <h2>@Model.Date.ReadableDate</h2>
+</div>
+<div class="calendar-events-content">
+
+    <div class="card">
+        @if (Model.Events.Any())
+        {
+            <div class="list-group list-group-flush">
+                @foreach (var evt in Model.Events)
+                {
+                    var pageTitles = string.Join(", ", evt.RelatedPages.Select(x => x.Title));
+                    var isMultiPage = evt.RelatedPages.Count > 1;
+                    var currPage = isMultiPage ? evt.RelatedEvent : evt.RelatedPages[0];
+
+                    <a href="@Url.Action("Description", "Page", new { key = currPage.Key })" class="calendar-events-item list-group-item">
+                        <div class="media">
+                            <div class="calendar-events-item-icon mr-3">
+                                @foreach (var rp in evt.RelatedPages)
+                                {
+                                    <page-image image="@rp.MainPhotoPath" class="@(isMultiPage ? "half" : "")" />
+                                }
+                                </div>
+                                <div class="media-body">
+                                    <h6 class="m-0">@currPage.Title</h6>
+                                    <p class="calendar-events-item-name">@evt.Title</p>
+                                </div>
+                            </div>
+                        </a>
+                    }
+            </div>
+        }
+        else
+        {
+            <p>В этот день ничего не произошло.</p>
+        }
+    </div>
+
+</div>

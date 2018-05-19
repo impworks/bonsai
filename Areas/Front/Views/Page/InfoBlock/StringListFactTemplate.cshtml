@@ -1,9 +1,9 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
 @model StringListFactModel
 
-<div class="fact">
-    <div class="fact-title">@Model.Definition.ShortTitle</div>
-    <div class="fact-value">
+<tr class="fact">
+    <th class="fact-title">@Model.ShortTitle</th>
+    <td class="fact-value">
         @foreach (var item in Model.Values)
         {
             <div class="fact-item">
@@ -14,5 +14,5 @@
                 }
             </div>
         }
-    </div>
-</div>
+    </td>
+</tr>

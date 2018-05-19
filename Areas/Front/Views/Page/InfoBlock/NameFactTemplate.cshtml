@@ -1,22 +1,7 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
 @model NameFactModel
 
-@{
-    var isSingle = Model.Values.Length == 1;
-}
-
-<div class="fact">
-    <div class="fact-title">@(isSingle ? "Имя" : "Имена")</div>
-    <div class="fact-value">
-        @foreach (var item in Model.Values)
-        {
-            <div class="fact-item">
-                <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
-                @if (item.Duration != null && !isSingle)
-                {
-                    <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
-                }
-            </div>
-        }
-    </div>
-</div>
+<tr class="fact">
+    <th class="fact-title">@Model.ShortTitle</th>
+    <td class="fact-value">@Model.Value</td>
+</tr>

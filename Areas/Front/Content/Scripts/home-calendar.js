@@ -1,78 +1,90 @@
 ﻿$(function () {
     var prefix = 'cal-';
+    var now = new Date();
+    var selectedDay;
+    var selectedClass = 'calendar-day-selected';
 
-    function registerEvents() {
-        $('.calendar-event').popover('dispose');
-
-        // configure event
-        $('.calendar-event').popover({
-            container: 'body',
-            trigger: 'manual',
-            html: true,
-            content: function () {
-                var $det = $(this).find('.calendar-event-details');
-                return $det.prop('outerHTML');
-            }
-        });
-
-        $('body').on('click', '.calendar-event', function (e) {
-            $(this).popover('show');
-            e.stopPropagation();
-        });
-
-        $('body').on('mousedown', function(e) {
-            var $wrapper = $('.popover');
-            if (!$wrapper.is(e.target) && $wrapper.has(e.target).length === 0) {
-                $wrapper.popover('hide');
-            }
-        });
-    }
-
-    function loadCalendar(year, month, isRetry) {
-        var now = new Date();
-
+    function loadCalendar(year, month, day) {
         if (typeof year === "undefined")
             year = now.getFullYear();
 
         if (typeof month === "undefined")
             month = now.getMonth() + 1;
 
-        var $wrapper = $('.calendar-wrapper'),
-            url = '/util/cal/' + year + '/' + month;
+        if (typeof day === "undefined")
+            day = now.getDate();
+
+        selectedDay = year + '-' + month + '-' + day;
+
+        loadMonth(year, month);
+        loadDay(year, month, day);
+    }
+
+    function loadMonth(year, month) {
+        var $wrapper = $('.calendar-wrapper .calendar-month'),
+            url = '/util/cal/grid?year=' + year + '&month=' + month;
 
         $.ajax(url).then(
             function (html) {
                 $wrapper.html(html);
-                registerEvents();
-                window.location.hash = prefix + year + '-' + month;
-            },
-            function () {
-                // reload current
-                if (!isRetry)
-                    loadCalendar(null, null, true);
+
+                $('.calendar-day-active[data-date="' + selectedDay + '"]').addClass(selectedClass);
+
+                updateEventsHeight();
             }
         );
     }
 
+    function loadDay(year, month, day) {
+        var $wrapper = $('.calendar-wrapper .calendar-events'),
+            url = '/util/cal/list?year=' + year + '&month=' + month + '&day=' + day;
+
+        $.ajax(url).then(
+            function (html) {
+                $wrapper.html(html);
+                selectedDay = year + '-' + month + '-' + day;
+                window.location.hash = prefix + selectedDay;
+
+                $('.calendar-day').removeClass(selectedClass);
+                $('.calendar-day-active[data-date="' + selectedDay + '"]').addClass(selectedClass);
+
+                updateEventsHeight();
+            }
+        );
+    }
+
+    function updateEventsHeight() {
+        var calendarHeight = $('.calendar-table').height();
+        $('.calendar-events .calendar-events-content').css('max-height', calendarHeight + 'px');
+    }
+
     if ($('.calendar-wrapper').length > 0) {
-        // toggle calendar on links
-        $('body').on('click', '.cmd-calendar-show', function(e) {
+
+        var hash = window.location.hash;
+        if (hash != null && hash.substr(1, prefix.length) === prefix) {
+            var date = hash.substr(prefix.length + 1).split('-');
+            loadCalendar(date[0], date[1], date[2]);
+        } else {
+            loadCalendar();
+        }
+        
+        $('body').on('click', '.cmd-calendar-show', function (e) {
             var $elem = $(this),
                 year = $elem.data('year'),
                 month = $elem.data('month');
 
-            loadCalendar(year, month);
+            loadMonth(year, month);
+
+            e.preventDefault();
+        }); 
+
+        $('body').on('click', '.calendar-day-active', function (e) {
+            var $elem = $(this),
+                date = $elem.data('date').split('-');
+
+            loadDay(date[0], date[1], date[2]);
 
             e.preventDefault();
         });
-
-        // display default or selected calendar
-        var hash = window.location.hash;
-        if (hash != null && hash.substr(1, prefix.length) === prefix) {
-            var date = hash.substr(prefix.length + 1).split('-');
-            loadCalendar(date[0], date[1]);
-        } else {
-            loadCalendar();
-        }
     }
 });

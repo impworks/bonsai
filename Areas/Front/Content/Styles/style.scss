@@ -1,4 +1,14 @@
-﻿@import 'Components/common.scss';
+﻿@import '../../../../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../../../../node_modules/magnific-popup/src/css/main.scss';
+
+@import 'fonts.scss';
+@import 'variables.scss';
+
+@import 'Components/main.scss';
+@import 'Components/header.scss';
+@import 'Components/typography.scss';
+
+@import 'Components/common.scss';
 
 @import 'Components/media.scss';
 @import 'Components/infoblock.scss';
@@ -7,10 +17,6 @@
 @import 'Components/page.scss';
 @import 'Components/search.scss';
 
-.container-main {
-    margin-top: 30px;
-}
-
-.page-header {
-    margin-bottom: 30px;
+.content {
+    padding: 1rem 3rem;
 }

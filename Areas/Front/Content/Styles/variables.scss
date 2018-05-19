@@ -23,3 +23,27 @@ $error-color: #990000;
         margin-top: 0;
     }
 }
+
+
+$color-border: #e0e0e0;
+$color-caption: #808080;
+
+@mixin placeholder-color($color) {
+    &::-webkit-input-placeholder {
+        color: $color;
+    }
+
+    &:-ms-input-placeholder {
+        color: $color;
+    }
+
+    &::-moz-placeholder {
+        color: $color;
+        opacity: 1;
+    }
+
+    &:-moz-placeholder {
+        color: $color;
+        opacity: 1;
+    }
+}

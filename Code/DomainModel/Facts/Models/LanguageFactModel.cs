@@ -5,12 +5,8 @@ namespace Bonsai.Code.DomainModel.Facts.Models
     /// <summary>
     /// The template for specifying known languages.
     /// </summary>
-    public class LanguageFactModel: FactModelBase
+    public class LanguageFactModel: FactListModelBase<LanguageFactItem>
     {
-        /// <summary>
-        /// List of known languages.
-        /// </summary>
-        public LanguageFactItem[] Values { get; set; }
     }
 
     /// <summary>

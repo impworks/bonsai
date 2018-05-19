@@ -13,11 +13,6 @@ namespace Bonsai.Areas.Front.ViewModels.Search
         public string Query { get; set; }
 
         /// <summary>
-        /// Currently displayed page.
-        /// </summary>
-        public int Page { get; set; }
-
-        /// <summary>
         /// Found pages.
         /// </summary>
         public IReadOnlyList<SearchResultVM> Results { get; set; }

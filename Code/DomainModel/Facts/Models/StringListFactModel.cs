@@ -3,12 +3,8 @@
     /// <summary>
     /// A list of string values, defined by date.
     /// </summary>
-    public class StringListFactModel: FactModelBase
+    public class StringListFactModel: FactListModelBase<StringListFactItem>
     {
-        /// <summary>
-        /// List of skill values.
-        /// </summary>
-        public StringListFactItem[] Values { get; set; }
     }
 
     /// <summary>

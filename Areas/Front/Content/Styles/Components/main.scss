@@ -1,0 +1,24 @@
+﻿@import '../variables.scss';
+
+body, html {
+    font-family: 'Open Sans';
+    background: #efefef;
+    font-size: 17px;
+    color: #464646;
+    height: 100%;
+}
+
+#main-container {
+    margin: auto;
+    overflow: hidden;
+    background: #fff;
+    min-height: 100%;
+    max-width: 1300px;
+    border-left: 1px solid $color-border;
+    border-right: 1px solid $color-border;
+}
+
+#page {
+    flex: 1 0 auto;
+    position: relative;
+}

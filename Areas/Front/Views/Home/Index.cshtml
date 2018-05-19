@@ -5,14 +5,14 @@
     ViewBag.Title = "Главная страница";
 }
 
-<div class="row">
-    <div class="col-md-7">
-        <h3 class="homepage-title">Календарь событий</h3>
-        <div class="calendar-wrapper">
-            Загрузка...
-        </div>
+<div class="calendar-wrapper">
+    <div class="row calendar">
+        <div class="col-md-7 calendar-month"></div>
+        <div class="col-md-5 calendar-events"></div>
     </div>
-    <div class="col-md-5">
+</div>
+
+@*<div class="col-md-5">
         @if(Model.LastUpdatedPages.Any())
         {
             <div class="homepage-block">
@@ -48,6 +48,5 @@
             </div>
         }
     </div>
-</div>
-
-<p>Ссылка на <a href="@Url.Action("Description", "Page", new { key = "Иванов Иван Петрович" })">тестовую страничку</a>.</p>
+*@
+@* <p>Ссылка на <a href="@Url.Action("Description", "Page", new { key = "Иванов Иван Петрович" })">тестовую страничку</a>.</p> *@

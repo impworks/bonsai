@@ -1,86 +1,107 @@
 ﻿@import '../variables.scss';
 
-.page-info {
-    float: right;
-    background: $panel-color;
-    padding: 10px;
-    margin: 10px;
-    border: $panel-border;
-    width: 300px;
+.sidebar {
+    overflow: hidden;
+    padding: 1rem 1.5rem 2rem;
+    background: #f5f5f5;
+    border-right: 1px solid $color-border;
 
-    .fact-group {
-        border: $panel-inner-border;
-        padding: 10px;
+    .fact-item:not(:last-child) {
+        padding-bottom: 0.3rem;
+    }
 
-        @include spaced-list(10px);
+    .fact-item-extra {
+        opacity: 0.8;
+        font-size: 0.7rem;
+    }
 
-        &.fact-group-sublime {
-            padding: 0;
+    hr:last-child {
+        display: none;
+    }
+
+    h6 {
+        font-family: 'Open Sans';
+        font-size: 1rem;
+        color: #2f373a;
+        font-weight: bold;
+        margin: 1rem 0 0.5rem;
+        padding: 0;
+        text-transform: uppercase;
+    }
+
+    .profile-photo {
+        margin-bottom: 1rem;
+
+        img {
+            border-radius: 100%;
+            width: 11rem;
+            height: 11rem;
+            margin: auto;
+            display: block;
         }
+    }
 
-        .relation-group {
-            border-bottom: $panel-inner-border;
-            margin: 0 -10px;
-            padding: 10px;
+    .relation-group {
+        font-size: 0.9rem;
 
-            &:last-of-type {
-                border-bottom: 0;
-                margin-bottom: -10px;
-            }
-
-            .relations-list {
-                list-style: none;
-                margin-bottom: 0;
-                padding-left: 0;
-
-                li {
-                    display: block;
-                }
-
-                .relation-range, .relation-event-link {
-                    display: inline-block;
-                    opacity: 0.8;
-                    font-size: 12px;
-                }
-            }
-        }
-
-        .fact-group-title {
-            text-align: center;
+        .relation-title {
+            color: #2f373a;
             font-weight: bold;
-            margin-top: -5px;
-            margin-bottom: 5px;
+            margin-top: 0.5rem;
         }
 
-        .relation-title, .fact-title {
-            font-weight: 600;
-        }
+        .relations-list {
+            list-style: none;
+            margin-bottom: 0;
+            padding-left: 0;
 
-        .fact, .relation {
-            .fact-title, .relation-title {
-                float: left;
-                display: inline-block;
-                width: 95px;
-            }
-
-            .fact-value, .relation-value {
-                float: left;
-
-                .fact-item-extra {
-                    opacity: 0.8;
-                    font-size: 12px;
-                }
-            }
-
-            &:after {
+            li {
                 display: block;
-                content: ' ';
-                clear: both;
+            }
+
+            .relation-range, .relation-event-link {
+                display: inline-block;
+                opacity: 0.8;
+                font-size: 0.7rem;
             }
         }
 
-        .page-photo {
-            width: 100%;
+        @mixin gradient-underline($color) {
+            background-image: -webkit-linear-gradient(top,transparent 50%,$color 50%);
+            background-image: -moz-linear-gradient(top,transparent 50%,$color 50%);
+            background-image: -o-linear-gradient(top,transparent 50%,$color 50%);
+            background-image: linear-gradient(to bottom,transparent 50%,$color 50%);
+            background-position: 0 93%;
+            background-repeat: repeat-x;
+            background-size: 100% .15rem;
+        }
+
+        a {
+            color: #6aa120;
+            @include gradient-underline(#82bb36);
+            text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
+
+            &:hover {
+                color: #f64b3b;
+                text-decoration: none;
+                @include gradient-underline(#f64b3b);
+            }
+        }
+    }
+
+    table.fact-group {
+        width: 100%;
+        margin: 0 -0.3rem;
+        font-size: 0.9rem;
+
+        td, th {
+            padding: 0.3rem;
+            vertical-align: top;
+        }
+
+        th {
+            white-space: nowrap;
+            color: #2f373a;
         }
     }
 }

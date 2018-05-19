@@ -17,7 +17,7 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Main",
                     "Основное",
                     true,
-                    new FactDefinition<NameFactModel>("Name", "Имя")
+                    new FactDefinition<HumanNameFactModel>("Name", "Имя", "Имя|Имена")
                 ),
                 new FactDefinitionGroup(
                     "Birth",
@@ -48,10 +48,10 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Person",
                     "Личность",
                     false,
-                    new FactDefinition<LanguageFactModel>("Language", "Язык"),
+                    new FactDefinition<LanguageFactModel>("Language", "Язык", "Язык|Языки"),
                     new FactDefinition<SkillFactModel>("Skill", "Хобби"),
-                    new FactDefinition<StringListFactModel>("Profession", "Профессия"),
-                    new FactDefinition<StringListFactModel>("Religion", "Религия")
+                    new FactDefinition<StringListFactModel>("Profession", "Профессия", "Профессия|Профессии"),
+                    new FactDefinition<StringListFactModel>("Religion", "Религия", "Религия|Религии")
                 )
             },
 
@@ -61,7 +61,7 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Main",
                     "Основное",
                     true,
-                    new FactDefinition<StringFactModel>("Name", "Имя")
+                    new FactDefinition<NameFactModel>("Name", "Имя")
                 ),
                 new FactDefinitionGroup(
                     "Birth",
@@ -96,7 +96,7 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Main",
                     "Основное",
                     true,
-                    new FactDefinition<StringFactModel>("Name", "Название"),
+                    new FactDefinition<NameFactModel>("Name", "Название"),
                     new FactDefinition<StringFactModel>("Location", "Расположение"),
                     new FactDefinition<AnnotatedDateFactModel>("Opening", "Открытие"),
                     new FactDefinition<AnnotatedDateFactModel>("Shutdown", "Закрытие")
@@ -109,7 +109,7 @@ namespace Bonsai.Code.DomainModel.Facts
                     "Main",
                     "Основное",
                     true,
-                    new FactDefinition<StringFactModel>("Name", "Название"),
+                    new FactDefinition<NameFactModel>("Name", "Название"),
                     new FactDefinition<DateFactModel>("Date", "Дата")
                 )
             },

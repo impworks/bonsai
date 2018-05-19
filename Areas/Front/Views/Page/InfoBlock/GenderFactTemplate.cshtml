@@ -1,9 +1,7 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
 @model GenderFactModel
 
-<div class="fact">
-    <div class="fact-title">@Model.Definition.ShortTitle</div>
-    <div class="fact-value">@(Model.IsMale ? "Мужской" : "Женский")</div>
-</div>
-
-
+<tr class="fact">
+    <th class="fact-title">@Model.ShortTitle</th>
+    <td class="fact-value">@(Model.IsMale ? "Мужской" : "Женский")</td>
+</tr>

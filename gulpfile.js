@@ -85,13 +85,6 @@ gulp.task('front.watch', function() {
 // Vendor tasks
 // ================
 
-gulp.task('vendor.styles', function () {
-    gulp.src(config.vendor.styles)
-        .pipe(concatcss('vendor.css', { rebaseUrls: false }))
-        .pipe(mincss())
-        .pipe(gulp.dest(config.assets.styles));
-});
-
 gulp.task('vendor.scripts', function () {
     gulp.src(config.vendor.scripts)
         .pipe(concatjs('vendor.js'))
@@ -105,6 +98,6 @@ gulp.task('vendor.fonts', function() {
         .pipe(gulp.dest(config.assets.fonts));
 });
 
-gulp.task('vendor', ['vendor.styles', 'vendor.scripts', 'vendor.fonts']);
+gulp.task('vendor', ['vendor.scripts', 'vendor.fonts']);
 
 gulp.task('build', ['vendor', 'front']);

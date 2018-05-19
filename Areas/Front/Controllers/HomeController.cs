@@ -12,16 +12,14 @@ namespace Bonsai.Areas.Front.Controllers
     [Area("Front")]
     public class HomeController : Controller
     {
-        public HomeController(PagePresenterService pages, MediaPresenterService media, CalendarPresenterService calendar)
+        public HomeController(PagePresenterService pages, MediaPresenterService media)
         {
             _pages = pages;
             _media = media;
-            _calendar = calendar;
         }
 
         private readonly PagePresenterService _pages;
         private readonly MediaPresenterService _media;
-        private readonly CalendarPresenterService _calendar;
 
         /// <summary>
         /// Returns the main page.
@@ -41,18 +39,6 @@ namespace Bonsai.Areas.Front.Controllers
                 LastUpdatedPages = lastPages,
                 LastUploadedMedia = lastMedia
             };
-
-            return View(vm);
-        }
-
-        /// <summary>
-        /// Returns the page for the calendar.
-        /// </summary>
-        [Route("~/util/cal/{year:int}/{month:int}")]
-        public async Task<ActionResult> Calendar(int year, int month)
-        {
-            var vm = await _calendar.GetEventsForMonthAsync(year, month)
-                                    .ConfigureAwait(false);
 
             return View(vm);
         }

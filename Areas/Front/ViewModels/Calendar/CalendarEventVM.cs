@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Areas.Front.ViewModels.Home;
 
-namespace Bonsai.Areas.Front.ViewModels.Home
+namespace Bonsai.Areas.Front.ViewModels.Calendar
 {
     /// <summary>
     /// Information about a calendar event.
@@ -23,8 +24,13 @@ namespace Bonsai.Areas.Front.ViewModels.Home
         public CalendarEventType Type { get; set; }
 
         /// <summary>
-        /// Links to related pages.
+        /// Links to related person pages.
         /// </summary>
         public IReadOnlyList<PageTitleExtendedVM> RelatedPages { get; set; }
+
+        /// <summary>
+        /// Link to the related event page.
+        /// </summary>
+        public PageTitleExtendedVM RelatedEvent { get; set; }
     }
 }

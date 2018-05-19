@@ -17,12 +17,12 @@
         @await Html.PartialAsync("Displayers/" + Model.Type + ".cshtml")
     </div>
 
-    <div class="media-meta">
+    <div class="media-meta row">
         @if (showFirstColumn)
         {
-            <div class="media-meta-column">
+            <div class="col media-meta-column">
                 <div class="meta-block">
-                    <strong>Изображены:</strong>
+                    <strong>Изображены</strong>
                     <ul class="media-tags">
                         @foreach (var tag in Model.Tags)
                         {
@@ -36,35 +36,38 @@
         }
         @if (showSecondColumn)
         {
-            <div class="media-meta-column">
-                @if (Model.Date != null)
-                {
-                    <div class="meta-block">
-                        <strong>Дата:</strong>
-                        <span>@Model.Date.Value.ReadableDate</span>
-                    </div>
-                }
-                @if (Model.Event != null)
-                {
-                    <div class="meta-block">
-                        <strong>Событие:</strong>
-                        <a href="@Url.Action("Description", "Page", new { key = Model.Event.Key })">@Model.Event.Title</a>
-                    </div>
-                }
-                @if (Model.Location != null)
-                {
-                    <div class="meta-block">
-                        <strong>Место:</strong>
-                        <a href="@Url.Action("Description", "Page", new { key = Model.Location.Key })">@Model.Location.Title</a>
-                    </div>
-                }
-                @if (Model.OriginalPath != null)
-                {
-                    <div class="meta-block">
-                        <strong>Оригинал:</strong>
-                        <a href="@Url.Content(Model.OriginalPath)" target="_blank">Скачать</a>
-                    </div>
-                }
+            <div class="col media-meta-column">
+                <table class="media-meta-table">
+
+                    @if (Model.Date != null)
+                    {
+                        <tr>
+                            <th>Дата</th>
+                            <td>@Model.Date.Value.ReadableDate</td>
+                        </tr>
+                    }
+                    @if (Model.Event != null)
+                    {
+                        <tr>
+                            <th>Событие</th>
+                            <td><a href="@Url.Action("Description", "Page", new { key = Model.Event.Key })">@Model.Event.Title</a></td>
+                        </tr>
+                    }
+                    @if (Model.Location != null)
+                    {
+                        <tr>
+                            <th>Место</th>
+                            <td><a href="@Url.Action("Description", "Page", new { key = Model.Location.Key })">@Model.Location.Title</a></td>
+                        </tr>
+                    }
+                    @if (Model.OriginalPath != null)
+                    {
+                        <tr>
+                            <th>Оригинал</th>
+                            <td><a href="@Url.Content(Model.OriginalPath)" download>Скачать</a></td>
+                        </tr>
+                    }
+                </table>
             </div>
         }
     </div>

@@ -1,0 +1,94 @@
+﻿@import '../variables.scss';
+
+h1, h2, h3, h4, h5, h6 {
+    color: #2f373a;
+    font-weight: bold;
+    font-family: "PT Serif", serif;
+    clear: both;
+
+    & + .caption {
+        margin-top: -1rem;
+    }
+}
+
+h1, h2, h3 {
+    line-height: 3rem;
+}
+
+h4, h5 {
+    line-height: 2rem;
+}
+
+h1 {
+    font-size: 2.08824rem;
+    margin-bottom: 0.2622rem;
+    padding-top: 0.7378rem;
+}
+
+h2 {
+    font-size: 1.76471rem;
+    margin-bottom: 0.14411rem;
+    padding-top: 0.85589rem;
+}
+
+h3 {
+    font-size: 1.76471rem;
+    margin-bottom: 0.14411rem;
+    padding-top: 0.85589rem;
+}
+
+h4 {
+    font-size: 1.57059rem;
+    margin-bottom: -0.42675rem;
+    padding-top: 0.42675rem;
+}
+
+h5 {
+    font-size: 1.32353rem;
+    margin-bottom: -0.51692rem;
+    padding-top: 0.51692rem;
+}
+
+p {
+    line-height: 2rem;
+    margin-bottom: 1.38234rem;
+    padding-top: 0.61766rem;
+}
+
+.caption {
+    color: $color-caption;
+    line-height: 2rem;
+    margin-bottom: 1.38234rem;
+    padding-top: 0.61766rem;
+}
+
+.typography {
+
+    @mixin gradient-underline($color) {
+        background-image: -webkit-linear-gradient(top,transparent 50%,$color 50%);
+        background-image: -moz-linear-gradient(top,transparent 50%,$color 50%);
+        background-image: -o-linear-gradient(top,transparent 50%,$color 50%);
+        background-image: linear-gradient(to bottom,transparent 50%,$color 50%);
+        background-position: 0 93%;
+        background-repeat: repeat-x;
+        background-size: 100% .15rem;
+    }
+
+    a {
+        color: #6aa120;
+
+        &:hover {
+            color: #f64b3b;
+            text-decoration: none;
+        }
+
+        &:not(.nav-link) {
+            @include gradient-underline(#82bb36);
+            text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
+
+            &:hover {
+                @include gradient-underline(#f64b3b);
+            }
+        }
+    }
+}

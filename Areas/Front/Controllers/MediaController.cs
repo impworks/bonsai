@@ -8,7 +8,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// The controller for displaying media information.
     /// </summary>
     [Area("Front")]
-    [Route("media")]
+    [Route("m")]
     public class MediaController: Controller
     {
         public MediaController(MediaPresenterService media)

@@ -53,7 +53,7 @@ namespace Bonsai.Code.Services
             return new AppConfig
             {
                 AllowGuests = true,
-                Title = "Bonsai sample"
+                Title = "Bonsai"
             };
         }
     }

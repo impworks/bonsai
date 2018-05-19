@@ -34,7 +34,7 @@ namespace Bonsai.Code.Services
         private readonly AppDbContext _db;
         private readonly IUrlHelper _url;
 
-        private static readonly Regex MediaRegex = Compile(@"\[\[media:(?<key>[^\[|]+)(\|(?<options>[^\]]+))?\]\]");
+        private static readonly Regex MediaRegex = Compile(@"(?<tag><p>)?\[\[media:(?<key>[^\[|]+)(\|(?<options>[^\]]+))?\]\](?(tag)</p>|)");
         private static readonly Regex LinkRegex = Compile(@"\[\[(?<key>[^\[|]+)(\|(?<label>[^\]]+))?\]\]");
         private static readonly Regex MarkupRegex = Compile(@"[*#|=_]+");
 
@@ -77,8 +77,9 @@ namespace Bonsai.Code.Services
         private async Task<string> ProcessMediaAsync(string html)
         {
             var keys = MediaRegex.Matches(html)
-                                .Select(x => x.Groups["key"].Value)
-                                .ToDictionary(x => x, PageHelper.GetMediaId);
+                                 .Select(x => x.Groups["key"].Value)
+                                 .Distinct()
+                                 .ToDictionary(x => x, PageHelper.GetMediaId);
 
             if (!keys.Any())
                 return html;
@@ -89,20 +90,19 @@ namespace Bonsai.Code.Services
                                          .ToDictionaryAsync(x => x.Key, x => x.FilePath)
                                          .ConfigureAwait(false);
 
-            string Wrapper(string classes, string body) => $@"<div class=""media-wrapper-inline {classes}"">{body}.</div>";
+            string Wrapper(string classes, string body) => $@"<div class=""media-wrapper-inline {classes}"">{body}</div>";
 
             return MediaRegex.Replace(html, m =>
             {
                 var key = m.Groups["key"].Value;
-
-                if (!existingMedia.TryGetValue(key, out var rawPath))
-                    return Wrapper("error", $"Медиа-файл '{key}' не найден");
-
                 var args = m.Groups["options"].Value?.Split('|');
                 var details = GetMediaDetails(args);
 
+                if (!existingMedia.TryGetValue(key, out var rawPath))
+                    return Wrapper(details.Classes + " error", $"<p class='caption'>Медиа-файл <span class='break-word'>'{key}'</span> не найден.</p>");
+
                 if(details.Error)
-                    return Wrapper("error", details.Descr);
+                    return Wrapper("right error", $"<p class='caption'>{details.Descr}</p>");
 
                 var link = _url.Action("ViewMedia", "Media", new {key = key});
                 var path = _url.Content(MediaPresenterService.GetSizedMediaPath(rawPath, MediaSize.Small));
@@ -111,7 +111,7 @@ namespace Bonsai.Code.Services
                     <a href=""{link}"" class=""media-thumb-link"" data-media=""{key}"">
                         <img src=""{path}"" />
                     </a>
-                    <span>{details.Descr}</span>
+                    <p class='caption'>{details.Descr}</p>
                 ";
 
                 return Wrapper(details.Classes, body);
