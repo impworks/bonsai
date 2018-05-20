@@ -149,6 +149,13 @@ namespace Bonsai.Code.Config
                     .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
 
+            services.AddAuthentication()
+                    .AddFacebook(x =>
+                    {
+                        x.AppId = Configuration["Auth:Facebook:AppId"];
+                        x.AppSecret = Configuration["Auth:Facebook:AppSecret"];
+                    });
+
             SqlMapper.AddTypeHandler(new FuzzyDate.FuzzyDateTypeHandler());
             SqlMapper.AddTypeHandler(new FuzzyDate.NullableFuzzyDateTypeHandler());
             SqlMapper.AddTypeHandler(new FuzzyRange.FuzzyRangeTypeHandler());
