@@ -154,6 +154,11 @@ namespace Bonsai.Code.Config
                     {
                         x.AppId = Configuration["Auth:Facebook:AppId"];
                         x.AppSecret = Configuration["Auth:Facebook:AppSecret"];
+                    })
+                    .AddGoogle(x =>
+                    {
+                        x.ClientId = Configuration["Auth:Google:ClientId"];
+                        x.ClientSecret = Configuration["Auth:Google:ClientSecret"];
                     });
 
             SqlMapper.AddTypeHandler(new FuzzyDate.FuzzyDateTypeHandler());
