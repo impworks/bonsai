@@ -1,8 +1,18 @@
 ﻿$(function () {
     var prefix = 'cal-';
     var now = new Date();
-    var selectedDay;
     var selectedClass = 'calendar-day-selected';
+
+    function isCalendarUrl(hash) {
+        return hash != null && hash.substr(1, prefix.length) === prefix;
+    }
+
+    function updateUrl(selectedDay) {
+        var loc = window.location;
+        if (loc.hash === null || loc.hash.length === 0 || isCalendarUrl(loc.hash)) {
+            loc.hash = prefix + selectedDay;
+        }
+    }
 
     function loadCalendar(year, month, day) {
         if (typeof year === "undefined")
@@ -14,23 +24,18 @@
         if (typeof day === "undefined")
             day = now.getDate();
 
-        selectedDay = year + '-' + month + '-' + day;
-
-        loadMonth(year, month);
-        loadDay(year, month, day);
+        loadMonth(year, month).then(function() {
+            loadDay(year, month, day);
+        });
     }
 
     function loadMonth(year, month) {
         var $wrapper = $('.calendar-wrapper .calendar-month'),
             url = '/util/cal/grid?year=' + year + '&month=' + month;
 
-        $.ajax(url).then(
+        return $.ajax(url).then(
             function (html) {
                 $wrapper.html(html);
-
-                $('.calendar-day-active[data-date="' + selectedDay + '"]').addClass(selectedClass);
-
-                updateEventsHeight();
             }
         );
     }
@@ -42,12 +47,12 @@
         $.ajax(url).then(
             function (html) {
                 $wrapper.html(html);
-                selectedDay = year + '-' + month + '-' + day;
-                window.location.hash = prefix + selectedDay;
+                var selectedDay = year + '-' + month + '-' + day;
+                updateUrl(selectedDay);
 
                 $('.calendar-day').removeClass(selectedClass);
                 $('.calendar-day-active[data-date="' + selectedDay + '"]').addClass(selectedClass);
-
+                
                 updateEventsHeight();
             }
         );
@@ -61,7 +66,7 @@
     if ($('.calendar-wrapper').length > 0) {
 
         var hash = window.location.hash;
-        if (hash != null && hash.substr(1, prefix.length) === prefix) {
+        if (isCalendarUrl(hash)) {
             var date = hash.substr(prefix.length + 1).split('-');
             loadCalendar(date[0], date[1], date[2]);
         } else {
