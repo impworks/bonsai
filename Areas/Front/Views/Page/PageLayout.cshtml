@@ -6,9 +6,9 @@
     ViewBag.PageModel = Model;
     var pageVm = (PageTitleVM)ViewBag.PageModel;
     var actions = new[] {
-new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "far fa-newspaper"},
-new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "far fa-image"}
-};
+        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "far fa-newspaper"},
+        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "far fa-image"}
+    };
 }
 
 <div id="page" class="d-flex">
@@ -18,10 +18,10 @@ new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Med
     <div class="content col">
         <h1>@pageVm.Title</h1>
         <ul class="nav nav-tabs">
-            @foreach (var action in actions)
+            @foreach(var action in actions)
             {
                 <li class="nav-item">
-                    @if (action.Active)
+                    @if(action.Active)
                     {
                         <a class="nav-link active" href="@action.Url"><i class="@action.Icon"></i> @action.Title</a>
                     }

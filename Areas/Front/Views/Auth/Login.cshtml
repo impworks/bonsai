@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Авторизация";
+    Layout = "~/Areas/Front/Views/Layout.cshtml";
+}
+
+<div class="text-page">
+    <h1>Авторизация</h1>
+    
+    <p>Пожалуйста, авторизуйтесь с помощью одного из разрешенных сервисов:</p>
+    
+    <form action="@Url.Action("Login")" method="post">
+        <div class="social-buttons">
+            <button type="submit" class="btn btn-lg btn-facebook" name="provider" value="Facebook" title="Вход через Facebook">
+                <i class="fa fa-facebook-square"></i>
+                <span>Facebook</span>
+            </button>
+            <button type="submit" class="btn btn-lg btn-google" name="provider" value="Google" title="Вход через Google">
+                <i class="fa fa-google-plus-square"></i>
+                <span>Google</span>
+            </button>
+        </div>
+    </form>
+</div>

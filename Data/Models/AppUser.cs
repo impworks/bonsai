@@ -22,5 +22,10 @@ namespace Bonsai.Data.Models
         /// List of this user's access rules.
         /// </summary>
         public ICollection<AccessRule> AccessRules { get; set; }
+
+        /// <summary>
+        /// Flag indicating that the user's profile has been validated by the administrator.
+        /// </summary>
+        public bool IsValidated { get; set; }
     }
 }

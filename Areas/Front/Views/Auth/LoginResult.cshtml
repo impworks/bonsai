@@ -1,0 +1,35 @@
+﻿@using Bonsai.Areas.Front.ViewModels.Auth
+@model Bonsai.Areas.Front.ViewModels.Auth.AuthResult
+@{
+    ViewBag.Title = "Авторизация";
+    Layout = "~/Areas/Front/Views/Layout.cshtml";
+}
+
+<div class="text-page">
+    <h1>Авторизация</h1>
+
+    @if(Model == AuthResult.Failed)
+    {
+        <div class="alert alert-danger">
+            <b>Ошибка</b>
+            <p>Не удалось авторизоваться.</p>
+        </div>
+    }
+    else if(Model == AuthResult.LockedOut)
+    {
+        <div class="alert alert-danger">
+            <b>Ошибка</b>
+            <p>Ваша учетная запись заблокирована администратором.</p>
+        </div>
+    }
+    else if(Model == AuthResult.ValidationPending)
+    {
+        <p>Авторизация прошла успешно!</p>
+        <p>Для активации вашей учетной записи ее должен проверить администратор. После этого вы сможете войти в систему.</p>
+    }
+    else if (Model == AuthResult.Unvalidated)
+    {
+        <p>Ваша учетная запись еще не была проверена администратором.</p>
+        <p>Пожалуйста, дождитесь проверки - тогда вы сможете авторизоваться.</p>
+    }
+</div>
