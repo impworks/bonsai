@@ -3,7 +3,7 @@
     /// <summary>
     /// Types of authorization result.
     /// </summary>
-    public enum AuthResult
+    public enum AuthStatus
     {
         /// <summary>
         /// The auth credentials are invalid.
@@ -28,6 +28,6 @@
         /// <summary>
         /// The user account has just been created, but validation is pending.
         /// </summary>
-        ValidationPending
+        NewUser
     }
 }

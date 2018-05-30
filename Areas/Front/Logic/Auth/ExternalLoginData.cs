@@ -1,23 +1,15 @@
-﻿using System.Security.Claims;
-
-namespace Bonsai.Areas.Front.Logic.Auth
+﻿namespace Bonsai.Areas.Front.Logic.Auth
 {
     /// <summary>
-    /// Information about a user's authorization.
+    /// Details of an external provider's authentication.
     /// </summary>
-    public class UserLoginData
+    public class ExternalLoginData
     {
-        public UserLoginData(ClaimsIdentity identity, string loginProvider, string providerKey)
+        public ExternalLoginData(string loginProvider, string providerKey)
         {
-            Identity = identity;
             LoginProvider = loginProvider;
             ProviderKey = providerKey;
         }
-
-        /// <summary>
-        /// Identity bound to current user.
-        /// </summary>
-        public ClaimsIdentity Identity { get; }
 
         /// <summary>
         /// External provider: Facebook, Google, etc.
