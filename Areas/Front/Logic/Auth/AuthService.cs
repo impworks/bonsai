@@ -8,7 +8,6 @@ using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,13 +53,39 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (errors.Any())
                 return new RegisterUserResultVM {ErrorMessages = errors};
 
-            // todo
-            throw new NotImplementedException();
+            var id = Guid.NewGuid().ToString();
+            var user = new AppUser
+            {
+                Id = id,
+                Email = vm.Email,
+                FirstName = vm.FirstName,
+                MiddleName = vm.MiddleName,
+                LastName = vm.LastName,
+                Birthday = vm.Birthday
+            };
+
+            var createResult = await _userMgr.CreateAsync(user).ConfigureAwait(false);
+            if (!createResult.Succeeded)
+            {
+                var msgs = createResult.Errors.Select(x => new KeyValuePair<string, string>("", x.Description)).ToList();
+                return new RegisterUserResultVM {ErrorMessages = msgs};
+            }
+
+            _db.UserLogins.Add(new IdentityUserLogin<string>
+            {
+                LoginProvider = extLogin.LoginProvider,
+                ProviderKey = extLogin.ProviderKey,
+                UserId = id
+            });
+
+            await _db.SaveChangesAsync().ConfigureAwait(false);
+
+            return new RegisterUserResultVM();
         }
 
         #region Constants
 
-        public const string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+        private const string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 
         #endregion
 

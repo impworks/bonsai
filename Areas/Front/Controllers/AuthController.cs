@@ -56,7 +56,7 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         public async Task<ActionResult> LoginCallback(string returnUrl)
         {
-            var authResult = await HttpContext.AuthenticateAsync().ConfigureAwait(false);
+            var authResult = await HttpContext.AuthenticateAsync(ExternalCookieAuthType).ConfigureAwait(false);
             var info = await _auth.AuthenticateAsync(authResult).ConfigureAwait(false);
 
             if (info.Status == AuthStatus.Succeeded)
@@ -68,7 +68,7 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToAction("Register");
             }
 
-            return View("LoginResult", info);
+            return View("LoginResult", info.Status);
         }
 
         /// <summary>
@@ -86,16 +86,19 @@ namespace Bonsai.Areas.Front.Controllers
         [HttpPost]
         public async Task<ActionResult> Register([FromBody] RegisterUserVM vm)
         {
+            var extLogin = HttpContext.Session.Get<ExternalLoginData>(ExternalLoginInfoKey);
+            if (extLogin == null)
+                return RedirectToAction("Login");
+
             if(!ModelState.IsValid)
                 return View("RegisterForm");
 
-            var extLogin = HttpContext.Session.Get<ExternalLoginData>(ExternalLoginInfoKey);
             var result = await _auth.RegisterAsync(vm, extLogin);
 
             if (result.ErrorMessages.Any())
             {
                 foreach(var error in result.ErrorMessages)
-                    ModelState[error.Key].Errors.Add(error.Value);
+                    ModelState.AddModelError(error.Key, error.Value);
 
                 return View("RegisterForm");
             }
