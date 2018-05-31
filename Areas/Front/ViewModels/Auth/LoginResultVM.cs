@@ -5,12 +5,12 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
     /// <summary>
     /// Result of an authentication attempt.
     /// </summary>
-    public class AuthResultVM
+    public class LoginResultVM
     {
         /// <summary>
         /// Status of the operation.
         /// </summary>
-        public AuthStatus Status { get; set; }
+        public LoginStatus Status { get; set; }
 
         /// <summary>
         /// Information about the external login.

@@ -3,7 +3,7 @@
     /// <summary>
     /// Types of authorization result.
     /// </summary>
-    public enum AuthStatus
+    public enum LoginStatus
     {
         /// <summary>
         /// The auth credentials are invalid.

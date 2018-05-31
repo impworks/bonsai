@@ -1,5 +1,5 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Auth
-@model Bonsai.Areas.Front.ViewModels.Auth.AuthStatus
+@model Bonsai.Areas.Front.ViewModels.Auth.LoginStatus
 @{
     ViewBag.Title = "Авторизация";
     Layout = "~/Areas/Front/Views/Layout.cshtml";
@@ -8,21 +8,21 @@
 <div class="text-page">
     <h1>Авторизация</h1>
 
-    @if(Model == AuthStatus.Failed)
+    @if(Model == LoginStatus.Failed)
     {
         <div class="alert alert-danger">
             <b>Ошибка</b>
             <p>Не удалось авторизоваться.</p>
         </div>
     }
-    else if(Model == AuthStatus.LockedOut)
+    else if(Model == LoginStatus.LockedOut)
     {
         <div class="alert alert-danger">
             <b>Ошибка</b>
             <p>Ваша учетная запись заблокирована администратором.</p>
         </div>
     }
-    else if (Model == AuthStatus.Unvalidated)
+    else if (Model == LoginStatus.Unvalidated)
     {
         <p>Ваша учетная запись еще не была проверена администратором.</p>
         <p>Пожалуйста, дождитесь проверки - тогда вы сможете авторизоваться.</p>

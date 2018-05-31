@@ -52,17 +52,27 @@ namespace Bonsai.Areas.Front.Controllers
         }
 
         /// <summary>
+        /// Logs the user out.
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult> Logout()
+        {
+            await _auth.LogoutAsync().ConfigureAwait(false);
+            return RedirectToAction("Index", "Home");
+        }
+
+        /// <summary>
         /// Invoked by external login provider when the authorization is successful.
         /// </summary>
         public async Task<ActionResult> LoginCallback(string returnUrl)
         {
             var authResult = await HttpContext.AuthenticateAsync(ExternalCookieAuthType).ConfigureAwait(false);
-            var info = await _auth.AuthenticateAsync(authResult).ConfigureAwait(false);
+            var info = await _auth.LoginAsync(authResult).ConfigureAwait(false);
 
-            if (info.Status == AuthStatus.Succeeded)
+            if (info.Status == LoginStatus.Succeeded)
                 return RedirectLocal(returnUrl);
 
-            if (info.Status == AuthStatus.NewUser)
+            if (info.Status == LoginStatus.NewUser)
             {
                 HttpContext.Session.Set(ExternalLoginInfoKey, info.ExternalLogin);
                 return RedirectToAction("Register");

@@ -1,0 +1,56 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Bonsai.Areas.Front.ViewModels.Auth.RegisterUserVM
+@{
+    ViewBag.Title = "Регистрация";
+    Layout = "~/Areas/Front/Views/Layout.cshtml";
+}
+
+<div class="text-page">
+    <h1>Регистрация</h1>
+
+    <p>Для создания учетной записи, пожалуйста, введите необходимую информацию.</p>
+    <p>Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.</p>
+    
+    @if(!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>Ошибка:</strong> пожалуйста, заполните все поля.
+        </div>
+    }
+
+    <form asp-action="Register" method="post">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Фамилия</label>
+            <div class="col-sm-6">
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Имя</label>
+            <div class="col-sm-6">
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Отчество</label>
+            <div class="col-sm-6">
+                <input asp-for="MiddleName" class="form-control" />
+                <span asp-validation-for="MiddleName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">E-mail</label>
+            <div class="col-sm-6">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-6">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </form>
+</div>

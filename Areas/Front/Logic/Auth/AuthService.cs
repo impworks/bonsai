@@ -32,16 +32,24 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Attempts to authenticate the user.
         /// </summary>
-        public async Task<AuthResultVM> AuthenticateAsync(AuthenticateResult authResult)
+        public async Task<LoginResultVM> LoginAsync(AuthenticateResult authResult)
         {
             var extLogin = GetUserLoginData(authResult?.Principal);
-            var result = await AuthorizeInternalAsync(extLogin).ConfigureAwait(false);
+            var result = await LoginInternalAsync(extLogin).ConfigureAwait(false);
 
-            return new AuthResultVM
+            return new LoginResultVM
             {
                 Status = result,
                 ExternalLogin = extLogin
             };
+        }
+
+        /// <summary>
+        /// Logs the user out.
+        /// </summary>
+        public async Task LogoutAsync()
+        {
+            await _signMgr.SignOutAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -126,25 +134,25 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Performs the authorization and returns the status.
         /// </summary>
-        private async Task<AuthStatus> AuthorizeInternalAsync(ExternalLoginData extLogin)
+        private async Task<LoginStatus> LoginInternalAsync(ExternalLoginData extLogin)
         {
             if (extLogin == null)
-                return AuthStatus.Failed;
+                return LoginStatus.Failed;
 
             var user = await FindUserAsync(extLogin).ConfigureAwait(false);
             if (user == null)
-                return AuthStatus.NewUser;
+                return LoginStatus.NewUser;
 
             var isLockedOut = await _userMgr.IsLockedOutAsync(user).ConfigureAwait(false);
             if (isLockedOut)
-                return AuthStatus.LockedOut;
+                return LoginStatus.LockedOut;
 
             if (user.IsValidated == false)
-                return AuthStatus.Unvalidated;
+                return LoginStatus.Unvalidated;
 
             await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
 
-            return AuthStatus.Succeeded;
+            return LoginStatus.Succeeded;
         }
 
         /// <summary>
