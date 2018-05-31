@@ -5,6 +5,7 @@ using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Utils;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -23,15 +24,20 @@ namespace Bonsai.Areas.Front.Controllers
 
         private readonly AuthService _auth;
 
-        private const string ExternalCookieAuthType = "ExternalCookie";
         private const string ExternalLoginInfoKey = "ExternalLoginInfo";
+        private const string RegisterUserVMKey = "RegisterUserVM";
+
+        private ISession Session => HttpContext.Session;
 
         /// <summary>
         /// Displays the authorization page.
         /// </summary>
         [HttpGet]
-        public ActionResult Login()
+        [Route("login")]
+        public ActionResult Login(string returnUrl = null)
         {
+            ViewBag.ReturnUrl = returnUrl;
+
             return View();
         }
 
@@ -39,13 +45,15 @@ namespace Bonsai.Areas.Front.Controllers
         /// Sends the authorization request.
         /// </summary>
         [HttpPost]
+        [Route("login")]
         public ActionResult Login(string provider, string returnUrl)
         {
+            var redirectUrl = Url.Action("LoginCallback", new {returnUrl = returnUrl});
             var authProps = new AuthenticationProperties
             {
                 AllowRefresh = true,
                 IsPersistent = true,
-                RedirectUri = returnUrl,
+                RedirectUri = redirectUrl,
                 Items = { ["LoginProvider"] = provider }
             };
             return Challenge(authProps, provider);
@@ -55,6 +63,7 @@ namespace Bonsai.Areas.Front.Controllers
         /// Logs the user out.
         /// </summary>
         [HttpGet]
+        [Route("logout")]
         public async Task<ActionResult> Logout()
         {
             await _auth.LogoutAsync().ConfigureAwait(false);
@@ -64,9 +73,10 @@ namespace Bonsai.Areas.Front.Controllers
         /// <summary>
         /// Invoked by external login provider when the authorization is successful.
         /// </summary>
+        [Route("loginCallback")]
         public async Task<ActionResult> LoginCallback(string returnUrl)
         {
-            var authResult = await HttpContext.AuthenticateAsync(ExternalCookieAuthType).ConfigureAwait(false);
+            var authResult = await HttpContext.AuthenticateAsync(AuthService.ExternalCookieAuthType).ConfigureAwait(false);
             var info = await _auth.LoginAsync(authResult).ConfigureAwait(false);
 
             if (info.Status == LoginStatus.Succeeded)
@@ -74,7 +84,9 @@ namespace Bonsai.Areas.Front.Controllers
 
             if (info.Status == LoginStatus.NewUser)
             {
-                HttpContext.Session.Set(ExternalLoginInfoKey, info.ExternalLogin);
+                Session.Set(ExternalLoginInfoKey, info.ExternalLogin);
+                Session.Set(RegisterUserVMKey, _auth.GetRegistrationData(authResult.Principal));
+
                 return RedirectToAction("Register");
             }
 
@@ -85,18 +97,21 @@ namespace Bonsai.Areas.Front.Controllers
         /// Displays the user registration form.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult> Register()
+        [Route("register")]
+        public ActionResult Register()
         {
-            return View("RegisterForm");
+            var vm = Session.Get<RegisterUserVM>(RegisterUserVMKey) ?? new RegisterUserVM();
+            return View("RegisterForm", vm);
         }
 
         /// <summary>
         /// Displays the user registration form.
         /// </summary>
         [HttpPost]
+        [Route("register")]
         public async Task<ActionResult> Register([FromBody] RegisterUserVM vm)
         {
-            var extLogin = HttpContext.Session.Get<ExternalLoginData>(ExternalLoginInfoKey);
+            var extLogin = Session.Get<ExternalLoginData>(ExternalLoginInfoKey);
             if (extLogin == null)
                 return RedirectToAction("Login");
 
@@ -112,6 +127,9 @@ namespace Bonsai.Areas.Front.Controllers
 
                 return View("RegisterForm");
             }
+
+            Session.Remove(ExternalLoginInfoKey);
+            Session.Remove(RegisterUserVMKey);
 
             return View("RegisterSuccess");
         }

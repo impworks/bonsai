@@ -11,15 +11,13 @@
     @if(Model == LoginStatus.Failed)
     {
         <div class="alert alert-danger">
-            <b>Ошибка</b>
-            <p>Не удалось авторизоваться.</p>
+            <b>Ошибка:</b> Не удалось авторизоваться.
         </div>
     }
     else if(Model == LoginStatus.LockedOut)
     {
         <div class="alert alert-danger">
-            <b>Ошибка</b>
-            <p>Ваша учетная запись заблокирована администратором.</p>
+            <b>Ошибка:</b>Ваша учетная запись заблокирована администратором.
         </div>
     }
     else if (Model == LoginStatus.Unvalidated)

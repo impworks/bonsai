@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Tools;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -24,6 +25,8 @@ namespace Bonsai.Areas.Front.Logic.Auth
             _userMgr = userManager;
             _db = db;
         }
+
+        public const string ExternalCookieAuthType = "ExternalCookie";
 
         private readonly SignInManager<AppUser> _signMgr;
         private readonly UserManager<AppUser> _userMgr;
@@ -50,6 +53,22 @@ namespace Bonsai.Areas.Front.Logic.Auth
         public async Task LogoutAsync()
         {
             await _signMgr.SignOutAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Retrieves default values for registration form from the claims provided by external login provider.
+        /// </summary>
+        public RegisterUserVM GetRegistrationData(ClaimsPrincipal cp)
+        {
+            string GetClaim(string type) => cp.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/" + type)?.Value;
+
+            return new RegisterUserVM
+            {
+                FirstName = GetClaim("givenname"),
+                LastName = GetClaim("surname"),
+                Email = GetClaim("emailaddress"),
+                Birthday = FormatDate(GetClaim("dateofbirth"))
+            };
         }
 
         /// <summary>
@@ -89,6 +108,32 @@ namespace Bonsai.Areas.Front.Logic.Auth
             await _db.SaveChangesAsync().ConfigureAwait(false);
 
             return new RegisterUserResultVM();
+        }
+
+        /// <summary>
+        /// Returns the information about the current user.
+        /// </summary>
+        public async Task<UserVM> GetCurrentUserAsync(ClaimsPrincipal principal)
+        {
+            if (principal == null)
+                return null;
+
+            var id = _userMgr.GetUserId(principal);
+            var user = await _db.Users
+                                .Include(x => x.Page)
+                                .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            if (user == null)
+                return null;
+
+            var isAdmin = await _userMgr.IsInRoleAsync(user, RoleNames.AdminRole).ConfigureAwait(false);
+
+            return new UserVM
+            {
+                Name = user.FirstName + " " + user.LastName,
+                Avatar = GetGravatarUrl(user.Email),
+                PageKey = user.Page?.Key,
+                IsAdministrator = isAdmin
+            };
         }
 
         #region Constants
@@ -170,6 +215,27 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 result[nameof(vm.Email)] = "Адрес электронной почты уже зарегистрирован.";
 
             return result.ToList();
+        }
+
+        /// <summary>
+        /// Returns the Gravatar URL for a given email.
+        /// </summary>
+        private string GetGravatarUrl(string email)
+        {
+            var cleanEmail = (email ?? "").ToLowerInvariant().Trim();
+            var md5 = StringHelper.Md5(cleanEmail);
+            return "https://www.gravatar.com/avatar/" + md5;
+        }
+
+        /// <summary>
+        /// Formats the date according to local format.
+        /// </summary>
+        private string FormatDate(string isoDate)
+        {
+            if (DateTime.TryParse(isoDate, out var date))
+                return new FuzzyDate(date).ToString();
+
+            return null;
         }
 
         #endregion

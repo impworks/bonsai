@@ -30,17 +30,7 @@
                 <form class="search" method="get" action="@Url.Action("Search", "Search")">
                     <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery"/>
                 </form>
-                <div class="account">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <img src="/assets/img/pawug.jpg">
-                        </div>
-                        <div class="col">
-                            Рашид Троицкий<br />
-                            <a href="">Выйти</a>
-                        </div>
-                    </div>
-                </div>
+                @await Component.InvokeAsync("UserHeaderComponent")
             </nav>
         </header>
          @RenderBody()

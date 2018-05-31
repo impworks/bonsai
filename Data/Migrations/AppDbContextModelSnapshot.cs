@@ -19,7 +19,7 @@ namespace Bonsai.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
+                .HasAnnotation("ProductVersion", "2.0.3-rtm-10026");
 
             modelBuilder.Entity("Bonsai.Data.Models.AccessRule", b =>
                 {
@@ -69,6 +69,9 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Birthday")
+                        .HasMaxLength(10);
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -77,9 +80,20 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("IsValidated");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(256);
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);

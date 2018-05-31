@@ -9,6 +9,7 @@
     <p>Пожалуйста, авторизуйтесь с помощью одного из разрешенных сервисов:</p>
     
     <form action="@Url.Action("Login")" method="post">
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl"/>
         <div class="social-buttons">
             <button type="submit" class="btn btn-lg btn-facebook" name="provider" value="Facebook" title="Вход через Facebook">
                 <i class="fa fa-facebook-square"></i>

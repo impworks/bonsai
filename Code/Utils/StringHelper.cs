@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Bonsai.Code.Utils
@@ -53,6 +54,24 @@ namespace Bonsai.Code.Utils
         public static string Capitalize(this string str)
         {
             return str.Substring(0, 1).ToUpper() + str.Substring(1);
+        }
+
+        /// <summary>
+        /// Returns the MD5 hash of a string.
+        /// </summary>
+        public static string Md5(string str)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var input = Encoding.UTF8.GetBytes(str);
+                var output = md5.ComputeHash(input);
+
+                var sb = new StringBuilder();
+                foreach (var b in output)
+                    sb.Append(b.ToString("x2"));
+
+                return sb.ToString();
+            }
         }
     }
 }
