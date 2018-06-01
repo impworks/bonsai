@@ -5,7 +5,7 @@
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 }
 
-<div class="text-page">
+<div class="content text">
     <h1>Регистрация</h1>
 
     <p>Для создания учетной записи, пожалуйста, введите необходимую информацию.</p>
@@ -42,8 +42,8 @@
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Дата рождения</label>
-                <div class="col-sm-6">
-                    <input asp-for="Birthday" class="form-control" />
+                <div class="col-sm-3">
+                    <input asp-for="Birthday" class="form-control datepicker" />
                     <span asp-validation-for="Birthday" class="text-danger"></span>
                 </div>
             </div>

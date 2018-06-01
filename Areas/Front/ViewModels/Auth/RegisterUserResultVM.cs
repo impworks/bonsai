@@ -7,9 +7,14 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
     /// </summary>
     public class RegisterUserResultVM
     {
+        public RegisterUserResultVM(IReadOnlyList<KeyValuePair<string, string>> msgs = null)
+        {
+            ErrorMessages = msgs ?? new List<KeyValuePair<string, string>>();
+        }
+
         /// <summary>
         /// Validation errors.
         /// </summary>
-        public IReadOnlyList<KeyValuePair<string, string>> ErrorMessages { get; set; }
+        public IReadOnlyList<KeyValuePair<string, string>> ErrorMessages { get; }
     }
 }

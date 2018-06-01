@@ -109,14 +109,14 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult> Register([FromBody] RegisterUserVM vm)
+        public async Task<ActionResult> Register(RegisterUserVM vm)
         {
             var extLogin = Session.Get<ExternalLoginData>(ExternalLoginInfoKey);
             if (extLogin == null)
                 return RedirectToAction("Login");
 
             if(!ModelState.IsValid)
-                return View("RegisterForm");
+                return View("RegisterForm", vm);
 
             var result = await _auth.RegisterAsync(vm, extLogin);
 
@@ -125,7 +125,7 @@ namespace Bonsai.Areas.Front.Controllers
                 foreach(var error in result.ErrorMessages)
                     ModelState.AddModelError(error.Key, error.Value);
 
-                return View("RegisterForm");
+                return View("RegisterForm", vm);
             }
 
             Session.Remove(ExternalLoginInfoKey);

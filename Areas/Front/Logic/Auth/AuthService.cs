@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Tools;
@@ -78,13 +79,14 @@ namespace Bonsai.Areas.Front.Logic.Auth
         {
             var errors = await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
             if (errors.Any())
-                return new RegisterUserResultVM {ErrorMessages = errors};
+                return new RegisterUserResultVM(errors);
 
             var id = Guid.NewGuid().ToString();
             var user = new AppUser
             {
                 Id = id,
                 Email = vm.Email,
+                UserName = Regex.Replace(vm.Email, "[^a-z0-9]", ""),
                 FirstName = vm.FirstName,
                 MiddleName = vm.MiddleName,
                 LastName = vm.LastName,
@@ -95,7 +97,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (!createResult.Succeeded)
             {
                 var msgs = createResult.Errors.Select(x => new KeyValuePair<string, string>("", x.Description)).ToList();
-                return new RegisterUserResultVM {ErrorMessages = msgs};
+                return new RegisterUserResultVM (msgs);
             }
 
             _db.UserLogins.Add(new IdentityUserLogin<string>

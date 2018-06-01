@@ -1,5 +1,5 @@
-﻿@import '../../../../node_modules/bootstrap/scss/bootstrap.scss';
-@import '../../../../node_modules/magnific-popup/src/css/main.scss';
+﻿@import 'vendor.scss';
+@import 'fixes.scss';
 
 @import 'fonts.scss';
 @import 'variables.scss';
@@ -7,7 +7,7 @@
 @import 'Components/main.scss';
 @import 'Components/header.scss';
 @import 'Components/typography.scss';
-
+@import 'Components/text.scss';
 @import 'Components/common.scss';
 
 @import 'Components/media.scss';
