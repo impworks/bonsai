@@ -10,54 +10,59 @@
 
     <p>Для создания учетной записи, пожалуйста, введите необходимую информацию.</p>
     <p>Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.</p>
-    
-    @if(!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger" role="alert">
-            <strong>Ошибка:</strong> пожалуйста, заполните все поля.
-        </div>
-    }
 
-        <form asp-action="Register" method="post">
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Фамилия</label>
-                <div class="col-sm-6">
-                    <input asp-for="LastName" class="form-control" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-7 col-sm-12">
+            <form asp-action="Register" method="post" style="margin-top: 32px">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Фамилия</label>
+                    <div class="col-sm-9">
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Имя</label>
-                <div class="col-sm-6">
-                    <input asp-for="FirstName" class="form-control" />
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Имя</label>
+                    <div class="col-sm-9">
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Отчество</label>
-                <div class="col-sm-6">
-                    <input asp-for="MiddleName" class="form-control" />
-                    <span asp-validation-for="MiddleName" class="text-danger"></span>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Отчество</label>
+                    <div class="col-sm-9">
+                        <input asp-for="MiddleName" class="form-control" />
+                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Дата рождения</label>
-                <div class="col-sm-3">
-                    <input asp-for="Birthday" class="form-control datepicker" />
-                    <span asp-validation-for="Birthday" class="text-danger"></span>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Дата рождения</label>
+                    <div class="col-sm-6">
+                        <input asp-for="Birthday" class="form-control datepicker" />
+                        <span asp-validation-for="Birthday" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">E-mail</label>
-                <div class="col-sm-6">
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">E-mail</label>
+                    <div class="col-sm-9">
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="offset-sm-2 col-sm-6">
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                
+                @if(!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.
+                    </div>
+                }
+
+                <div class="form-group row">
+                    <div class="offset-sm-3 col-sm-6">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+    </div>
 </div>

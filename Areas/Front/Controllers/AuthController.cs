@@ -90,7 +90,8 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToAction("Register");
             }
 
-            return View("LoginResult", info.Status);
+            ViewBag.ReturnUrl = returnUrl;
+            return View("Login", info.Status);
         }
 
         /// <summary>
