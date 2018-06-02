@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Search;
+using Bonsai.Code.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -13,6 +15,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Area("front")]
     [Route("s")]
+    [Authorize(Policy = AuthRequirement.Name)]
     public class SearchController: Controller
     {
         public SearchController(SearchPresenterService search)

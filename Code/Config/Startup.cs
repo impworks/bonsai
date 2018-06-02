@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Security.Claims;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
+using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Tools;
@@ -15,8 +14,10 @@ using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
 using Dapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -153,31 +154,42 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureAuthServices(IServiceCollection services)
         {
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy(AuthRequirement.Name, p => p.Requirements.Add(new AuthRequirement()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, AuthHandler>();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddFacebook(x =>
+                    .AddFacebook(opts =>
                     {
-                        x.SignInScheme = AuthService.ExternalCookieAuthType;
-                        x.AppId = Configuration["Auth:Facebook:AppId"];
-                        x.AppSecret = Configuration["Auth:Facebook:AppSecret"];
+                        opts.SignInScheme = AuthService.ExternalCookieAuthType;
+                        opts.AppId = Configuration["Auth:Facebook:AppId"];
+                        opts.AppSecret = Configuration["Auth:Facebook:AppSecret"];
 
                         foreach(var scope in new [] { "email", "user_birthday", "user_gender" })
-                            x.Scope.Add(scope);
+                            opts.Scope.Add(scope);
                     })
-                    .AddGoogle(x =>
+                    .AddGoogle(opts =>
                     {
-                        x.SignInScheme = AuthService.ExternalCookieAuthType;
-                        x.ClientId = Configuration["Auth:Google:ClientId"];
-                        x.ClientSecret = Configuration["Auth:Google:ClientSecret"];
+                        opts.SignInScheme = AuthService.ExternalCookieAuthType;
+                        opts.ClientId = Configuration["Auth:Google:ClientId"];
+                        opts.ClientSecret = Configuration["Auth:Google:ClientSecret"];
 
                         foreach(var scope in new [] { "email", "profile" })
-                            x.Scope.Add(scope);
+                            opts.Scope.Add(scope);
                     })
-                    .AddCookie(AuthService.ExternalCookieAuthType, x =>
+                    .AddCookie(AuthService.ExternalCookieAuthType, opts =>
                     {
-                        x.CookieName = ".AspNet." + AuthService.ExternalCookieAuthType;
-                        x.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                        x.LoginPath = "/auth/loginCallback";
+                        opts.CookieName = ".AspNet." + AuthService.ExternalCookieAuthType;
+                        opts.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                     });
+
+            services.ConfigureApplicationCookie(x =>
+            {
+                x.LoginPath = "/auth/login";
+            });
         }
 
         /// <summary>

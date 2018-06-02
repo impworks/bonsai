@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -17,12 +18,14 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("auth")]
     public class AuthController: Controller
     {
-        public AuthController(AuthService auth)
+        public AuthController(AuthService auth, AppConfigService cfgProvider)
         {
             _auth = auth;
+            _cfgProvider = cfgProvider;
         }
 
         private readonly AuthService _auth;
+        private readonly AppConfigService _cfgProvider;
 
         private const string ExternalLoginInfoKey = "ExternalLoginInfo";
         private const string RegisterUserVMKey = "RegisterUserVM";
@@ -36,9 +39,12 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("login")]
         public ActionResult Login(string returnUrl = null)
         {
-            ViewBag.ReturnUrl = returnUrl;
-
-            return View();
+            var vm = new LoginVM
+            {
+                ReturnUrl = returnUrl,
+                AllowGuests = _cfgProvider.GetConfig().AllowGuests
+            };
+            return View(vm);
         }
 
         /// <summary>
@@ -90,8 +96,14 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToAction("Register");
             }
 
-            ViewBag.ReturnUrl = returnUrl;
-            return View("Login", info.Status);
+            var vm = new LoginVM
+            {
+                ReturnUrl = returnUrl,
+                AllowGuests = _cfgProvider.GetConfig().AllowGuests,
+                Status = info.Status
+            };
+
+            return View("Login", vm);
         }
 
         /// <summary>

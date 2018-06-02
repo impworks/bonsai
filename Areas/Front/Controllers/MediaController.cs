@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -9,6 +11,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Area("Front")]
     [Route("m")]
+    [Authorize(Policy = AuthRequirement.Name)]
     public class MediaController: Controller
     {
         public MediaController(MediaPresenterService media)

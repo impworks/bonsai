@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Home;
+using Bonsai.Code.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -10,6 +12,8 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Route("")]
     [Area("Front")]
+    [Authorize]
+    [Authorize(Policy = AuthRequirement.Name)]
     public class HomeController : Controller
     {
         public HomeController(PagePresenterService pages, MediaPresenterService media)
