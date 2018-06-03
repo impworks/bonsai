@@ -156,12 +156,16 @@ namespace Bonsai.Code.Config
         {
             services.AddAuthorization(opts =>
             {
-                opts.AddPolicy(AuthRequirement.Name, p => p.Requirements.Add(new AuthRequirement()));
+                opts.AddPolicy(AuthRequirement.Name, p =>
+                {
+                    p.AuthenticationSchemes = new List<string> { AuthService.ExternalCookieAuthType };
+                    p.Requirements.Add(new AuthRequirement());
+                });
             });
 
             services.AddSingleton<IAuthorizationHandler, AuthHandler>();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication(AuthService.ExternalCookieAuthType)
                     .AddFacebook(opts =>
                     {
                         opts.SignInScheme = AuthService.ExternalCookieAuthType;
@@ -182,14 +186,8 @@ namespace Bonsai.Code.Config
                     })
                     .AddCookie(AuthService.ExternalCookieAuthType, opts =>
                     {
-                        opts.CookieName = ".AspNet." + AuthService.ExternalCookieAuthType;
-                        opts.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                        opts.LoginPath = "/auth/login";
                     });
-
-            services.ConfigureApplicationCookie(x =>
-            {
-                x.LoginPath = "/auth/login";
-            });
         }
 
         /// <summary>
