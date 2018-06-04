@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Bonsai.Code.Infrastructure
+namespace Bonsai.Areas.Front.Logic.Auth
 {
     /// <summary>
     /// Empty requirement class.

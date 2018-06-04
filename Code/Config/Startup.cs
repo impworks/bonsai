@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
-using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Tools;
@@ -187,6 +186,8 @@ namespace Bonsai.Code.Config
                     .AddCookie(AuthService.ExternalCookieAuthType, opts =>
                     {
                         opts.LoginPath = "/auth/login";
+                        opts.AccessDeniedPath = "/auth/login";
+                        opts.ReturnUrlParameter = "returnUrl";
                     });
         }
 

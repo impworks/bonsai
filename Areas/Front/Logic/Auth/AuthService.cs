@@ -194,10 +194,10 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (isLockedOut)
                 return LoginStatus.LockedOut;
 
+            await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
+
             if (user.IsValidated == false)
                 return LoginStatus.Unvalidated;
-
-            await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
 
             return LoginStatus.Succeeded;
         }

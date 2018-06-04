@@ -2,7 +2,7 @@
 using Bonsai.Code.Services;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Bonsai.Code.Infrastructure
+namespace Bonsai.Areas.Front.Logic.Auth
 {
     /// <summary>
     /// Authorization handler for requiring login depending on the config.

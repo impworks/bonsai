@@ -1,4 +1,4 @@
-﻿using Bonsai.Code.Infrastructure;
+﻿using Bonsai.Areas.Front.Logic.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
