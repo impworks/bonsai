@@ -121,9 +121,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return null;
 
             var id = _userMgr.GetUserId(principal);
-            var user = await _db.Users
-                                .Include(x => x.Page)
-                                .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            var provider = principal.Identity.AuthenticationType;
+
+            var user = await FindUserAsync(provider, id).ConfigureAwait(false);
             if (user == null)
                 return null;
 
@@ -134,7 +134,8 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 Name = user.FirstName + " " + user.LastName,
                 Avatar = GetGravatarUrl(user.Email),
                 PageKey = user.Page?.Key,
-                IsAdministrator = isAdmin
+                IsAdministrator = isAdmin,
+                IsValidated = user.IsValidated
             };
         }
 
@@ -163,11 +164,11 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Finds the corresponding user.
         /// </summary>
-        private async Task<AppUser> FindUserAsync(ExternalLoginData data)
+        private async Task<AppUser> FindUserAsync(string provider, string key)
         {
             var login = await _db.UserLogins
-                                 .FirstOrDefaultAsync(x => x.LoginProvider == data.LoginProvider
-                                                           && x.ProviderKey == data.ProviderKey)
+                                 .FirstOrDefaultAsync(x => x.LoginProvider == provider
+                                                           && x.ProviderKey == key)
                                  .ConfigureAwait(false);
 
             if (login == null)
@@ -186,7 +187,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (extLogin == null)
                 return LoginStatus.Failed;
 
-            var user = await FindUserAsync(extLogin).ConfigureAwait(false);
+            var user = await FindUserAsync(extLogin.LoginProvider, extLogin.ProviderKey).ConfigureAwait(false);
             if (user == null)
                 return LoginStatus.NewUser;
 
@@ -194,7 +195,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (isLockedOut)
                 return LoginStatus.LockedOut;
 
-            await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
+            await _signMgr.SignInAsync(user, true, ExternalCookieAuthType).ConfigureAwait(false);
 
             if (user.IsValidated == false)
                 return LoginStatus.Unvalidated;

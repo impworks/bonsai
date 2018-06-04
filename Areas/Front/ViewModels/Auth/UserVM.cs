@@ -21,6 +21,11 @@
         public bool IsAdministrator { get; set; }
 
         /// <summary>
+        /// Flag indicating that the current user has been validated by administators.
+        /// </summary>
+        public bool IsValidated { get; set; }
+
+        /// <summary>
         /// Reference to the user's own page.
         /// </summary>
         public string PageKey { get; set; }
