@@ -162,7 +162,7 @@ namespace Bonsai.Code.Config
                 });
             });
 
-            services.AddSingleton<IAuthorizationHandler, AuthHandler>();
+            services.AddScoped<IAuthorizationHandler, AuthHandler>();
 
             services.AddAuthentication(IdentityConstants.ApplicationScheme)
                     .AddFacebook(opts =>
