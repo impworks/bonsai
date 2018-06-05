@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Bonsai.Code.Services;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Areas.Front.Logic.Auth
 {
@@ -9,25 +13,30 @@ namespace Bonsai.Areas.Front.Logic.Auth
     /// </summary>
     public class AuthHandler: AuthorizationHandler<AuthRequirement>
     {
-        public AuthHandler(AppConfigService cfgProvider)
+        public AuthHandler(AppConfigService cfgProvider, UserManager<AppUser> userMgr)
         {
             _cfgProvider = cfgProvider;
+            _userMgr = userMgr;
         }
 
         private readonly AppConfigService _cfgProvider;
+        private readonly UserManager<AppUser> _userMgr;
 
         /// <summary>
         /// Checks the authorization if the config requires it.
         /// </summary>
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthRequirement requirement)
         {
             var cfg = _cfgProvider.GetConfig();
-            var user = context.User.Identity;
-
-            if(cfg.AllowGuests || user.IsAuthenticated)
+            if (cfg.AllowGuests)
+            {
                 context.Succeed(requirement);
+                return;
+            }
 
-            return Task.CompletedTask;
+            var user = await _userMgr.GetUserAsync(context.User).ConfigureAwait(false);
+            if(user?.IsValidated == true)
+                context.Succeed(requirement);
         }
     }
 }

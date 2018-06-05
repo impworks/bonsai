@@ -9,7 +9,6 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Route("")]
     [Area("Front")]
-    [Authorize]
     [Authorize(Policy = AuthRequirement.Name)]
     public class HomeController : Controller
     {

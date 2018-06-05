@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Services;
+using Bonsai.Code.Utils;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +27,8 @@ namespace Bonsai.Areas.Front.Controllers
 
         private readonly AuthService _auth;
         private readonly AppConfigService _cfgProvider;
+
+        protected ISession Session => HttpContext.Session;
 
         /// <summary>
         /// Displays the authorization page.
@@ -79,20 +83,29 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("loginCallback")]
         public async Task<ActionResult> LoginCallback(string returnUrl)
         {
-            var status = await _auth.LoginAsync(HttpContext).ConfigureAwait(false);
+            var result = await _auth.LoginAsync().ConfigureAwait(false);
 
-            if (status == LoginStatus.Succeeded)
+            if (result.Status == LoginStatus.Succeeded)
                 return RedirectLocal(returnUrl);
 
-            if (status == LoginStatus.NewUser)
+            if (result.Status == LoginStatus.NewUser)
+            {
+                Session.Set(new RegistrationInfo
+                {
+                    FormData = _auth.GetRegistrationData(result.Principal),
+                    Login = result.ExternalLogin
+                });
                 return RedirectToAction("Register");
+            }
 
             var vm = new LoginVM
             {
                 ReturnUrl = returnUrl,
                 AllowGuests = _cfgProvider.GetConfig().AllowGuests,
-                Status = status
+                Status = result.Status
             };
+
+            HttpContext.User = result.Principal;
 
             return View("Login", vm);
         }
@@ -104,7 +117,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("register")]
         public ActionResult Register()
         {
-            var vm = _auth.GetRegistrationData(User);
+            var vm = Session.Get<RegistrationInfo>()?.FormData ?? new RegisterUserVM();
             return View("RegisterForm", vm);
         }
 
@@ -115,14 +128,14 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("register")]
         public async Task<ActionResult> Register(RegisterUserVM vm)
         {
-            if (User.Identity.IsAuthenticated == false)
+            var info = Session.Get<RegistrationInfo>();
+            if (info == null)
                 return RedirectToAction("Login");
 
             if(!ModelState.IsValid)
                 return View("RegisterForm", vm);
 
-            var result = await _auth.RegisterAsync(vm);
-
+            var result = await _auth.RegisterAsync(vm, info.Login);
             if (result.ErrorMessages.Any())
             {
                 foreach(var error in result.ErrorMessages)
@@ -131,7 +144,21 @@ namespace Bonsai.Areas.Front.Controllers
                 return View("RegisterForm", vm);
             }
 
-            return View("RegisterSuccess");
+            return RedirectToAction("RegisterSuccess", "Auth");
+        }
+
+        /// <summary>
+        /// Displays the "Registration success" page.
+        /// </summary>
+        [Route("registerSuccess")]
+        public ActionResult RegisterSuccess()
+        {
+            if (Session.Get<RegistrationInfo>() == null)
+                return RedirectToAction("Index", "Home");
+
+            Session.Remove<RegistrationInfo>();
+
+            return View();
         }
 
         #region Private helpers

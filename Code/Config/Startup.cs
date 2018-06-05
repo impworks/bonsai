@@ -54,9 +54,10 @@ namespace Bonsai.Code.Config
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
+            // order is crucial
             ConfigureMvcServices(services);
-            ConfigureAuthServices(services);
             ConfigureDatabaseServices(services);
+            ConfigureAuthServices(services);
             ConfigureElasticServices(services);
 
             services.AddTransient<MarkdownService>();
@@ -157,17 +158,15 @@ namespace Bonsai.Code.Config
             {
                 opts.AddPolicy(AuthRequirement.Name, p =>
                 {
-                    p.AuthenticationSchemes = new List<string> { IdentityConstants.ExternalScheme };
                     p.Requirements.Add(new AuthRequirement());
                 });
             });
 
             services.AddSingleton<IAuthorizationHandler, AuthHandler>();
 
-            services.AddAuthentication(IdentityConstants.ExternalScheme)
+            services.AddAuthentication(IdentityConstants.ApplicationScheme)
                     .AddFacebook(opts =>
                     {
-                        opts.SignInScheme = IdentityConstants.ExternalScheme;
                         opts.AppId = Configuration["Auth:Facebook:AppId"];
                         opts.AppSecret = Configuration["Auth:Facebook:AppSecret"];
 
@@ -176,7 +175,6 @@ namespace Bonsai.Code.Config
                     })
                     .AddGoogle(opts =>
                     {
-                        opts.SignInScheme = IdentityConstants.ExternalScheme;
                         opts.ClientId = Configuration["Auth:Google:ClientId"];
                         opts.ClientSecret = Configuration["Auth:Google:ClientSecret"];
 
@@ -184,7 +182,7 @@ namespace Bonsai.Code.Config
                             opts.Scope.Add(scope);
                     });
 
-            services.ConfigureExternalCookie(opts =>
+            services.ConfigureApplicationCookie(opts =>
             {
                 opts.LoginPath = "/auth/login";
                 opts.AccessDeniedPath = "/auth/login";

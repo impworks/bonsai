@@ -9,7 +9,6 @@ using Bonsai.Code.Tools;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,26 +33,24 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Attempts to authenticate the user.
         /// </summary>
-        public async Task<LoginStatus> LoginAsync(HttpContext http)
+        public async Task<LoginResultVM> LoginAsync()
         {
             var info = await _signMgr.GetExternalLoginInfoAsync().ConfigureAwait(false);
             if (info == null)
-                return LoginStatus.Failed;
+                return new LoginResultVM(LoginStatus.Failed);
 
             var result = await _signMgr.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true).ConfigureAwait(false);
             if (result.IsLockedOut || result.IsNotAllowed)
-                return LoginStatus.LockedOut;
-
-            http.User = info.Principal;
+                return new LoginResultVM(LoginStatus.LockedOut, info);
 
             if(!result.Succeeded)
-                return LoginStatus.NewUser;
+                return new LoginResultVM(LoginStatus.NewUser, info);
 
             var user = await FindUserAsync(info.LoginProvider, info.ProviderKey).ConfigureAwait(false);
             if (!user.IsValidated)
-                return LoginStatus.Unvalidated;
+                return new LoginResultVM(LoginStatus.Unvalidated, info);
 
-            return LoginStatus.Succeeded;
+            return new LoginResultVM(LoginStatus.Succeeded, info);
         }
 
         /// <summary>
@@ -83,7 +80,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Creates the user.
         /// </summary>
-        public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm)
+        public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
             var errors = await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
             if (errors.Any())
@@ -108,11 +105,10 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return new RegisterUserResultVM (msgs);
             }
 
-            var extLogin = await _signMgr.GetExternalLoginInfoAsync();
-            if (extLogin == null)
-                return new RegisterUserResultVM(new [] { new KeyValuePair<string, string>("", "Ошибка авторизации") });
+            var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
+            await _userMgr.AddLoginAsync(user, login).ConfigureAwait(false);
 
-            await _userMgr.AddLoginAsync(user, extLogin).ConfigureAwait(false);
+            await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
 
             return new RegisterUserResultVM();
         }
