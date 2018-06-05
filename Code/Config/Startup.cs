@@ -157,17 +157,17 @@ namespace Bonsai.Code.Config
             {
                 opts.AddPolicy(AuthRequirement.Name, p =>
                 {
-                    p.AuthenticationSchemes = new List<string> { AuthService.ExternalCookieAuthType };
+                    p.AuthenticationSchemes = new List<string> { IdentityConstants.ExternalScheme };
                     p.Requirements.Add(new AuthRequirement());
                 });
             });
 
             services.AddSingleton<IAuthorizationHandler, AuthHandler>();
 
-            services.AddAuthentication(AuthService.ExternalCookieAuthType)
+            services.AddAuthentication(IdentityConstants.ExternalScheme)
                     .AddFacebook(opts =>
                     {
-                        opts.SignInScheme = AuthService.ExternalCookieAuthType;
+                        opts.SignInScheme = IdentityConstants.ExternalScheme;
                         opts.AppId = Configuration["Auth:Facebook:AppId"];
                         opts.AppSecret = Configuration["Auth:Facebook:AppSecret"];
 
@@ -176,19 +176,20 @@ namespace Bonsai.Code.Config
                     })
                     .AddGoogle(opts =>
                     {
-                        opts.SignInScheme = AuthService.ExternalCookieAuthType;
+                        opts.SignInScheme = IdentityConstants.ExternalScheme;
                         opts.ClientId = Configuration["Auth:Google:ClientId"];
                         opts.ClientSecret = Configuration["Auth:Google:ClientSecret"];
 
                         foreach(var scope in new [] { "email", "profile" })
                             opts.Scope.Add(scope);
-                    })
-                    .AddCookie(AuthService.ExternalCookieAuthType, opts =>
-                    {
-                        opts.LoginPath = "/auth/login";
-                        opts.AccessDeniedPath = "/auth/login";
-                        opts.ReturnUrlParameter = "returnUrl";
                     });
+
+            services.ConfigureExternalCookie(opts =>
+            {
+                opts.LoginPath = "/auth/login";
+                opts.AccessDeniedPath = "/auth/login";
+                opts.ReturnUrlParameter = "returnUrl";
+            });
         }
 
         /// <summary>

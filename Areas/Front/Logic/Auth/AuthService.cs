@@ -9,7 +9,7 @@ using Bonsai.Code.Tools;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,8 +27,6 @@ namespace Bonsai.Areas.Front.Logic.Auth
             _db = db;
         }
 
-        public const string ExternalCookieAuthType = "ExternalCookie";
-
         private readonly SignInManager<AppUser> _signMgr;
         private readonly UserManager<AppUser> _userMgr;
         private readonly AppDbContext _db;
@@ -36,16 +34,26 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Attempts to authenticate the user.
         /// </summary>
-        public async Task<LoginResultVM> LoginAsync(AuthenticateResult authResult)
+        public async Task<LoginStatus> LoginAsync(HttpContext http)
         {
-            var extLogin = GetUserLoginData(authResult?.Principal);
-            var result = await LoginInternalAsync(extLogin).ConfigureAwait(false);
+            var info = await _signMgr.GetExternalLoginInfoAsync().ConfigureAwait(false);
+            if (info == null)
+                return LoginStatus.Failed;
 
-            return new LoginResultVM
-            {
-                Status = result,
-                ExternalLogin = extLogin
-            };
+            var result = await _signMgr.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true).ConfigureAwait(false);
+            if (result.IsLockedOut || result.IsNotAllowed)
+                return LoginStatus.LockedOut;
+
+            http.User = info.Principal;
+
+            if(!result.Succeeded)
+                return LoginStatus.NewUser;
+
+            var user = await FindUserAsync(info.LoginProvider, info.ProviderKey).ConfigureAwait(false);
+            if (!user.IsValidated)
+                return LoginStatus.Unvalidated;
+
+            return LoginStatus.Succeeded;
         }
 
         /// <summary>
@@ -75,7 +83,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Creates the user.
         /// </summary>
-        public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
+        public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm)
         {
             var errors = await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
             if (errors.Any())
@@ -100,14 +108,11 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return new RegisterUserResultVM (msgs);
             }
 
-            _db.UserLogins.Add(new IdentityUserLogin<string>
-            {
-                LoginProvider = extLogin.LoginProvider,
-                ProviderKey = extLogin.ProviderKey,
-                UserId = id
-            });
+            var extLogin = await _signMgr.GetExternalLoginInfoAsync();
+            if (extLogin == null)
+                return new RegisterUserResultVM(new [] { new KeyValuePair<string, string>("", "Ошибка авторизации") });
 
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            await _userMgr.AddLoginAsync(user, extLogin).ConfigureAwait(false);
 
             return new RegisterUserResultVM();
         }
@@ -120,10 +125,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (principal == null)
                 return null;
 
-            var id = _userMgr.GetUserId(principal);
-            var provider = principal.Identity.AuthenticationType;
+            var user = await _userMgr.GetUserAsync(principal).ConfigureAwait(false)
+                       ?? await FindUserAsync(principal.Identity.AuthenticationType, _userMgr.GetUserId(principal)).ConfigureAwait(false);
 
-            var user = await FindUserAsync(provider, id).ConfigureAwait(false);
             if (user == null)
                 return null;
 
@@ -139,27 +143,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             };
         }
 
-        #region Constants
-
-        private const string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
-
-        #endregion
-
         #region Private helpers
-
-        /// <summary>
-        /// Returns the information about a user.
-        /// </summary>
-        private ExternalLoginData GetUserLoginData(ClaimsPrincipal principal)
-        {
-            var identity = principal?.Identity as ClaimsIdentity;
-            var claim = identity?.FindFirst(UserIdClaimType);
-
-            if (claim == null)
-                return null;
-
-            return new ExternalLoginData(claim.Issuer, claim.Value);
-        }
 
         /// <summary>
         /// Finds the corresponding user.
@@ -177,30 +161,6 @@ namespace Bonsai.Areas.Front.Logic.Auth
             return await _db.Users
                             .FirstOrDefaultAsync(x => x.Id == login.UserId)
                             .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Performs the authorization and returns the status.
-        /// </summary>
-        private async Task<LoginStatus> LoginInternalAsync(ExternalLoginData extLogin)
-        {
-            if (extLogin == null)
-                return LoginStatus.Failed;
-
-            var user = await FindUserAsync(extLogin.LoginProvider, extLogin.ProviderKey).ConfigureAwait(false);
-            if (user == null)
-                return LoginStatus.NewUser;
-
-            var isLockedOut = await _userMgr.IsLockedOutAsync(user).ConfigureAwait(false);
-            if (isLockedOut)
-                return LoginStatus.LockedOut;
-
-            await _signMgr.SignInAsync(user, true, ExternalCookieAuthType).ConfigureAwait(false);
-
-            if (user.IsValidated == false)
-                return LoginStatus.Unvalidated;
-
-            return LoginStatus.Succeeded;
         }
 
         /// <summary>
