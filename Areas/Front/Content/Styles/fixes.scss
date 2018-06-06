@@ -1,0 +1,11 @@
+﻿/*
+    Fix for Gijgo Datepicker button
+*/
+
+.gj-datepicker-bootstrap .input-group-append {
+    flex-direction: column;
+
+    button {
+        flex-grow: 1;
+    }
+}

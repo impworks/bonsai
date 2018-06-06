@@ -1,0 +1,11 @@
+﻿.btn.btn-social {
+    &:not(:last-of-type) {
+        margin-right: 20px;
+    }
+
+    .fa {
+        font-size: 34px;
+        vertical-align: sub;
+        margin-right: 8px;
+    }
+}

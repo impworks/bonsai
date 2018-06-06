@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Elastic;
@@ -11,8 +12,11 @@ using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
 using Dapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -35,6 +39,7 @@ namespace Bonsai.Code.Config
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddUserSecrets<Startup>()
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -49,8 +54,10 @@ namespace Bonsai.Code.Config
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
+            // order is crucial
             ConfigureMvcServices(services);
             ConfigureDatabaseServices(services);
+            ConfigureAuthServices(services);
             ConfigureElasticServices(services);
 
             services.AddTransient<MarkdownService>();
@@ -60,6 +67,7 @@ namespace Bonsai.Code.Config
             services.AddTransient<MediaPresenterService>();
             services.AddTransient<CalendarPresenterService>();
             services.AddTransient<SearchPresenterService>();
+            services.AddTransient<AuthService>();
         }
 
         /// <summary>
@@ -71,6 +79,7 @@ namespace Bonsai.Code.Config
             {
                 var context = scope.ServiceProvider.GetService<AppDbContext>();
                 var elastic = scope.ServiceProvider.GetService<ElasticService>();
+
                 context.EnsureDatabaseCreated();
 
                 if(Environment.IsDevelopment())
@@ -79,8 +88,8 @@ namespace Bonsai.Code.Config
 
             if (Environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                app.UseDeveloperExceptionPage()
+                   .UseBrowserLink();
             }
 
             if (Environment.IsProduction())
@@ -88,9 +97,10 @@ namespace Bonsai.Code.Config
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
             }
 
-            app.UseStaticFiles();
-            app.UseAuthentication();
-            app.UseMvc();
+            app.UseStaticFiles()
+               .UseAuthentication()
+               .UseSession()
+               .UseMvc();
         }
 
         /// <summary>
@@ -100,6 +110,7 @@ namespace Bonsai.Code.Config
         {
             services.AddMvc()
                     .AddControllersAsServices()
+                    .AddSessionStateTempDataProvider()
                     .AddJsonOptions(opts =>
                     {
                         var convs = new List<JsonConverter>
@@ -124,6 +135,8 @@ namespace Bonsai.Code.Config
                 opts.LowercaseUrls = false;
             });
 
+            services.AddSession();
+
             services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
 
@@ -134,8 +147,47 @@ namespace Bonsai.Code.Config
                     opts.Filters.Add(new RequireHttpsAttribute());
                 });
             }
+        }
 
-            services.AddTransient<AppDbContext>();
+        /// <summary>
+        /// Configures the auth-related sessions.
+        /// </summary>
+        private void ConfigureAuthServices(IServiceCollection services)
+        {
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy(AuthRequirement.Name, p =>
+                {
+                    p.Requirements.Add(new AuthRequirement());
+                });
+            });
+
+            services.AddScoped<IAuthorizationHandler, AuthHandler>();
+
+            services.AddAuthentication(IdentityConstants.ApplicationScheme)
+                    .AddFacebook(opts =>
+                    {
+                        opts.AppId = Configuration["Auth:Facebook:AppId"];
+                        opts.AppSecret = Configuration["Auth:Facebook:AppSecret"];
+
+                        foreach(var scope in new [] { "email", "user_birthday", "user_gender" })
+                            opts.Scope.Add(scope);
+                    })
+                    .AddGoogle(opts =>
+                    {
+                        opts.ClientId = Configuration["Auth:Google:ClientId"];
+                        opts.ClientSecret = Configuration["Auth:Google:ClientSecret"];
+
+                        foreach(var scope in new [] { "email", "profile" })
+                            opts.Scope.Add(scope);
+                    });
+
+            services.ConfigureApplicationCookie(opts =>
+            {
+                opts.LoginPath = "/auth/login";
+                opts.AccessDeniedPath = "/auth/login";
+                opts.ReturnUrlParameter = "returnUrl";
+            });
         }
 
         /// <summary>
@@ -143,6 +195,7 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureDatabaseServices(IServiceCollection services)
         {
+            services.AddTransient<AppDbContext>();
             services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.GetConnectionString("Database")));
 
             services.AddIdentity<AppUser, IdentityRole>()

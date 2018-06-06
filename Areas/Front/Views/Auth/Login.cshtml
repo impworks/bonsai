@@ -1,0 +1,51 @@
+﻿@using Bonsai.Areas.Front.ViewModels.Auth
+@model LoginVM
+@{
+    ViewBag.Title = "Авторизация";
+    Layout = "~/Areas/Front/Views/Layout.cshtml";
+}
+
+<div class="content text">
+    <h1>Авторизация</h1>
+    
+    @if(Model.Status == LoginStatus.Failed)
+    {
+        <div class="alert alert-danger">
+            <b>Ошибка:</b> Не удалось авторизоваться.<br />Возможно, вы ввели некорректный пароль? Попробуйте снова.
+        </div>
+    }
+    else if(Model.Status == LoginStatus.LockedOut)
+    {
+        <div class="alert alert-danger">
+            <b>Ошибка:</b>Ваша учетная запись заблокирована администратором.
+        </div>
+    }
+    else if (Model.Status == LoginStatus.Unvalidated)
+    {
+        <p>Ваша учетная запись еще не была проверена администратором.</p>
+        <p>Пожалуйста, дождитесь проверки - тогда вы сможете пользоваться системой.</p>
+    }
+    
+    @if (Model.Status == LoginStatus.Failed || Model.Status == null)
+    {
+        if (!Model.AllowGuests)
+        {
+            <p>Страница доступна только для зарегистрированных пользователей.</p>
+        }
+        <p>Пожалуйста, авторизуйтесь с помощью одного из доступных сервисов:</p>
+
+        <form action="@Url.Action("Login")" method="post">
+            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl"/>
+            <div class="social-buttons">
+                <button type="submit" class="btn btn-lg btn-outline-primary btn-social" name="provider" value="Facebook" title="Вход через Facebook">
+                    <i class="fa fa-facebook-square"></i>
+                    <span>Facebook</span>
+                </button>
+                <button type="submit" class="btn btn-lg btn-outline-primary btn-social" name="provider" value="Google" title="Вход через Google">
+                    <i class="fa fa-google-plus-square"></i>
+                    <span>Google</span>
+                </button>
+            </div>
+        </form>
+    }
+</div>

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Code.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -10,6 +12,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Area("Front")]
     [Route("p")]
+    [Authorize(Policy = AuthRequirement.Name)]
     public class PageController: Controller
     {
         public PageController(PagePresenterService pages)

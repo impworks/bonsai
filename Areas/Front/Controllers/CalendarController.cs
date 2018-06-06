@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.Logic.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Controllers
@@ -9,6 +11,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Area("front")]
     [Route("util/cal")]
+    [Authorize(Policy = AuthRequirement.Name)]
     public class CalendarController: Controller
     {
         public CalendarController(CalendarPresenterService calendar)

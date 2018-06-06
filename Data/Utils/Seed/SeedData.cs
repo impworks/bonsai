@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Data.Utils.Seed
 {
@@ -18,6 +19,8 @@ namespace Bonsai.Data.Utils.Seed
         {
             // warning! this REMOVES ALL DATA AND FILES
             ClearPreviousData(db, elastic);
+
+            EnsureIdentityItemsSeeded(db);
 
             var ctx = new SeedContext(db, elastic);
 
@@ -96,6 +99,20 @@ namespace Bonsai.Data.Utils.Seed
 
             elastic?.ClearPreviousData();
             elastic?.EnsureIndexesCreated();
+        }
+
+        /// <summary>
+        /// Adds required Identity-related records.
+        /// </summary>
+        private static void EnsureIdentityItemsSeeded(AppDbContext db)
+        {
+            if (!db.Roles.Any())
+            {
+                db.Roles.Add(new IdentityRole(RoleNames.UserRole));
+                db.Roles.Add(new IdentityRole(RoleNames.AdminRole));
+
+                db.SaveChanges();
+            }
         }
     }
 }

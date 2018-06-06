@@ -14,20 +14,18 @@ var gulp = require('gulp'),
 
 var config = {
     vendor: {
-        styles: [
-            './node_modules/bootstrap/dist/css/bootstrap.css',
-            './node_modules/magnific-popup/dist/magnific-popup.css',
-            './node_modules/font-awesome/css/font-awesome.css'
-        ],
         scripts: [
             './node_modules/jquery/dist/jquery.js',
             './node_modules/popper.js/dist/umd/popper.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/magnific-popup/dist/jquery.magnific-popup.js',
-            './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js'
+            './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
+            './node_modules/gijgo/js/gijgo.js',
+            './node_modules/gijgo/js/messages/messages.ru-ru.js'
         ],
         fonts: [
-            './node_modules/font-awesome/fonts/*.*'
+            './node_modules/font-awesome/fonts/*.*',
+            './node_modules/gijgo/fonts/*.*'
         ]
     },
     front: {

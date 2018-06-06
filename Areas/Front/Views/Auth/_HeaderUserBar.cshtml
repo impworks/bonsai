@@ -1,0 +1,39 @@
+﻿@model Bonsai.Areas.Front.ViewModels.Auth.UserVM
+@{
+    var pageUrl = string.IsNullOrEmpty(Model?.PageKey)
+        ? null
+        : Url.Action("Description", "Page", new {key = Model.PageKey});
+}
+<div class="account">
+    <div class="row align-items-center">
+        @if (Model != null)
+        {
+            <div class="col">
+                @if (pageUrl == null)
+                {
+                    <img src="@Model.Avatar"/>
+                }
+                else
+                {
+                    <a href="@pageUrl">
+                        <img src="@Model.Avatar" />
+                    </a>
+                }
+            </div>
+            <div class="col">
+                @Model.Name<br/>
+                @if (Model.IsAdministrator)
+                {
+                    <a href="@Url.Action("Index", "Home", new { area = "Admin" })">Управление</a><br />
+                }
+                <a href="@Url.Action("Logout", "Auth")">Выйти</a>
+            </div>
+        }
+        else
+        {
+            <div class="col">
+                <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">Войти</a>
+            </div>
+        }
+    </div>
+</div>

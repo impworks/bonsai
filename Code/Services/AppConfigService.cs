@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 
@@ -12,24 +13,18 @@ namespace Bonsai.Code.Services
         public AppConfigService(AppDbContext context)
         {
             _context = context;
-            _lock = new object();
+            _config = new ConcurrentDictionary<string, AppConfig>();
         }
 
         private readonly AppDbContext _context;
-        private readonly object _lock;
-        private static AppConfig _config;
+        private static ConcurrentDictionary<string, AppConfig> _config;
 
         /// <summary>
         /// Returns the configuration instance.
         /// </summary>
         public AppConfig GetConfig()
         {
-            if (_config == null)
-                lock (_lock)
-                    if (_config == null)
-                        _config = LoadOrCreateConfig();
-
-            return _config;
+            return _config.GetOrAdd("default", x => LoadOrCreateConfig());
         }
 
         /// <summary>
@@ -37,8 +32,7 @@ namespace Bonsai.Code.Services
         /// </summary>
         public void ResetCache()
         {
-            lock(_lock)
-                _config = null;
+            _config.TryRemove("default", out var _);
         }
 
         /// <summary>
@@ -52,7 +46,7 @@ namespace Bonsai.Code.Services
 
             return new AppConfig
             {
-                AllowGuests = true,
+                AllowGuests = false,
                 Title = "Bonsai"
             };
         }
