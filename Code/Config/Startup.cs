@@ -100,7 +100,7 @@ namespace Bonsai.Code.Config
             app.UseStaticFiles()
                .UseAuthentication()
                .UseSession()
-               .UseMvc();
+               .UseMvc(routes => { routes.MapAreaRoute("admin", "Admin", "admin/{controller}/{action}/{id?}"); });
         }
 
         /// <summary>

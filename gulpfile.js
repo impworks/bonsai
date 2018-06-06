@@ -1,4 +1,4 @@
-﻿/// <binding ProjectOpened='front.watch' />
+﻿/// <binding ProjectOpened='custom.watch' />
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     sass = require('gulp-sass'),
@@ -28,16 +28,23 @@ var config = {
             './node_modules/gijgo/fonts/*.*'
         ]
     },
+    styles: {
+        root: './Styles/style.scss',
+        all: [
+            './Styles/**/*.scss'
+        ]
+    },
     front: {
-        styles: {
-            root: './Areas/Front/Content/Styles/style.scss',
-            all: [
-                './Areas/Front/Content/Styles/**/*.scss'
-            ]
-        },
         scripts: {
             all: [
-                './Areas/Front/Content/Scripts/**/*.js'
+                './Areas/Front/Scripts/**/*.js'
+            ]
+        }
+    },
+    admin: {
+        scripts: {
+            all: [
+                './Areas/Admin/Scripts/**/*.js'
             ]
         }
     },
@@ -49,13 +56,13 @@ var config = {
 };
 
 // ================
-// Front tasks
+// Bonsai tasks
 // ================
 
-gulp.task('front.styles', function() {
-    gulp.src(config.front.styles.root)
+gulp.task('styles', function() {
+    gulp.src(config.styles.root)
         .pipe(sass())
-        .pipe(concatcss('front.css'))
+        .pipe(concatcss('style.css'))
         .pipe(gulp.dest(config.assets.styles));
 });
 
@@ -65,17 +72,28 @@ gulp.task('front.scripts', function () {
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-gulp.task('front', ['front.styles', 'front.scripts']);
+gulp.task('admin.scripts', function () {
+    gulp.src(config.admin.scripts.all)
+        .pipe(concatjs('front.js'))
+        .pipe(gulp.dest(config.assets.scripts));
+});
 
-gulp.task('front.watch', function() {
+gulp.task('custom', ['styles', 'front.scripts', 'admin.scripts']);
+
+gulp.task('custom.watch', function() {
     watch(
-        config.front.styles.all,
-        function () { gulp.start('front.styles'); }
+        config.styles.all,
+        function () { gulp.start('styles'); }
     );
 
     watch(
         config.front.scripts.all,
         function () { gulp.start('front.scripts'); }
+    );
+
+    watch(
+        config.admin.scripts.all,
+        function () { gulp.start('admin.scripts'); }
     );
 });
 
@@ -98,4 +116,4 @@ gulp.task('vendor.fonts', function() {
 
 gulp.task('vendor', ['vendor.scripts', 'vendor.fonts']);
 
-gulp.task('build', ['vendor', 'front']);
+gulp.task('build', ['vendor', 'custom']);

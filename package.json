@@ -16,6 +16,7 @@
     "bootstrap": "^4.1.1",
     "datepicker-bootstrap": "^1.8.0",
     "devbridge-autocomplete": "^1.4.7",
+    "font-awesome": "^4.7.0",
     "gijgo": "^1.9.6",
     "jquery": "^3.2.1",
     "magnific-popup": "^1.1.0",
