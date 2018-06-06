@@ -3,13 +3,17 @@
     var now = new Date();
     var selectedClass = 'calendar-day-selected';
 
-    function isCalendarUrl(hash) {
+    function isCalendarHash(hash) {
         return hash != null && hash.substr(1, prefix.length) === prefix;
+    }
+
+    function isEmptyHash(hash) {
+        return hash == null || hash.length === 0 || hash === '#_=_';
     }
 
     function updateUrl(selectedDay) {
         var loc = window.location;
-        if (loc.hash === null || loc.hash.length === 0 || isCalendarUrl(loc.hash)) {
+        if (isEmptyHash(loc.hash) || isCalendarHash(loc.hash)) {
             loc.hash = prefix + selectedDay;
         }
     }
@@ -66,7 +70,7 @@
     if ($('.calendar-wrapper').length > 0) {
 
         var hash = window.location.hash;
-        if (isCalendarUrl(hash)) {
+        if (isCalendarHash(hash)) {
             var date = hash.substr(prefix.length + 1).split('-');
             loadCalendar(date[0], date[1], date[2]);
         } else {
