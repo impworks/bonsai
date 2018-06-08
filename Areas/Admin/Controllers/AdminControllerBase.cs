@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Bonsai.Areas.Admin.Logic.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -8,7 +8,7 @@ namespace Bonsai.Areas.Admin.Controllers
     /// Base class for all admin controllers.
     /// </summary>
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Policy = AdminAuthRequirement.Name)]
     public abstract class AdminControllerBase: Controller
     {
     }

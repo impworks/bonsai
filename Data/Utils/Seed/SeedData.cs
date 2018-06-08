@@ -106,10 +106,13 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         private static void EnsureIdentityItemsSeeded(AppDbContext db)
         {
+            void AddRole(string name) => db.Roles.Add(new IdentityRole {Name = name, NormalizedName = name.ToUpper()});
+
             if (!db.Roles.Any())
             {
-                db.Roles.Add(new IdentityRole(RoleNames.UserRole));
-                db.Roles.Add(new IdentityRole(RoleNames.AdminRole));
+                AddRole(RoleNames.UserRole);
+                AddRole(RoleNames.EditorRole);
+                AddRole(RoleNames.AdminRole);
 
                 db.SaveChanges();
             }

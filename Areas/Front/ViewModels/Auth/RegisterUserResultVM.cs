@@ -16,5 +16,11 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         /// Validation errors.
         /// </summary>
         public IReadOnlyList<KeyValuePair<string, string>> ErrorMessages { get; }
+
+        /// <summary>
+        /// Flag indicating the user's validation state.
+        /// The first user is automatically validated.
+        /// </summary>
+        public bool IsValidated { get; set; }
     }
 }

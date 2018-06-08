@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Bonsai.Areas.Admin.Logic.Auth;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
@@ -160,6 +161,8 @@ namespace Bonsai.Code.Config
                 {
                     p.Requirements.Add(new AuthRequirement());
                 });
+
+                opts.AddPolicy(AdminAuthRequirement.Name, p => { p.RequireRole(RoleNames.AdminRole, RoleNames.EditorRole); });
             });
 
             services.AddScoped<IAuthorizationHandler, AuthHandler>();

@@ -86,17 +86,24 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (errors.Any())
                 return new RegisterUserResultVM(errors);
 
-            var id = Guid.NewGuid().ToString();
             var user = new AppUser
             {
-                Id = id,
+                Id = Guid.NewGuid().ToString(),
                 Email = vm.Email,
                 UserName = Regex.Replace(vm.Email, "[^a-z0-9]", ""),
                 FirstName = vm.FirstName,
                 MiddleName = vm.MiddleName,
                 LastName = vm.LastName,
-                Birthday = vm.Birthday
+                Birthday = vm.Birthday,
             };
+            var roles = new List<string> {RoleNames.UserRole};
+
+            var isFirstUser = (await _db.Users.AnyAsync().ConfigureAwait(false)) == false;
+            if (isFirstUser)
+            {
+                user.IsValidated = true;
+                roles.Add(RoleNames.AdminRole);
+            }
 
             var createResult = await _userMgr.CreateAsync(user).ConfigureAwait(false);
             if (!createResult.Succeeded)
@@ -107,6 +114,8 @@ namespace Bonsai.Areas.Front.Logic.Auth
 
             var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
             await _userMgr.AddLoginAsync(user, login).ConfigureAwait(false);
+
+            await _userMgr.AddToRolesAsync(user, roles).ConfigureAwait(false);
 
             await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
 
@@ -127,7 +136,8 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (user == null)
                 return null;
 
-            var isAdmin = await _userMgr.IsInRoleAsync(user, RoleNames.AdminRole).ConfigureAwait(false);
+            var roles = await _userMgr.GetRolesAsync(user).ConfigureAwait(false);
+            var isAdmin = roles.Contains(RoleNames.AdminRole) || roles.Contains(RoleNames.EditorRole);
 
             return new UserVM
             {

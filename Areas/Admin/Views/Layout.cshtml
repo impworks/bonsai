@@ -15,7 +15,7 @@
 <div id="main-container" class="d-flex flex-column">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+            <a class="navbar-brand" href="@Url.Action("Index", "Dashboard")">
                 <div class="row align-items-center">
                     <div class="col">
                         <img src="/assets/img/logo.svg">
@@ -25,15 +25,18 @@
                     </div>
                 </div>
             </a>
+            <div class="placeholder"></div>
             @await Component.InvokeAsync("UserHeaderComponent")
         </nav>
     </header>
-    <div class="row">
-        <div class="col-sm-2">
-            @await Component.InvokeAsync("AdminMenuComponent")
-        </div>
-        <div class="col-sm-10">
-            @RenderBody()
+    <div class="content text">
+        <div class="row">
+            <div class="col-sm-2">
+                @await Component.InvokeAsync("AdminMenuComponent")
+            </div>
+            <div class="col-sm-10">
+                @RenderBody()
+            </div>
         </div>
     </div>
 </div>

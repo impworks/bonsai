@@ -31,14 +31,14 @@ namespace Bonsai.Areas.Admin.Components
             var groups = new List<MenuGroupVM>();
             groups.Add(
                 new MenuGroupVM(
-                    new MenuItemVM { Title = "Главная страница", Url = Url.Action("Index", "Home", new { area = "Admin" }) }
+                    new MenuItemVM { Title = "Главная", Url = Url.Action("Index", "Dashboard", new { area = "Admin" }) }
                 )
             );
 
             groups.Add(
                 new MenuGroupVM(
-                    new MenuItemVM { Title = "Страницы", Url = "#" },
-                    new MenuItemVM { Title = "Медиа", Url = "#" }
+                    new MenuItemVM { Title = "Страницы", Url = "/#" },
+                    new MenuItemVM { Title = "Медиа", Url = "/#" }
                 )
             );
 
@@ -46,8 +46,8 @@ namespace Bonsai.Areas.Admin.Components
             {
                 groups.Add(
                     new MenuGroupVM(
-                        new MenuItemVM { Title = "Пользователи", Url = "#" },
-                        new MenuItemVM { Title = "Настройки", Url = "#" }
+                        new MenuItemVM { Title = "Пользователи", Url = "/#" },
+                        new MenuItemVM { Title = "Настройки", Url = "/#" }
                     )
                 );
             }

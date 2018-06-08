@@ -74,7 +74,7 @@ namespace Bonsai.Areas.Front.Controllers
         {
             await _auth.LogoutAsync().ConfigureAwait(false);
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         /// <summary>
@@ -144,6 +144,9 @@ namespace Bonsai.Areas.Front.Controllers
                 return View("RegisterForm", vm);
             }
 
+            if (result.IsValidated)
+                return RedirectToAction("Index", "Home");
+
             return RedirectToAction("RegisterSuccess", "Auth");
         }
 
@@ -154,7 +157,7 @@ namespace Bonsai.Areas.Front.Controllers
         public ActionResult RegisterSuccess()
         {
             if (Session.Get<RegistrationInfo>() == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
 
             Session.Remove<RegistrationInfo>();
 
@@ -178,7 +181,7 @@ namespace Bonsai.Areas.Front.Controllers
                     return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         #endregion

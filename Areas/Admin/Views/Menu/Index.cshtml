@@ -1,12 +1,14 @@
 ﻿@model IReadOnlyList<Bonsai.Areas.Admin.ViewModels.Menu.MenuGroupVM>
 
-@foreach (var group in Model)
-{
-    <div class="list-group">
-        @foreach (var item in group.Items)
-        {
-            <a href="@item.Url" class="list-group-item list-group-item-action @(item.IsSelected ? "active" : "")">@item.Title</a>
-        }
-    </div>
-    <br />
-}
+<div class="side-menu">
+    @foreach(var group in Model)
+    {
+        <div class="list-group">
+            @foreach(var item in group.Items)
+            {
+                <a href="@item.Url" class="list-group-item list-group-item-action @(item.IsSelected ? "active" : "")">@item.Title</a>
+            }
+        </div>
+        <br />
+    }
+</div>

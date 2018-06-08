@@ -33,11 +33,12 @@ header {
             }
         }
 
-        .search {
+        .search, .placeholder {
             margin: 0;
             flex: 1 0 auto;
             position: relative;
             margin: 0 1.5rem;
+            height: 4.2rem;
 
             &:before, &:after {
                 content: "";

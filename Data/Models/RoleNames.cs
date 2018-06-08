@@ -8,11 +8,16 @@
         /// <summary>
         /// Role for basic users.
         /// </summary>
-        public static string UserRole = "User";
+        public const string UserRole = "User";
 
         /// <summary>
-        /// Role for administrators.
+        /// Role for content editors.
         /// </summary>
-        public static string AdminRole = "Admin";
+        public const string EditorRole = "Editor";
+
+        /// <summary>
+        /// Role for almighty administrators.
+        /// </summary>
+        public const string AdminRole = "Admin";
     }
 }

@@ -24,7 +24,7 @@
                 @Model.Name<br/>
                 @if (Model.IsAdministrator)
                 {
-                    <a href="@Url.Action("Index", "Home", new { area = "Admin" })">Управление</a><br />
+                    <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Управление</a><br />
                 }
                 <a href="@Url.Action("Logout", "Auth")">Выйти</a>
             </div>
