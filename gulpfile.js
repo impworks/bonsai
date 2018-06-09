@@ -28,23 +28,22 @@ var config = {
             './node_modules/gijgo/fonts/*.*'
         ]
     },
-    styles: {
-        root: './Styles/style.scss',
-        all: [
-            './Styles/**/*.scss'
-        ]
-    },
-    front: {
-        scripts: {
+    content: {
+        styles: {
+            root: './Styles/style.scss',
             all: [
-                './Areas/Front/Scripts/**/*.js'
+                './Styles/**/*.scss'
             ]
-        }
-    },
-    admin: {
+        },
         scripts: {
-            all: [
+            front: [
+                './Areas/Front/Scripts/**/*.js'
+            ],
+            admin: [
                 './Areas/Admin/Scripts/**/*.js'
+            ],
+            common: [
+                './Areas/Common/Scripts/**/*.js'
             ]
         }
     },
@@ -59,41 +58,53 @@ var config = {
 // Bonsai tasks
 // ================
 
-gulp.task('styles', function() {
-    gulp.src(config.styles.root)
+gulp.task('content.styles', function() {
+    gulp.src(config.content.styles.root)
         .pipe(sass())
         .pipe(concatcss('style.css'))
         .pipe(gulp.dest(config.assets.styles));
 });
 
-gulp.task('front.scripts', function () {
-    gulp.src(config.front.scripts.all)
+gulp.task('content.scripts.front', function () {
+    gulp.src(config.content.scripts.front)
         .pipe(concatjs('front.js'))
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-gulp.task('admin.scripts', function () {
-    gulp.src(config.admin.scripts.all)
-        .pipe(concatjs('front.js'))
+gulp.task('content.scripts.common', function () {
+    gulp.src(config.content.scripts.common)
+        .pipe(concatjs('common.js'))
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-gulp.task('custom', ['styles', 'front.scripts', 'admin.scripts']);
+gulp.task('content.scripts.admin', function () {
+    gulp.src(config.content.scripts.admin)
+        .pipe(concatjs('admin.js'))
+        .pipe(gulp.dest(config.assets.scripts));
+});
 
-gulp.task('custom.watch', function() {
+
+gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common']);
+
+gulp.task('content.watch', function() {
     watch(
-        config.styles.all,
-        function () { gulp.start('styles'); }
+        config.content.styles.all,
+        function () { gulp.start('content.styles'); }
     );
 
     watch(
-        config.front.scripts.all,
-        function () { gulp.start('front.scripts'); }
+        config.content.scripts.front,
+        function () { gulp.start('content.scripts.front'); }
     );
 
     watch(
-        config.admin.scripts.all,
-        function () { gulp.start('admin.scripts'); }
+        config.content.scripts.common,
+        function () { gulp.start('content.scripts.common'); }
+    );
+
+    watch(
+        config.content.scripts.admin,
+        function () { gulp.start('content.scripts.admin'); }
     );
 });
 
@@ -116,4 +127,4 @@ gulp.task('vendor.fonts', function() {
 
 gulp.task('vendor', ['vendor.scripts', 'vendor.fonts']);
 
-gulp.task('build', ['vendor', 'custom']);
+gulp.task('build', ['vendor', 'content']);

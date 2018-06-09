@@ -22,12 +22,12 @@
     <div id="user-popover-contents">
         @if (!string.IsNullOrEmpty(Model?.PageKey))
         {
-            <a class="user-popover-link" href="@Url.Action("Description", "Page", new {key = Model.PageKey})">Страница</a>
+            <a class="user-popover-link" href="@Url.Action("Description", "Page", new {key = Model.PageKey, area = "Front"})">Страница</a>
         }
         @if (Model?.IsAdministrator == true)
         {
             <a class="user-popover-link" href="@Url.Action("Index", "Dashboard", new {area = "Admin"})">Управление</a>
         }
-        <a class="user-popover-link" href="@Url.Action("Logout", "Auth")">Выйти</a>
+        <a class="user-popover-link" href="@Url.Action("Logout", "Auth", new {area = "Front"})">Выйти</a>
     </div>
 </div>

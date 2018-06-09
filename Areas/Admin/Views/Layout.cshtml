@@ -1,5 +1,4 @@
-﻿@using Bonsai.Areas.Admin.Components
-@inject Bonsai.Code.Services.AppConfigService ConfigService
+﻿@inject Bonsai.Code.Services.AppConfigService ConfigService
 @{
     var config = ConfigService.GetConfig();
 }
@@ -15,7 +14,7 @@
 <div id="main-container" class="d-flex flex-column">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="@Url.Action("Index", "Dashboard")">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home", new { Area = "Front" })">
                 <div class="row align-items-center">
                     <div class="col">
                         <img src="/assets/img/logo.svg">
@@ -42,6 +41,7 @@
 </div>
 
 <script src="@Url.Content("~/assets/scripts/vendor.js")"></script>
+<script src="@Url.Content("~/assets/scripts/common.js")"></script>
 <script src="@Url.Content("~/assets/scripts/admin.js")"></script>
 </body>
 </html>

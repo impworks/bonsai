@@ -74,7 +74,7 @@ namespace Bonsai.Areas.Front.Controllers
         {
             await _auth.LogoutAsync().ConfigureAwait(false);
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Index", "Home", new { area = "Front" });
         }
 
         /// <summary>
