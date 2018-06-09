@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Auth;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
@@ -13,11 +14,9 @@ using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
 using Dapper;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -69,6 +68,9 @@ namespace Bonsai.Code.Config
             services.AddTransient<CalendarPresenterService>();
             services.AddTransient<SearchPresenterService>();
             services.AddTransient<AuthService>();
+
+            services.AddTransient<DashboardPresenterService>();
+            services.AddTransient<UserManagerService>();
         }
 
         /// <summary>

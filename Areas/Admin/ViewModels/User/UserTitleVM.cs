@@ -14,5 +14,10 @@
         /// Readable name of the user.
         /// </summary>
         public string FullName { get; set; }
+
+        /// <summary>
+        /// The user's role with richest access level.
+        /// </summary>
+        public UserRole? Role { get; set; }
     }
 }
