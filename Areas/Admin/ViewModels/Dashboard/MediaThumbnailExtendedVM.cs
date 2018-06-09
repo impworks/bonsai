@@ -1,7 +1,7 @@
 ﻿using System;
 using Bonsai.Areas.Front.ViewModels.Media;
 
-namespace Bonsai.Areas.Front.ViewModels.Home
+namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 {
     /// <summary>
     /// Additional information about a media file.

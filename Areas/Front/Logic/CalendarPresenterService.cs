@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels.Calendar;
-using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Code.Tools;
 using Bonsai.Code.Utils;
 using Bonsai.Data;

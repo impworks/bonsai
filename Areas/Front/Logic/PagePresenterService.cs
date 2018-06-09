@@ -2,15 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
-using Bonsai.Areas.Front.ViewModels.Home;
-using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
-using Bonsai.Code.Tools;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -72,28 +69,6 @@ namespace Bonsai.Areas.Front.Logic
 
             var media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
             return await ConfigureAsync(page, new PageMediaVM { Media = media }).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Returns the last X updated pages (for front page).
-        /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
-        {
-            return await _db.Pages
-                            .OrderByDescending(x => x.LastUpdateDate)
-                            .Take(count)
-                            .Select(x => new PageTitleExtendedVM
-                            {
-                                Title = x.Title,
-                                Key = x.Key,
-                                Type = x.PageType,
-                                UpdatedDate = x.LastUpdateDate.LocalDateTime,
-                                MainPhotoPath = x.MainPhoto != null
-                                    ? MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small)
-                                    : null
-                            })
-                            .ToListAsync()
-                            .ConfigureAwait(false);
         }
 
         #endregion

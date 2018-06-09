@@ -1,7 +1,7 @@
 ﻿using System;
 using Bonsai.Areas.Front.ViewModels.Page;
 
-namespace Bonsai.Areas.Front.ViewModels.Home
+namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 {
     /// <summary>
     /// Information about the page with a tiny preview image, if any.

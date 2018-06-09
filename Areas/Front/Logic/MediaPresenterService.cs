@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
@@ -61,26 +60,6 @@ namespace Bonsai.Areas.Front.Logic
                 OriginalPath = media.FilePath,
                 PreviewPath = GetSizedMediaPath(media.FilePath, MediaSize.Large)
             };
-        }
-
-        /// <summary>
-        /// Returns the last X uploaded media files (for front page).
-        /// </summary>
-        public async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMediaAsync(int count)
-        {
-            return await _db.Media
-                            .OrderByDescending(x => x.UploadDate)
-                            .Take(count)
-                            .Select(x => new MediaThumbnailExtendedVM
-                            {
-                                Type = x.Type,
-                                MediaKey = x.Key,
-                                ThumbnailUrl = GetSizedMediaPath(x.FilePath, MediaSize.Small),
-                                Date = FuzzyDate.TryParse(x.Date),
-                                UploadDate = x.UploadDate
-                            })
-                            .ToListAsync()
-                            .ConfigureAwait(false);
         }
 
         #region Private helpers
