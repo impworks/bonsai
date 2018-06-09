@@ -87,18 +87,43 @@ header {
         .account {
             white-space: nowrap;
 
+            .user-image {
+                margin-right: 1rem;
+            }
+
             img {
                 $size: 2.2rem;
                 width: $size;
                 height: $size;
                 border-radius: 100%;
-                margin-right: 1rem;
             }
 
             a {
                 font-size: 0.8rem;
                 color: $color-caption;
             }
+        }
+    }
+}
+
+#user-popover-contents {
+    display: none;
+}
+
+.user-popover-toggle {
+    cursor: pointer;
+}
+
+.user-popover-body {
+    padding: 0;
+    width: 160px;
+
+    .user-popover-link {
+        display: block;
+        padding: 10px;
+
+        &:not(:last-of-type) {
+            border-bottom: $panel-inner-border;
         }
     }
 }
