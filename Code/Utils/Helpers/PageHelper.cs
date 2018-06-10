@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Bonsai.Code.Utils
+namespace Bonsai.Code.Utils.Helpers
 {
     /// <summary>
     /// Common utilities for page handling.

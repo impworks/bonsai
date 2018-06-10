@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bonsai.Code.Tools
+namespace Bonsai.Code.Utils
 {
     /// <summary>
     /// Linked list that supports appending to head.

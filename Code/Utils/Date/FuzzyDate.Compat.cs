@@ -3,7 +3,7 @@ using System.Data;
 using Dapper;
 using Newtonsoft.Json;
 
-namespace Bonsai.Code.Tools
+namespace Bonsai.Code.Utils.Date
 {
     public partial struct FuzzyDate
     {

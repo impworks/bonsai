@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Bonsai.Code.Tools
+namespace Bonsai.Code.Utils.Date
 {
     /// <summary>
     /// A date with possibly unknown parts.

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Code.Utils;
+using Impworks.Utils.Strings;
 using Nest;
 using Page = Bonsai.Data.Models.Page;
 

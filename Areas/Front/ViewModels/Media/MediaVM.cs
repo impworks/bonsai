@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Bonsai.Areas.Front.ViewModels.Page;
-using Bonsai.Code.Tools;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Front.ViewModels.Media

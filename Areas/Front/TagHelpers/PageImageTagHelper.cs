@@ -3,6 +3,7 @@ using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Linq;
+using Impworks.Utils.Strings;
 
 namespace Bonsai.Areas.Front.TagHelpers
 {

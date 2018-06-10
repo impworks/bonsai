@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Auth;
-using Bonsai.Code.Tools;
-using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -82,10 +84,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
-            var errors = await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
-            if (errors.Any())
-                return new RegisterUserResultVM(errors);
-
+            await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
             var user = new AppUser
             {
                 Id = Guid.NewGuid().ToString(),
@@ -109,7 +108,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (!createResult.Succeeded)
             {
                 var msgs = createResult.Errors.Select(x => new KeyValuePair<string, string>("", x.Description)).ToList();
-                return new RegisterUserResultVM (msgs);
+                throw new ValidationException(msgs);
             }
 
             var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
@@ -119,7 +118,10 @@ namespace Bonsai.Areas.Front.Logic.Auth
 
             await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
 
-            return new RegisterUserResultVM();
+            return new RegisterUserResultVM
+            {
+                IsValidated = user.IsValidated
+            };
         }
 
         /// <summary>
@@ -172,18 +174,18 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Performs additional checks on the registration request.
         /// </summary>
-        private async Task<IReadOnlyList<KeyValuePair<string, string>>> ValidateRegisterRequestAsync(RegisterUserVM vm)
+        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm)
         {
-            var result = new Dictionary<string, string>();
+            var val = new Validator();
 
             if (FuzzyDate.TryParse(vm.Birthday) == null)
-                result[nameof(vm.Birthday)] = "Дата рождения указана неверно.";
+                val.Add(nameof(vm.Birthday), "Дата рождения указана неверно.");
 
             var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email).ConfigureAwait(false);
             if (emailExists)
-                result[nameof(vm.Email)] = "Адрес электронной почты уже зарегистрирован.";
+                val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
 
-            return result.ToList();
+            val.ThrowIfInvalid();
         }
 
         /// <summary>
@@ -192,8 +194,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         private string GetGravatarUrl(string email)
         {
             var cleanEmail = (email ?? "").ToLowerInvariant().Trim();
-            var md5 = StringHelper.Md5(cleanEmail);
-            return "https://www.gravatar.com/avatar/" + md5;
+            return "https://www.gravatar.com/avatar/" + Md5(cleanEmail);
         }
 
         /// <summary>
@@ -205,6 +206,24 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return new FuzzyDate(date).ToString();
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns the MD5 hash of a string.
+        /// </summary>
+        private static string Md5(string str)
+        {
+            using(var md5 = MD5.Create())
+            {
+                var input = Encoding.UTF8.GetBytes(str);
+                var output = md5.ComputeHash(input);
+
+                var sb = new StringBuilder();
+                foreach(var b in output)
+                    sb.Append(b.ToString("x2"));
+
+                return sb.ToString();
+            }
         }
 
         #endregion

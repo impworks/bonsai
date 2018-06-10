@@ -5,7 +5,7 @@ using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
-using Bonsai.Code.Tools;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,17 +28,15 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<DashboardVM> GetDashboardAsync()
         {
-            var pagesTask = GetLastUpdatedPagesAsync(5);
-            var mediaTask = GetLastUploadedMediaAsync(5);
-            var usersTask = GetNewUsersAsync();
-
-            await Task.WhenAll(pagesTask, mediaTask, usersTask).ConfigureAwait(false);
+            var pages = await GetLastUpdatedPagesAsync(5).ConfigureAwait(false);
+            var media = await GetLastUploadedMediaAsync(5).ConfigureAwait(false);
+            var users = await GetNewUsersAsync().ConfigureAwait(false);
 
             return new DashboardVM
             {
-                UpdatedPages = pagesTask.Result,
-                UploadedMedia = mediaTask.Result,
-                NewUsers = usersTask.Result
+                UpdatedPages = pages,
+                UploadedMedia = media,
+                NewUsers = users
             };
         }
 

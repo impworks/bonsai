@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text;
-using Newtonsoft.Json;
 
-namespace Bonsai.Code.Tools
+namespace Bonsai.Code.Utils.Date
 {
     /// <summary>
     /// A range between two fuzzy dates.

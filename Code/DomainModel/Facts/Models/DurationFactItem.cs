@@ -1,4 +1,4 @@
-﻿using Bonsai.Code.Tools;
+﻿using Bonsai.Code.Utils.Date;
 
 namespace Bonsai.Code.DomainModel.Facts.Models
 {
