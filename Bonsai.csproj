@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.0" />
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Impworks.Utils" Version="1.0.29" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />

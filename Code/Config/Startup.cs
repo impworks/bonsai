@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using AutoMapper;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Auth;
+using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
+using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Date;
@@ -59,6 +64,7 @@ namespace Bonsai.Code.Config
             ConfigureDatabaseServices(services);
             ConfigureAuthServices(services);
             ConfigureElasticServices(services);
+            ConfigureAutomapper(services);
 
             services.AddTransient<MarkdownService>();
             services.AddTransient<AppConfigService>();
@@ -164,7 +170,7 @@ namespace Bonsai.Code.Config
                     p.Requirements.Add(new AuthRequirement());
                 });
 
-                opts.AddPolicy(AdminAuthRequirement.Name, p => { p.RequireRole(RoleNames.AdminRole, RoleNames.EditorRole); });
+                opts.AddPolicy(AdminAuthRequirement.Name, p => { p.RequireRole(nameof(UserRole.Admin), nameof(UserRole.Editor)); });
             });
 
             services.AddScoped<IAuthorizationHandler, AuthHandler>();
@@ -224,6 +230,40 @@ namespace Bonsai.Code.Config
 
             services.AddScoped(s => new ElasticClient(settings));
             services.AddScoped<ElasticService>();
+        }
+
+        /// <summary>
+        /// Registers Automapper.
+        /// </summary>
+        private void ConfigureAutomapper(IServiceCollection services)
+        {
+            var types = Assembly.GetExecutingAssembly()
+                                .GetTypes()
+                                .Where(x => x.IsClass
+                                            && !x.IsAbstract
+                                            && x.GetInterfaces().Any(y => y == typeof(IMapped)))
+                                .ToList();
+
+            services.AddAutoMapper(opts =>
+            {
+                opts.CreateProfile("Default", p =>
+                {
+                    foreach (var type in types)
+                    {
+                        try
+                        {
+                            var t = (IMapped) Activator.CreateInstance(type);
+                            t.Configure(p);
+                        }
+                        catch
+                        {
+                            // do nothing
+                        }
+                    }
+                });
+            });
+
+            Mapper.AssertConfigurationIsValid();
         }
     }
 }

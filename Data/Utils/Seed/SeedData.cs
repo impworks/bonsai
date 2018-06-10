@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Data.Models;
+using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Data.Utils.Seed
@@ -110,9 +112,8 @@ namespace Bonsai.Data.Utils.Seed
 
             if (!db.Roles.Any())
             {
-                AddRole(RoleNames.UserRole);
-                AddRole(RoleNames.EditorRole);
-                AddRole(RoleNames.AdminRole);
+                foreach (var role in EnumHelper.GetEnumValues<UserRole>())
+                    AddRole(role.ToString());
 
                 db.SaveChanges();
             }

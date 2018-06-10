@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Menu;
+using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace Bonsai.Areas.Admin.Components
                 )
             );
 
-            if (roles.Contains(RoleNames.AdminRole))
+            if (roles.Contains(nameof(UserRole.Admin)))
             {
                 groups.Add(
                     new MenuGroupVM(

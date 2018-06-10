@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AutoMapper;
+using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Validation;
@@ -21,16 +23,18 @@ namespace Bonsai.Areas.Front.Logic.Auth
     /// </summary>
     public class AuthService
     {
-        public AuthService(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, AppDbContext db)
+        public AuthService(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, AppDbContext db, IMapper mapper)
         {
             _signMgr = signInManager;
             _userMgr = userManager;
             _db = db;
+            _mapper = mapper;
         }
 
         private readonly SignInManager<AppUser> _signMgr;
         private readonly UserManager<AppUser> _userMgr;
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Attempts to authenticate the user.
@@ -85,24 +89,12 @@ namespace Bonsai.Areas.Front.Logic.Auth
         public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
             await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
-            var user = new AppUser
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = vm.Email,
-                UserName = Regex.Replace(vm.Email, "[^a-z0-9]", ""),
-                FirstName = vm.FirstName,
-                MiddleName = vm.MiddleName,
-                LastName = vm.LastName,
-                Birthday = vm.Birthday,
-            };
-            var roles = new List<string> {RoleNames.UserRole};
 
             var isFirstUser = (await _db.Users.AnyAsync().ConfigureAwait(false)) == false;
-            if (isFirstUser)
-            {
-                user.IsValidated = true;
-                roles.Add(RoleNames.AdminRole);
-            }
+
+            var user = _mapper.Map<AppUser>(vm);
+            user.Id = Guid.NewGuid().ToString();
+            user.IsValidated = isFirstUser;
 
             var createResult = await _userMgr.CreateAsync(user).ConfigureAwait(false);
             if (!createResult.Succeeded)
@@ -114,7 +106,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
             await _userMgr.AddLoginAsync(user, login).ConfigureAwait(false);
 
-            await _userMgr.AddToRolesAsync(user, roles).ConfigureAwait(false);
+            await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.User)).ConfigureAwait(false);
 
             await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
 
@@ -139,7 +131,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return null;
 
             var roles = await _userMgr.GetRolesAsync(user).ConfigureAwait(false);
-            var isAdmin = roles.Contains(RoleNames.AdminRole) || roles.Contains(RoleNames.EditorRole);
+            var isAdmin = roles.Contains(nameof(UserRole.Admin)) || roles.Contains(nameof(UserRole.Editor));
 
             return new UserVM
             {

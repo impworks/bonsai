@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
@@ -17,14 +19,16 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class UserManagerService
     {
-        public UserManagerService(AppDbContext db, UserManager<AppUser> userMgr)
+        public UserManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper)
         {
             _db = db;
             _userMgr = userMgr;
+            _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
         private readonly UserManager<AppUser> _userMgr;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Returns the list of all registered users.
@@ -65,11 +69,29 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
-        /// Confirms user validation.
+        /// Retrieves the default values for an update operation.
         /// </summary>
-        public async Task ValidateAsync(ValidateUserVM request)
+        public async Task<UpdateUserVM> RequestUpdateAsync(string id)
         {
-            await CheckValidateRequestAsync(request).ConfigureAwait(false);
+            var user = await _db.Users
+                                .GetAsync(x => x.Id == id, "Пользователь не найден")
+                                .ConfigureAwait(false);
+
+            var vm = _mapper.Map<UpdateUserVM>(user);
+
+            var roles = await _userMgr.GetRolesAsync(user).ConfigureAwait(false);
+            if (roles.Count > 0 && Enum.TryParse<UserRole>(roles.First(), out var role))
+                vm.Role = role;
+
+            return vm;
+        }
+
+        /// <summary>
+        /// Updates the user.
+        /// </summary>
+        public async Task UpdateAsync(UpdateUserVM request)
+        {
+            await ValidateUpdateRequestAsync(request).ConfigureAwait(false);
 
             var user = await _db.Users
                                 .GetAsync(x => x.Id == request.Id, "Пользователь не найден")
@@ -78,14 +100,11 @@ namespace Bonsai.Areas.Admin.Logic
             if(user.IsValidated)
                 throw new OperationException("Пользователь уже проверен");
 
-            user.FirstName = request.FirstName;
-            user.MiddleName = request.MiddleName;
-            user.LastName = request.LastName;
-            user.Birthday = request.Birthday;
-
+            _mapper.Map(request, user);
             user.IsValidated = true;
 
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            var allRoles = EnumHelper.GetEnumValues<UserRole>().Select(x => x.ToString());
+            await _userMgr.RemoveFromRolesAsync(user, allRoles).ConfigureAwait(false);
 
             var role = request.Role.ToString();
             await _userMgr.AddToRoleAsync(user, role).ConfigureAwait(false);
@@ -101,8 +120,6 @@ namespace Bonsai.Areas.Admin.Logic
                                 .ConfigureAwait(false);
 
             _db.Remove(user);
-
-            await _db.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #region Private helpers
@@ -110,7 +127,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Performs additional checks on the request.
         /// </summary>
-        private async Task CheckValidateRequestAsync(ValidateUserVM request)
+        private async Task ValidateUpdateRequestAsync(UpdateUserVM request)
         {
             var val = new Validator();
 
