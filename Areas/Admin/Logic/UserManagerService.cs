@@ -48,6 +48,7 @@ namespace Bonsai.Areas.Admin.Logic
                                         .ConfigureAwait(false);
 
             var users = await _db.Users
+                                 .Where(x => x.LockoutEnd < DateTimeOffset.MaxValue)
                                  .ProjectTo<UserTitleVM>()
                                  .OrderBy(x => x.FullName)
                                  .ToListAsync()
@@ -71,6 +72,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<UpdateUserVM> RequestUpdateAsync(string id)
         {
             var user = await _db.Users
+                                .AsNoTracking()
                                 .GetAsync(x => x.Id == id, "Пользователь не найден")
                                 .ConfigureAwait(false);
 
@@ -108,15 +110,37 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
+        /// Retrieves the information about user removal.
+        /// </summary>
+        public async Task<RemoveUserVM> RequestRemoveAsync(string id)
+        {
+            var user = await _db.Users
+                                .AsNoTracking()
+                                .GetAsync(x => x.Id == id, "Пользователь не найден")
+                                .ConfigureAwait(false);
+
+            return _mapper.Map<RemoveUserVM>(user);
+        }
+
+        /// <summary>
         /// Removes the user account.
         /// </summary>
         public async Task RemoveAsync(string id)
         {
             var user = await _db.Users
+                                .Include(x => x.Changes)
+                                .Include(x => x.Page)
                                 .GetAsync(x => x.Id == id, "Пользователь не найден")
                                 .ConfigureAwait(false);
 
-            _db.Remove(user);
+            if (user.Page == null && user.Changes.Count == 0)
+            {
+                await _userMgr.DeleteAsync(user).ConfigureAwait(false);
+                return;
+            }
+
+            user.LockoutEnabled = true;
+            user.LockoutEnd = DateTimeOffset.MaxValue;
         }
 
         #region Private helpers

@@ -36,6 +36,28 @@ namespace Bonsai.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// Displays the remove confirmation for a user.
+        /// </summary>
+        [HttpGet]
+        [Route("remove")]
+        public async Task<ActionResult> Remove(string id)
+        {
+            var vm = await _users.RequestRemoveAsync(id).ConfigureAwait(false);
+            return View(vm);
+        }
+
+        /// <summary>
+        /// Displays the remove confirmation for a user.
+        /// </summary>
+        [HttpPost]
+        [Route("remove")]
+        public async Task<ActionResult> Remove(string id, bool confirm)
+        {
+            await _users.RemoveAsync(id).ConfigureAwait(false);
+            return RedirectToSuccess("Пользователь удален");
+        }
+
+        /// <summary>
         /// Displays the update form for a user.
         /// </summary>
         [HttpGet]
