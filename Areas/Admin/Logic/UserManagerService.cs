@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
@@ -47,11 +48,7 @@ namespace Bonsai.Areas.Admin.Logic
                                         .ConfigureAwait(false);
 
             var users = await _db.Users
-                                 .Select(x => new UserTitleVM
-                                 {
-                                     Id = x.Id,
-                                     FullName = x.FirstName + " " + x.LastName
-                                 })
+                                 .ProjectTo<UserTitleVM>()
                                  .OrderBy(x => x.FullName)
                                  .ToListAsync()
                                  .ConfigureAwait(false);

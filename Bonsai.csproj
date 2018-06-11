@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Utils\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Utils\Seed\Media\" />
     <Folder Include="wwwroot\media\" />

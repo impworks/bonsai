@@ -1,9 +1,13 @@
-﻿namespace Bonsai.Areas.Admin.ViewModels.User
+﻿using AutoMapper;
+using Bonsai.Code.Infrastructure;
+using Bonsai.Data.Models;
+
+namespace Bonsai.Areas.Admin.ViewModels.User
 {
     /// <summary>
     /// Brief information about the user.
     /// </summary>
-    public class UserTitleVM
+    public class UserTitleVM: IMapped
     {
         /// <summary>
         /// Surrogate ID.
@@ -19,5 +23,12 @@
         /// The user's role with richest access level.
         /// </summary>
         public UserRole? Role { get; set; }
+
+        public void Configure(IProfileExpression profile)
+        {
+            profile.CreateMap<AppUser, UserTitleVM>()
+                   .ForMember(x => x.Role, opt => opt.Ignore())
+                   .ForMember(x => x.FullName, opt => opt.ResolveUsing(y => y.FirstName + " " + y.LastName));
+        }
     }
 }
