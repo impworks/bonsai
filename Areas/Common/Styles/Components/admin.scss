@@ -1,3 +1,35 @@
 ﻿.side-menu {
     margin-top: 1.5rem;
 }
+
+.admin-row {
+    .admin-row-icon {
+        img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .admin-row-actions {
+        white-space: nowrap;
+        padding: 8px 12px;
+    }
+
+    .admin-row-actions a {
+        opacity: 0;
+        font-size: 0;
+        display: inline-block;
+
+        &:not(:last-of-type) {
+            margin-right: 6px;
+        }
+
+        .fa {
+            font-size: 24px;
+        }
+    }
+
+    &:hover .admin-row-actions a {
+        opacity: 1;
+    }
+}

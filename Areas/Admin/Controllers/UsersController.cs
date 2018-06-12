@@ -4,6 +4,8 @@ using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
+using Bonsai.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -12,16 +14,18 @@ namespace Bonsai.Areas.Admin.Controllers
     /// Controller for managing users.
     /// </summary>
     [Area("Admin")]
-    [Route("users")]
+    [Route("admin/users")]
     public class UsersController: AdminControllerBase
     {
-        public UsersController(UserManagerService users, AppDbContext db)
+        public UsersController(UserManagerService users, UserManager<AppUser> userMgr, AppDbContext db)
         {
             _users = users;
+            _userMgr = userMgr;
             _db = db;
         }
 
         private readonly UserManagerService _users;
+        private readonly UserManager<AppUser> _userMgr;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -43,6 +47,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Remove(string id)
         {
             var vm = await _users.RequestRemoveAsync(id).ConfigureAwait(false);
+            ViewBag.IsSelf = _userMgr.GetUserId(User) == id;
             return View(vm);
         }
 
@@ -53,7 +58,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(string id, bool confirm)
         {
-            await _users.RemoveAsync(id).ConfigureAwait(false);
+            await _users.RemoveAsync(id, User).ConfigureAwait(false);
             return RedirectToSuccess("Пользователь удален");
         }
 
@@ -65,8 +70,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Update(string id)
         {
             var vm = await _users.RequestUpdateAsync(id).ConfigureAwait(false);
-            ViewBag.UserRoles = FormHelper.GetEnumSelectList(vm.Role);
-            return View(vm);
+            return ViewUpdateForm(vm);
         }
 
         /// <summary>
@@ -77,11 +81,11 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Update(UpdateUserVM vm)
         {
             if (!ModelState.IsValid)
-                return View(vm);
+                return ViewUpdateForm(vm);
 
             try
             {
-                await _users.UpdateAsync(vm).ConfigureAwait(false);
+                await _users.UpdateAsync(vm, User).ConfigureAwait(false);
                 await _db.SaveChangesAsync().ConfigureAwait(false);
 
                 return RedirectToSuccess("Пользователь обновлен");
@@ -89,8 +93,23 @@ namespace Bonsai.Areas.Admin.Controllers
             catch (ValidationException ex)
             {
                 SetModelState(ex);
-                return View(vm);
+                return ViewUpdateForm(vm);
             }
         }
+
+        #region Helpers
+
+        /// <summary>
+        /// Displays the UpdateUser form.
+        /// </summary>
+        private ActionResult ViewUpdateForm(UpdateUserVM vm)
+        {
+            ViewBag.IsSelf = _users.IsSelf(vm.Id, User);
+            ViewBag.UserRoles = ViewHelper.GetEnumSelectList(vm.Role);
+
+            return View("Update", vm);
+        }
+
+        #endregion
     }
 }

@@ -30,9 +30,9 @@ var config = {
     },
     content: {
         styles: {
-            root: './Styles/style.scss',
+            root: './Areas/Common/Styles/style.scss',
             all: [
-                './Styles/**/*.scss'
+                './Areas/Common/Styles/**/*.scss'
             ]
         },
         scripts: {

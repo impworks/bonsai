@@ -10,6 +10,7 @@ using AutoMapper;
 using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -136,7 +137,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             return new UserVM
             {
                 Name = user.FirstName + " " + user.LastName,
-                Avatar = GetGravatarUrl(user.Email),
+                Avatar = ViewHelper.GetGravatarUrl(user.Email),
                 PageKey = user.Page?.Key,
                 IsAdministrator = isAdmin,
                 IsValidated = user.IsValidated
@@ -181,15 +182,6 @@ namespace Bonsai.Areas.Front.Logic.Auth
         }
 
         /// <summary>
-        /// Returns the Gravatar URL for a given email.
-        /// </summary>
-        private string GetGravatarUrl(string email)
-        {
-            var cleanEmail = (email ?? "").ToLowerInvariant().Trim();
-            return "https://www.gravatar.com/avatar/" + Md5(cleanEmail);
-        }
-
-        /// <summary>
         /// Formats the date according to local format.
         /// </summary>
         private string FormatDate(string isoDate)
@@ -198,24 +190,6 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return new FuzzyDate(date).ToString();
 
             return null;
-        }
-
-        /// <summary>
-        /// Returns the MD5 hash of a string.
-        /// </summary>
-        private static string Md5(string str)
-        {
-            using(var md5 = MD5.Create())
-            {
-                var input = Encoding.UTF8.GetBytes(str);
-                var output = md5.ComputeHash(input);
-
-                var sb = new StringBuilder();
-                foreach(var b in output)
-                    sb.Append(b.ToString("x2"));
-
-                return sb.ToString();
-            }
         }
 
         #endregion

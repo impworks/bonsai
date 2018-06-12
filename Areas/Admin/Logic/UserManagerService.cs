@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -36,11 +37,8 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<UserListVM> GetUsersListAsync()
         {
-            var roleDescrs = EnumHelper.GetEnumDescriptions<UserRole>()
-                                       .ToDictionary(x => x.Value, x => x.Key);
-
             var roles = await _db.Roles
-                                 .ToDictionaryAsync(x => x.Id, x => roleDescrs[x.Name])
+                                 .ToDictionaryAsync(x => x.Id, x => Enum.Parse<UserRole>(x.Name))
                                  .ConfigureAwait(false);
 
             var userBindings = await _db.UserRoles
@@ -48,7 +46,7 @@ namespace Bonsai.Areas.Admin.Logic
                                         .ConfigureAwait(false);
 
             var users = await _db.Users
-                                 .Where(x => x.LockoutEnd < DateTimeOffset.MaxValue)
+                                 .Where(x => x.LockoutEnd != DateTimeOffset.MaxValue)
                                  .ProjectTo<UserTitleVM>()
                                  .OrderBy(x => x.FullName)
                                  .ToListAsync()
@@ -88,7 +86,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the user.
         /// </summary>
-        public async Task UpdateAsync(UpdateUserVM request)
+        public async Task UpdateAsync(UpdateUserVM request, ClaimsPrincipal currUser)
         {
             await ValidateUpdateRequestAsync(request).ConfigureAwait(false);
 
@@ -96,17 +94,17 @@ namespace Bonsai.Areas.Admin.Logic
                                 .GetAsync(x => x.Id == request.Id, "Пользователь не найден")
                                 .ConfigureAwait(false);
 
-            if(user.IsValidated)
-                throw new OperationException("Пользователь уже проверен");
-
             _mapper.Map(request, user);
             user.IsValidated = true;
 
-            var allRoles = EnumHelper.GetEnumValues<UserRole>().Select(x => x.ToString());
-            await _userMgr.RemoveFromRolesAsync(user, allRoles).ConfigureAwait(false);
+            if(!IsSelf(request.Id, currUser))
+            {
+                var allRoles = EnumHelper.GetEnumValues<UserRole>().Select(x => x.ToString());
+                await _userMgr.RemoveFromRolesAsync(user, allRoles).ConfigureAwait(false);
 
-            var role = request.Role.ToString();
-            await _userMgr.AddToRoleAsync(user, role).ConfigureAwait(false);
+                var role = request.Role.ToString();
+                await _userMgr.AddToRoleAsync(user, role).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -125,8 +123,11 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Removes the user account.
         /// </summary>
-        public async Task RemoveAsync(string id)
+        public async Task RemoveAsync(string id, ClaimsPrincipal currUser)
         {
+            if(IsSelf(id, currUser))
+                throw new OperationException("Нельзя удалить собственную учетную запись");
+
             var user = await _db.Users
                                 .Include(x => x.Changes)
                                 .Include(x => x.Page)
@@ -141,6 +142,15 @@ namespace Bonsai.Areas.Admin.Logic
 
             user.LockoutEnabled = true;
             user.LockoutEnd = DateTimeOffset.MaxValue;
+        }
+
+        /// <summary>
+        /// Checks if the specified ID belongs to current user.
+        /// </summary>
+        public bool IsSelf(string id, ClaimsPrincipal principal)
+        {
+            return principal != null
+                   && _userMgr.GetUserId(principal) == id;
         }
 
         #region Private helpers

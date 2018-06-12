@@ -66,17 +66,17 @@ namespace Bonsai.Code.Config
             ConfigureElasticServices(services);
             ConfigureAutomapper(services);
 
-            services.AddTransient<MarkdownService>();
-            services.AddTransient<AppConfigService>();
-            services.AddTransient<RelationsPresenterService>();
-            services.AddTransient<PagePresenterService>();
-            services.AddTransient<MediaPresenterService>();
-            services.AddTransient<CalendarPresenterService>();
-            services.AddTransient<SearchPresenterService>();
-            services.AddTransient<AuthService>();
+            services.AddScoped<MarkdownService>();
+            services.AddScoped<AppConfigService>();
+            services.AddScoped<RelationsPresenterService>();
+            services.AddScoped<PagePresenterService>();
+            services.AddScoped<MediaPresenterService>();
+            services.AddScoped<CalendarPresenterService>();
+            services.AddScoped<SearchPresenterService>();
+            services.AddScoped<AuthService>();
 
-            services.AddTransient<DashboardPresenterService>();
-            services.AddTransient<UserManagerService>();
+            services.AddScoped<DashboardPresenterService>();
+            services.AddScoped<UserManagerService>();
         }
 
         /// <summary>
@@ -206,7 +206,6 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureDatabaseServices(IServiceCollection services)
         {
-            services.AddTransient<AppDbContext>();
             services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.GetConnectionString("Database")));
 
             services.AddIdentity<AppUser, IdentityRole>()

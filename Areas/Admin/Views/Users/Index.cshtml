@@ -1,0 +1,51 @@
+﻿@using Bonsai.Areas.Admin.ViewModels.User
+@using Bonsai.Code.Utils.Helpers
+@model UserListVM
+@{
+    ViewBag.Title = "Список пользователей";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>Список пользователей</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th width="1px"></th>
+            <th width="65%">Имя</th>
+            <th width="20%">E-mail</th>
+            <th width="15%">Доступ</th>
+            <th width="1px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+        <tr class="admin-row">
+            <td class="admin-row-icon">
+                <img src="@ViewHelper.GetGravatarUrl(user.Email)" />
+            </td>
+            <td>@user.FullName</td>
+            <td>@user.Email</td>
+            <td>
+                @if(user.Role == null)
+                {<span class="badge badge-danger">Новый</span> }
+                else if(user.Role == UserRole.Admin)
+                { <span class="badge badge-success">Администратор</span> }
+                else if(user.Role == UserRole.Editor)
+                { <span class="badge badge-secondary">Редактор</span>}
+                else if(user.Role == UserRole.User)
+                { <span class="badge badge-light">Читатель</span>}
+            </td>
+            <td class="admin-row-actions">
+                <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})">
+                    <span class="fa fa-pencil-square" title="Редактировать"></span>
+                </a>
+                <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = user.Id})">
+                    <span class="fa fa-remove" title="Удалить"></span>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
