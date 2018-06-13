@@ -22,7 +22,7 @@ namespace Bonsai.Data.Utils.Seed
             // warning! this REMOVES ALL DATA AND FILES
             ClearPreviousData(db, elastic);
 
-            EnsureIdentityItemsSeeded(db);
+            EnsureSystemItemsSeeded(db);
 
             var ctx = new SeedContext(db, elastic);
 
@@ -104,9 +104,9 @@ namespace Bonsai.Data.Utils.Seed
         }
 
         /// <summary>
-        /// Adds required Identity-related records.
+        /// Adds required records (identity, config, etc.).
         /// </summary>
-        private static void EnsureIdentityItemsSeeded(AppDbContext db)
+        private static void EnsureSystemItemsSeeded(AppDbContext db)
         {
             void AddRole(string name) => db.Roles.Add(new IdentityRole {Name = name, NormalizedName = name.ToUpper()});
 
@@ -114,9 +114,19 @@ namespace Bonsai.Data.Utils.Seed
             {
                 foreach (var role in EnumHelper.GetEnumValues<UserRole>())
                     AddRole(role.ToString());
-
-                db.SaveChanges();
             }
+
+            if (!db.Config.Any())
+            {
+                db.Config.Add(new AppConfig
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Bonsai",
+                    AllowGuests = false
+                });
+            }
+
+            db.SaveChanges();
         }
     }
 }

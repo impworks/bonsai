@@ -77,6 +77,7 @@ namespace Bonsai.Code.Config
 
             services.AddScoped<DashboardPresenterService>();
             services.AddScoped<UserManagerService>();
+            services.AddScoped<AppConfigManagerService>();
         }
 
         /// <summary>
