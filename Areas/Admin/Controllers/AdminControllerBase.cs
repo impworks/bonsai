@@ -49,18 +49,5 @@ namespace Bonsai.Areas.Admin.Controllers
 
             return Redirect(DefaultActionUrl);
         }
-
-        /// <summary>
-        /// Returns the one-time message.
-        /// </summary>
-        protected OperationResultMessage TryGetMessage()
-        {
-            var msg = Session.Get<OperationResultMessage>();
-
-            if(msg != null)
-                Session.Remove<OperationResultMessage>();
-
-            return msg;
-        }
     }
 }

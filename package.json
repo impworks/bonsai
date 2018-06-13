@@ -20,6 +20,7 @@
     "gijgo": "^1.9.6",
     "jquery": "^3.2.1",
     "magnific-popup": "^1.1.0",
-    "popper.js": "^1.14.3"
+    "popper.js": "^1.14.3",
+    "toastr": "^2.1.4"
   }
 }

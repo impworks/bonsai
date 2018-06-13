@@ -1,0 +1,5 @@
+﻿@model Bonsai.Areas.Admin.Utils.OperationResultMessage
+
+<script id="operation-message" language="text/data" success="@Model.IsSuccess">
+    @Html.Raw(Model.Message)    
+</script>

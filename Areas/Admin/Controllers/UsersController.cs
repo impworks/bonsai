@@ -35,7 +35,6 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Index()
         {
             var users = await _users.GetUsersListAsync().ConfigureAwait(false);
-            ViewBag.Message = TryGetMessage();
             return View(users);
         }
 

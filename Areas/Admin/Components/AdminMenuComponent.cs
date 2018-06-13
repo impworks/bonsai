@@ -57,7 +57,7 @@ namespace Bonsai.Areas.Admin.Components
             foreach (var item in groups.SelectMany(x => x.Items))
                 item.IsSelected = url.StartsWithSegments(item.Url);
 
-            return View("~/Areas/Admin/Views/Menu/Index.cshtml", groups);
+            return View("~/Areas/Admin/Views/Components/AdminMenu.cshtml", groups);
         }
     }
 }

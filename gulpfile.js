@@ -21,7 +21,8 @@ var config = {
             './node_modules/magnific-popup/dist/jquery.magnific-popup.js',
             './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
             './node_modules/gijgo/js/gijgo.js',
-            './node_modules/gijgo/js/messages/messages.ru-ru.js'
+            './node_modules/gijgo/js/messages/messages.ru-ru.js',
+            './node_modules/toastr/toastr.js'
         ],
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
