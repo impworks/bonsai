@@ -3,11 +3,12 @@
 }
 
 .admin-row {
-    .admin-row-icon {
-        img {
-            width: 24px;
-            height: 24px;
-        }
+    img, .image {
+        width: 24px;
+        height: 24px;
+
+        display: inline-block;
+        vertical-align: bottom;
     }
 
     .admin-row-actions {

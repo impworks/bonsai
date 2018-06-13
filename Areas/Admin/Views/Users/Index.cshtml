@@ -11,7 +11,6 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th width="1px"></th>
             <th width="65%">Имя</th>
             <th width="20%">E-mail</th>
             <th width="15%">Доступ</th>
@@ -22,10 +21,10 @@
         @foreach (var user in Model.Users)
         {
         <tr class="admin-row">
-            <td class="admin-row-icon">
+            <td>
                 <img src="@ViewHelper.GetGravatarUrl(user.Email)" />
+                @user.FullName
             </td>
-            <td>@user.FullName</td>
             <td>@user.Email</td>
             <td>
                 @if(user.Role == null)

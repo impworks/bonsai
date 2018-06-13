@@ -1,9 +1,103 @@
-﻿@{
+﻿@using Bonsai.Code.Utils.Helpers
+@model Bonsai.Areas.Admin.ViewModels.Dashboard.DashboardVM
+@addTagHelper *, Bonsai
+@{
     ViewBag.Title = "Панель администрации";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 }
 
-<h1>@ViewBag.Title</h1>
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Обновленные страницы</h3>
+        @if(Model.UpdatedPages.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Название</th>
+                    <th width="1px"></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach(var p in Model.UpdatedPages)
+                {
+                    <tr class="admin-row">
+                        <td>
+                            <page-image image="@p.MainPhotoPath" type="@p.Type"></page-image>
+                            <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank" title="Обновлено: @p.UpdatedDate.ToLongDateString()">@p.Title</a>
+                        </td>
+                        <td class="admin-row-actions">
+                            <a href="@Url.Action("Update", "Pages", new {area = "Admin", key = p.Key})">
+                                <span class="fa fa-pencil-square" title="Редактировать"></span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">Не добавлено ни одной страницы.</div>
+        }
+    </div>
 
-<p>Добро пожаловать в администрационную панель!</p>
-<p>Выберите раздел из бокового меню.</p>
+    <div class="col-sm-6">
+        <h3>Пользователи</h3>
+        @if(Model.NewUsers.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Имя</th>
+                    <th width="1px"></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach(var u in Model.NewUsers)
+                {
+                    <tr class="admin-row">
+                        <td>
+                            <img src="@ViewHelper.GetGravatarUrl(u.Email)" />
+                            @u.FullName
+                        </td>
+                        <td class="admin-row-actions">
+                            <a href="@Url.Action("Update", "Users", new {area = "Admin", id = u.Id})">
+                                <span class="fa fa-check-square" title="Подтвердить"></span>
+                            </a>
+                            <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = u.Id})">
+                                <span class="fa fa-remove" title="Удалить"></span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">Новых регистраций нет.</div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Медиа</h3>
+        @if(Model.UploadedMedia.Any())
+        {
+            <ul class="list-inline">
+                @foreach(var m in Model.UploadedMedia)
+                {
+                    <li class="list-inline-item">
+                        <div class="media-thumb-wrapper">
+                            <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = m.MediaKey})" class="media-link" data-media="@m.MediaKey">
+                                <img src="@Url.Content(m.ThumbnailUrl)" alt="@(m.UploadDate.LocalDateTime.ToShortDateString())" />
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
