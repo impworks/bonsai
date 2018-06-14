@@ -250,7 +250,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Key = page.Key,
                 Title = page.Title,
-                Type = page.PageType,
+                Type = page.Type,
                 MainPhotoPath = page.MainPhotoPath
             };
         }

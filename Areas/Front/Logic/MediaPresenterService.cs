@@ -9,7 +9,6 @@ using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
-using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
@@ -77,7 +76,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Title = tag.Object?.Title ?? tag.ObjectTitle,
                 Key = tag.Object?.Key,
-                Type = tag.Object?.PageType ?? PageType.Other
+                Type = tag.Object?.Type ?? PageType.Other
             };
         }
 
@@ -152,9 +151,9 @@ namespace Bonsai.Areas.Front.Logic
             return new MediaThumbnailVM
             {
                 Type = media.Type,
-                MediaKey = media.Key,
+                Key = media.Key,
                 ThumbnailUrl = GetSizedMediaPath(media.FilePath, size),
-                Date = FuzzyDate.TryParse(media.Date)
+                OriginDate = FuzzyDate.TryParse(media.Date)
             };
         }
 

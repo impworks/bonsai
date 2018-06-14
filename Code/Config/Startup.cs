@@ -78,6 +78,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<DashboardPresenterService>();
             services.AddScoped<UserManagerService>();
             services.AddScoped<AppConfigManagerService>();
+            services.AddScoped<PagesManagerService>();
         }
 
         /// <summary>
@@ -241,7 +242,8 @@ namespace Bonsai.Code.Config
                                 .GetTypes()
                                 .Where(x => x.IsClass
                                             && !x.IsAbstract
-                                            && x.GetInterfaces().Any(y => y == typeof(IMapped)))
+                                            && x.GetInterfaces().Any(y => y == typeof(IMapped))
+                                            && x.GetMethods().Any(y => y.Name == nameof(IMapped.Configure) && y.DeclaringType == x))
                                 .ToList();
 
             services.AddAutoMapper(opts =>

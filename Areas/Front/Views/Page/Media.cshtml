@@ -5,7 +5,7 @@
     ViewBag.Title = Model.Title + " &mdash; Медиа";
 
     var groups = Model.Media
-                      .GroupBy(x => x.Date?.ReadableYear)
+                      .GroupBy(x => x.OriginDate?.ReadableYear)
                       .OrderByDescending(x => x.Key);
 }
 
@@ -17,12 +17,12 @@
         <div class="media-thumb-group">
             <h3 id="@key">@key</h3>
             <ul class="list-inline">
-                @foreach (var elem in group.OrderByDescending(x => x.Date))
+                @foreach (var elem in group.OrderByDescending(x => x.OriginDate))
                 {
                     <li class="list-inline-item">
                         <div class="media-thumb-wrapper">
-                            <a href="@Url.Action("ViewMedia", "Media", new { key = elem.MediaKey })" class="media-thumb-link" data-media="@elem.MediaKey">
-                                <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@(elem.Date?.ShortReadableDate ?? "Дата неизвестна"))" />
+                            <a href="@Url.Action("ViewMedia", "Media", new { key = elem.Key })" class="media-thumb-link" data-media="@elem.Key">
+                                <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@(elem.OriginDate?.ShortReadableDate ?? "Дата неизвестна"))" />
                             </a>
                         </div>
                     </li>

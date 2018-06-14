@@ -9,7 +9,7 @@ namespace Bonsai.Code.Utils.Helpers
     /// <summary>
     /// Extensions for the IQueryable interface.
     /// </summary>
-    public static class IQueryableExtensions
+    public static class QueryableExtensions
     {
         /// <summary>
         /// Finds the object by a predicate or throws an OperationException.

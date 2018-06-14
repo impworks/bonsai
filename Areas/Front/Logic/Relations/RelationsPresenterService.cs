@@ -149,7 +149,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         private IEnumerable<RelationGroupVM> GetSpouseGroups(RelationContext ctx, Guid pageId)
         {
             var page = ctx.Pages[pageId];
-            if (page.PageType != PageType.Person && page.PageType != PageType.Pet)
+            if (page.Type != PageType.Person && page.Type != PageType.Pet)
                 yield break;
 
             var spouses = ctx.Relations[pageId]

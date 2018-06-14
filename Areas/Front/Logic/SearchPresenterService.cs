@@ -40,7 +40,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var details = await _db.Pages
                                    .Where(x => ids.Contains(x.Id))
-                                   .Select(x => new { x.Id, x.MainPhoto.FilePath, x.LastUpdateDate, x.PageType })
+                                   .Select(x => new { x.Id, x.MainPhoto.FilePath, x.LastUpdateDate, PageType = x.Type })
                                    .ToDictionaryAsync(x => x.Id, x => x)
                                    .ConfigureAwait(false);
 
@@ -51,7 +51,7 @@ namespace Bonsai.Areas.Front.Logic
                 Type = details[x.Id].PageType,
                 DescriptionExcerpt = x.HighlightedDescription,
                 MainPhotoPath = details[x.Id].FilePath,
-                UpdatedDate = details[x.Id].LastUpdateDate.LocalDateTime,
+                LastUpdateDate = details[x.Id].LastUpdateDate,
             });
 
             return results.ToList();

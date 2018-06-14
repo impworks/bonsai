@@ -11,7 +11,7 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         /// <summary>
         /// Full URL of the media's display page.
         /// </summary>
-        public string MediaKey { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// URL of the media's thumbnail.
@@ -26,6 +26,6 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         /// <summary>
         /// Date of the media's origin.
         /// </summary>
-        public FuzzyDate? Date { get; set; }
+        public FuzzyDate? OriginDate { get; set; }
     }
 }

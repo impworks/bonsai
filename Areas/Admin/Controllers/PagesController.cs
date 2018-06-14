@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.ViewModels.Pages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -22,9 +23,10 @@ namespace Bonsai.Areas.Admin.Controllers
         /// Displays the list of pages.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(PagesListRequestVM request)
         {
-
+            var vm = await _pages.GetPagesAsync(request).ConfigureAwait(false);
+            return View(vm);
         }
     }
 }

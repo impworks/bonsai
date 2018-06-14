@@ -1,0 +1,44 @@
+﻿@using Bonsai.Areas.Admin.ViewModels.Pages
+@addTagHelper *, Bonsai
+@model PagesListVM
+@{
+    ViewBag.Title = "Список пользователей";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>Список страниц</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th width="60%">Название</th>
+            <th width="20%">Создана</th>
+            <th width="20%">Изменена</th>
+            <th width="1px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var p in Model.Items)
+        {
+            <tr class="admin-row">
+                <td>
+                    <page-image image="@p.MainPhotoPath" type="@p.Type"></page-image>
+                    @p.Title
+                </td>
+                <td>@p.CreateDate.LocalDateTime.ToShortDateString()</td>
+                <td>@p.LastUpdateDate.LocalDateTime.ToShortDateString()</td>
+                <td class="admin-row-actions">
+                    <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Key})">
+                        <span class="fa fa-remove" title="Удалить"></span>
+                    </a>
+                    <a href="@Url.Action("History", "Pages", new {area = "Admin", key = p.Key})">
+                        <span class="fa fa-history" title="История изменений"></span>
+                    </a>
+                    <a href="@Url.Action("Update", "Pages", new {area = "Admin", key = p.Key})">
+                        <span class="fa fa-pencil-square" title="Редактировать"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

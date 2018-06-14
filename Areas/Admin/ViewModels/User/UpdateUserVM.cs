@@ -43,7 +43,7 @@ namespace Bonsai.Areas.Admin.ViewModels.User
                    .ForMember(x => x.MiddleName, opt => opt.MapFrom(x => x.MiddleName))
                    .ForMember(x => x.LastName, opt => opt.MapFrom(x => x.LastName))
                    .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
-                   .ForMember(x => x.UserName, opt => opt.ResolveUsing(x => Regex.Replace(x.Email, "[^a-z0-9]", "")))
+                   .ForMember(x => x.UserName, opt => opt.MapFrom(x => Regex.Replace(x.Email, "[^a-z0-9]", "")))
                    .ForAllOtherMembers(x => x.Ignore());
 
             profile.CreateMap<AppUser, UpdateUserVM>()

@@ -83,7 +83,7 @@ namespace Bonsai.Areas.Front.Logic
         {
             vm.Title = page.Title;
             vm.Key = page.Key;
-            vm.Type = page.PageType;
+            vm.Type = page.Type;
 
             vm.InfoBlock = await GetInfoBlockAsync(page).ConfigureAwait(false);            
 
@@ -116,7 +116,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var pageFacts = JObject.Parse(page.Facts);
 
-            foreach (var group in FactDefinitions.Groups[page.PageType])
+            foreach (var group in FactDefinitions.Groups[page.Type])
             {
                 var factsVms = new List<FactModelBase>();
 

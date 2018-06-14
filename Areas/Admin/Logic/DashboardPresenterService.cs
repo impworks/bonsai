@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.User;
-using Bonsai.Areas.Front.Logic;
-using Bonsai.Code.DomainModel.Media;
-using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -50,16 +48,7 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Pages
                             .OrderByDescending(x => x.LastUpdateDate)
                             .Take(count)
-                            .Select(x => new PageTitleExtendedVM
-                            {
-                                Title = x.Title,
-                                Key = x.Key,
-                                Type = x.PageType,
-                                UpdatedDate = x.LastUpdateDate.LocalDateTime,
-                                MainPhotoPath = x.MainPhoto != null
-                                    ? MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small)
-                                    : null
-                            })
+                            .ProjectTo<PageTitleExtendedVM>()
                             .ToListAsync()
                             .ConfigureAwait(false);
         }
@@ -73,14 +62,7 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Media
                             .OrderByDescending(x => x.UploadDate)
                             .Take(count)
-                            .Select(x => new MediaThumbnailExtendedVM
-                            {
-                                Type = x.Type,
-                                MediaKey = x.Key,
-                                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small),
-                                Date = FuzzyDate.TryParse(x.Date),
-                                UploadDate = x.UploadDate
-                            })
+                            .ProjectTo<MediaThumbnailExtendedVM>()
                             .ToListAsync()
                             .ConfigureAwait(false);
         }
@@ -92,11 +74,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return await _db.Users
                             .Where(x => x.IsValidated == false)
-                            .Select(x => new UserTitleVM
-                            {
-                                Id = x.Id,
-                                FullName = x.FirstName + " " + x.LastName
-                            })
+                            .ProjectTo<UserTitleVM>()
                             .OrderBy(x => x.FullName)
                             .ToListAsync()
                             .ConfigureAwait(false);

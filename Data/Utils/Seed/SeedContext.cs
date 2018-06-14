@@ -87,7 +87,7 @@ namespace Bonsai.Data.Utils.Seed
                 Id = Guid.NewGuid(),
                 Title = title,
                 Key = PageHelper.EncodeTitle(title),
-                PageType = type,
+                Type = type,
                 Description = (File.Exists(descrFile) ? File.ReadAllText(descrFile) : descrSource) ?? title,
                 Facts = factsObj.ToString(Formatting.None),
                 CreateDate = DateTimeOffset.Now,
@@ -105,7 +105,7 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public Relation AddRelation(Page source, RelationType type, Page target, string duration = null, Page eventPage = null)
         {
-            if(!RelationHelper.IsRelationAllowed(source.PageType, target.PageType, type))
+            if(!RelationHelper.IsRelationAllowed(source.Type, target.Type, type))
                 throw new ArgumentException("This relation is not allowed!");
 
             if (eventPage != null)
@@ -113,7 +113,7 @@ namespace Bonsai.Data.Utils.Seed
                 if(!RelationHelper.IsRelationEventReferenceAllowed(type))
                     throw new ArgumentException("This relation cannot have an event reference.");
 
-                if(eventPage.PageType != PageType.Event)
+                if(eventPage.Type != PageType.Event)
                     throw new ArgumentException("The related event page must have Event type.");
             }
 
@@ -206,7 +206,7 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public MediaTag AddMediaTag(Media media, Page page, MediaTagType type = MediaTagType.DepictedEntity, string coords = null)
         {
-            var ptype = page.PageType;
+            var ptype = page.Type;
 
             if(type == MediaTagType.DepictedEntity)
                 if(ptype != PageType.Person && ptype != PageType.Pet && ptype != PageType.Other)

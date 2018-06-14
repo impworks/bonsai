@@ -181,8 +181,8 @@ namespace Bonsai.Data.Migrations
                     Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     LastUpdateDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                     MainPhotoId = table.Column<Guid>(type: "uuid", nullable: true),
-                    PageType = table.Column<int>(type: "int4", nullable: false),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    Type = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>
                 {

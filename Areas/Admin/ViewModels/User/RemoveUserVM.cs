@@ -25,7 +25,7 @@ namespace Bonsai.Areas.Admin.ViewModels.User
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<AppUser, RemoveUserVM>()
-                   .ForMember(x => x.FullName, opt => opt.ResolveUsing(y => y.FirstName + " " + y.LastName));
+                   .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName));
         }
     }
 }

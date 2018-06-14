@@ -31,7 +31,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Type of the entity described by this page.
         /// </summary>
-        public PageType PageType { get; set; }
+        public PageType Type { get; set; }
 
         /// <summary>
         /// Free text description of the entity.

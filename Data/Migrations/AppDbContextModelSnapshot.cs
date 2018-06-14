@@ -239,11 +239,11 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<Guid?>("MainPhotoId");
 
-                    b.Property<int>("PageType");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200);
+
+                    b.Property<int>("Type");
 
                     b.HasKey("Id");
 

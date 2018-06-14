@@ -46,7 +46,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                         t.""Id"",
                                         t.""Title"",
                                         t.""Key"",
-                                        t.""PageType"",
+                                        t.""Type"",
                                         t.""BirthDate"",
                                         t.""DeathDate"",
                                         t.""Gender"",
@@ -57,7 +57,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                                             p.""Id"",
                                             p.""Title"",
                                             p.""Key"",
-                                            p.""PageType"",
+                                            p.""Type"",
                                             p.""Facts""::json#>>'{Main.Name,Values,-1,FirstName}' AS ""FirstName"",
                                             p.""Facts""::json#>>'{Main.Name,Values,-1,LastName}' AS ""LastName"",
                                             p.""Facts""::json#>>'{Main.Name,Value}' AS ""Nickname"",
@@ -109,7 +109,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
 
             public string Title { get; set; }
             public string Key { get; set; }
-            public PageType PageType { get; set; }
+            public PageType Type { get; set; }
             public bool? Gender { get; set; }
             public FuzzyDate? BirthDate { get; set; }
             public FuzzyDate? DeathDate { get; set; }

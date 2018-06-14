@@ -37,11 +37,11 @@
                 { <span class="badge badge-light">Читатель</span>}
             </td>
             <td class="admin-row-actions">
-                <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})">
-                    <span class="fa fa-pencil-square" title="Редактировать"></span>
-                </a>
                 <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = user.Id})">
                     <span class="fa fa-remove" title="Удалить"></span>
+                </a>
+                <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})">
+                    <span class="fa fa-pencil-square" title="Редактировать"></span>
                 </a>
             </td>
         </tr>
