@@ -1,9 +1,9 @@
-﻿namespace Bonsai.Areas.Admin.ViewModels.Pages
+﻿namespace Bonsai.Areas.Admin.ViewModels.Common
 {
     /// <summary>
-    /// Search query options.
+    /// Base request for entity list filtering.
     /// </summary>
-    public class PagesListRequestVM
+    public class ListRequestVM
     {
         /// <summary>
         /// Search query for page names.
@@ -24,5 +24,10 @@
         /// Current page (0-based).
         /// </summary>
         public int Page { get; set; }
+
+        /// <summary>
+        /// Creates a clone of this object.
+        /// </summary>
+        public static T Clone<T>(T obj) where T: ListRequestVM => (T) obj.MemberwiseClone();
     }
 }
