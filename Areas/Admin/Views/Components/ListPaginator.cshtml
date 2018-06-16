@@ -1,7 +1,7 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Components
 @model IReadOnlyList<ListPaginatorPageVM>
 
-@if(Model.Any())
+@if(Model.Count > 1)
 {
     <ul class="pagination">
         @foreach(var p in Model)

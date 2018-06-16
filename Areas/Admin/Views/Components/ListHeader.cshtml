@@ -1,0 +1,13 @@
+﻿@model Bonsai.Areas.Admin.ViewModels.Components.ListHeaderVM
+
+<a href="@Model.Url">
+    <span>@Model.Title</span>
+    @if(Model.IsDescending == true)
+    {
+        <span class="fa fa-arrow-down"></span>
+    }
+    else if(Model.IsDescending == false)
+    {
+        <span class="fa fa-arrow-up"></span>
+    }
+</a>

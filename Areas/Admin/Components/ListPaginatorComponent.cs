@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Components;
@@ -31,7 +30,7 @@ namespace Bonsai.Areas.Admin.Components
                 var clone = ListRequestVM.Clone(request);
                 clone.Page = page;
 
-                var cloneUrl = GetFullUrl(url, clone);
+                var cloneUrl = ListRequestHelper.GetUrl(url, clone);
                 result.Add(new ListPaginatorPageVM
                 {
                     Url = cloneUrl,
@@ -57,16 +56,6 @@ namespace Bonsai.Areas.Admin.Components
                              .Concat(Enumerable.Range(count - Margin, Margin))
                              .Where(x => x >= 0 && x < count)
                              .Distinct();
-        }
-
-        /// <summary>
-        /// Builds the query with specified request.
-        /// </summary>
-        private string GetFullUrl(string url, ListRequestVM request)
-        {
-            var args = ListRequestHelper.GetValues(request);
-            var strArgs = args.Select(x => HttpUtility.UrlEncode(x.Key) + "=" + HttpUtility.UrlEncode(x.Value));
-            return url + "?" + string.Join("&", strArgs);
         }
     }
 }

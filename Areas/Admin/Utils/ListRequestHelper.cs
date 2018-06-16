@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using Bonsai.Areas.Admin.ViewModels.Common;
 
 namespace Bonsai.Areas.Admin.Utils
@@ -32,6 +34,16 @@ namespace Bonsai.Areas.Admin.Utils
             }
 
             return dict;
+        }
+
+        /// <summary>
+        /// Returns the URL for current request.
+        /// </summary>
+        public static string GetUrl(string url, ListRequestVM request)
+        {
+            var args = GetValues(request);
+            var strArgs = args.Select(x => HttpUtility.UrlEncode(x.Key) + "=" + HttpUtility.UrlEncode(x.Value));
+            return url + "?" + string.Join("&", strArgs);
         }
     }
 }

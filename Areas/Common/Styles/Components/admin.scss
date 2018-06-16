@@ -20,10 +20,11 @@
         padding: 8px 12px;
     }
 
-    .admin-row-actions a {
+    .admin-row-actions a, .admin-row-action {
         opacity: 0;
         font-size: 0;
         display: inline-block;
+        vertical-align: bottom;
 
         &:not(:last-of-type) {
             margin-right: 6px;
@@ -34,7 +35,9 @@
         }
     }
 
-    &:hover .admin-row-actions a {
-        opacity: 1;
+    &:hover {
+        .admin-row-actions a, .admin-row-action {
+            opacity: 1;
+        }
     }
 }
