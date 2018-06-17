@@ -1,5 +1,6 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Areas.Admin.ViewModels.Pages
+@using Humanizer
 @addTagHelper *, Bonsai
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model PagesListVM
@@ -50,8 +51,8 @@
                             <span class="fa fa-external-link-square" title="Просмотреть"></span>
                         </a>
                     </td>
-                    <td>@p.CreateDate.LocalDateTime.ToShortDateString()</td>
-                    <td>@p.LastUpdateDate.LocalDateTime.ToShortDateString()</td>
+                    <td><span title="@p.CreateDate.LocalDateTime.ToLongDateString()">@p.CreateDate.Humanize()</span></td>
+                    <td><span title="@p.LastUpdateDate.LocalDateTime.ToLongDateString()">@p.LastUpdateDate.Humanize()</span></td>
                     <td class="admin-row-actions">
                         <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Key})">
                             <span class="fa fa-remove" title="Удалить"></span>
