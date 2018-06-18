@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,9 +15,9 @@ namespace Bonsai.Areas.Admin.Utils
         /// <summary>
         /// Gets all arbitrary values for the request.
         /// </summary>
-        public static Dictionary<string, string> GetValues(ListRequestVM vm)
+        public static IEnumerable<KeyValuePair<string, string>> GetValues(ListRequestVM vm)
         {
-            var dict = new Dictionary<string, string>();
+            var dict = new List<KeyValuePair<string, string>>();
 
             if (vm != null)
             {
@@ -28,8 +29,19 @@ namespace Bonsai.Areas.Admin.Utils
                     var defValue = pt.IsValueType && Nullable.GetUnderlyingType(pt) == null ? Activator.CreateInstance(pt) : null;
                     var value = prop.GetValue(vm);
 
-                    if (value != null && !value.Equals(defValue))
-                        dict.Add(prop.Name, value.ToString());
+                    if (value == null || value.Equals(defValue))
+                        continue;
+
+                    var isEnumerable = pt.IsArray || pt.GetInterfaces().Contains(typeof(IEnumerable));
+                    if (isEnumerable)
+                    {
+                        foreach(object elem in (dynamic) value)
+                            dict.Add(new KeyValuePair<string, string>(prop.Name, elem.ToString()));
+                    }
+                    else
+                    {
+                        dict.Add(new KeyValuePair<string, string>(prop.Name, value.ToString()));
+                    }
                 }
             }
 

@@ -59,14 +59,13 @@
                     <tr class="admin-row">
                         <td>
                             <img src="@ViewHelper.GetGravatarUrl(u.Email)" />
-                            @u.FullName
+                            <a href="@Url.Action("Update", "Users", new {area = "Admin", id = u.Id})" title="Подтвердить">
+                                @u.FullName
+                            </a>
                         </td>
                         <td class="admin-row-actions">
-                            <a href="@Url.Action("Update", "Users", new {area = "Admin", id = u.Id})">
-                                <span class="fa fa-check-square" title="Подтвердить"></span>
-                            </a>
-                            <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = u.Id})">
-                                <span class="fa fa-remove" title="Удалить"></span>
+                            <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = u.Id})" title="Удалить">
+                                <span class="fa fa-remove"></span>
                             </a>
                         </td>
                     </tr>

@@ -1,4 +1,5 @@
-﻿@using Bonsai.Areas.Admin.ViewModels.Dashboard
+﻿@using Bonsai.Areas.Admin.Components
+@using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Areas.Admin.ViewModels.Pages
 @using Humanizer
 @addTagHelper *, Bonsai
@@ -21,11 +22,18 @@
         </a>
         </div>
     <div class="float-right">
-        @await Component.InvokeAsync("ListSearchFieldComponent", new
-        {
-            url = baseUrl,
-            request = Model.Request
-        })
+        <form action="@Url.Action("Index", "Pages", new {area = "Admin"})" method="GET" class="form-inline admin-filter">
+            @await Component.InvokeAsync("ListEnumFilterComponent", new
+            {
+                request = Model.Request,
+                propName = nameof(PagesListRequestVM.Types)
+            })
+            @await Component.InvokeAsync("ListSearchFieldComponent", new
+            {
+                url = baseUrl,
+                request = Model.Request
+            })
+        </form>
     </div>
 </div>
 
@@ -34,9 +42,9 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th width="60%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.Title), title = "Название" })</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.CreateDate), title = "Создана" })</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.LastUpdateDate), title = "Изменена" })</th>
+                <th width="60%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.Title), title = "Название"})</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.CreateDate), title = "Создана"})</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.LastUpdateDate), title = "Изменена"})</th>
                 <th width="1px"></th>
             </tr>
         </thead>
@@ -46,9 +54,8 @@
                 <tr class="admin-row">
                     <td>
                         <page-image image="@p.MainPhotoPath" type="@p.Type"></page-image>
-                        @p.Title
-                        <a class="admin-row-action" href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank">
-                            <span class="fa fa-external-link-square" title="Просмотреть"></span>
+                        <a href="@Url.Action("Update", "Pages", new {area = "Admin", key = p.Key})" title="Редактировать">
+                            @p.Title
                         </a>
                     </td>
                     <td><span title="@p.CreateDate.LocalDateTime.ToLongDateString()">@p.CreateDate.Humanize()</span></td>
@@ -60,8 +67,8 @@
                         <a href="@Url.Action("History", "Pages", new {area = "Admin", key = p.Key})">
                             <span class="fa fa-history" title="История изменений"></span>
                         </a>
-                        <a href="@Url.Action("Update", "Pages", new {area = "Admin", key = p.Key})">
-                            <span class="fa fa-pencil-square" title="Редактировать"></span>
+                        <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank">
+                            <span class="fa fa-external-link-square" title="Просмотреть"></span>
                         </a>
                     </td>
                 </tr>

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
@@ -12,7 +11,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// <summary>
         /// Current search query.
         /// </summary>
-        public ListRequestVM Request { get; set; }
+        public PagesListRequestVM Request { get; set; }
 
         /// <summary>
         /// List of pages.

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
-using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Data;
@@ -27,7 +26,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Finds pages.
         /// </summary>
-        public async Task<PagesListVM> GetPagesAsync(ListRequestVM request)
+        public async Task<PagesListVM> GetPagesAsync(PagesListRequestVM request)
         {
             const int PageSize = 20;
 
@@ -37,6 +36,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
                 query = query.Where(x => x.Title.Contains(request.SearchQuery));
+
+            if (request.Types?.Length > 0)
+                query = query.Where(x => request.Types.Contains(x.Type));
 
             var totalCount = await query.CountAsync()
                                         .ConfigureAwait(false);
@@ -61,10 +63,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Completes and\or corrects the search request.
         /// </summary>
-        private ListRequestVM ValidateRequest(ListRequestVM vm)
+        private PagesListRequestVM ValidateRequest(PagesListRequestVM vm)
         {
             if(vm == null)
-                vm = new ListRequestVM {OrderBy = nameof(Page.Title)};
+                vm = new PagesListRequestVM { OrderBy = nameof(Page.Title)};
 
             var orderableFields = new[] {nameof(Page.Title), nameof(Page.LastUpdateDate), nameof(Page.CreateDate)};
             if (!orderableFields.Contains(vm.OrderBy))
