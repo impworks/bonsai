@@ -1,0 +1,6 @@
+﻿@model IEnumerable<KeyValuePair<string, string>>
+
+@foreach (var elem in Model)
+{
+    <input type="hidden" name="@elem.Key" value="@elem.Value" />
+}

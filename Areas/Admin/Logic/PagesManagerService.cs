@@ -35,7 +35,7 @@ namespace Bonsai.Areas.Admin.Logic
             var query = (IQueryable<Page>) _db.Pages.Include(x => x.MainPhoto);
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
-                query = query.Where(x => x.Title.Contains(request.SearchQuery));
+                query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
 
             if (request.Types?.Length > 0)
                 query = query.Where(x => request.Types.Contains(x.Type));

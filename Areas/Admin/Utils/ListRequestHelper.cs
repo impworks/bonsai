@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Bonsai.Areas.Admin.ViewModels.Common;
+using Impworks.Utils.Format;
 
 namespace Bonsai.Areas.Admin.Utils
 {
@@ -19,33 +20,48 @@ namespace Bonsai.Areas.Admin.Utils
         {
             var dict = new List<KeyValuePair<string, string>>();
 
-            if (vm != null)
+            if (vm == null)
+                return dict;
+
+            var props = vm.GetType().GetProperties();
+            foreach (var prop in props)
             {
-                var props = vm.GetType().GetProperties();
+                var propType = prop.PropertyType;
+                var value = prop.GetValue(vm);
 
-                foreach (var prop in props)
+                if (value == null)
+                    continue;
+
+                var defValue = propType.IsValueType && Nullable.GetUnderlyingType(propType) == null
+                    ? Activator.CreateInstance(propType)
+                    : null;
+
+                if (value.Equals(defValue))
+                    continue;
+
+                var isEnumerable = propType.IsArray
+                                   || (propType != typeof(string) && propType.GetInterfaces().Contains(typeof(IEnumerable)));
+                if (isEnumerable)
                 {
-                    var pt = prop.PropertyType;
-                    var defValue = pt.IsValueType && Nullable.GetUnderlyingType(pt) == null ? Activator.CreateInstance(pt) : null;
-                    var value = prop.GetValue(vm);
-
-                    if (value == null || value.Equals(defValue))
-                        continue;
-
-                    var isEnumerable = pt.IsArray || pt.GetInterfaces().Contains(typeof(IEnumerable));
-                    if (isEnumerable)
-                    {
-                        foreach(object elem in (dynamic) value)
-                            dict.Add(new KeyValuePair<string, string>(prop.Name, elem.ToString()));
-                    }
-                    else
-                    {
-                        dict.Add(new KeyValuePair<string, string>(prop.Name, value.ToString()));
-                    }
+                    foreach (object elem in (dynamic) value)
+                        Add(prop.Name, elem);
+                }
+                else
+                {
+                    Add(prop.Name, value);
                 }
             }
 
             return dict;
+
+            void Add(string propName, object value)
+            {
+                var str = value is IConvertible fmt
+                    ? fmt.ToInvariantString()
+                    : value.ToString();
+
+                dict.Add(new KeyValuePair<string, string>(propName, str));
+            }
         }
 
         /// <summary>

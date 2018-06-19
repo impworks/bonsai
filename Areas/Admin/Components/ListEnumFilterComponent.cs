@@ -36,7 +36,7 @@ namespace Bonsai.Areas.Admin.Components
                 throw new ArgumentException($"Type '{prop.PropertyType.Name}' is not an enum.");
 
             var enumValues = GetEnumValues(elemType);
-            var selected = prop.GetValue(request) as Array;
+            var selected = prop.GetValue(request) as int[];
             var result = new List<ListEnumFilterItemVM>();
 
             foreach (var enumValue in enumValues)
@@ -46,7 +46,7 @@ namespace Bonsai.Areas.Admin.Components
                     PropertyName = propName,
                     Title = enumValue.Value,
                     Value = enumValue.Key.ToInvariantString(),
-                    IsActive = Array.IndexOf(selected, enumValue.Key) > -1
+                    IsActive = selected?.Any(x => x == enumValue.Key) == true
                 });
             }
 
@@ -56,7 +56,7 @@ namespace Bonsai.Areas.Admin.Components
         /// <summary>
         /// Gets the raw enum values and their descriptions.
         /// </summary>
-        private Dictionary<IConvertible, string> GetEnumValues(Type enumType)
+        private Dictionary<int, string> GetEnumValues(Type enumType)
         {
             var flags = BindingFlags.DeclaredOnly
                         | BindingFlags.Static
@@ -64,11 +64,15 @@ namespace Bonsai.Areas.Admin.Components
                         | BindingFlags.GetField;
 
             return enumType.GetFields(flags)
-                       .ToDictionary(
-                           x => (IConvertible) x.GetRawConstantValue(),
-                           x => x.GetCustomAttribute<DescriptionAttribute>()?.Description
-                                ?? x.GetRawConstantValue().ToString()
-                       );
+                           .Select(x => new
+                           {
+                               Description = x.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                               Value = x.GetRawConstantValue()
+                           })
+                           .ToDictionary(
+                               x => Convert.ToInt32(x.Value),
+                               x => x.Description ?? Enum.GetName(enumType, x.Value)
+                           );
         }
     }
 }
