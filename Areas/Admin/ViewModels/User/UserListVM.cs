@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Bonsai.Areas.Admin.ViewModels.Common;
 
 namespace Bonsai.Areas.Admin.ViewModels.User
 {
     /// <summary>
     /// List of users.
     /// </summary>
-    public class UserListVM
+    public class UserListVM: ListResultVM<ListRequestVM, UserTitleVM>
     {
-        /// <summary>
-        /// List of registered users.
-        /// </summary>
-        public IReadOnlyList<UserTitleVM> Users { get; set; }
     }
 }

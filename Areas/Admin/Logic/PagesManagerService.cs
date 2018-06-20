@@ -30,9 +30,9 @@ namespace Bonsai.Areas.Admin.Logic
         {
             const int PageSize = 20;
 
-            request = ValidateRequest(request);
+            request = NormalizeListRequest(request);
 
-            var query = (IQueryable<Page>) _db.Pages.Include(x => x.MainPhoto);
+            var query = _db.Pages.Include(x => x.MainPhoto).AsQueryable();
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
                 query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
@@ -63,10 +63,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Completes and\or corrects the search request.
         /// </summary>
-        private PagesListRequestVM ValidateRequest(PagesListRequestVM vm)
+        private PagesListRequestVM NormalizeListRequest(PagesListRequestVM vm)
         {
-            if(vm == null)
-                vm = new PagesListRequestVM { OrderBy = nameof(Page.Title)};
+            if (vm == null)
+                vm = new PagesListRequestVM();
 
             var orderableFields = new[] {nameof(Page.Title), nameof(Page.LastUpdateDate), nameof(Page.CreateDate)};
             if (!orderableFields.Contains(vm.OrderBy))

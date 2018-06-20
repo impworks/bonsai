@@ -27,7 +27,7 @@ namespace Bonsai.Areas.Admin.ViewModels.User
         /// <summary>
         /// The user's role with richest access level.
         /// </summary>
-        public UserRole? Role { get; set; }
+        public UserRole Role { get; set; }
 
         public void Configure(IProfileExpression profile)
         {

@@ -11,6 +11,7 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
+using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,32 +36,35 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the list of all registered users.
         /// </summary>
-        public async Task<UserListVM> GetUsersListAsync()
+        public async Task<UserListVM> GetUsersListAsync(UserListRequestVM request)
         {
-            var roles = await _db.Roles
-                                 .ToDictionaryAsync(x => x.Id, x => Enum.Parse<UserRole>(x.Name))
-                                 .ConfigureAwait(false);
+            const int PageSize = 20;
 
-            var userBindings = await _db.UserRoles
-                                        .ToDictionaryAsync(x => x.UserId, x => x.RoleId)
-                                        .ConfigureAwait(false);
+            request = NormalizeListRequest(request);
 
-            var users = await _db.Users
-                                 .Where(x => x.LockoutEnd != DateTimeOffset.MaxValue)
-                                 .ProjectTo<UserTitleVM>()
-                                 .OrderBy(x => x.FullName)
-                                 .ToListAsync()
-                                 .ConfigureAwait(false);
+            var query = await LoadUsersAsync().ConfigureAwait(false);
 
-            foreach (var user in users)
+            if (!string.IsNullOrEmpty(request.SearchQuery))
             {
-                if (userBindings.TryGetValue(user.Id, out var roleId))
-                    user.Role = roles[roleId];
+                var nq = request.SearchQuery.ToLower();
+                query = query.Where(x => x.FullName.ToLower().Contains(nq)
+                                         || x.Email.ToLower().Contains(nq));
             }
+
+            if (request.Roles?.Length > 0)
+                query = query.Where(x => request.Roles.Contains(x.Role));
+
+            var totalCount = query.Count();
+            var items = query.OrderBy(request.OrderBy, request.OrderDescending)
+                             .Skip(PageSize * request.Page)
+                             .Take(PageSize)
+                             .ToList();
 
             return new UserListVM
             {
-                Users = users
+                Items = items,
+                PageCount = (int) Math.Ceiling((double) totalCount / PageSize),
+                Request = request
             };
         }
 
@@ -154,6 +158,53 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         #region Private helpers
+
+        /// <summary>
+        /// Returns the request with default/valid values.
+        /// </summary>
+        private UserListRequestVM NormalizeListRequest(UserListRequestVM vm)
+        {
+            if (vm == null)
+                vm = new UserListRequestVM();
+
+            var orderableFields = new[] {nameof(UserTitleVM.FullName), nameof(UserTitleVM.Email)};
+            if (!orderableFields.Contains(vm.OrderBy))
+                vm.OrderBy = orderableFields[0];
+
+            if (vm.Page < 0)
+                vm.Page = 0;
+
+            return vm;
+        }
+
+        /// <summary>
+        /// Loads users from the database.
+        /// </summary>
+        private async Task<IQueryable<UserTitleVM>> LoadUsersAsync()
+        {
+            var roles = await _db.Roles
+                                 .ToDictionaryAsync(x => x.Id, x => Enum.Parse<UserRole>(x.Name))
+                                 .ConfigureAwait(false);
+
+            var userBindings = await _db.UserRoles
+                                        .ToDictionaryAsync(x => x.UserId, x => x.RoleId)
+                                        .ConfigureAwait(false);
+
+            var users = await _db.Users
+                                 .Where(x => x.LockoutEnd != DateTimeOffset.MaxValue)
+                                 .ProjectTo<UserTitleVM>()
+                                 .ToListAsync()
+                                 .ConfigureAwait(false);
+
+            foreach (var user in users)
+            {
+                user.Role = userBindings.TryGetValue(user.Id, out var roleId)
+                    ? roles[roleId]
+                    : UserRole.Unvalidated;
+            }
+
+            return users.AsQueryable();
+        }
 
         /// <summary>
         /// Performs additional checks on the request.

@@ -28,6 +28,6 @@
         /// <summary>
         /// Creates a clone of this object.
         /// </summary>
-        public static T Clone<T>(T obj) where T: ListRequestVM => (T) obj.MemberwiseClone();
+        public static T Clone<T>(T request) where T: ListRequestVM => (T) request.MemberwiseClone();
     }
 }

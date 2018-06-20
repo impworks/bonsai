@@ -22,7 +22,7 @@
         </a>
         </div>
     <div class="float-right">
-        <form action="@Url.Action("Index", "Pages", new {area = "Admin"})" method="GET" class="form-inline">
+        <form action="@baseUrl" method="GET" class="form-inline">
             @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
             @await Component.InvokeAsync("ListEnumFilterComponent", new
             {
@@ -30,7 +30,7 @@
                 propName = nameof(PagesListRequestVM.Types)
             })
             <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(PagesListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Название"/>
-            <button class="btn btn-sm btn-outline-secondary" type="submit" title="Искать">Найти</button>
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
         </form>
     </div>
 </div>

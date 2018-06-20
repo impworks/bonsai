@@ -1,26 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
 {
     /// <summary>
-    /// Found pages.
+    /// List of pages.
     /// </summary>
-    public class PagesListVM
+    public class PagesListVM: ListResultVM<PagesListRequestVM, PageTitleExtendedVM>
     {
-        /// <summary>
-        /// Current search query.
-        /// </summary>
-        public PagesListRequestVM Request { get; set; }
-
-        /// <summary>
-        /// List of pages.
-        /// </summary>
-        public IReadOnlyList<PageTitleExtendedVM> Items { get; set; }
-
-        /// <summary>
-        /// Number of pages of data.
-        /// </summary>
-        public int PageCount { get; set; }
     }
 }

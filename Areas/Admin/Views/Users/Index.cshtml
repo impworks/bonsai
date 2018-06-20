@@ -1,49 +1,88 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.User
 @using Bonsai.Code.Utils.Helpers
+@using Bonsai.Data.Models
+@using Impworks.Utils.Format
 @model UserListVM
 @{
     ViewBag.Title = "Список пользователей";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var baseUrl = Url.Action("Index", "Users", new { area = "Admin" });
+    var badgeClassMap = new Dictionary<UserRole, string>
+    {
+        [UserRole.Unvalidated] = "danger",
+        [UserRole.Admin] = "success",
+        [UserRole.Editor] = "secondary",
+        [UserRole.User] = "light",
+    };
 }
 
 <h1>Список пользователей</h1>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th width="65%">Имя</th>
-            <th width="20%">E-mail</th>
-            <th width="15%">Доступ</th>
-            <th width="1px"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Users)
+<div class="clearfix">
+    <div class="float-right">
+        <form action="@baseUrl" method="GET" class="form-inline">
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListEnumFilterComponent", new
+            {
+                request = Model.Request,
+                propName = nameof(UserListRequestVM.Roles)
+            })
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(UserListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя / E-mail" />
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+        </form>
+    </div>
+</div>
+
+@if(Model.Items.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th width="65%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(UserTitleVM.FullName), title = "Имя" })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(UserTitleVM.Email), title = "E-mail" })</th>
+                <th width="15%">Доступ</th>
+                <th width="1px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var user in Model.Items)
+            {
+                <tr class="admin-row">
+                    <td>
+                        <img src="@ViewHelper.GetGravatarUrl(user.Email)" />
+                        <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})" title="Редактировать">
+                            @user.FullName
+                        </a>
+                    </td>
+                    <td>@user.Email</td>
+                    <td>
+                        <span class="badge badge-@(badgeClassMap[user.Role])">@user.Role.GetEnumDescription()</span>
+                    </td>
+                    <td class="admin-row-actions">
+                        <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = user.Id})" title="Удалить">
+                            <span class="fa fa-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        По запросу не найдено ни одного пользователя.
+    </div>
+}
+
+<div class="clearfix">
+    <div class="pull-right">
+        @await Component.InvokeAsync("ListPaginatorComponent", new
         {
-        <tr class="admin-row">
-            <td>
-                <img src="@ViewHelper.GetGravatarUrl(user.Email)" />
-                <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})" title="Редактировать">
-                    @user.FullName
-                </a>
-            </td>
-            <td>@user.Email</td>
-            <td>
-                @if(user.Role == null)
-                {<span class="badge badge-danger">Новый</span> }
-                else if(user.Role == UserRole.Admin)
-                { <span class="badge badge-success">Администратор</span> }
-                else if(user.Role == UserRole.Editor)
-                { <span class="badge badge-secondary">Редактор</span>}
-                else if(user.Role == UserRole.User)
-                { <span class="badge badge-light">Читатель</span>}
-            </td>
-            <td class="admin-row-actions">
-                <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = user.Id})" title="Удалить">
-                    <span class="fa fa-remove"></span>
-                </a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+            url = baseUrl,
+            request = Model.Request,
+            pageCount = Model.PageCount
+        })
+    </div>
+</div>

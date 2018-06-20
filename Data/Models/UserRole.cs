@@ -1,12 +1,18 @@
 ﻿using System.ComponentModel;
 
-namespace Bonsai.Areas.Admin.ViewModels.User
+namespace Bonsai.Data.Models
 {
     /// <summary>
     /// Known account roles.
     /// </summary>
     public enum UserRole
     {
+        /// <summary>
+        /// Newly registered user.
+        /// </summary>
+        [Description("Новый")]
+        Unvalidated,
+
         /// <summary>
         /// Basic user.
         /// </summary>

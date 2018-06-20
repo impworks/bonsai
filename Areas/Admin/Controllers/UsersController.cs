@@ -31,10 +31,11 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Displays the list of users.
         /// </summary>
+        [HttpGet]
         [Route("")]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index([FromQuery] UserListRequestVM vm)
         {
-            var users = await _users.GetUsersListAsync().ConfigureAwait(false);
+            var users = await _users.GetUsersListAsync(vm).ConfigureAwait(false);
             return View(users);
         }
 
