@@ -5,7 +5,6 @@ using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Date;
-using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 {
@@ -19,9 +18,15 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         /// </summary>
         public DateTimeOffset UploadDate { get; set; }
 
+        /// <summary>
+        /// Number of tagged entities.
+        /// </summary>
+        public int MediaTagsCount { get; set; }
+
         public void Configure(IProfileExpression profile)
         {
-            profile.CreateMap<Media, MediaThumbnailExtendedVM>()
+            profile.CreateMap<Data.Models.Media, MediaThumbnailExtendedVM>()
+                   .ForMember(x => x.MediaTagsCount, opt => opt.MapFrom(x => x.Tags.Count))
                    .ForMember(x => x.OriginDate, opt => opt.MapFrom(x => FuzzyDate.TryParse(x.Date)))
                    .ForMember(y => y.ThumbnailUrl, opt => opt.MapFrom(x => MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small)));
         }

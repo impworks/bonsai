@@ -6,7 +6,6 @@ using System.Reflection;
 using AutoMapper;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Auth;
-using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
@@ -79,6 +78,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<UserManagerService>();
             services.AddScoped<AppConfigManagerService>();
             services.AddScoped<PagesManagerService>();
+            services.AddScoped<MediaManagerService>();
         }
 
         /// <summary>
