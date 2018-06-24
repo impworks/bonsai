@@ -6,7 +6,6 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services.Elastic;
-using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
@@ -82,11 +81,12 @@ namespace Bonsai.Data.Utils.Seed
                 deathData["Value"] = death;
             }
 
+            var key = PageHelper.EncodeTitle(title);
             var page = new Page
             {
                 Id = Guid.NewGuid(),
                 Title = title,
-                Key = PageHelper.EncodeTitle(title),
+                Key = key,
                 Type = type,
                 Description = (File.Exists(descrFile) ? File.ReadAllText(descrFile) : descrSource) ?? title,
                 Facts = factsObj.ToString(Formatting.None),
@@ -94,6 +94,7 @@ namespace Bonsai.Data.Utils.Seed
                 LastUpdateDate = DateTimeOffset.Now
             };
             _db.Pages.Add(page);
+            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Key = key, Page = page});
 
             _elastic?.AddPageAsync(page).Wait();
 

@@ -21,6 +21,7 @@ namespace Bonsai.Data
         public virtual DbSet<Media> Media => Set<Media>();
         public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
         public virtual DbSet<Page> Pages => Set<Page>();
+        public virtual DbSet<PageAlias> PageAliases => Set<PageAlias>();
         public virtual DbSet<Relation> Relations => Set<Relation>();
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -44,6 +45,9 @@ namespace Bonsai.Data
 
             builder.Entity<Page>()
                    .HasIndex(x => x.Key).IsUnique(true);
+
+            builder.Entity<Page>()
+                   .HasMany(x => x.Aliases).WithOne(x => x.Page).IsRequired();
 
             builder.Entity<Relation>()
                    .HasOne(x => x.Source).WithMany(x => x.Relations).HasForeignKey(x => x.SourceId);

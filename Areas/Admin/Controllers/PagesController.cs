@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Code.Utils.Helpers;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -28,5 +31,61 @@ namespace Bonsai.Areas.Admin.Controllers
             var vm = await _pages.GetPagesAsync(request).ConfigureAwait(false);
             return View(vm);
         }
+
+        /// <summary>
+        /// Dispays the editor form for a new page.
+        /// </summary>
+        [HttpGet]
+        [Route("create")]
+        public async Task<ActionResult> Create()
+        {
+            return ViewEditorForm(new PageEditorVM {Type = PageType.Person});
+        }
+
+        /// <summary>
+        /// Attempts to create a new page.
+        /// </summary>
+        [HttpPost]
+        [Route("create")]
+        public async Task<ActionResult> Create(PageEditorVM vm)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Displays the editor for an existing page.
+        /// </summary>
+        [HttpGet]
+        [Route("update")]
+        public async Task<ActionResult> Update(Guid id)
+        {
+            var vm = await _pages.RequestUpdateAsync(id).ConfigureAwait(false);
+            return ViewEditorForm(vm);
+        }
+
+        /// <summary>
+        /// Attempts to update the existing page.
+        /// </summary>
+        [HttpPost]
+        [Route("update")]
+        public async Task<ActionResult> Update(PageEditorVM vm)
+        {
+            throw new NotImplementedException();
+        }
+
+        #region Helpers
+
+        /// <summary>
+        /// Displays the editor form.
+        /// </summary>
+        private ActionResult ViewEditorForm(PageEditorVM vm)
+        {
+            ViewBag.PageTypes = ViewHelper.GetEnumSelectList(vm.Type);
+            ViewBag.IsNew = vm.Id == Guid.Empty;
+
+            return View("Editor", vm);
+        }
+
+        #endregion
     }
 }

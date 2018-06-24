@@ -15,35 +15,35 @@
             <input type="hidden" asp-for="Id" />
 
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Фамилия</label>
+                <label class="col-sm-3 col-form-label" asp-for="LastName">Фамилия</label>
                 <div class="col-sm-9">
                     <input asp-for="LastName" class="form-control" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Имя</label>
+                <label class="col-sm-3 col-form-label" asp-for="FirstName">Имя</label>
                 <div class="col-sm-9">
                     <input asp-for="FirstName" class="form-control" />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Отчество</label>
+                <label class="col-sm-3 col-form-label" asp-for="MiddleName">Отчество</label>
                 <div class="col-sm-9">
                     <input asp-for="MiddleName" class="form-control" />
                     <span asp-validation-for="MiddleName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Дата рождения</label>
+                <label class="col-sm-3 col-form-label" asp-for="Birthday">Дата рождения</label>
                 <div class="col-sm-6">
                     <input asp-for="Birthday" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
                     <span asp-validation-for="Birthday" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">E-mail</label>
+                <label class="col-sm-3 col-form-label" asp-for="Email">E-mail</label>
                 <div class="col-sm-9">
                     <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
@@ -53,7 +53,7 @@
             @if(!ViewBag.IsSelf)
             {
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Доступ</label>
+                    <label class="col-sm-3 col-form-label" asp-for="Role">Доступ</label>
                     <div class="col-sm-9">
                         <select asp-for="Role" asp-items="@ViewBag.UserRoles"></select>
                         <span asp-validation-for="Role" class="text-danger"></span>
@@ -84,7 +84,7 @@
             <div class="form-group row">
                 <div class="offset-sm-3 col-sm-6">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a href="@Url.Action("Index")"></a>
+                    <a class="btn btn-secondary" href="@Url.Action("Index")">Отмена</a>
                 </div>
             </div>
         </form>

@@ -8,6 +8,7 @@ using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -39,14 +40,19 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
         {
-            var page = await _db.Pages
-                                .Include(x => x.MainPhoto)
+            var page = await _db.PageAliases
                                 .AsNoTracking()
-                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .Where(x => x.Key == key)
+                                .Select(x => x.Page)
+                                .Include(x => x.MainPhoto)
+                                .FirstOrDefaultAsync()
                                 .ConfigureAwait(false);
 
             if (page == null)
                 throw new KeyNotFoundException();
+
+            if (page.Key != key)
+                throw new RedirectRequiredException(page.Key);
 
             var descr = await _markdown.CompileAsync(page.Description).ConfigureAwait(false);
             return await ConfigureAsync(page, new PageDescriptionVM { Description = descr }).ConfigureAwait(false);
@@ -57,8 +63,10 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<PageMediaVM> GetPageMediaAsync(string key)
         {
-            var page = await _db.Pages
+            var page = await _db.PageAliases
                                 .AsNoTracking()
+                                .Where(x => x.Key == key)
+                                .Select(x => x.Page)
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
                                 .FirstOrDefaultAsync(x => x.Key == key)
@@ -66,6 +74,9 @@ namespace Bonsai.Areas.Front.Logic
 
             if (page == null)
                 throw new KeyNotFoundException();
+
+            if(page.Key != key)
+                throw new RedirectRequiredException(page.Key);
 
             var media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
             return await ConfigureAsync(page, new PageMediaVM { Media = media }).ConfigureAwait(false);

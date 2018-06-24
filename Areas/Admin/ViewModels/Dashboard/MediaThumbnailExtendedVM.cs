@@ -14,6 +14,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
     public class MediaThumbnailExtendedVM: MediaThumbnailVM, IMapped
     {
         /// <summary>
+        /// Unique ID.
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
         /// Date of the media file's upload.
         /// </summary>
         public DateTimeOffset UploadDate { get; set; }

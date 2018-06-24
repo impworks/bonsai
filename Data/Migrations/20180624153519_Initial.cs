@@ -261,6 +261,25 @@ namespace Bonsai.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PageAliases",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Key = table.Column<string>(type: "text", nullable: true),
+                    PageId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PageAliases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PageAliases_Pages_PageId",
+                        column: x => x.PageId,
+                        principalTable: "Pages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Relations",
                 columns: table => new
                 {
@@ -376,6 +395,11 @@ namespace Bonsai.Data.Migrations
                 name: "IX_MediaTags_ObjectId",
                 table: "MediaTags",
                 column: "ObjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PageAliases_PageId",
+                table: "PageAliases",
+                column: "PageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pages_Key",
@@ -516,6 +540,9 @@ namespace Bonsai.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "MediaTags");
+
+            migrationBuilder.DropTable(
+                name: "PageAliases");
 
             migrationBuilder.DropTable(
                 name: "Relations");

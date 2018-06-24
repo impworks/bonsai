@@ -255,6 +255,23 @@ namespace Bonsai.Data.Migrations
                     b.ToTable("Pages");
                 });
 
+            modelBuilder.Entity("Bonsai.Data.Models.PageAlias", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Key");
+
+                    b.Property<Guid?>("PageId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PageId");
+
+                    b.ToTable("PageAliases");
+                });
+
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -451,6 +468,14 @@ namespace Bonsai.Data.Migrations
                     b.HasOne("Bonsai.Data.Models.Media", "MainPhoto")
                         .WithMany()
                         .HasForeignKey("MainPhotoId");
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.PageAlias", b =>
+                {
+                    b.HasOne("Bonsai.Data.Models.Page", "Page")
+                        .WithMany("Aliases")
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>

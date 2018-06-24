@@ -12,6 +12,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
     public class PageTitleExtendedVM: PageTitleVM, IMapped
     {
         /// <summary>
+        /// Unique ID.
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
         /// Page's main image.
         /// </summary>
         public string MainPhotoPath { get; set; }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +18,16 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class PagesManagerService
     {
-        public PagesManagerService(AppDbContext db)
+        public PagesManagerService(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
+
+        #region Pages
 
         /// <summary>
         /// Finds pages.
@@ -57,6 +63,24 @@ namespace Bonsai.Areas.Admin.Logic
                 Request = request
             };
         }
+
+        /// <summary>
+        /// Returns the original data for the editor form.
+        /// </summary>
+        public async Task<PageEditorVM> RequestUpdateAsync(Guid id)
+        {
+            var page = await _db.Pages
+                                .AsNoTracking()
+                                .Include(x => x.MainPhoto)
+                                .Include(x => x.Relations)
+                                .Include(x => x.Aliases)
+                                .GetAsync(x => x.Id == id, "Страница не найдена")
+                                .ConfigureAwait(false);
+
+            return _mapper.Map<Page, PageEditorVM>(page);
+        }
+
+        #endregion
 
         #region Helpers
 

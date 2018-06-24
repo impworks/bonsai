@@ -42,6 +42,11 @@ namespace Bonsai.Data.Models
         /// Serialized collection of facts related to current entity.
         /// </summary>
         public string Facts { get; set; }
+
+        /// <summary>
+        /// Aliases to current page.
+        /// </summary>
+        public ICollection<PageAlias> Aliases { get; set; }
         
         /// <summary>
         /// Relations from this page to others.

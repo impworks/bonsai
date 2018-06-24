@@ -34,9 +34,16 @@ namespace Bonsai.Areas.Front.Controllers
             if (encKey != key)
                 return RedirectToActionPermanent("Description", new {key = encKey});
 
-            var vm = await _pages.GetPageDescriptionAsync(encKey)
-                                 .ConfigureAwait(false);
-            return View(vm);
+            try
+            {
+                var vm = await _pages.GetPageDescriptionAsync(encKey)
+                                     .ConfigureAwait(false);
+                return View(vm);
+            }
+            catch (RedirectRequiredException ex)
+            {
+                return RedirectToActionPermanent("Description", new {key = ex.Key});
+            }
         }
 
 
@@ -50,9 +57,16 @@ namespace Bonsai.Areas.Front.Controllers
             if (encKey != key)
                 return RedirectToActionPermanent("Media", new { key = encKey });
 
-            var vm = await _pages.GetPageMediaAsync(encKey)
-                                 .ConfigureAwait(false);
-            return View(vm);
+            try
+            {
+                var vm = await _pages.GetPageMediaAsync(encKey)
+                                     .ConfigureAwait(false);
+                return View(vm);
+            }
+            catch(RedirectRequiredException ex)
+            {
+                return RedirectToActionPermanent("Description", new { key = ex.Key });
+            }
         }
     }
 }
