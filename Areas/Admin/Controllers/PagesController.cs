@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.Utils.Helpers;
+using Bonsai.Code.Utils.Validation;
+using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +17,15 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/pages")]
     public class PagesController: AdminControllerBase
     {
-        public PagesController(PagesManagerService pages)
+        public PagesController(PagesManagerService pages, AppDbContext db)
         {
             _pages = pages;
+            _db = db;
         }
 
-        public readonly PagesManagerService _pages;
+        private readonly PagesManagerService _pages;
+        private readonly AppDbContext _db;
+
 
         /// <summary>
         /// Displays the list of pages.
@@ -59,7 +64,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("update")]
         public async Task<ActionResult> Update(Guid id)
         {
-            var vm = await _pages.RequestUpdateAsync(id).ConfigureAwait(false);
+            var vm = await _pages.RequestUpdateAsync(id, User).ConfigureAwait(false);
             return ViewEditorForm(vm);
         }
 
@@ -70,7 +75,21 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("update")]
         public async Task<ActionResult> Update(PageEditorVM vm)
         {
-            throw new NotImplementedException();
+            if(!ModelState.IsValid)
+                return ViewEditorForm(vm);
+
+            try
+            {
+                await _pages.UpdateAsync(vm, User).ConfigureAwait(false);
+                await _db.SaveChangesAsync().ConfigureAwait(false);
+
+                return RedirectToSuccess("Страница обновлена");
+            }
+            catch (ValidationException ex)
+            {
+                SetModelState(ex);
+                return ViewEditorForm(vm);
+            }
         }
 
         #region Helpers

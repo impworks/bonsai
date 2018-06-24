@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.Utils.Helpers;
+using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Impworks.Utils.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Areas.Admin.Logic
 {
@@ -18,14 +21,16 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class PagesManagerService
     {
-        public PagesManagerService(AppDbContext db, IMapper mapper)
+        public PagesManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr)
         {
             _db = db;
             _mapper = mapper;
+            _userMgr = userMgr;
         }
 
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userMgr;
 
         #region Pages
 
@@ -67,8 +72,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the original data for the editor form.
         /// </summary>
-        public async Task<PageEditorVM> RequestUpdateAsync(Guid id)
+        public async Task<PageEditorVM> RequestUpdateAsync(Guid id, ClaimsPrincipal principal)
         {
+            // todo: validate access
+
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.MainPhoto)
@@ -78,6 +85,25 @@ namespace Bonsai.Areas.Admin.Logic
                                 .ConfigureAwait(false);
 
             return _mapper.Map<Page, PageEditorVM>(page);
+        }
+
+        /// <summary>
+        /// Updates the changes to a page.
+        /// </summary>
+        public async Task UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
+        {
+            // todo: validate access
+
+            await ValidateUpdateRequestAsync(vm).ConfigureAwait(false);
+
+            var page = await _db.Pages
+                                .GetAsync(x => x.Id == vm.Id, "Страница не найдена")
+                                .ConfigureAwait(false);
+
+            var changeset = await GetUpdateChangesetAsync(page, _mapper.Map<Page>(vm), principal);
+            _db.Changes.Add(changeset);
+
+            _mapper.Map(vm, page);
         }
 
         #endregion
@@ -102,6 +128,46 @@ namespace Bonsai.Areas.Admin.Logic
             return vm;
         }
 
+        /// <summary>
+        /// Checks if the request contains valid data.
+        /// </summary>
+        private async Task ValidateUpdateRequestAsync(PageEditorVM vm)
+        {
+            var val = new Validator();
+
+            var key = PageHelper.EncodeTitle(vm.Title);
+            var otherPage = await _db.PageAliases
+                                     .AnyAsync(x => x.Key == key && x.Page.Id != vm.Id)
+                                     .ConfigureAwait(false);
+
+            if (otherPage)
+                val.Add(nameof(PageEditorVM.Title), "Страница с таким названием уже существует.");
+
+            val.ThrowIfInvalid();
+        }
+
+        /// <summary>
+        /// Gets the changeset for updates.
+        /// </summary>
+        private async Task<Changeset> GetUpdateChangesetAsync(Page prev, Page next, ClaimsPrincipal principal)
+        {
+            var userId = _userMgr.GetUserId(principal);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+
+            // todo: diff!
+
+            return new Changeset
+            {
+                Id = Guid.NewGuid(),
+                Type = ChangesetEntityType.Page,
+                Date = DateTime.Now,
+                SourceEntityId = prev.Id,
+                SourceDiff = "{}",
+                Author = user
+            };
+        }
+
         #endregion
     }
 }
+

@@ -135,9 +135,6 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AffectedDiff")
-                        .IsRequired();
-
                     b.Property<string>("AffectedEntityIds")
                         .IsRequired();
 
@@ -152,6 +149,8 @@ namespace Bonsai.Data.Migrations
                         .IsRequired();
 
                     b.Property<Guid>("SourceEntityId");
+
+                    b.Property<int>("Type");
 
                     b.HasKey("Id");
 

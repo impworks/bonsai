@@ -138,13 +138,13 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AffectedDiff = table.Column<string>(type: "text", nullable: false),
                     AffectedEntityIds = table.Column<string>(type: "text", nullable: false),
                     AppUserId = table.Column<string>(type: "text", nullable: true),
                     AuthorId = table.Column<string>(type: "text", nullable: false),
                     Date = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                     SourceDiff = table.Column<string>(type: "text", nullable: false),
-                    SourceEntityId = table.Column<Guid>(type: "uuid", nullable: false)
+                    SourceEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Type = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>
                 {

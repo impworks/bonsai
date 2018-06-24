@@ -25,6 +25,11 @@ namespace Bonsai.Data.Models
         public AppUser Author { get; set; }
 
         /// <summary>
+        /// Type of the changed entity.
+        /// </summary>
+        public ChangesetEntityType Type { get; set; }
+
+        /// <summary>
         /// ID of the entity that has been edited.
         /// </summary>
         public Guid SourceEntityId { get; set; }
@@ -40,11 +45,5 @@ namespace Bonsai.Data.Models
         /// </summary>
         [Required]
         public string AffectedEntityIds { get; set; }
-
-        /// <summary>
-        /// The diff of all other entities' changes.
-        /// </summary>
-        [Required]
-        public string AffectedDiff { get; set; }
     }
 }
