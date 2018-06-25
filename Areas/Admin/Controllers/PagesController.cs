@@ -54,7 +54,21 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("create")]
         public async Task<ActionResult> Create(PageEditorVM vm)
         {
-            throw new NotImplementedException();
+            if(!ModelState.IsValid)
+                return ViewEditorForm(vm);
+
+            try
+            {
+                await _pages.CreateAsync(vm, User).ConfigureAwait(false);
+                await _db.SaveChangesAsync().ConfigureAwait(false);
+
+                return RedirectToSuccess("Страница создана");
+            }
+            catch (ValidationException ex)
+            {
+                SetModelState(ex);
+                return ViewEditorForm(vm);
+            }
         }
 
         /// <summary>

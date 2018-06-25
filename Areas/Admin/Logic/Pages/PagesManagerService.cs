@@ -21,16 +21,18 @@ namespace Bonsai.Areas.Admin.Logic.Pages
     /// </summary>
     public class PagesManagerService
     {
-        public PagesManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr)
+        public PagesManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr, PageValidator validator)
         {
             _db = db;
             _mapper = mapper;
             _userMgr = userMgr;
+            _validator = validator;
         }
 
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userMgr;
+        private readonly PageValidator _validator;
 
         #region Pages
 
@@ -86,20 +88,61 @@ namespace Bonsai.Areas.Admin.Logic.Pages
         }
 
         /// <summary>
+        /// Creates the new page.
+        /// </summary>
+        public async Task CreateAsync(PageEditorVM vm, ClaimsPrincipal principal)
+        {
+            await ValidateRequestAsync(vm).ConfigureAwait(false);
+
+            var page = _mapper.Map<Page>(vm);
+
+            var valResult = await _validator.ValidateAsync(page, vm.Relations, vm.Facts)
+                                            .ConfigureAwait(false);
+
+            var changeset = await GetUpdateChangesetAsync(null, page, principal).ConfigureAwait(false);
+            changeset.AffectedEntityIds = valResult.AffectedPageIds.JoinString(",");
+            _db.Changes.Add(changeset);
+
+            _db.Pages.Add(page);
+            _db.Relations.AddRange(valResult.Relations);
+            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Page = page, Key = page.Key});
+        }
+
+        /// <summary>
         /// Updates the changes to a page.
         /// </summary>
         public async Task UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
         {
-            await ValidateUpdateRequestAsync(vm).ConfigureAwait(false);
+            await ValidateRequestAsync(vm).ConfigureAwait(false);
 
             var page = await _db.Pages
                                 .GetAsync(x => x.Id == vm.Id, "Страница не найдена")
                                 .ConfigureAwait(false);
 
-            var changeset = await GetUpdateChangesetAsync(page, _mapper.Map<Page>(vm), principal);
+            var valResult = await _validator.ValidateAsync(page, vm.Relations, vm.Facts)
+                                            .ConfigureAwait(false);
+
+            var changeset = await GetUpdateChangesetAsync(page, _mapper.Map<Page>(vm), principal).ConfigureAwait(false);
+            changeset.AffectedEntityIds = valResult.AffectedPageIds.JoinString(",");
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
+
+            await _db.Relations
+                     .RemoveWhereAsync(x => (x.SourceId == vm.Id && x.IsComplementary == false)
+                                            || (x.DestinationId == vm.Id && x.IsComplementary))
+                     .ConfigureAwait(false);
+            _db.Relations.AddRange(valResult.Relations);
+
+            await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id).ConfigureAwait(false);
+            _db.PageAliases.AddRange(
+                vm.Aliases.Select(x => new PageAlias
+                {
+                    Id = Guid.NewGuid(),
+                    Key = PageHelper.EncodeTitle(x),
+                    Title = x
+                })
+            );
         }
 
         #endregion
@@ -125,9 +168,9 @@ namespace Bonsai.Areas.Admin.Logic.Pages
         }
 
         /// <summary>
-        /// Checks if the request contains valid data.
+        /// Checks if the create/update request contains valid data.
         /// </summary>
-        private async Task ValidateUpdateRequestAsync(PageEditorVM vm)
+        private async Task ValidateRequestAsync(PageEditorVM vm)
         {
             var val = new Validator();
 

@@ -234,10 +234,16 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Key");
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(200);
 
                     b.Property<Guid?>("PageId")
                         .IsRequired();
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 

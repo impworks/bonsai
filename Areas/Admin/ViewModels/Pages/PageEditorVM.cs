@@ -84,6 +84,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
                    .MapMember(x => x.Type, x => x.Type)
                    .MapMember(x => x.Description, x => x.Description)
                    .MapMember(x => x.Facts, x => x.Facts)
+                   .MapMember(x => x.Key, x => PageHelper.EncodeTitle(x.Title))
                    .ForAllOtherMembers(opt => opt.Ignore());
         }
     }

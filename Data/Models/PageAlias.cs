@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bonsai.Data.Models
 {
@@ -13,8 +14,17 @@ namespace Bonsai.Data.Models
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Original title.
+        /// </summary>
+        [Required]
+        [StringLength(200)]
+        public string Title { get; set; }
+
+        /// <summary>
         /// Page key (for URL mapping).
         /// </summary>
+        [Required]
+        [StringLength(200)]
         public string Key { get; set; }
 
         /// <summary>

@@ -250,8 +250,9 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Key = table.Column<string>(type: "text", nullable: true),
-                    PageId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    PageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {

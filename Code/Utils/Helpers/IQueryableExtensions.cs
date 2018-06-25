@@ -25,5 +25,18 @@ namespace Bonsai.Code.Utils.Helpers
 
             return result;
         }
+
+        /// <summary>
+        /// Removes all objects matching a predicate.
+        /// </summary>
+        public static async Task RemoveWhereAsync<T>(this DbSet<T> source, Expression<Func<T, bool>> predicate)
+            where T : class
+        {
+            var existing = await source.Where(predicate)
+                                       .ToListAsync()
+                                       .ConfigureAwait(false);
+
+            source.RemoveRange(existing);
+        }
     }
 }
