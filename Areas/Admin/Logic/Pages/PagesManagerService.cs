@@ -10,11 +10,11 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Microsoft.EntityFrameworkCore;
 using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Bonsai.Areas.Admin.Logic
+namespace Bonsai.Areas.Admin.Logic.Pages
 {
     /// <summary>
     /// The manager service for handling pages.
@@ -72,10 +72,8 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the original data for the editor form.
         /// </summary>
-        public async Task<PageEditorVM> RequestUpdateAsync(Guid id, ClaimsPrincipal principal)
+        public async Task<PageEditorVM> RequestUpdateAsync(Guid id)
         {
-            // todo: validate access
-
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.MainPhoto)
@@ -92,8 +90,6 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
         {
-            // todo: validate access
-
             await ValidateUpdateRequestAsync(vm).ConfigureAwait(false);
 
             var page = await _db.Pages

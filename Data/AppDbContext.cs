@@ -16,7 +16,6 @@ namespace Bonsai.Data
         }
 
         public virtual DbSet<AppConfig> Config => Set<AppConfig>();
-        public virtual DbSet<AccessRule> AccessRules => Set<AccessRule>();
         public virtual DbSet<Changeset> Changes => Set<Changeset>();
         public virtual DbSet<Media> Media => Set<Media>();
         public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
@@ -33,12 +32,6 @@ namespace Bonsai.Data
 
             builder.Entity<AppUser>()
                    .HasOne(x => x.Page).WithMany().IsRequired(false);
-
-            builder.Entity<AccessRule>()
-                   .HasOne(x => x.Page).WithMany();
-
-            builder.Entity<AccessRule>()
-                .HasOne(x => x.User).WithMany();
 
             builder.Entity<Changeset>()
                    .HasOne(x => x.Author).WithMany();

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Pages;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -64,7 +64,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("update")]
         public async Task<ActionResult> Update(Guid id)
         {
-            var vm = await _pages.RequestUpdateAsync(id, User).ConfigureAwait(false);
+            var vm = await _pages.RequestUpdateAsync(id).ConfigureAwait(false);
             return ViewEditorForm(vm);
         }
 

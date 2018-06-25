@@ -47,10 +47,5 @@ namespace Bonsai.Data.Models
         /// Changes created by this user.
         /// </summary>
         public virtual ICollection<Changeset> Changes { get; set; }
-
-        /// <summary>
-        /// List of this user's access rules.
-        /// </summary>
-        public virtual ICollection<AccessRule> AccessRules { get; set; }
     }
 }

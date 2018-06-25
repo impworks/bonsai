@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180624190325_Initial")]
+    [Migration("20180625132235_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,31 +21,6 @@ namespace Bonsai.Data.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026");
-
-            modelBuilder.Entity("Bonsai.Data.Models.AccessRule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("AllowEditing");
-
-                    b.Property<string>("AppUserId");
-
-                    b.Property<Guid>("PageId");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("PageId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AccessRules");
-                });
 
             modelBuilder.Entity("Bonsai.Data.Models.AppConfig", b =>
                 {
@@ -406,23 +381,6 @@ namespace Bonsai.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Bonsai.Data.Models.AccessRule", b =>
-                {
-                    b.HasOne("Bonsai.Data.Models.AppUser")
-                        .WithMany("AccessRules")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("Bonsai.Data.Models.Page", "Page")
-                        .WithMany()
-                        .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Bonsai.Data.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.AppUser", b =>

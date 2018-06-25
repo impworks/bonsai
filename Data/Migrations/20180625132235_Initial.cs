@@ -76,21 +76,6 @@ namespace Bonsai.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AccessRules",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AllowEditing = table.Column<bool>(type: "bool", nullable: false),
-                    AppUserId = table.Column<string>(type: "text", nullable: true),
-                    PageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccessRules", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -315,21 +300,6 @@ namespace Bonsai.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessRules_AppUserId",
-                table: "AccessRules",
-                column: "AppUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccessRules_PageId",
-                table: "AccessRules",
-                column: "PageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccessRules_UserId",
-                table: "AccessRules",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -436,30 +406,6 @@ namespace Bonsai.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AccessRules_AspNetUsers_AppUserId",
-                table: "AccessRules",
-                column: "AppUserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AccessRules_AspNetUsers_UserId",
-                table: "AccessRules",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AccessRules_Pages_PageId",
-                table: "AccessRules",
-                column: "PageId",
-                principalTable: "Pages",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                 table: "AspNetUserClaims",
                 column: "UserId",
@@ -513,9 +459,6 @@ namespace Bonsai.Data.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Media_AspNetUsers_UploaderAuthorId",
                 table: "Media");
-
-            migrationBuilder.DropTable(
-                name: "AccessRules");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
