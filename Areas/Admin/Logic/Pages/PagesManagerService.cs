@@ -95,6 +95,9 @@ namespace Bonsai.Areas.Admin.Logic.Pages
             await ValidateRequestAsync(vm).ConfigureAwait(false);
 
             var page = _mapper.Map<Page>(vm);
+            page.Id = Guid.NewGuid();
+            page.CreateDate = DateTimeOffset.Now;
+            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
 
             var valResult = await _validator.ValidateAsync(page, vm.Relations, vm.Facts)
                                             .ConfigureAwait(false);
@@ -127,6 +130,7 @@ namespace Bonsai.Areas.Admin.Logic.Pages
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
+            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
 
             await _db.Relations
                      .RemoveWhereAsync(x => (x.SourceId == vm.Id && x.IsComplementary == false)
@@ -204,6 +208,27 @@ namespace Bonsai.Areas.Admin.Logic.Pages
                 SourceDiff = "{}",
                 Author = user
             };
+        }
+
+        /// <summary>
+        /// Finds the image to use for the page.
+        /// </summary>
+        private async Task<Media> FindMainPhotoAsync(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+                return null;
+
+            var media = await _db.Media
+                                 .FirstOrDefaultAsync(x => x.Key == key)
+                                 .ConfigureAwait(false);
+
+            if(media == null)
+                throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), "Фотография не найдена!");
+
+            if(media.Type != MediaType.Photo)
+                throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), "Медиа-файл не является фотографией!");
+
+            return media;
         }
 
         #endregion
