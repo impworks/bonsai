@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.DomainModel.Facts;
@@ -11,7 +11,7 @@ using Impworks.Utils.Strings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Bonsai.Areas.Admin.Logic.Pages
+namespace Bonsai.Areas.Admin.Logic.Validation
 {
     /// <summary>
     /// The validator that checks relation/fact consistency.
@@ -28,32 +28,57 @@ namespace Bonsai.Areas.Admin.Logic.Pages
         /// <summary>
         /// Checks the current relations and prepares them for database serialization.
         /// </summary>
-        public async Task<PageValidationResult> ValidateAsync(Page page, string rawFacts)
+        public async Task ValidateAsync(Page page, string rawFacts)
         {
-            ParseFacts(page.Type, rawFacts);
-
             var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
             AugmentRelationContext(context, page, rawFacts);
 
-            // todo
+            var core = new ValidatorCore();
+            core.Validate(context);
 
-            return new PageValidationResult();
+            if(core.Violations.Any())
+            {
+                throw new ValidationException(
+                    nameof(PageEditorVM.Facts),
+                    string.Join(
+                        "\n",
+                        new[] { "Противоречивые факты:" }.Concat(
+                            core.Violations.Select(x => x.Message)
+                        )
+                    )
+                );
+            }
         }
 
         #region Helpers
 
         /// <summary>
-        /// Deserializes the relation data from the JSON representation.
+        /// Adds information from the current page to the context.
         /// </summary>
-        private IReadOnlyList<PageRelationVM> DeserializeRelations(string rawRelations)
+        private void AugmentRelationContext(RelationContext context, Page page, string rawFacts)
         {
-            try
+            var facts = ParseFacts(page.Type, rawFacts);
+            var excerpt = new RelationContext.PageExcerpt
             {
-                return JsonConvert.DeserializeObject<List<PageRelationVM>>(rawRelations);
-            }
-            catch (JsonException)
+                Id = page.Id,
+                Key = page.Key,
+                Type = page.Type,
+                Title = page.Title,
+                Gender = Parse<bool>("Bio.Gender"),
+                BirthDate = Parse<FuzzyDate>("Birth.Date"),
+                DeathDate = Parse<FuzzyDate>("Death.Date"),
+            };
+
+            context.Augment(excerpt);
+
+            T? Parse<T>(string key) where T : struct
             {
-                throw new ValidationException(nameof(Page.Relations), "Данные об отношениях имеют некорректный формат!");
+                var value = facts[key].ToString();
+
+                if(typeof(T) == typeof(FuzzyDate))
+                    return (T?)(object)FuzzyDate.TryParse(value);
+
+                return value.TryParse<T?>();
             }
         }
 
@@ -82,36 +107,6 @@ namespace Bonsai.Areas.Admin.Logic.Pages
             catch (JsonException)
             {
                 throw new ValidationException(nameof(Page.Facts), "Данные о фактах имеют некорректный формат!");
-            }
-        }
-
-        /// <summary>
-        /// Adds information from the current page to the context.
-        /// </summary>
-        private void AugmentRelationContext(RelationContext context, Page page, string rawFacts)
-        {
-            var facts = ParseFacts(page.Type, rawFacts);
-            var excerpt = new RelationContext.PageExcerpt
-            {
-                Id = page.Id,
-                Key = page.Key,
-                Type = page.Type,
-                Title = page.Title,
-                Gender = Parse<bool>("Bio.Gender"),
-                BirthDate = Parse<FuzzyDate>("Birth.Date"),
-                DeathDate = Parse<FuzzyDate>("Death.Date"),
-            };
-
-            context.Augment(excerpt);
-
-            T? Parse<T>(string key) where T: struct
-            {
-                var value = facts[key].ToString();
-
-                if (typeof(T) == typeof(FuzzyDate))
-                    return (T?) (object) FuzzyDate.TryParse(value);
-
-                return value.TryParse<T?>();
             }
         }
 

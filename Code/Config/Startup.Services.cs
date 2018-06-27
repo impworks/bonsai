@@ -1,5 +1,5 @@
 ﻿using Bonsai.Areas.Admin.Logic;
-using Bonsai.Areas.Admin.Logic.Pages;
+using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;

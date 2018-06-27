@@ -91,6 +91,7 @@ namespace Bonsai.Code.DomainModel.Relations
                 var relations = await db.Relations
                                          .Select(x => new RelationExcerpt
                                          {
+                                             Id = x.Id,
                                              SourceId = x.SourceId,
                                              DestinationId = x.DestinationId,
                                              EventId = x.EventId,
@@ -171,6 +172,8 @@ namespace Bonsai.Code.DomainModel.Relations
         [DebuggerDisplay("{Type}: {SourceId} -> {DestinationId} ({Duration})")]
         public class RelationExcerpt
         {
+            public Guid Id { get; set; }
+
             public Guid SourceId { get; set; }
             public Guid DestinationId { get; set; }
             public Guid? EventId { get; set; }

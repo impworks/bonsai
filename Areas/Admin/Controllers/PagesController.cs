@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Bonsai.Areas.Admin.Logic.Pages;
+using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;

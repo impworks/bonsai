@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.Utils.Helpers;
@@ -14,7 +15,7 @@ using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bonsai.Areas.Admin.Logic.Pages
+namespace Bonsai.Areas.Admin.Logic
 {
     /// <summary>
     /// The manager service for handling pages.
@@ -99,15 +100,12 @@ namespace Bonsai.Areas.Admin.Logic.Pages
             page.CreateDate = DateTimeOffset.Now;
             page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
 
-            var valResult = await _validator.ValidateAsync(page, vm.Facts)
-                                            .ConfigureAwait(false);
+            await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
 
             var changeset = await GetUpdateChangesetAsync(null, page, principal).ConfigureAwait(false);
-            changeset.AffectedEntityIds = valResult.AffectedPageIds.JoinString(",");
             _db.Changes.Add(changeset);
 
             _db.Pages.Add(page);
-            _db.Relations.AddRange(valResult.Relations);
             _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Page = page, Key = page.Key});
         }
 
@@ -122,21 +120,13 @@ namespace Bonsai.Areas.Admin.Logic.Pages
                                 .GetAsync(x => x.Id == vm.Id, "Страница не найдена")
                                 .ConfigureAwait(false);
 
-            var valResult = await _validator.ValidateAsync(page, vm.Relations, vm.Facts)
-                                            .ConfigureAwait(false);
+            await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
 
             var changeset = await GetUpdateChangesetAsync(page, _mapper.Map<Page>(vm), principal).ConfigureAwait(false);
-            changeset.AffectedEntityIds = valResult.AffectedPageIds.JoinString(",");
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
             page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
-
-            await _db.Relations
-                     .RemoveWhereAsync(x => (x.SourceId == vm.Id && x.IsComplementary == false)
-                                            || (x.DestinationId == vm.Id && x.IsComplementary))
-                     .ConfigureAwait(false);
-            _db.Relations.AddRange(valResult.Relations);
 
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id).ConfigureAwait(false);
             _db.PageAliases.AddRange(
