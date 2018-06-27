@@ -99,7 +99,7 @@ namespace Bonsai.Areas.Admin.Logic.Pages
             page.CreateDate = DateTimeOffset.Now;
             page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
 
-            var valResult = await _validator.ValidateAsync(page, vm.Relations, vm.Facts)
+            var valResult = await _validator.ValidateAsync(page, vm.Facts)
                                             .ConfigureAwait(false);
 
             var changeset = await GetUpdateChangesetAsync(null, page, principal).ConfigureAwait(false);

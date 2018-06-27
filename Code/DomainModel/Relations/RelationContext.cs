@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
@@ -11,7 +12,7 @@ using Bonsai.Data.Utils;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bonsai.Areas.Front.Logic.Relations
+namespace Bonsai.Code.DomainModel.Relations
 {
     /// <summary>
     /// Information about all known pages and relations.
@@ -29,6 +30,19 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// List of all relations currently available.
         /// </summary>
         public IReadOnlyDictionary<Guid, IReadOnlyList<RelationExcerpt>> Relations { get; private set; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Adds extra information about the page.
+        /// </summary>
+        public void Augment(PageExcerpt page)
+        {
+            var pages = (Dictionary<Guid, PageExcerpt>) Pages;
+            pages[page.Id] = page;
+        }
 
         #endregion
 

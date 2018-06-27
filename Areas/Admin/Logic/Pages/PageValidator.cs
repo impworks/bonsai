@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.DomainModel.Facts;
-using Bonsai.Code.DomainModel.Facts.Models;
+using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Strings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -26,10 +28,14 @@ namespace Bonsai.Areas.Admin.Logic.Pages
         /// <summary>
         /// Checks the current relations and prepares them for database serialization.
         /// </summary>
-        public async Task<PageValidationResult> ValidateAsync(Page page, string rawRelations, string rawFacts)
+        public async Task<PageValidationResult> ValidateAsync(Page page, string rawFacts)
         {
-            var relations = DeserializeRelations(rawRelations);
-            var facts = DeserializeFacts(page.Type, rawFacts);
+            ParseFacts(page.Type, rawFacts);
+
+            var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
+            AugmentRelationContext(context, page, rawFacts);
+
+            // todo
 
             return new PageValidationResult();
         }
@@ -54,38 +60,58 @@ namespace Bonsai.Areas.Admin.Logic.Pages
         /// <summary>
         /// Deserializes the fact data.
         /// </summary>
-        private IReadOnlyList<FactModelBase> DeserializeFacts(PageType type, string rawFacts)
+        private JObject ParseFacts(PageType type, string rawFacts)
         {
             try
             {
-                var result = new List<FactModelBase>();
                 if (string.IsNullOrEmpty(rawFacts))
-                    return result;
+                    return new JObject();
 
                 var pageFacts = JObject.Parse(rawFacts);
-
-                foreach(var group in FactDefinitions.Groups[type])
+                foreach (var prop in pageFacts)
                 {
-                    foreach(var fact in group.Facts)
-                    {
-                        var key = group.Id + "." + fact.Id;
-                        var factInfo = pageFacts[key];
+                    var def = FactDefinitions.TryGetDefinition(type, prop.Key);
+                    if (def == null)
+                        throw new ValidationException(nameof(Page.Facts), $"Тип факта {prop.Key} не существует!");
 
-                        if(factInfo == null)
-                            continue;
-
-                        var vm = (FactModelBase)JsonConvert.DeserializeObject(factInfo.ToString(), fact.Kind);
-                        vm.Definition = fact;
-
-                        result.Add(vm);
-                    }
+                    JsonConvert.DeserializeObject(prop.Value.ToString(), def.Kind);
                 }
 
-                return result;
+                return pageFacts;
             }
             catch (JsonException)
             {
                 throw new ValidationException(nameof(Page.Facts), "Данные о фактах имеют некорректный формат!");
+            }
+        }
+
+        /// <summary>
+        /// Adds information from the current page to the context.
+        /// </summary>
+        private void AugmentRelationContext(RelationContext context, Page page, string rawFacts)
+        {
+            var facts = ParseFacts(page.Type, rawFacts);
+            var excerpt = new RelationContext.PageExcerpt
+            {
+                Id = page.Id,
+                Key = page.Key,
+                Type = page.Type,
+                Title = page.Title,
+                Gender = Parse<bool>("Bio.Gender"),
+                BirthDate = Parse<FuzzyDate>("Birth.Date"),
+                DeathDate = Parse<FuzzyDate>("Death.Date"),
+            };
+
+            context.Augment(excerpt);
+
+            T? Parse<T>(string key) where T: struct
+            {
+                var value = facts[key].ToString();
+
+                if (typeof(T) == typeof(FuzzyDate))
+                    return (T?) (object) FuzzyDate.TryParse(value);
+
+                return value.TryParse<T?>();
             }
         }
 

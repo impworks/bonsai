@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
-using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
 {
@@ -44,11 +42,6 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         public string Facts { get; set; }
 
         /// <summary>
-        /// Serialized collection of relations to current entity.
-        /// </summary>
-        public string Relations { get; set; }
-
-        /// <summary>
         /// Key of the main photo.
         /// </summary>
         public string MainPhotoKey { get; set; }
@@ -67,16 +60,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
                    .MapMember(x => x.Description, x => x.Description)
                    .MapMember(x => x.Facts, x => x.Facts)
                    .MapMember(x => x.Aliases, x => x.Aliases.Select(y => y.Key).ToList())
-                   .MapMember(x => x.MainPhotoKey, x => x.MainPhoto.Key)
-                   .MapMember(
-                       x => x.Relations,
-                       x => JsonConvert.SerializeObject(
-                           x.Relations
-                            .Where(y => !y.IsComplementary)
-                            .AsQueryable()
-                            .ProjectTo<PageRelationVM>()
-                       )
-                   );
+                   .MapMember(x => x.MainPhotoKey, x => x.MainPhoto.Key);
 
             profile.CreateMap<PageEditorVM, Page>()
                    .MapMember(x => x.Id, x => x.Id)
