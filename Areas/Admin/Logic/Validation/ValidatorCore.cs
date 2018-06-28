@@ -27,11 +27,15 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         /// <summary>
         /// Checks the context for contradictory facts.
         /// </summary>
-        public void Validate(RelationContext context)
+        public void Validate(RelationContext context, Guid[] updatedPageIds = null)
         {
-            CheckWeddingConsistency(context);
+            CheckLifespans(context);
+            CheckWeddings(context);
+            CheckParentLifespans(context);
 
-            // todo: other validations
+            if(updatedPageIds != null)
+                foreach(var pageId in updatedPageIds)
+                    CheckLoops(context, pageId);
         }
 
         #region Checks
@@ -39,11 +43,11 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         /// <summary>
         /// Checks the context for inconsistent wedding information.
         /// </summary>
-        private void CheckWeddingConsistency(RelationContext context)
+        private void CheckWeddings(RelationContext context)
         {
             foreach (var rel in context.Relations.Values.SelectMany(x => x))
             {
-                if (rel.Type != RelationType.Spouse)
+                if (rel.Type != RelationType.Spouse || rel.IsComplementary)
                     continue;
 
                 var first = context.Pages[rel.SourceId];
@@ -60,6 +64,65 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                     if(dur.RangeStart < second.BirthDate || dur.RangeEnd > second.DeathDate)
                         AddViolation("Брак должен быть ограничен временем жизни супруга", first.Id, rel.Id);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks the lifespans consistency of each person/pet page.
+        /// </summary>
+        private void CheckLifespans(RelationContext context)
+        {
+            foreach (var page in context.Pages.Values)
+            {
+                if(page.BirthDate <= page.DeathDate)
+                    AddViolation("Дата рождения не может быть раньше даты смерти", page.Id);
+            }
+        }
+
+        /// <summary>
+        /// Checks the context for inconsistencies with lifespans of parents/children.
+        /// </summary>
+        private void CheckParentLifespans(RelationContext context)
+        {
+            foreach (var rel in context.Relations.Values.SelectMany(x => x))
+            {
+                if (rel.Type != RelationType.Child)
+                    continue;
+
+                var parent = context.Pages[rel.SourceId];
+                var child = context.Pages[rel.DestinationId];
+
+                if(parent.BirthDate >= child.BirthDate)
+                    AddViolation("Родитель не может быть старше ребенка", parent.Id, rel.Id);
+            }
+        }
+
+        /// <summary>
+        /// Finds loops of a particular relation in the relation graph.
+        /// </summary>
+        private void CheckLoops(RelationContext context, Guid pageId)
+        {
+            var isLoopFound = false;
+            var visited = context.Pages.ToDictionary(x => x.Key, x => false);
+            CheckLoopsInternal(pageId);
+
+            void CheckLoopsInternal(Guid id)
+            {
+                if (isLoopFound)
+                    return;
+
+                if (visited[id])
+                {
+                    isLoopFound = true;
+                    AddViolation("Два человека не могут быть родителями друг для друга", id);
+                    return;
+                }
+
+                visited[id] = true;
+
+                foreach(var rel in context.Relations[id])
+                    if(rel.Type == RelationType.Parent)
+                        CheckLoopsInternal(rel.DestinationId);
             }
         }
 

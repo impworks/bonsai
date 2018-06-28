@@ -34,7 +34,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
             AugmentRelationContext(context, page, rawFacts);
 
             var core = new ValidatorCore();
-            core.Validate(context);
+            core.Validate(context, new [] { page.Id });
 
             if(core.Violations.Any())
             {

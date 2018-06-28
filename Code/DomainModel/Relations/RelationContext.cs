@@ -96,7 +96,8 @@ namespace Bonsai.Code.DomainModel.Relations
                                              DestinationId = x.DestinationId,
                                              EventId = x.EventId,
                                              Duration = FuzzyRange.TryParse(x.Duration),
-                                             Type = x.Type
+                                             Type = x.Type,
+                                             IsComplementary = x.IsComplementary
                                          })
                                          .GroupBy(x => x.SourceId)
                                          .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>)x.ToList())
@@ -179,6 +180,7 @@ namespace Bonsai.Code.DomainModel.Relations
             public Guid? EventId { get; set; }
             public RelationType Type { get; set; }
             public FuzzyRange? Duration { get; set; }
+            public bool IsComplementary { get; set; }
         }
 
         #endregion
