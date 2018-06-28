@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180625154608_Initial")]
+    [Migration("20180628123334_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,9 +111,6 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AffectedEntityIds")
-                        .IsRequired();
-
                     b.Property<string>("AppUserId");
 
                     b.Property<string>("AuthorId")
@@ -121,12 +118,13 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<string>("SourceDiff")
-                        .IsRequired();
+                    b.Property<Guid>("EntityId");
 
-                    b.Property<Guid>("SourceEntityId");
+                    b.Property<string>("OriginalState");
 
                     b.Property<int>("Type");
+
+                    b.Property<string>("UpdatedState");
 
                     b.HasKey("Id");
 

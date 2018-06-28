@@ -32,18 +32,16 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// ID of the entity that has been edited.
         /// </summary>
-        public Guid SourceEntityId { get; set; }
+        public Guid EntityId { get; set; }
 
         /// <summary>
-        /// The diff of the entity's changes.
+        /// The original state (before the change).
         /// </summary>
-        [Required]
-        public string SourceDiff { get; set; }
+        public string OriginalState { get; set; }
 
         /// <summary>
-        /// IDs of entities that have been transitively affected by the change.
+        /// The new state (after the change).
         /// </summary>
-        [Required]
-        public string AffectedEntityIds { get; set; }
+        public string UpdatedState { get; set; }
     }
 }

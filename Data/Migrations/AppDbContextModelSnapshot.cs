@@ -110,9 +110,6 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AffectedEntityIds")
-                        .IsRequired();
-
                     b.Property<string>("AppUserId");
 
                     b.Property<string>("AuthorId")
@@ -120,12 +117,13 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<string>("SourceDiff")
-                        .IsRequired();
+                    b.Property<Guid>("EntityId");
 
-                    b.Property<Guid>("SourceEntityId");
+                    b.Property<string>("OriginalState");
 
                     b.Property<int>("Type");
+
+                    b.Property<string>("UpdatedState");
 
                     b.HasKey("Id");
 

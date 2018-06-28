@@ -14,6 +14,7 @@ using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Logic
 {
@@ -102,7 +103,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
 
-            var changeset = await GetUpdateChangesetAsync(null, page, principal).ConfigureAwait(false);
+            var changeset = await GetUpdateChangesetAsync(null, vm, principal).ConfigureAwait(false);
             _db.Changes.Add(changeset);
 
             _db.Pages.Add(page);
@@ -122,7 +123,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
 
-            var changeset = await GetUpdateChangesetAsync(page, _mapper.Map<Page>(vm), principal).ConfigureAwait(false);
+            var changeset = await GetUpdateChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, principal).ConfigureAwait(false);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
@@ -182,21 +183,23 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Gets the changeset for updates.
         /// </summary>
-        private async Task<Changeset> GetUpdateChangesetAsync(Page prev, Page next, ClaimsPrincipal principal)
+        private async Task<Changeset> GetUpdateChangesetAsync(PageEditorVM prev, PageEditorVM next, ClaimsPrincipal principal)
         {
+            if(prev == null && next == null)
+                throw new ArgumentNullException();
+
             var userId = _userMgr.GetUserId(principal);
             var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
-
-            // todo: diff!
 
             return new Changeset
             {
                 Id = Guid.NewGuid(),
                 Type = ChangesetEntityType.Page,
                 Date = DateTime.Now,
-                SourceEntityId = prev.Id,
-                SourceDiff = "{}",
-                Author = user
+                EntityId = (prev ?? next).Id,
+                Author = user,
+                OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
+                UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
             };
         }
 
