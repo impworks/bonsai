@@ -10,7 +10,6 @@ namespace Bonsai.Areas.Admin.Controllers
     /// <summary>
     /// Controller for managing the global configuration.
     /// </summary>
-    [Area("Admin")]
     [Route("admin/config")]
     public class AppConfigController: AdminControllerBase
     {

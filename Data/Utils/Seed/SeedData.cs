@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;

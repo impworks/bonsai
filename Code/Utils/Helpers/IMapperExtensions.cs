@@ -19,5 +19,16 @@ namespace Bonsai.Code.Utils.Helpers
         {
             return map.ForMember(destMember, opt => opt.MapFrom(sourceMember));
         }
+
+        /// <summary>
+        /// Shorthand method for mapping members (allows automatic mapping via the user).
+        /// </summary>
+        public static IMappingExpression<TSource, TDest> MapMemberDynamic<TSource, TDest, TSourceProp, TDestProp>(
+            this IMappingExpression<TSource, TDest> map,
+            Expression<Func<TDest, TDestProp>> destMember,
+            Expression<Func<TSource, TSourceProp>> sourceMember)
+        {
+            return map.ForMember(destMember, opt => opt.MapFrom(sourceMember));
+        }
     }
 }

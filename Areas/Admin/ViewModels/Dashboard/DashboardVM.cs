@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Bonsai.Areas.Admin.ViewModels.User;
+using Bonsai.Areas.Admin.ViewModels.Users;
 
 namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 {

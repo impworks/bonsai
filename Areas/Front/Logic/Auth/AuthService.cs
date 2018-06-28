@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
-using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;

@@ -13,7 +13,6 @@ namespace Bonsai.Areas.Admin.Controllers
     /// <summary>
     /// Controller for handling pages.
     /// </summary>
-    [Area("Admin")]
     [Route("admin/pages")]
     public class PagesController: AdminControllerBase
     {
@@ -25,7 +24,6 @@ namespace Bonsai.Areas.Admin.Controllers
 
         private readonly PagesManagerService _pages;
         private readonly AppDbContext _db;
-
 
         /// <summary>
         /// Displays the list of pages.

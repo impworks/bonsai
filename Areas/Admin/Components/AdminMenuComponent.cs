@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Menu;
-using Bonsai.Areas.Admin.ViewModels.User;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +38,7 @@ namespace Bonsai.Areas.Admin.Components
             groups.Add(
                 new MenuGroupVM(
                     new MenuItemVM { Title = "Страницы", Url = Url.Action("Index", "Pages", new { area = "Admin" }) },
+                    new MenuItemVM { Title = "Связи", Url = Url.Action("Index", "Relations", new { area = "Admin" }) },
                     new MenuItemVM { Title = "Медиа", Url = "/#" }
                 )
             );

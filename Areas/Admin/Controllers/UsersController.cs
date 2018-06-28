@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
-using Bonsai.Areas.Admin.ViewModels.User;
+using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -13,18 +13,17 @@ namespace Bonsai.Areas.Admin.Controllers
     /// <summary>
     /// Controller for managing users.
     /// </summary>
-    [Area("Admin")]
     [Route("admin/users")]
     public class UsersController: AdminControllerBase
     {
-        public UsersController(UserManagerService users, UserManager<AppUser> userMgr, AppDbContext db)
+        public UsersController(UsersManagerService users, UserManager<AppUser> userMgr, AppDbContext db)
         {
             _users = users;
             _userMgr = userMgr;
             _db = db;
         }
 
-        private readonly UserManagerService _users;
+        private readonly UsersManagerService _users;
         private readonly UserManager<AppUser> _userMgr;
         private readonly AppDbContext _db;
 
@@ -33,9 +32,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult> Index([FromQuery] UserListRequestVM vm)
+        public async Task<ActionResult> Index([FromQuery] UsersListRequestVM vm)
         {
-            var users = await _users.GetUsersListAsync(vm).ConfigureAwait(false);
+            var users = await _users.GetUsersAsync(vm).ConfigureAwait(false);
             return View(users);
         }
 

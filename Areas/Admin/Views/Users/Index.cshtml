@@ -1,8 +1,8 @@
-﻿@using Bonsai.Areas.Admin.ViewModels.User
+﻿@using Bonsai.Areas.Admin.ViewModels.Users
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
 @using Impworks.Utils.Format
-@model UserListVM
+@model Bonsai.Areas.Admin.ViewModels.Users.UsersListVM
 @{
     ViewBag.Title = "Список пользователей";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
@@ -26,9 +26,9 @@
             @await Component.InvokeAsync("ListEnumFilterComponent", new
             {
                 request = Model.Request,
-                propName = nameof(UserListRequestVM.Roles)
+                propName = nameof(UsersListRequestVM.Roles)
             })
-            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(UserListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя / E-mail" />
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(UsersListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя / E-mail" />
             <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
         </form>
     </div>

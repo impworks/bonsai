@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
-using Bonsai.Areas.Admin.ViewModels.User;
+using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Data;
 using Microsoft.EntityFrameworkCore;
 

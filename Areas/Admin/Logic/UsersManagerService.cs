@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Bonsai.Areas.Admin.ViewModels.User;
+using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -20,9 +20,9 @@ namespace Bonsai.Areas.Admin.Logic
     /// <summary>
     /// Service for handling user accounts.
     /// </summary>
-    public class UserManagerService
+    public class UsersManagerService
     {
-        public UserManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper)
+        public UsersManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper)
         {
             _db = db;
             _userMgr = userMgr;
@@ -36,7 +36,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the list of all registered users.
         /// </summary>
-        public async Task<UserListVM> GetUsersListAsync(UserListRequestVM request)
+        public async Task<UsersListVM> GetUsersAsync(UsersListRequestVM request)
         {
             const int PageSize = 20;
 
@@ -60,7 +60,7 @@ namespace Bonsai.Areas.Admin.Logic
                              .Take(PageSize)
                              .ToList();
 
-            return new UserListVM
+            return new UsersListVM
             {
                 Items = items,
                 PageCount = (int) Math.Ceiling((double) totalCount / PageSize),
@@ -162,10 +162,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the request with default/valid values.
         /// </summary>
-        private UserListRequestVM NormalizeListRequest(UserListRequestVM vm)
+        private UsersListRequestVM NormalizeListRequest(UsersListRequestVM vm)
         {
             if (vm == null)
-                vm = new UserListRequestVM();
+                vm = new UsersListRequestVM();
 
             var orderableFields = new[] {nameof(UserTitleVM.FullName), nameof(UserTitleVM.Email)};
             if (!orderableFields.Contains(vm.OrderBy))

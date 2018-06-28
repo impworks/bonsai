@@ -2,7 +2,7 @@
 using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.ViewModels.User
+namespace Bonsai.Areas.Admin.ViewModels.Users
 {
     /// <summary>
     /// Information about a user removal request.

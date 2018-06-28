@@ -4,7 +4,7 @@ using AutoMapper;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.ViewModels.User
+namespace Bonsai.Areas.Admin.ViewModels.Users
 {
     /// <summary>
     /// VM for editing a user.

@@ -30,9 +30,10 @@ namespace Bonsai.Code.Config
             // admin
             services.AddScoped<PageValidator>();
             services.AddScoped<DashboardPresenterService>();
-            services.AddScoped<UserManagerService>();
+            services.AddScoped<UsersManagerService>();
             services.AddScoped<AppConfigManagerService>();
             services.AddScoped<PagesManagerService>();
+            services.AddScoped<RelationsManagerService>();
             services.AddScoped<MediaManagerService>();
         }
     }
