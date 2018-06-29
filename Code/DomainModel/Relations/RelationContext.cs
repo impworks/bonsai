@@ -36,12 +36,32 @@ namespace Bonsai.Code.DomainModel.Relations
         #region Methods
 
         /// <summary>
-        /// Adds extra information about the page.
+        /// Adds extra information about a page.
         /// </summary>
         public void Augment(PageExcerpt page)
         {
             var pages = (Dictionary<Guid, PageExcerpt>) Pages;
             pages[page.Id] = page;
+        }
+
+        /// <summary>
+        /// Adds extra information about a relation.
+        /// </summary>
+        public void Augment(RelationExcerpt rel)
+        {
+            var rels = (Dictionary<Guid, List<RelationExcerpt>>) Relations;
+            if (rels.TryGetValue(rel.SourceId, out var list))
+            {
+                var existing = list.FirstOrDefault(x => x.DestinationId == rel.DestinationId && x.Type == rel.Type);
+                if (existing != null)
+                    list.Remove(existing);
+
+                list.Add(rel);
+            }
+            else
+            {
+                rels[rel.SourceId] = new List<RelationExcerpt> {rel};
+            }
         }
 
         #endregion
@@ -89,19 +109,19 @@ namespace Bonsai.Code.DomainModel.Relations
                     page.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(page.MainPhotoPath, MediaSize.Small);
 
                 var relations = await db.Relations
-                                         .Select(x => new RelationExcerpt
-                                         {
-                                             Id = x.Id,
-                                             SourceId = x.SourceId,
-                                             DestinationId = x.DestinationId,
-                                             EventId = x.EventId,
-                                             Duration = FuzzyRange.TryParse(x.Duration),
-                                             Type = x.Type,
-                                             IsComplementary = x.IsComplementary
-                                         })
-                                         .GroupBy(x => x.SourceId)
-                                         .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>)x.ToList())
-                                         .ConfigureAwait(false);
+                                        .Select(x => new RelationExcerpt
+                                        {
+                                            Id = x.Id,
+                                            SourceId = x.SourceId,
+                                            DestinationId = x.DestinationId,
+                                            EventId = x.EventId,
+                                            Duration = FuzzyRange.TryParse(x.Duration),
+                                            Type = x.Type,
+                                            IsComplementary = x.IsComplementary
+                                        })
+                                        .GroupBy(x => x.SourceId)
+                                        .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList())
+                                        .ConfigureAwait(false);
 
                 return new RelationContext
                 {

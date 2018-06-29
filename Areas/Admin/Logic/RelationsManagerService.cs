@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Relations;
+using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Helpers;
+using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
+using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Logic
 {
@@ -14,12 +24,18 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class RelationsManagerService
     {
-        public RelationsManagerService(AppDbContext db)
+        public RelationsManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr, RelationValidator validator)
         {
             _db = db;
+            _mapper = mapper;
+            _userMgr = userMgr;
+            _validator = validator;
         }
 
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userMgr;
+        private readonly RelationValidator _validator;
 
         /// <summary>
         /// Returns the found relations.
@@ -30,7 +46,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
-            var query = _db.Relations.AsQueryable();
+            var query = _db.Relations.Where(x => x.IsComplementary == false);
 
             if (!string.IsNullOrEmpty(request.SearchQuery))
             {
@@ -67,6 +83,50 @@ namespace Bonsai.Areas.Admin.Logic
             };
         }
 
+        /// <summary>
+        /// Creates a new relation.
+        /// </summary>
+        public async Task CreateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
+        {
+            await ValidateRequestAsync(vm).ConfigureAwait(false);
+
+            var rel = _mapper.Map<Relation>(vm);
+            rel.Id = Guid.NewGuid();
+
+            var rels = new[] {rel, GetComplementaryRelation(vm)};
+
+            await _validator.ValidateAsync(rels).ConfigureAwait(false);
+
+            var changeset = await GetChangesetAsync(null, vm, rel.Id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
+
+            _db.Relations.AddRange(rels);
+        }
+
+        /// <summary>
+        /// Returns the form information for updating a relation.
+        /// </summary>
+        public async Task<RelationEditorVM> RequestUpdateAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Updates the relation.
+        /// </summary>
+        public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Removes the relation.
+        /// </summary>
+        public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
+        {
+            throw new NotImplementedException();
+        }
+
         #region Helpers
 
         /// <summary>
@@ -85,6 +145,98 @@ namespace Bonsai.Areas.Admin.Logic
                 vm.Page = 0;
 
             return vm;
+        }
+
+        /// <summary>
+        /// Checks if the create/update request contains valid data.
+        /// </summary>
+        private async Task ValidateRequestAsync(RelationEditorVM vm)
+        {
+            var val = new Validator();
+
+            var pageIds = new [] {vm.SourceId, vm.DestinationId, vm.EventId ?? Guid.Empty};
+            var pages = await _db.Pages
+                                 .Where(x => pageIds.Contains(x.Id))
+                                 .ToDictionaryAsync(x => x.Id, x => x.Type)
+                                 .ConfigureAwait(false);
+
+            var sourceType = pages.TryGetNullableValue(vm.SourceId);
+            var destType = pages.TryGetNullableValue(vm.DestinationId);
+            var eventType = pages.TryGetNullableValue(vm.EventId ?? Guid.Empty);
+
+            if (sourceType == null)
+                val.Add(nameof(vm.SourceId), "Страница не найдена");
+
+            if (destType == null)
+                val.Add(nameof(vm.DestinationId), "Страница не найдена");
+
+            if (sourceType != null && destType != null && !RelationHelper.IsRelationAllowed(sourceType.Value, destType.Value, vm.Type))
+                val.Add(nameof(vm.Type), "Тип связи недопустимм для данных страниц");
+
+            if (vm.EventId != null)
+            {
+                if(eventType == null)
+                    val.Add(nameof(vm.EventId), "Страница не найдена");
+                else if(eventType != PageType.Event)
+                    val.Add(nameof(vm.EventId), "Требуется страница события");
+                else if(!RelationHelper.IsRelationEventReferenceAllowed(vm.Type))
+                    val.Add(nameof(vm.EventId), "Событие нельзя привязать к данному типу связи");
+            }
+
+            if(!string.IsNullOrEmpty(vm.Duration) && FuzzyRange.TryParse(vm.Duration) == null)
+                val.Add(nameof(vm.Duration), "Введите дату в корректном формате");
+
+            var existingRelation = await _db.Relations
+                                            .AnyAsync(x => x.SourceId == vm.SourceId
+                                                           && x.DestinationId == vm.DestinationId
+                                                           && x.Type == vm.Type
+                                                           && x.Id != vm.Id)
+                                            .ConfigureAwait(false);
+
+            if (existingRelation)
+                val.Add(nameof(vm.DestinationId), "Такая связь уже существует!");
+
+            val.ThrowIfInvalid();
+        }
+        
+        /// <summary>
+        /// Gets the changeset for updates.
+        /// </summary>
+        private async Task<Changeset> GetChangesetAsync(RelationEditorVM prev, RelationEditorVM next, Guid id, ClaimsPrincipal principal)
+        {
+            if(prev == null && next == null)
+                throw new ArgumentNullException();
+
+            var userId = _userMgr.GetUserId(principal);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+
+            return new Changeset
+            {
+                Id = Guid.NewGuid(),
+                Type = ChangesetEntityType.Relation,
+                Date = DateTime.Now,
+                EntityId = id,
+                Author = user,
+                OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
+                UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
+            };
+        }
+
+        /// <summary>
+        /// Creates a complimentary inverse relation.
+        /// </summary>
+        private Relation GetComplementaryRelation(RelationEditorVM vm)
+        {
+            return new Relation
+            {
+                Id = Guid.NewGuid(),
+                SourceId = vm.DestinationId,
+                DestinationId = vm.SourceId,
+                Type = RelationHelper.ComplementaryRelations[vm.Type],
+                EventId = vm.EventId,
+                Duration = vm.Duration,
+                IsComplementary = true
+            };
         }
 
         #endregion

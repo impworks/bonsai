@@ -35,7 +35,8 @@ namespace Bonsai.Areas.Admin.Logic.Validation
 
             if(updatedPageIds != null)
                 foreach(var pageId in updatedPageIds)
-                    CheckLoops(context, pageId);
+                    if(pageId != Guid.Empty)
+                        CheckLoops(context, pageId);
         }
 
         #region Checks

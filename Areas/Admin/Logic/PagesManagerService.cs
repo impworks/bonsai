@@ -72,6 +72,27 @@ namespace Bonsai.Areas.Admin.Logic
                 Request = request
             };
         }
+        
+        /// <summary>
+        /// Creates the new page.
+        /// </summary>
+        public async Task CreateAsync(PageEditorVM vm, ClaimsPrincipal principal)
+        {
+            await ValidateRequestAsync(vm).ConfigureAwait(false);
+
+            var page = _mapper.Map<Page>(vm);
+            page.Id = Guid.NewGuid();
+            page.CreateDate = DateTimeOffset.Now;
+            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
+
+            await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
+
+            var changeset = await GetChangesetAsync(null, vm, page.Id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
+
+            _db.Pages.Add(page);
+            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Page = page, Key = page.Key});
+        }
 
         /// <summary>
         /// Returns the original data for the editor form.
@@ -90,27 +111,6 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
-        /// Creates the new page.
-        /// </summary>
-        public async Task CreateAsync(PageEditorVM vm, ClaimsPrincipal principal)
-        {
-            await ValidateRequestAsync(vm).ConfigureAwait(false);
-
-            var page = _mapper.Map<Page>(vm);
-            page.Id = Guid.NewGuid();
-            page.CreateDate = DateTimeOffset.Now;
-            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
-
-            await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
-
-            var changeset = await GetUpdateChangesetAsync(null, vm, principal).ConfigureAwait(false);
-            _db.Changes.Add(changeset);
-
-            _db.Pages.Add(page);
-            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Page = page, Key = page.Key});
-        }
-
-        /// <summary>
         /// Updates the changes to a page.
         /// </summary>
         public async Task UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
@@ -123,7 +123,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
 
-            var changeset = await GetUpdateChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, principal).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, vm.Id, principal).ConfigureAwait(false);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
@@ -183,7 +183,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Gets the changeset for updates.
         /// </summary>
-        private async Task<Changeset> GetUpdateChangesetAsync(PageEditorVM prev, PageEditorVM next, ClaimsPrincipal principal)
+        private async Task<Changeset> GetChangesetAsync(PageEditorVM prev, PageEditorVM next, Guid id, ClaimsPrincipal principal)
         {
             if(prev == null && next == null)
                 throw new ArgumentNullException();
@@ -196,7 +196,7 @@ namespace Bonsai.Areas.Admin.Logic
                 Id = Guid.NewGuid(),
                 Type = ChangesetEntityType.Page,
                 Date = DateTime.Now,
-                EntityId = (prev ?? next).Id,
+                EntityId = id,
                 Author = user,
                 OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),

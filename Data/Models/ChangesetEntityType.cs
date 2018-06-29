@@ -13,6 +13,11 @@
         /// <summary>
         /// A media file has been changed
         /// </summary>
-        Media
+        Media,
+
+        /// <summary>
+        /// A relation has been changed
+        /// </summary>
+        Relation
     }
 }
