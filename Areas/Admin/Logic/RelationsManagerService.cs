@@ -108,7 +108,11 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<RelationEditorVM> RequestUpdateAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var rel = await _db.Relations
+                               .GetAsync(x => x.Id == id, "Связь не найдена")
+                               .ConfigureAwait(false);
+
+            return _mapper.Map<RelationEditorVM>(rel);
         }
 
         /// <summary>
@@ -116,7 +120,22 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
         {
-            throw new NotImplementedException();
+            await ValidateRequestAsync(vm).ConfigureAwait(false);
+
+            var rel = await _db.Relations
+                               .GetAsync(x => x.Id == vm.Id, "Связь не найдена")
+                               .ConfigureAwait(false);
+
+            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
+
+            await RemoveComplementaryRelationAsync(rel).ConfigureAwait(false);
+            _mapper.Map(vm, rel);
+
+            var rels = new[] {rel, GetComplementaryRelation(vm)};
+            await _validator.ValidateAsync(rels).ConfigureAwait(false);
+
+            _db.Relations.AddRange(rels);
         }
 
         /// <summary>
@@ -124,7 +143,15 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
-            throw new NotImplementedException();
+            var rel = await _db.Relations
+                               .GetAsync(x => x.Id == id, "Связь не найдена")
+                               .ConfigureAwait(false);
+
+            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
+
+            await RemoveComplementaryRelationAsync(rel).ConfigureAwait(false);
+            _db.Relations.Remove(rel);
         }
 
         #region Helpers
@@ -237,6 +264,23 @@ namespace Bonsai.Areas.Admin.Logic
                 Duration = vm.Duration,
                 IsComplementary = true
             };
+        }
+
+        /// <summary>
+        /// Removes the complementary relation (it is always recreated).
+        /// </summary>
+        private async Task RemoveComplementaryRelationAsync(Relation rel)
+        {
+            var compRelType = RelationHelper.ComplementaryRelations[rel.Type];
+            var compRel = await _db.Relations
+                                   .FirstOrDefaultAsync(x => x.SourceId == rel.DestinationId
+                                                             && x.DestinationId == rel.SourceId
+                                                             && x.Type == compRelType
+                                                             && x.IsComplementary)
+                                   .ConfigureAwait(false);
+
+            if (compRel != null)
+                _db.Relations.Remove(compRel);
         }
 
         #endregion
