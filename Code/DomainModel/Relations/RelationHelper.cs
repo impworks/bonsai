@@ -12,7 +12,7 @@ namespace Bonsai.Code.DomainModel.Relations
         /// <summary>
         /// Complementary relation bindings.
         /// </summary>
-        public static IReadOnlyDictionary<RelationType, RelationType> ComplementaryRelations = new Dictionary<RelationType, RelationType>
+        public static readonly IReadOnlyDictionary<RelationType, RelationType> ComplementaryRelations = new Dictionary<RelationType, RelationType>
         {
             [RelationType.Parent] = RelationType.Child,
             [RelationType.Child] = RelationType.Parent,

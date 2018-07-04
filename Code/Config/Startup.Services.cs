@@ -35,6 +35,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<PagesManagerService>();
             services.AddScoped<RelationsManagerService>();
             services.AddScoped<MediaManagerService>();
+            services.AddScoped<SuggestService>();
         }
     }
 }
