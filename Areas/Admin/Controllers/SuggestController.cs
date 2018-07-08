@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Mvc;
@@ -37,17 +36,24 @@ namespace Bonsai.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// Suggests pages for relations.
+        /// Suggests pages for relation source / media tag.
         /// </summary>
         [HttpGet]
         [Route("pages")]
-        public async Task<ActionResult> SuggestPages(string query, PageType pageType, RelationType relType)
+        public async Task<ActionResult> SuggestPages(string query, PageType[] pageTypes)
         {
-            var pages = await _suggest.SuggestRelatedPagesAsync(query, pageType, relType).ConfigureAwait(false);
+            var pages = await _suggest.SuggestPagesAsync(query, pageTypes).ConfigureAwait(false);
+            return Json(pages);
+        }
 
-            foreach (var page in pages)
-                page.MainPhotoPath = Url.Content(PageHelper.GetPageImageUrl(page.Type, page.MainPhotoPath));
-
+        /// <summary>
+        /// Suggests pages for relation target.
+        /// </summary>
+        [HttpGet]
+        [Route("relatedPages")]
+        public async Task<ActionResult> SuggestRelatedPages(string query, PageType otherType, RelationType relType)
+        {
+            var pages = await _suggest.SuggestRelatedPagesAsync(query, otherType, relType).ConfigureAwait(false);
             return Json(pages);
         }
     }

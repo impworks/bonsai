@@ -52,7 +52,7 @@ namespace Bonsai.Code.Utils.Helpers
         public static string GetPageImageUrl(PageType? type, string image, string fallback = null)
         {
             var typeStr = (type ?? PageType.Person).ToString().ToLower();
-            return StringHelper.Coalesce(image, fallback, $"~/assets/img/unknown-{type}.svg");
+            return StringHelper.Coalesce(image, fallback, $"~/assets/img/unknown-{typeStr}.svg");
         }
     }
 }
