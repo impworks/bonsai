@@ -1,0 +1,58 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Admin.ViewModels.Relations
+@model RelationEditorVM
+@{
+    var isNew = (bool)ViewBag.IsNew;
+    ViewBag.Title = isNew ? "Создание связи" : "Редактор связи";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var formAction = Url.Action(isNew ? "Create" : "Update", "Pages", new { area = "Admin" });
+}
+
+<h1>@ViewBag.Title</h1>
+
+<form action="@formAction" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-row" data-order="1">
+        <div class="form-group col-md-8">
+            <label asp-for="SourceId">Исходная страница</label>
+            <input type="text" asp-for="SourceId" />
+        </div>
+    </div>
+
+    <div class="form-row" data-order="2">
+        <div class="form-group col-md-8">
+            <label asp-for="Type">Тип связи</label>
+            <input type="text" asp-for="Type" />
+        </div>
+    </div>
+
+    <div class="form-row" data-order="3">
+        <div class="form-group col-md-8">
+            <label asp-for="DestinationId">Целевая страница</label>
+            <input type="text" asp-for="DestinationId" />
+        </div>
+    </div>
+
+    <div class="form-row" data-order="4">
+        <div class="form-group col-md-8">
+            <label asp-for="Duration">Длительность</label>
+            <input type="text" asp-for="Duration" />
+        </div>
+    </div>
+
+    <div class="form-row" data-order="4">
+        <div class="form-group col-md-8">
+            <label asp-for="EventId">Ссылка на событие</label>
+            <input type="text" asp-for="EventId" />
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+            <a class="btn btn-secondary" href="@Url.Action("Index", "Relations", new { area = "Admin" })">Назад</a>
+        </div>
+    </div>
+</form>

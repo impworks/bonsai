@@ -2,13 +2,13 @@
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 @{
     var isNew = (bool)ViewBag.IsNew;
-    ViewBag.Title = isNew ? "Создание страницы" : "Редактирование страницы";
+    ViewBag.Title = isNew ? "Новая страница" : "Редактирование страницы";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var formAction = Url.Action(isNew ? "Create" : "Update", "Pages", new { area = "Admin" });
 }
 
-<h1>@(isNew ? "Новая страница" : "Редактирование страницы")</h1>
+<h1>@ViewBag.Title</h1>
 
 <form action="@formAction" method="post">
     <input type="hidden" asp-for="Id" />
@@ -77,7 +77,7 @@
 
     <div class="form-row">
         <div class="form-group col-md-12">
-            <button class="btn btn-primary">Сохранить</button>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
             <a class="btn btn-secondary" href="@Url.Action("Index", "Pages", new { area = "Admin" })">Назад</a>
         </div>
     </div>
