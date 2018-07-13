@@ -40,7 +40,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("pages")]
-        public async Task<ActionResult> SuggestPages(string query, PageType[] pageTypes)
+        public async Task<ActionResult> SuggestPages(string query, PageType[] pageTypes = null)
         {
             var pages = await _suggest.SuggestPagesAsync(query, pageTypes).ConfigureAwait(false);
             return Json(pages);

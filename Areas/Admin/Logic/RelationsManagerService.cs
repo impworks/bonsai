@@ -210,8 +210,13 @@ namespace Bonsai.Areas.Admin.Logic
                     val.Add(nameof(vm.EventId), "Событие нельзя привязать к данному типу связи");
             }
 
-            if(!string.IsNullOrEmpty(vm.Duration) && FuzzyRange.TryParse(vm.Duration) == null)
-                val.Add(nameof(vm.Duration), "Введите дату в корректном формате");
+            if (!string.IsNullOrEmpty(vm.Duration))
+            {
+                if(!RelationHelper.IsRelationDurationAllowed(vm.Type))
+                    val.Add(nameof(vm.Duration), "Дату нельзя указать для данного типа связи");
+                else if (FuzzyRange.TryParse(vm.Duration) == null)
+                    val.Add(nameof(vm.Duration), "Введите дату в корректном формате");
+            }
 
             var existingRelation = await _db.Relations
                                             .AnyAsync(x => x.SourceId == vm.SourceId

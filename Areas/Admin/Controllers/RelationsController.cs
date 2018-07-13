@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Relations;
+using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -116,13 +118,35 @@ namespace Bonsai.Areas.Admin.Controllers
             return RedirectToSuccess("Связь удалена");
         }
 
+        /// <summary>
+        /// Returns editor properties for the selected relation type.
+        /// </summary>
+        [HttpGet]
+        [Route("editorProps")]
+        public async Task<ActionResult> EditorProperties(RelationType relType)
+        {
+            return Json(new RelationEditorPropertiesVM
+            {
+                ShowDuration = RelationHelper.IsRelationDurationAllowed(relType),
+                ShowEvent = RelationHelper.IsRelationEventReferenceAllowed(relType)
+            });
+        }
+
         #region Helpers
 
         /// <summary>
         /// Displays the editor.
         /// </summary>
-        public ActionResult ViewEditorForm(RelationEditorVM vm)
+        private ActionResult ViewEditorForm(RelationEditorVM vm)
         {
+            ViewBag.ShowType = vm.SourceId != Guid.Empty;
+            ViewBag.ShowDestination = vm.SourceId != Guid.Empty;
+            ViewBag.ShowEvent = vm.SourceId != Guid.Empty
+                                && vm.DestinationId != Guid.Empty
+                                && RelationHelper.IsRelationEventReferenceAllowed(vm.Type);
+            ViewBag.ShowDuration = vm.SourceId != Guid.Empty
+                                   && vm.DestinationId != Guid.Empty
+                                   && RelationHelper.IsRelationDurationAllowed(vm.Type);
             return View("Editor", vm);
         }
 

@@ -111,5 +111,17 @@ namespace Bonsai.Code.DomainModel.Relations
         {
             return relation == RelationType.Spouse;
         }
+
+        /// <summary>
+        /// Checks if the relation can have a duration.
+        /// </summary>
+        public static bool IsRelationDurationAllowed(RelationType relation)
+        {
+            return relation == RelationType.Spouse
+                   || relation == RelationType.Pet
+                   || relation == RelationType.Owner
+                   || relation == RelationType.StepParent
+                   || relation == RelationType.StepChild;
+        }
     }
 }

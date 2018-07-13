@@ -7,42 +7,47 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var formAction = Url.Action(isNew ? "Create" : "Update", "Pages", new { area = "Admin" });
+
+    string ShowIf(bool cond)
+    {
+        return cond ? "" : "display: none";
+    }
 }
 
 <h1>@ViewBag.Title</h1>
 
-<form action="@formAction" method="post">
+<form action="@formAction" method="post" id="relation-editor-form">
     <input type="hidden" asp-for="Id" />
 
-    <div class="form-row" data-order="1">
+    <div class="form-row" data-tier="source">
         <div class="form-group col-md-8">
             <label asp-for="SourceId">Исходная страница</label>
             <input type="text" asp-for="SourceId" />
         </div>
     </div>
 
-    <div class="form-row" data-order="2">
+    <div class="form-row" data-tier="type" style="@ShowIf(ViewBag.ShowType)">
         <div class="form-group col-md-8">
             <label asp-for="Type">Тип связи</label>
             <input type="text" asp-for="Type" />
         </div>
     </div>
 
-    <div class="form-row" data-order="3">
+    <div class="form-row" data-tier="destination" style="@ShowIf(ViewBag.ShowDestination)">
         <div class="form-group col-md-8">
             <label asp-for="DestinationId">Целевая страница</label>
             <input type="text" asp-for="DestinationId" />
         </div>
     </div>
 
-    <div class="form-row" data-order="4">
+    <div class="form-row" data-tier="duration" style="@ShowIf(ViewBag.ShowDuration)">
         <div class="form-group col-md-8">
             <label asp-for="Duration">Длительность</label>
             <input type="text" asp-for="Duration" />
         </div>
     </div>
 
-    <div class="form-row" data-order="4">
+    <div class="form-row" data-tier="event" style="@ShowIf(ViewBag.ShowEvent)">
         <div class="form-group col-md-8">
             <label asp-for="EventId">Ссылка на событие</label>
             <input type="text" asp-for="EventId" />

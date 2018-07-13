@@ -32,7 +32,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Suggests pages of specified types.
         /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestPagesAsync(string query, IReadOnlyList<PageType> types)
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestPagesAsync(string query, IReadOnlyList<PageType> types = null)
         {
             var search = await _elastic.SearchAutocompleteAsync(query, types, 100).ConfigureAwait(false);
 
