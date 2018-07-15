@@ -49,9 +49,10 @@ namespace Bonsai.Code.DomainModel.Relations
         /// </summary>
         public void Augment(RelationExcerpt rel)
         {
-            var rels = (Dictionary<Guid, List<RelationExcerpt>>) Relations;
-            if (rels.TryGetValue(rel.SourceId, out var list))
+            var rels = (Dictionary<Guid, IReadOnlyList<RelationExcerpt>>) Relations;
+            if (rels.TryGetValue(rel.SourceId, out var rList))
             {
+                var list = (List<RelationExcerpt>) rList;
                 var existing = list.FirstOrDefault(x => x.DestinationId == rel.DestinationId && x.Type == rel.Type);
                 if (existing != null)
                     list.Remove(existing);

@@ -75,7 +75,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         {
             foreach (var page in context.Pages.Values)
             {
-                if(page.BirthDate <= page.DeathDate)
+                if(page.BirthDate >= page.DeathDate)
                     AddViolation("Дата рождения не может быть раньше даты смерти", page.Id);
             }
         }

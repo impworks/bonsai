@@ -28,6 +28,20 @@
         }
     });
 
+    setupPagePicker($sourceEditor, 'source');
+    setupPagePicker($destEditor, 'dest');
+    setupPagePicker($eventEditor, [2]);
+
+    prepopulate();
+
+    function prepopulate() {
+        // loads initial types
+        var type = $typeEditor[0].selectize.items[0];
+        if (typeof type === 'string') {
+            refreshProperties(type);
+        }
+    }
+
     function refreshProperties(type) {
         $.ajax({
                 url: '/admin/relations/editorProps',
@@ -42,12 +56,23 @@
                 $durationRow.toggle(!!data.showDuration);
                 $eventRow.toggle(!!data.showEvent);
 
-                $sourceEditor[0].selectize.load(function (callback) { loadData('', 'source', callback); });
-                $destEditor[0].selectize.load(function (callback) { loadData('', 'dest', callback); });
+                preload($sourceEditor, 'source');
+                preload($destEditor, 'dest');
             });
     }
 
+    function preload($select, typesDef) {
+        // loads data according to current selected value
+        var s = $select[0].selectize;
+        var curr = s.items.length > 0 ? s.options[s.items[0]] : {};
+        var query = curr.title || '';
+        s.load(function(callback) {
+            loadData(query, typesDef, callback);
+        });
+    }
+
     function clear($select) {
+        // clears dropdown
         var s = $select[0].selectize;
         s.clear();
         s.clearOptions();
@@ -55,6 +80,7 @@
     }
 
     function loadData(query, typesDef, callback) {
+        // loads data according to current query
         var currTypes = typeof typesDef === 'string' ? types[typesDef] : typesDef;
         var url = '/admin/suggest/pages?query=' + encodeURIComponent(query);
         currTypes.forEach(function (t) { url += '&types=' + encodeURIComponent(t); });
@@ -83,8 +109,4 @@
             }
         });
     }
-
-    setupPagePicker($sourceEditor, 'source');
-    setupPagePicker($destEditor, 'dest');
-    setupPagePicker($eventEditor, [2]);
 });
