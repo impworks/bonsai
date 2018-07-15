@@ -7,10 +7,10 @@ namespace Bonsai.Code.DomainModel.Relations
     /// </summary>
     public class RelationBinding
     {
-        public RelationBinding(PageType sourceType, PageType targetType, RelationType[] relTypes)
+        public RelationBinding(PageType sourceType, PageType destinationType, RelationType[] relTypes)
         {
             SourceType = sourceType;
-            TargetType = targetType;
+            DestinationType = destinationType;
             RelationTypes = relTypes;
         }
 
@@ -22,7 +22,7 @@ namespace Bonsai.Code.DomainModel.Relations
         /// <summary>
         /// Type of the destination page.
         /// </summary>
-        public PageType TargetType { get; }
+        public PageType DestinationType { get; }
 
         /// <summary>
         /// Type of the relation.

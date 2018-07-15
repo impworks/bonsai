@@ -60,6 +60,7 @@ namespace Bonsai.Code.Services.Elastic
                                 .Analyzer("index_ru")
                                 .SearchAnalyzer("search_ru")
                             )
+                             .Scalar(x => x.PageType)
                         )
                     )
                 )
@@ -114,7 +115,8 @@ namespace Bonsai.Code.Services.Elastic
                 Id = page.Id,
                 Key = page.Key,
                 Title = page.Title,
-                Description = MarkdownService.Strip(page.Description)
+                PageType = (int) page.Type,
+                Description = MarkdownService.Strip(page.Description),
             };
 
             await _client.IndexAsync(doc, i => i.Index(PAGE_INDEX)).ConfigureAwait(false);
@@ -205,7 +207,8 @@ namespace Bonsai.Code.Services.Elastic
                 {
                     Id = doc.Id,
                     Key = doc.Key,
-                    HighlightedTitle = doc.Title
+                    HighlightedTitle = doc.Title,
+                    PageType = (PageType) doc.PageType
                 };
             }
 
@@ -215,7 +218,8 @@ namespace Bonsai.Code.Services.Elastic
                 s => s.Index(PAGE_INDEX)
                       .Query(q =>
                                  q.Terms(f => f.Field(x => x.PageType).Terms(pageTypes))
-                                 && (
+                                 &&
+                                 (
                                      q.Match(f => f.Field(x => x.Title).Query(query).Fuzziness(Fuzziness.Auto))
                                      || q.Prefix(f => f.Field(x => x.Title).Value(query))
                                  )
@@ -229,3 +233,4 @@ namespace Bonsai.Code.Services.Elastic
         #endregion
     }
 }
+

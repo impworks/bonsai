@@ -29,6 +29,7 @@ namespace Bonsai.Code.Config
 
             // admin
             services.AddScoped<PageValidator>();
+            services.AddScoped<RelationValidator>();
             services.AddScoped<DashboardPresenterService>();
             services.AddScoped<UsersManagerService>();
             services.AddScoped<AppConfigManagerService>();

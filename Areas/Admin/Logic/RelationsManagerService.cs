@@ -12,6 +12,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -152,6 +153,22 @@ namespace Bonsai.Areas.Admin.Logic
 
             await RemoveComplementaryRelationAsync(rel).ConfigureAwait(false);
             _db.Relations.Remove(rel);
+        }
+
+        /// <summary>
+        /// Returns extended properties based on the relation type.
+        /// </summary>
+        public RelationEditorPropertiesVM GetPropertiesForRelationType(RelationType relType)
+        {
+            return new RelationEditorPropertiesVM
+            {
+                SourceName = RelationHelper.ComplementaryRelations[relType].GetEnumDescription(),
+                DestinationName = relType.GetEnumDescription(),
+                SourceTypes = RelationHelper.SuggestSourcePageTypes(relType),
+                DestinationTypes = RelationHelper.SuggestDestinationPageTypes(relType),
+                ShowDuration = RelationHelper.IsRelationDurationAllowed(relType),
+                ShowEvent = RelationHelper.IsRelationEventReferenceAllowed(relType)
+            };
         }
 
         #region Helpers

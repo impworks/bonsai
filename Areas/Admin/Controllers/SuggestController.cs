@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
-using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
@@ -27,11 +26,10 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("relations")]
-        public async Task<ActionResult> SuggestRelations(PageType pageType)
+        public async Task<ActionResult> SuggestRelations()
         {
             var names = EnumHelper.GetEnumDescriptions<RelationType>();
-            var relTypes = RelationHelper.SuggestRelationTypes(pageType);
-            var data = relTypes.Select(x => new ListItem<RelationType>(x, names[x]));
+            var data = names.Select(x => new ListItem<RelationType>(x.Key, x.Value));
             return Json(data);
         }
 
@@ -40,20 +38,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("pages")]
-        public async Task<ActionResult> SuggestPages(string query, PageType[] pageTypes = null)
+        public async Task<ActionResult> SuggestPages(string query, PageType[] types = null)
         {
-            var pages = await _suggest.SuggestPagesAsync(query, pageTypes).ConfigureAwait(false);
-            return Json(pages);
-        }
-
-        /// <summary>
-        /// Suggests pages for relation target.
-        /// </summary>
-        [HttpGet]
-        [Route("relatedPages")]
-        public async Task<ActionResult> SuggestRelatedPages(string query, PageType otherType, RelationType relType)
-        {
-            var pages = await _suggest.SuggestRelatedPagesAsync(query, otherType, relType).ConfigureAwait(false);
+            var pages = await _suggest.SuggestPagesAsync(query, types).ConfigureAwait(false);
             return Json(pages);
         }
     }

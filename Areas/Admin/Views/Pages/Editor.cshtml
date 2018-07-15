@@ -65,9 +65,12 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label asp-for="Aliases">Ссылки</label>
-                    @foreach (var alias in Model.Aliases)
+                    @if (Model.Aliases != null)
                     {
-                        <input type="text" class="form-control" name="@(nameof(Model.Aliases))" value="@alias" />
+                         foreach (var alias in Model.Aliases)
+                         {
+                             <input type="text" class="form-control" name="@(nameof(Model.Aliases))" value="@alias"/>
+                         }
                     }
                     <span asp-validation-for="Aliases" class="text-danger"></span>
                 </div>

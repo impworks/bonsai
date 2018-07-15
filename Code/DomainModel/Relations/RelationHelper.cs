@@ -58,37 +58,25 @@ namespace Bonsai.Code.DomainModel.Relations
         };
 
         /// <summary>
-        /// Suggests available relation types for one or two pages.
+        /// Returns possible source types for a relation.
         /// </summary>
-        public static IReadOnlyList<RelationType> SuggestRelationTypes(PageType sourceType, PageType? targetType = null)
+        public static IReadOnlyList<PageType> SuggestSourcePageTypes(RelationType relType)
         {
-            var types = RelationBindingsMap.Where(x => x.SourceType == sourceType
-                                                      && (targetType == null || targetType == x.TargetType))
-                                          .SelectMany(x => x.RelationTypes)
-                                          .Distinct()
-                                          .ToList();
-
-            if(sourceType == PageType.Other || targetType == PageType.Other)
-                types.Add(RelationType.Other);
-
-            return types;
+            return RelationBindingsMap.Where(x => x.RelationTypes.Contains(relType))
+                                      .Select(x => x.SourceType)
+                                      .Distinct()
+                                      .ToList();
         }
 
         /// <summary>
-        /// Suggests available page types for a page and a relation.
+        /// Returns possible target types for a relation.
         /// </summary>
-        public static IReadOnlyList<PageType> SuggestPageTypes(PageType sourceType, RelationType? relType = null)
+        public static IReadOnlyList<PageType> SuggestDestinationPageTypes(RelationType relType)
         {
-            var types = RelationBindingsMap.Where(x => x.SourceType == sourceType
-                                                       && (relType == null || x.RelationTypes.Contains(relType.Value)))
-                                           .Select(x => x.TargetType)
-                                           .Distinct()
-                                           .ToList();
-
-            if(sourceType == PageType.Other || relType == RelationType.Other)
-                types.Add(PageType.Other);
-
-            return types;
+            return RelationBindingsMap.Where(x => x.RelationTypes.Contains(relType))
+                                      .Select(x => x.DestinationType)
+                                      .Distinct()
+                                      .ToList();
         }
 
         /// <summary>
@@ -100,7 +88,7 @@ namespace Bonsai.Code.DomainModel.Relations
                 return source == PageType.Other || target == PageType.Other;
 
             return RelationBindingsMap.Any(x => x.SourceType == source
-                                                && x.TargetType == target
+                                                && x.DestinationType == target
                                                 && x.RelationTypes.Contains(relation));
         }
 

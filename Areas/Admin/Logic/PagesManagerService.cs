@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -71,6 +72,18 @@ namespace Bonsai.Areas.Admin.Logic
                 PageCount = (int) Math.Ceiling((double) totalCount / PageSize),
                 Request = request
             };
+        }
+
+        /// <summary>
+        /// Returns the lookup of page titles.
+        /// </summary>
+        public async Task<IReadOnlyDictionary<Guid, PageTitleExtendedVM>> FindPagesByIdsAsync(IReadOnlyList<Guid?> pages)
+        {
+            return await _db.Pages.Include(x => x.MainPhoto)
+                            .Where(x => pages.Any(y => x.Id == y))
+                            .ProjectTo<PageTitleExtendedVM>()
+                            .ToDictionaryAsync(x => x.Id, x => x)
+                            .ConfigureAwait(false);
         }
         
         /// <summary>

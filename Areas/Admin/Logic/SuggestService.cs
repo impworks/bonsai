@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
-using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
@@ -51,15 +50,6 @@ namespace Bonsai.Areas.Admin.Logic
                 page.MainPhotoPath = GetFullThumbnailPath(page);
 
             return pages.OrderBy(x => idsOrder[x.Id]).ToList();
-        }
-
-        /// <summary>
-        /// Suggests pages for a relation.
-        /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestRelatedPagesAsync(string query, PageType otherType, RelationType relType)
-        {
-            var allowedPageTypes = RelationHelper.SuggestPageTypes(otherType, relType);
-            return await SuggestPagesAsync(query, allowedPageTypes).ConfigureAwait(false);
         }
 
         #region Helpers

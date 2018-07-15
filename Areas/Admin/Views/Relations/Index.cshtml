@@ -14,7 +14,7 @@
 
 <div class="clearfix">
     <div class="float-left">
-        <a class="btn btn-outline-secondary" href="@Url.Action("Create", "Pages", new {area = "Admin"})" title="Создать новую связь">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Create", "Relations", new {area = "Admin"})" title="Создать новую связь">
             <span class="fa fa-plus-circle"></span>
             Создать
         </a>
@@ -33,9 +33,9 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Type), title = "Тип связи" })</th>
                 <th width="40%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Source), title = "Страница" })</th>
                 <th width="40%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Destination), title = "Связанная страница" })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Type), title = "Тип связи" })</th>
                 <th width="1px"></th>
             </tr>
         </thead>
@@ -44,17 +44,17 @@
             {
             <tr class="admin-row">
                 <td>
-                    <a href="@Url.Action("Update", "Relations", new {area = "Admin", id = r.Id})" title="Редактировать">
-                        @r.Type.GetEnumDescription()
-                    </a>
-                </td>
-                <td>
                     <page-image image="@r.Source.MainPhotoPath" type="@r.Source.Type"></page-image>
                     @r.Source.Title
                 </td>
                 <td>
                     <page-image image="@r.Destination.MainPhotoPath" type="@r.Destination.Type"></page-image>
                     @r.Destination.Title
+                </td>
+                <td>
+                    <a href="@Url.Action("Update", "Relations", new {area = "Admin", id = r.Id})" title="Редактировать">
+                        @r.Type.GetEnumDescription()
+                    </a>
                 </td>
                 <td class="admin-row-actions">
                     <a href="@Url.Action("Remove", "Relations", new {area = "Admin", id = r.Id})">

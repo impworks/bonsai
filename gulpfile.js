@@ -22,7 +22,8 @@ var config = {
             './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
             './node_modules/gijgo/js/gijgo.js',
             './node_modules/gijgo/js/messages/messages.ru-ru.js',
-            './node_modules/toastr/toastr.js'
+            './node_modules/toastr/toastr.js',
+            './node_modules/selectize/dist/js/standalone/selectize.js'
         ],
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
@@ -116,7 +117,7 @@ gulp.task('content.watch', function() {
 gulp.task('vendor.scripts', function () {
     gulp.src(config.vendor.scripts)
         .pipe(concatjs('vendor.js'))
-        .pipe(minjs({  }))
+        //.pipe(minjs({  }))
         .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
         .pipe(gulp.dest(config.assets.scripts));
 });
