@@ -37,7 +37,7 @@ namespace Bonsai.Areas.Admin.Logic
         private readonly UserManager<AppUser> _userMgr;
         private readonly PageValidator _validator;
 
-        #region Pages
+        #region Public methods
 
         /// <summary>
         /// Finds pages.

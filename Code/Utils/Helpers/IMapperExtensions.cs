@@ -30,5 +30,16 @@ namespace Bonsai.Code.Utils.Helpers
         {
             return map.ForMember(destMember, opt => opt.MapFrom(sourceMember));
         }
+
+        /// <summary>
+        /// Shorthand method for ignoring members.
+        /// </summary>
+        public static IMappingExpression<TSource, TDest> Ignore<TSource, TDest, TDestProp>(
+            this IMappingExpression<TSource, TDest> map, 
+            Expression<Func<TDest, TDestProp>> destMember
+        )
+        {
+            return map.ForMember(destMember, opt => opt.Ignore());
+        }
     }
 }

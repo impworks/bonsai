@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
@@ -23,10 +24,12 @@ namespace Bonsai.Areas.Admin.Logic
 
         private readonly AppDbContext _db;
 
+        #region Public methods
+
         /// <summary>
-        /// Finds pages.
+        /// Finds media files.
         /// </summary>
-        public async Task<MediaListVM> GetPagesAsync(MediaListRequestVM request)
+        public async Task<MediaListVM> GetMediaAsync(MediaListRequestVM request)
         {
             const int PageSize = 20;
 
@@ -57,6 +60,32 @@ namespace Bonsai.Areas.Admin.Logic
                 Request = request
             };
         }
+
+        /// <summary>
+        /// Uploads a new media file.
+        /// </summary>
+        public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, ClaimsPrincipal principal)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Updates the media data.
+        /// </summary>
+        public async Task UpdateAsync(MediaEditorVM vm, ClaimsPrincipal principal)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Removes the media file.
+        /// </summary>
+        public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         #region Helpers
 
