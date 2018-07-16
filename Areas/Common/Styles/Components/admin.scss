@@ -40,4 +40,24 @@
             opacity: 1;
         }
     }
+
+    .hide-overflow {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 0;
+    }
+}
+
+.form-label-required {
+    &::after {
+        display: inline-block;
+        content: '*';
+        font-size: 18px;
+        line-height: 2px;
+        font-weight: bold;
+        color: #FF0000;
+        margin-left: 4px;
+        vertical-align: sub;
+    }
 }

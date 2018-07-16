@@ -68,7 +68,7 @@ namespace Bonsai.Areas.Admin.Logic
             else if (request.OrderBy == nameof(RelationTitleVM.Source))
                 query = query.OrderBy(x => x.Source.Title, request.OrderDescending);
             else
-                query = query.OrderBy(x => x.Event.Title, request.OrderDescending);
+                query = query.OrderBy(x => x.Type, request.OrderDescending);
 
             var items = await query.ProjectTo<RelationTitleVM>()
                                    .Skip(PageSize * request.Page)
@@ -94,7 +94,10 @@ namespace Bonsai.Areas.Admin.Logic
             var rel = _mapper.Map<Relation>(vm);
             rel.Id = Guid.NewGuid();
 
-            var rels = new[] {rel, GetComplementaryRelation(vm)};
+            var compRel = new Relation {Id = Guid.NewGuid()};
+            MapComplementaryRelation(rel, compRel);
+
+            var rels = new[] {rel, compRel};
 
             await _validator.ValidateAsync(rels).ConfigureAwait(false);
 
@@ -127,16 +130,15 @@ namespace Bonsai.Areas.Admin.Logic
                                .GetAsync(x => x.Id == vm.Id, "Связь не найдена")
                                .ConfigureAwait(false);
 
+            var compRel = await FindComplementaryRelationAsync(rel).ConfigureAwait(false);
+
             var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, principal).ConfigureAwait(false);
             _db.Changes.Add(changeset);
 
-            await RemoveComplementaryRelationAsync(rel).ConfigureAwait(false);
             _mapper.Map(vm, rel);
+            MapComplementaryRelation(rel, compRel);
 
-            var rels = new[] {rel, GetComplementaryRelation(vm)};
-            await _validator.ValidateAsync(rels).ConfigureAwait(false);
-
-            _db.Relations.AddRange(rels);
+            await _validator.ValidateAsync(new[] {rel, compRel}).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -148,11 +150,13 @@ namespace Bonsai.Areas.Admin.Logic
                                .GetAsync(x => x.Id == id, "Связь не найдена")
                                .ConfigureAwait(false);
 
+            var compRel = await FindComplementaryRelationAsync(rel).ConfigureAwait(false);
+
             var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal).ConfigureAwait(false);
             _db.Changes.Add(changeset);
 
-            await RemoveComplementaryRelationAsync(rel).ConfigureAwait(false);
             _db.Relations.Remove(rel);
+            _db.Relations.Remove(compRel);
         }
 
         /// <summary>
@@ -181,7 +185,7 @@ namespace Bonsai.Areas.Admin.Logic
             if (vm == null)
                 vm = new RelationsListRequestVM();
 
-            var orderableFields = new[] {nameof(RelationTitleVM.Source), nameof(RelationTitleVM.Destination), nameof(RelationTitleVM.Event)};
+            var orderableFields = new[] {nameof(RelationTitleVM.Destination), nameof(RelationTitleVM.Source), nameof(RelationTitleVM.Type)};
             if (!orderableFields.Contains(vm.OrderBy))
                 vm.OrderBy = orderableFields[0];
 
@@ -204,14 +208,18 @@ namespace Bonsai.Areas.Admin.Logic
                                  .ToDictionaryAsync(x => x.Id, x => x.Type)
                                  .ConfigureAwait(false);
 
-            var sourceType = pages.TryGetNullableValue(vm.SourceId);
-            var destType = pages.TryGetNullableValue(vm.DestinationId);
+            var sourceType = pages.TryGetNullableValue(vm.SourceId ?? Guid.Empty);
+            var destType = pages.TryGetNullableValue(vm.DestinationId ?? Guid.Empty);
             var eventType = pages.TryGetNullableValue(vm.EventId ?? Guid.Empty);
 
-            if (sourceType == null)
+            if(vm.SourceId == null)
+                val.Add(nameof(vm.SourceId), "Выберите страницу");
+            else if (sourceType == null)
                 val.Add(nameof(vm.SourceId), "Страница не найдена");
 
-            if (destType == null)
+            if(vm.DestinationId == null)
+                val.Add(nameof(vm.DestinationId), "Выберите страницу");
+            else if (destType == null)
                 val.Add(nameof(vm.DestinationId), "Страница не найдена");
 
             if (sourceType != null && destType != null && !RelationHelper.IsRelationAllowed(sourceType.Value, destType.Value, vm.Type))
@@ -227,12 +235,23 @@ namespace Bonsai.Areas.Admin.Logic
                     val.Add(nameof(vm.EventId), "Событие нельзя привязать к данному типу связи");
             }
 
-            if (!string.IsNullOrEmpty(vm.Duration))
+            if (!string.IsNullOrEmpty(vm.DurationStart) || !string.IsNullOrEmpty(vm.DurationEnd))
             {
-                if(!RelationHelper.IsRelationDurationAllowed(vm.Type))
-                    val.Add(nameof(vm.Duration), "Дату нельзя указать для данного типа связи");
-                else if (FuzzyRange.TryParse(vm.Duration) == null)
-                    val.Add(nameof(vm.Duration), "Введите дату в корректном формате");
+                if (!RelationHelper.IsRelationDurationAllowed(vm.Type))
+                {
+                    val.Add(nameof(vm.DurationStart), "Дату нельзя указать для данного типа связи");
+                }
+                else
+                {
+                    var from = FuzzyDate.TryParse(vm.DurationStart);
+                    var to = FuzzyDate.TryParse(vm.DurationEnd);
+
+                    if (from > to)
+                        val.Add(nameof(vm.DurationStart), "Дата начала не может быть больше даты конца");
+                    else if (FuzzyRange.TryParse(FuzzyRange.TryCombine(vm.DurationStart, vm.DurationEnd)) == null)
+                        val.Add(nameof(vm.DurationStart), "Введите дату в корректном формате");
+
+                }
             }
 
             var existingRelation = await _db.Relations
@@ -274,35 +293,28 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Creates a complimentary inverse relation.
         /// </summary>
-        private Relation GetComplementaryRelation(RelationEditorVM vm)
+        private void MapComplementaryRelation(Relation source, Relation target)
         {
-            return new Relation
-            {
-                Id = Guid.NewGuid(),
-                SourceId = vm.DestinationId,
-                DestinationId = vm.SourceId,
-                Type = RelationHelper.ComplementaryRelations[vm.Type],
-                EventId = vm.EventId,
-                Duration = vm.Duration,
-                IsComplementary = true
-            };
+            target.SourceId = source.DestinationId;
+            target.DestinationId = source.SourceId;
+            target.Type = RelationHelper.ComplementaryRelations[source.Type];
+            target.EventId = source.EventId;
+            target.Duration = source.Duration;
+            target.IsComplementary = true;
         }
 
         /// <summary>
         /// Removes the complementary relation (it is always recreated).
         /// </summary>
-        private async Task RemoveComplementaryRelationAsync(Relation rel)
+        private async Task<Relation> FindComplementaryRelationAsync(Relation rel)
         {
             var compRelType = RelationHelper.ComplementaryRelations[rel.Type];
-            var compRel = await _db.Relations
-                                   .FirstOrDefaultAsync(x => x.SourceId == rel.DestinationId
-                                                             && x.DestinationId == rel.SourceId
-                                                             && x.Type == compRelType
-                                                             && x.IsComplementary)
-                                   .ConfigureAwait(false);
-
-            if (compRel != null)
-                _db.Relations.Remove(compRel);
+            return await _db.Relations
+                            .FirstOrDefaultAsync(x => x.SourceId == rel.DestinationId
+                                                      && x.DestinationId == rel.SourceId
+                                                      && x.Type == compRelType
+                                                      && x.IsComplementary)
+                            .ConfigureAwait(false);
         }
 
         #endregion

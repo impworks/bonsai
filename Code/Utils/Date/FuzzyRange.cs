@@ -21,6 +21,9 @@ namespace Bonsai.Code.Utils.Date
             if (from == null && to == null)
                 throw new ArgumentNullException(nameof(from), "At least one of the dates must be set.");
 
+            if (from > to)
+                throw new ArgumentException(nameof(from), "Range end may not precede the start.");
+
             RangeStart = from;
             RangeEnd = to;
         }
@@ -137,9 +140,38 @@ namespace Bonsai.Code.Utils.Date
                 throw new ArgumentException("Incorrect range format.");
 
             var from = !string.IsNullOrEmpty(parts[0]) ? FuzzyDate.Parse(parts[0]) : (FuzzyDate?) null;
-            var to = !string.IsNullOrEmpty(parts[1]) ? FuzzyDate.Parse(parts[1]) : (FuzzyDate?)null;
+            var to = !string.IsNullOrEmpty(parts[1]) ? FuzzyDate.Parse(parts[1]) : (FuzzyDate?) null;
 
             return new FuzzyRange(from, to);
+        }
+
+        /// <summary>
+        /// Returns the raw parts of the date range.
+        /// </summary>
+        public static string[] TrySplit(string raw)
+        {
+            if (!string.IsNullOrEmpty(raw))
+            {
+                var parts = raw.Split('-', 2);
+                if (parts.Length == 2)
+                    return parts;
+
+                if (parts.Length == 1)
+                    return new[] { parts[0], "" };
+            }
+
+            return new [] { "", "" };
+        }
+
+        /// <summary>
+        /// Attempts to combine the raw parts.
+        /// </summary>
+        public static string TryCombine(string from, string to)
+        {
+            if (string.IsNullOrEmpty(from) && string.IsNullOrEmpty(to))
+                return "";
+
+            return $"{from}-{to}";
         }
 
         #endregion

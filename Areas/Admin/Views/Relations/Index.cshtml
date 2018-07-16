@@ -7,7 +7,7 @@
     ViewBag.Title = "Список связей";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
-    var baseUrl = Url.Action("Index", "Pages", new { area = "Admin" });
+    var baseUrl = Url.Action("Index", "Relations", new { area = "Admin" });
 }
 
 <h1>Список связей</h1>
@@ -33,9 +33,9 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th width="40%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Source), title = "Страница" })</th>
-                <th width="40%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Destination), title = "Связанная страница" })</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Type), title = "Тип связи" })</th>
+                <th width="42%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Destination), title = "Cтраница" })</th>
+                <th width="16%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Type), title = "Тип связи" })</th>
+                <th width="42%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Source), title = "Связанная страница" })</th>
                 <th width="1px"></th>
             </tr>
         </thead>
@@ -43,18 +43,18 @@
             @foreach(var r in Model.Items)
             {
             <tr class="admin-row">
-                <td>
-                    <page-image image="@r.Source.MainPhotoPath" type="@r.Source.Type"></page-image>
-                    @r.Source.Title
-                </td>
-                <td>
+                <td class="hide-overflow">
                     <page-image image="@r.Destination.MainPhotoPath" type="@r.Destination.Type"></page-image>
-                    @r.Destination.Title
+                    <span title="@r.Destination.Title">@r.Destination.Title</span>
                 </td>
                 <td>
                     <a href="@Url.Action("Update", "Relations", new {area = "Admin", id = r.Id})" title="Редактировать">
                         @r.Type.GetEnumDescription()
                     </a>
+                </td>
+                <td class="hide-overflow">
+                    <page-image image="@r.Source.MainPhotoPath" type="@r.Source.Type"></page-image>
+                    <span title="@r.Source.Title">@r.Source.Title</span>
                 </td>
                 <td class="admin-row-actions">
                     <a href="@Url.Action("Remove", "Relations", new {area = "Admin", id = r.Id})">

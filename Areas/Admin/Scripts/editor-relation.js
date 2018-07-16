@@ -8,10 +8,11 @@
         $sourceEditor = $sourceRow.find('select'),
         $destRow = $('.form-row[data-tier="destination"]'),
         $destEditor = $destRow.find('select'),
-        $durationRow = $('.form-row[data-tier="duration"]'),
-        $durationEditor = $durationRow.find('input'),
         $eventRow = $('.form-row[data-tier="event"]'),
-        $eventEditor = $eventRow.find('select');
+        $eventEditor = $eventRow.find('select'),
+        $durationRow = $('.form-row[data-tier="duration"]'),
+        $durationStartEditor = $durationRow.find('input.duration-start'),
+        $durationEndEditor = $durationRow.find('input.duration-end');
 
     var types = {
         source: [],
@@ -31,6 +32,9 @@
     setupPagePicker($sourceEditor, 'source');
     setupPagePicker($destEditor, 'dest');
     setupPagePicker($eventEditor, [2]);
+
+    setupDatePicker($durationStartEditor, null, $durationEndEditor);
+    setupDatePicker($durationEndEditor, $durationStartEditor, null);
 
     prepopulate();
 
@@ -106,6 +110,20 @@
             preload: true,
             load: function (query, callback) {
                 loadData(query, typesDef, callback);
+            }
+        });
+    }
+
+    function setupDatePicker($elem, $prev, $next) {
+        $elem.datepicker({
+            locale: 'ru-ru',
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy.mm.dd',
+            minDate: function () {
+                return $prev != null ? $prev.val() : null;
+            },
+            maxDate: function() {
+                return $next != null ? $next.val() : null;
             }
         });
     }

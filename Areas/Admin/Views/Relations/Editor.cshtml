@@ -21,7 +21,7 @@
 
     <div class="form-row" data-tier="type">
         <div class="form-group col-md-8">
-            <label asp-for="Type">Тип связи</label>
+            <label class="form-label-required" asp-for="Type">Тип связи</label>
             <select asp-for="Type" asp-items="data.RelationTypes"></select>
             <span asp-validation-for="Type" class="text-danger"></span>
         </div>
@@ -29,7 +29,7 @@
 
     <div class="form-row" data-tier="destination">
         <div class="form-group col-md-8">
-            <label asp-for="DestinationId">@data.Properties.DestinationName</label>
+            <label class="form-label-required" asp-for="DestinationId">@data.Properties.DestinationName</label>
             <select asp-for="DestinationId" asp-items="data.DestinationItem"></select>
             <span asp-validation-for="DestinationId" class="text-danger"></span>
         </div>
@@ -37,17 +37,23 @@
 
     <div class="form-row" data-tier="source">
         <div class="form-group col-md-8">
-            <label asp-for="SourceId">@data.Properties.SourceName</label>
+            <label class="form-label-required" asp-for="SourceId">@data.Properties.SourceName</label>
             <select asp-for="SourceId" asp-items="data.SourceItem"></select>
             <span asp-validation-for="SourceId" class="text-danger"></span>
         </div>
     </div>
 
     <div class="form-row" data-tier="duration" style="@ShowIf(data.Properties.ShowDuration)">
-        <div class="form-group col-md-8">
-            <label asp-for="Duration">Длительность</label>
-            <input type="text" class="form-control" asp-for="Duration" />
-            <span asp-validation-for="Duration" class="text-danger"></span>
+        <div class="form-group col-md-4">
+            <label asp-for="DurationStart">Начало периода</label>
+            <input type="text" class="form-control duration-start" asp-for="DurationStart" placeholder="ГГГГ.ММ.ДД" />
+            <span asp-validation-for="DurationStart" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-4">
+            <label asp-for="DurationEnd">Конец периода</label>
+            <input type="text" class="form-control duration-end" asp-for="DurationEnd" placeholder="ГГГГ.ММ.ДД" />
+            <span asp-validation-for="DurationEnd" class="text-danger"></span>
         </div>
     </div>
 

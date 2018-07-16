@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Bonsai.Code.Infrastructure;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 
@@ -15,17 +16,17 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         /// <summary>
         /// Surrogate ID.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// ID of the source page.
         /// </summary>
-        public Guid SourceId { get; set; }
+        public Guid? SourceId { get; set; }
 
         /// <summary>
         /// ID of the second page.
         /// </summary>
-        public Guid DestinationId { get; set; }
+        public Guid? DestinationId { get; set; }
 
         /// <summary>
         /// ID of the related event.
@@ -38,10 +39,14 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         public RelationType Type { get; set; }
 
         /// <summary>
-        /// Timespan of the relation.
+        /// Relation timespan's start.
         /// </summary>
-        [StringLength(30)]
-        public string Duration { get; set; }
+        public string DurationStart { get; set; }
+
+        /// <summary>
+        /// Relation timespan's end.
+        /// </summary>
+        public string DurationEnd { get; set; }
 
         public void Configure(IProfileExpression profile)
         {
@@ -51,8 +56,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
                    .MapMember(x => x.DestinationId, x => x.DestinationId)
                    .MapMember(x => x.EventId, x => x.EventId)
                    .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.Duration, x => x.Duration)
+                   .MapMember(x => x.DurationStart, x => FuzzyRange.TrySplit(x.Duration)[0])
+                   .MapMember(x => x.DurationEnd, x => FuzzyRange.TrySplit(x.Duration)[1])
                    .ReverseMap()
+                   .MapMember(x => x.Duration, x => FuzzyRange.TryCombine(x.DurationStart, x.DurationEnd))
                    .ForMember(x => x.Id, opt => opt.Ignore());
         }
     }
