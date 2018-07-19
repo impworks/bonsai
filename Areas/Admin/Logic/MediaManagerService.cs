@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
+using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Helpers;
+using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Logic
 {
@@ -17,12 +23,14 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class MediaManagerService
     {
-        public MediaManagerService(AppDbContext db)
+        public MediaManagerService(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
         #region Public methods
 
@@ -74,7 +82,18 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task UpdateAsync(MediaEditorVM vm, ClaimsPrincipal principal)
         {
-            throw new NotImplementedException();
+            await ValidateRequestAsync(vm).ConfigureAwait(false);
+
+            var media = await _db.Media
+                                 .GetAsync(x => x.Id == vm.Id, "Медиа-файл не найден")
+                                 .ConfigureAwait(false);
+
+            // todo: changeset
+
+            _mapper.Map(vm, media);
+
+            _db.MediaTags.RemoveRange(media.Tags);
+            media.Tags = await DeserializeTagsAsync(vm.Tags).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -105,6 +124,46 @@ namespace Bonsai.Areas.Admin.Logic
                 vm.Page = 0;
 
             return vm;
+        }
+
+        /// <summary>
+        /// Creates tag elements.
+        /// </summary>
+        private async Task<ICollection<MediaTag>> DeserializeTagsAsync(string raw)
+        {
+            var tagVms = JsonConvert.DeserializeObject<MediaTagVM[]>(raw ?? "[]");
+
+            var relatedIds = tagVms.Where(x => x.PageId.HasValue)
+                                   .Select(x => x.PageId.Value)
+                                   .ToList();
+
+            if (relatedIds.Any())
+            {
+                var foundPageIds = await _db.Pages
+                                            .Where(x => relatedIds.Contains(x.Id))
+                                            .Select(x => x.Id)
+                                            .ToListAsync()
+                                            .ConfigureAwait(false);
+
+                var hasMissingIds = relatedIds.Except(foundPageIds).Any();
+                if(hasMissingIds)
+                    throw new ValidationException(nameof(MediaEditorVM.Tags), "Выбранная страница не существует!");
+            }
+
+            return tagVms.Select(x => _mapper.Map<MediaTagVM, MediaTag>(x)).ToList();
+        }
+
+        /// <summary>
+        /// Checks if the update request contains valid data.
+        /// </summary>
+        private async Task ValidateRequestAsync(MediaEditorVM vm)
+        {
+            var val = new Validator();
+
+            if (!string.IsNullOrEmpty(vm.Date) && FuzzyDate.TryParse(vm.Date) == null)
+                val.Add(nameof(vm.Date), "Введите корректную дату.");
+
+            val.ThrowIfInvalid();
         }
 
         #endregion

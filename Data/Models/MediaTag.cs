@@ -20,9 +20,14 @@ namespace Bonsai.Data.Models
         public Media Media { get; set; }
 
         /// <summary>
-        /// Tagged entity link.
+        /// Tagged entity (if exists).
         /// </summary>
         public Page Object { get; set; }
+
+        /// <summary>
+        /// FK of the tagged entity (if exists).
+        /// </summary>
+        public Guid? ObjectId { get; set; }
 
         /// <summary>
         /// Explicit title for tags that don't reference an object.
