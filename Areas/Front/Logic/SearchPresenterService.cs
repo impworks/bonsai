@@ -39,7 +39,7 @@ namespace Bonsai.Areas.Front.Logic
             var ids = matches.Select(x => x.Id);
 
             var details = await _db.Pages
-                                   .Where(x => ids.Contains(x.Id))
+                                   .Where(x => ids.Contains(x.Id) && x.IsDeleted == false)
                                    .Select(x => new { x.Id, x.MainPhoto.FilePath, x.LastUpdateDate, PageType = x.Type })
                                    .ToDictionaryAsync(x => x.Id, x => x)
                                    .ConfigureAwait(false);

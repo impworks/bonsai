@@ -101,7 +101,8 @@ namespace Bonsai.Code.DomainModel.Relations
                                             CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender"",
                                             m.""FilePath"" AS ""MainPhotoPath""
                                         FROM ""Pages"" AS p
-                                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId""
+                                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId"" AND m.""IsDeleted"" = 0
+                                        WHERE p.""IsDeleted"" = 0
                                     ) AS t
                                   ").ConfigureAwait(false);
 
@@ -110,12 +111,13 @@ namespace Bonsai.Code.DomainModel.Relations
                     page.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(page.MainPhotoPath, MediaSize.Small);
 
                 var relations = await db.Relations
+                                        .Where(x => x.Source.IsDeleted == false && x.Destination.IsDeleted == false)
                                         .Select(x => new RelationExcerpt
                                         {
                                             Id = x.Id,
                                             SourceId = x.SourceId,
                                             DestinationId = x.DestinationId,
-                                            EventId = x.EventId,
+                                            EventId = x.Event != null && x.Event.IsDeleted == false ? x.EventId : null,
                                             Duration = FuzzyRange.TryParse(x.Duration),
                                             Type = x.Type,
                                             IsComplementary = x.IsComplementary

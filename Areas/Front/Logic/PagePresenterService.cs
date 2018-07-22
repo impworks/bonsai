@@ -42,7 +42,7 @@ namespace Bonsai.Areas.Front.Logic
         {
             var page = await _db.PageAliases
                                 .AsNoTracking()
-                                .Where(x => x.Key == key)
+                                .Where(x => x.Key == key && x.Page.IsDeleted == false)
                                 .Select(x => x.Page)
                                 .Include(x => x.MainPhoto)
                                 .FirstOrDefaultAsync()
@@ -65,7 +65,7 @@ namespace Bonsai.Areas.Front.Logic
         {
             var page = await _db.PageAliases
                                 .AsNoTracking()
-                                .Where(x => x.Key == key)
+                                .Where(x => x.Key == key && x.Page.IsDeleted == false)
                                 .Select(x => x.Page)
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
@@ -78,7 +78,10 @@ namespace Bonsai.Areas.Front.Logic
             if(page.Key != key)
                 throw new RedirectRequiredException(page.Key);
 
-            var media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
+            var media = page.MediaTags
+                            .Where(x => x.Media.IsDeleted == false)
+                            .Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
+
             return await ConfigureAsync(page, new PageMediaVM { Media = media }).ConfigureAwait(false);
         }
 

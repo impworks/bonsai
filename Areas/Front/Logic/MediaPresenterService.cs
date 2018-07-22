@@ -40,6 +40,7 @@ namespace Bonsai.Areas.Front.Logic
             var media = await _db.Media
                                  .Include(x => x.Tags)
                                  .ThenInclude(x => x.Object)
+                                 .Where(x => x.IsDeleted == false)
                                  .FirstOrDefaultAsync(x => x.Id == id)
                                  .ConfigureAwait(false);
 
