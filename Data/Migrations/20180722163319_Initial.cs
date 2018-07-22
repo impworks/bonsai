@@ -144,11 +144,13 @@ namespace Bonsai.Data.Migrations
                     Date = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     FilePath = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bool", nullable: false),
                     Key = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
+                    MimeType = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Title = table.Column<string>(type: "text", nullable: true),
                     Type = table.Column<int>(type: "int4", nullable: false),
                     UploadDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
-                    UploaderAuthorId = table.Column<string>(type: "text", nullable: true)
+                    UploaderId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -160,9 +162,10 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Facts = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bool", nullable: false),
                     Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     LastUpdateDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                     MainPhotoId = table.Column<Guid>(type: "uuid", nullable: true),
@@ -353,9 +356,9 @@ namespace Bonsai.Data.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Media_UploaderAuthorId",
+                name: "IX_Media_UploaderId",
                 table: "Media",
-                column: "UploaderAuthorId");
+                column: "UploaderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MediaTags_MediaId",
@@ -447,9 +450,9 @@ namespace Bonsai.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Media_AspNetUsers_UploaderAuthorId",
+                name: "FK_Media_AspNetUsers_UploaderId",
                 table: "Media",
-                column: "UploaderAuthorId",
+                column: "UploaderId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
@@ -458,7 +461,7 @@ namespace Bonsai.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Media_AspNetUsers_UploaderAuthorId",
+                name: "FK_Media_AspNetUsers_UploaderId",
                 table: "Media");
 
             migrationBuilder.DropTable(

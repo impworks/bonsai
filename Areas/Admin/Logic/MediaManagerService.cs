@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -23,14 +26,18 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class MediaManagerService
     {
-        public MediaManagerService(AppDbContext db, IMapper mapper)
+        public MediaManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper, IHostingEnvironment env)
         {
             _db = db;
             _mapper = mapper;
+            _userMgr = userMgr;
+            _env = env;
         }
 
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userMgr;
+        private readonly IHostingEnvironment _env;
 
         #region Public methods
 
@@ -74,7 +81,32 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, ClaimsPrincipal principal)
         {
-            throw new NotImplementedException();
+            var id = Guid.NewGuid();
+            var key = PageHelper.GetMediaKey(id);
+
+            var userId = _userMgr.GetUserId(principal);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+
+            var filePath = await SaveUploadAsync(vm, key);
+
+            var media = new Media
+            {
+                Id = id,
+                Key = key,
+                Type = vm.Type,
+                MimeType = vm.MimeType,
+                FilePath = filePath,
+                UploadDate = DateTimeOffset.Now,
+                Uploader = user,
+            };
+
+            _db.Media.Add(media);
+
+            return new MediaUploadResultVM
+            {
+                Id = media.Id,
+                Key = media.Key
+            };
         }
 
         /// <summary>
@@ -101,7 +133,13 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
-            throw new NotImplementedException();
+            var media = await _db.Media
+                                 .GetAsync(x => x.Id == id, "Медиа-файл не найден")
+                                 .ConfigureAwait(false);
+
+            // todo: changeset
+
+            media.IsDeleted = true;
         }
 
         #endregion
@@ -164,6 +202,23 @@ namespace Bonsai.Areas.Admin.Logic
                 val.Add(nameof(vm.Date), "Введите корректную дату.");
 
             val.ThrowIfInvalid();
+        }
+
+        /// <summary>
+        /// Saves an uploaded file to disk.
+        /// </summary>
+        private async Task<string> SaveUploadAsync(MediaUploadRequestVM vm, string key)
+        {
+            var ext = Path.GetExtension(vm.Name);
+            var fileName = key + ext;
+            var filePath = Path.Combine(_env.ContentRootPath, "media", fileName);
+
+            using (var fs = new FileStream(filePath, FileMode.CreateNew))
+                await vm.Data.CopyToAsync(fs);
+
+            // todo: create thumbnails
+
+            return $"~/media/{fileName}";
         }
 
         #endregion

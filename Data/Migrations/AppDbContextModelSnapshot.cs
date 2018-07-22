@@ -148,9 +148,15 @@ namespace Bonsai.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(300);
 
+                    b.Property<bool>("IsDeleted");
+
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(30);
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<string>("Title");
 
@@ -158,11 +164,11 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<DateTimeOffset>("UploadDate");
 
-                    b.Property<string>("UploaderAuthorId");
+                    b.Property<string>("UploaderId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UploaderAuthorId");
+                    b.HasIndex("UploaderId");
 
                     b.ToTable("Media");
                 });
@@ -197,11 +203,13 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
+                    b.Property<DateTimeOffset>("CreationDate");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Facts");
+
+                    b.Property<bool>("IsDeleted");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -407,9 +415,9 @@ namespace Bonsai.Data.Migrations
 
             modelBuilder.Entity("Bonsai.Data.Models.Media", b =>
                 {
-                    b.HasOne("Bonsai.Data.Models.AppUser", "UploaderAuthor")
+                    b.HasOne("Bonsai.Data.Models.AppUser", "Uploader")
                         .WithMany()
-                        .HasForeignKey("UploaderAuthorId");
+                        .HasForeignKey("UploaderId");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.MediaTag", b =>

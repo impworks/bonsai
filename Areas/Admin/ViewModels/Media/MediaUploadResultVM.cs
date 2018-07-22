@@ -11,5 +11,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// Unique ID.
         /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Unique key.
+        /// </summary>
+        public string Key { get; set; }
     }
 }

@@ -66,11 +66,16 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Date of the page's creation.
         /// </summary>
-        public DateTimeOffset CreateDate { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
 
         /// <summary>
         /// Date of the page's last revision.
         /// </summary>
         public DateTimeOffset LastUpdateDate { get; set; }
+
+        /// <summary>
+        /// Flag indicating that this resource is removed.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

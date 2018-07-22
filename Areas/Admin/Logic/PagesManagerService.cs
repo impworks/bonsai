@@ -95,7 +95,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var page = _mapper.Map<Page>(vm);
             page.Id = Guid.NewGuid();
-            page.CreateDate = DateTimeOffset.Now;
+            page.CreationDate = DateTimeOffset.Now;
             page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
 
             await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
@@ -165,7 +165,7 @@ namespace Bonsai.Areas.Admin.Logic
             if (vm == null)
                 vm = new PagesListRequestVM();
 
-            var orderableFields = new[] {nameof(Page.Title), nameof(Page.LastUpdateDate), nameof(Page.CreateDate)};
+            var orderableFields = new[] {nameof(Page.Title), nameof(Page.LastUpdateDate), nameof(Page.CreationDate)};
             if (!orderableFields.Contains(vm.OrderBy))
                 vm.OrderBy = orderableFields[0];
 

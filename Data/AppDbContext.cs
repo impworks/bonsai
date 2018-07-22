@@ -52,7 +52,7 @@ namespace Bonsai.Data
                    .HasOne(x => x.Event).WithMany().HasForeignKey(x => x.EventId);
 
             builder.Entity<Media>()
-                   .HasOne(x => x.UploaderAuthor).WithMany().IsRequired(false);
+                   .HasOne(x => x.Uploader).WithMany().IsRequired(false);
 
             builder.Entity<MediaTag>()
                    .HasOne(x => x.Media).WithMany(x => x.Tags);

@@ -9,6 +9,16 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
     public class MediaUploadRequestVM
     {
         /// <summary>
+        /// Name of the original file.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// MIME type of the file.
+        /// </summary>
+        public string MimeType { get; set; }
+
+        /// <summary>
         /// Media type.
         /// </summary>
         public MediaType Type { get; set; }
@@ -16,6 +26,6 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// <summary>
         /// File contents.
         /// </summary>
-        public Stream SourceStream { get; set; }
+        public Stream Data { get; set; }
     }
 }

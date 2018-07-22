@@ -90,7 +90,7 @@ namespace Bonsai.Data.Utils.Seed
                 Type = type,
                 Description = (File.Exists(descrFile) ? File.ReadAllText(descrFile) : descrSource) ?? title,
                 Facts = factsObj.ToString(Formatting.None),
-                CreateDate = DateTimeOffset.Now,
+                CreationDate = DateTimeOffset.Now,
                 LastUpdateDate = DateTimeOffset.Now
             };
             _db.Pages.Add(page);
