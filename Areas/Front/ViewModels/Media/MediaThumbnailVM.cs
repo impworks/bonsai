@@ -26,6 +26,6 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         /// <summary>
         /// Date of the media's origin.
         /// </summary>
-        public FuzzyDate? OriginDate { get; set; }
+        public FuzzyDate? Date { get; set; }
     }
 }
