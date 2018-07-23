@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Code.Utils.Date;
@@ -32,12 +33,14 @@ namespace Bonsai.Areas.Admin.Logic
             _mapper = mapper;
             _userMgr = userMgr;
             _env = env;
+            _mediaHandlers = GetMediaHandlers().ToList();
         }
 
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userMgr;
         private readonly IHostingEnvironment _env;
+        private readonly IReadOnlyList<IMediaHandler> _mediaHandlers;
 
         #region Public methods
 
@@ -84,6 +87,10 @@ namespace Bonsai.Areas.Admin.Logic
             var id = Guid.NewGuid();
             var key = PageHelper.GetMediaKey(id);
 
+            var handler = _mediaHandlers.FirstOrDefault(x => x.SupportedMimeTypes.Contains(vm.MimeType));
+            if(handler == null)
+                throw new ValidationException(nameof(MediaUploadRequestVM.MimeType), "Неизвестный тип файла!");
+
             var userId = _userMgr.GetUserId(principal);
             var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
 
@@ -93,7 +100,7 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 Id = id,
                 Key = key,
-                Type = vm.Type,
+                Type = handler.MediaType,
                 MimeType = vm.MimeType,
                 FilePath = filePath,
                 UploadDate = DateTimeOffset.Now,
@@ -102,11 +109,30 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.Media.Add(media);
 
+            MediaHandlerHelper.FireAndForget(() => handler.CreateThumbnailsAsync(vm.MimeType, filePath));
+
             return new MediaUploadResultVM
             {
                 Id = media.Id,
                 Key = media.Key
             };
+        }
+
+        /// <summary>
+        /// Returns the media file editor.
+        /// </summary>
+        public async Task<MediaEditorVM> RequestUpdateAsync(Guid id)
+        {
+            var media = await _db.Media
+                                 .AsNoTracking()
+                                 .Include(x => x.Tags)
+                                 .GetAsync(x => x.Id == id, "Медиа-файл не найден")
+                                 .ConfigureAwait(false);
+
+            var vm = _mapper.Map<MediaEditorVM>(media);
+            vm.Tags = SerializeTags(media.Tags);
+
+            return vm;
         }
 
         /// <summary>
@@ -165,6 +191,22 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
+        /// Converts tags to a string representation.
+        /// </summary>
+        private string SerializeTags(IEnumerable<MediaTag> tags)
+        {
+            var tagExcerpts = tags.Select(x => new MediaTagVM
+            {
+                PageId = x.ObjectId,
+                ObjectTitle = x.ObjectTitle,
+                Type = x.Type,
+                Coordinates = x.Coordinates
+            });
+
+            return JsonConvert.SerializeObject(tagExcerpts);
+        }
+
+        /// <summary>
         /// Creates tag elements.
         /// </summary>
         private async Task<ICollection<MediaTag>> DeserializeTagsAsync(string raw)
@@ -219,6 +261,16 @@ namespace Bonsai.Areas.Admin.Logic
             // todo: create thumbnails
 
             return $"~/media/{fileName}";
+        }
+
+        /// <summary>
+        /// Returns the list of known media handlers.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<IMediaHandler> GetMediaHandlers()
+        {
+            // todo
+            yield break;
         }
 
         #endregion

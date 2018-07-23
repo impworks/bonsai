@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.ViewModels.Media
 {
@@ -17,11 +16,6 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// MIME type of the file.
         /// </summary>
         public string MimeType { get; set; }
-
-        /// <summary>
-        /// Media type.
-        /// </summary>
-        public MediaType Type { get; set; }
 
         /// <summary>
         /// File contents.

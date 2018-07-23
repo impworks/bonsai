@@ -219,7 +219,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Finds the image to use for the page.
         /// </summary>
-        private async Task<Media> FindMainPhotoAsync(string key)
+        private async Task<MediaHandlers> FindMainPhotoAsync(string key)
         {
             if (string.IsNullOrEmpty(key))
                 return null;
