@@ -13,6 +13,7 @@
     "gulp-watch": "^4.3.11"
   },
   "dependencies": {
+    "blueimp-file-upload": "^9.22.0",
     "bootstrap": "^4.1.1",
     "datepicker-bootstrap": "^1.8.0",
     "devbridge-autocomplete": "^1.4.7",

@@ -23,7 +23,10 @@ var config = {
             './node_modules/gijgo/js/gijgo.js',
             './node_modules/gijgo/js/messages/messages.ru-ru.js',
             './node_modules/toastr/toastr.js',
-            './node_modules/selectize/dist/js/standalone/selectize.js'
+            './node_modules/selectize/dist/js/standalone/selectize.js',
+            './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+            './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
+            './node_modules/blueimp-file-upload/js/jquery.fileupload.js'
         ],
         fonts: [
             './node_modules/font-awesome/fonts/*.*',

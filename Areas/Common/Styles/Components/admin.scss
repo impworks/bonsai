@@ -77,3 +77,37 @@
         vertical-align: sub;
     }
 }
+
+.media-uploader {
+    &:hover {
+        border-color: $primary;
+        color: $primary;
+    }
+
+    .card-body {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding: 48px;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    input[type="file"] {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        opacity: 0;
+        width: 100%;
+        cursor: pointer;
+    }
+}
+
+.media-uploader-items {
+    margin-top: 32px;
+}
