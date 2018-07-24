@@ -242,8 +242,22 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Adds a generic media element.
         /// </summary>
-        private Media AddMedia(MediaType type, string source, string preview = null, string date = null, string description = null, Guid? explicitId = null)
+        private Media AddMedia(MediaType type, string source, string preview = null, string date = null, string description = null, Guid? explicitId = null, string mimeType = null)
         {
+            string GetDefaultMimeType()
+            {
+                if (type == MediaType.Photo)
+                    return "image/jpeg";
+
+                if (type == MediaType.Document)
+                    return "application/pdf";
+
+                if (type == MediaType.Video)
+                    return "video/mpeg";
+
+                throw new ArgumentException("Unknown MediaType!");
+            }
+
             var id = explicitId ?? Guid.NewGuid();
             var key = PageHelper.GetMediaKey(id);
             var newName = key + Path.GetExtension(source);
@@ -273,7 +287,8 @@ namespace Bonsai.Data.Utils.Seed
                 Date = date,
                 Description = description,
                 Tags = new List<MediaTag>(),
-                UploadDate = DateTimeOffset.Now
+                UploadDate = DateTimeOffset.Now,
+                MimeType = mimeType ?? GetDefaultMimeType()
             };
             _db.Media.Add(media);
             return media;

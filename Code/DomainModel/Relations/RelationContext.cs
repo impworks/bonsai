@@ -101,8 +101,8 @@ namespace Bonsai.Code.DomainModel.Relations
                                             CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender"",
                                             m.""FilePath"" AS ""MainPhotoPath""
                                         FROM ""Pages"" AS p
-                                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId"" AND m.""IsDeleted"" = 0
-                                        WHERE p.""IsDeleted"" = 0
+                                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId"" AND m.""IsDeleted"" = false
+                                        WHERE p.""IsDeleted"" = false
                                     ) AS t
                                   ").ConfigureAwait(false);
 

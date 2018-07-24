@@ -39,7 +39,7 @@ namespace Bonsai.Areas.Admin.Components
                 new MenuGroupVM(
                     new MenuItemVM { Title = "Страницы", Url = Url.Action("Index", "Pages", new { area = "Admin" }) },
                     new MenuItemVM { Title = "Связи", Url = Url.Action("Index", "Relations", new { area = "Admin" }) },
-                    new MenuItemVM { Title = "Медиа", Url = "/#" }
+                    new MenuItemVM { Title = "Медиа", Url = Url.Action("Index", "Media", new { area = "Admin" })}
                 )
             );
 

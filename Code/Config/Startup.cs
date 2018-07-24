@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,9 +60,17 @@ namespace Bonsai.Code.Config
 
             InitDatabase(app);
 
+            var culture = CultureInfo.GetCultureInfo("ru-RU");
+
             app.UseStaticFiles()
                .UseAuthentication()
                .UseSession()
+               .UseRequestLocalization(new RequestLocalizationOptions
+               {
+                   DefaultRequestCulture = new RequestCulture(culture),
+                   SupportedCultures = new [] { culture },
+                   SupportedUICultures = new [] { culture }
+               })
                .UseMvc(routes => { routes.MapAreaRoute("admin", "Admin", "admin/{controller}/{action}/{id?}"); });
         }
     }

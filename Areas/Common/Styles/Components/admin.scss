@@ -11,6 +11,22 @@
         vertical-align: bottom;
     }
 
+    .admin-full-image {
+        padding: 0;
+
+        img {
+            height: 48px;
+            width: auto;
+        }
+
+        .image {
+            height: 48px;
+            width: 64px;
+            background-position: center;
+            background-size: cover;
+        }
+    }
+
     .image {
         background-size: cover;
     }

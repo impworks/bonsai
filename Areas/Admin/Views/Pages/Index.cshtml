@@ -40,7 +40,7 @@
         <thead>
             <tr>
                 <th width="60%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.Title), title = "Название"})</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.CreateDate), title = "Создана"})</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.CreationDate), title = "Создана"})</th>
                 <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.LastUpdateDate), title = "Изменена"})</th>
                 <th width="1px"></th>
             </tr>
@@ -55,7 +55,7 @@
                             @p.Title
                         </a>
                     </td>
-                    <td><span title="@p.CreateDate.LocalDateTime.ToLongDateString()">@p.CreateDate.Humanize()</span></td>
+                    <td><span title="@p.CreationDate.LocalDateTime.ToLongDateString()">@p.CreationDate.Humanize()</span></td>
                     <td><span title="@p.LastUpdateDate.LocalDateTime.ToLongDateString()">@p.LastUpdateDate.Humanize()</span></td>
                     <td class="admin-row-actions">
                         <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Id})">
