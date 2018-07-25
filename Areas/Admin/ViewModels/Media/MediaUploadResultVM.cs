@@ -16,5 +16,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// Unique key.
         /// </summary>
         public string Key { get; set; }
+
+        /// <summary>
+        /// Full path to preview.
+        /// </summary>
+        public string ThumbnailPath { get; set; }
     }
 }

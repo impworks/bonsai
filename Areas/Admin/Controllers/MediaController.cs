@@ -51,14 +51,30 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("upload")]
         public async Task<ActionResult> Upload(IFormFile file)
         {
-            var vm = new MediaUploadRequestVM
+            try
             {
-                Name = file.FileName,
-                MimeType = file.ContentType,
-                Data = file.OpenReadStream(),
-            };
-            var result = await _media.UploadAsync(vm, User);
-            return Json(result);
+                var vm = new MediaUploadRequestVM
+                {
+                    Name = file.FileName,
+                    MimeType = file.ContentType,
+                    Data = file.OpenReadStream(),
+                };
+
+                var result = await _media.UploadAsync(vm, User);
+                result.ThumbnailPath = Url.Content(result.ThumbnailPath);
+
+                await _db.SaveChangesAsync();
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Error = true,
+                    Description = ex.Message
+                });
+            }
         }
 
         /// <summary>

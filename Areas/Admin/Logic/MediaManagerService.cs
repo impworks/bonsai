@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
+using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
+using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -89,12 +92,12 @@ namespace Bonsai.Areas.Admin.Logic
 
             var handler = _mediaHandlers.FirstOrDefault(x => x.SupportedMimeTypes.Contains(vm.MimeType));
             if(handler == null)
-                throw new ValidationException(nameof(MediaUploadRequestVM.MimeType), "Неизвестный тип файла!");
+                throw new UploadException("Неизвестный тип файла!");
 
             var userId = _userMgr.GetUserId(principal);
             var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
 
-            var filePath = await SaveUploadAsync(vm, key);
+            var filePath = await SaveUploadAsync(vm, key, handler);
 
             var media = new Media
             {
@@ -109,12 +112,11 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.Media.Add(media);
 
-            MediaHandlerHelper.FireAndForget(() => handler.CreateThumbnailsAsync(vm.MimeType, filePath));
-
             return new MediaUploadResultVM
             {
                 Id = media.Id,
-                Key = media.Key
+                Key = media.Key,
+                ThumbnailPath = MediaPresenterService.GetSizedMediaPath(filePath, MediaSize.Small)
             };
         }
 
@@ -249,16 +251,16 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Saves an uploaded file to disk.
         /// </summary>
-        private async Task<string> SaveUploadAsync(MediaUploadRequestVM vm, string key)
+        private async Task<string> SaveUploadAsync(MediaUploadRequestVM vm, string key, IMediaHandler handler)
         {
             var ext = Path.GetExtension(vm.Name);
             var fileName = key + ext;
-            var filePath = Path.Combine(_env.ContentRootPath, "media", fileName);
+            var filePath = Path.Combine(_env.WebRootPath, "media", fileName);
 
             using (var fs = new FileStream(filePath, FileMode.CreateNew))
                 await vm.Data.CopyToAsync(fs);
 
-            // todo: create thumbnails
+            MediaHandlerHelper.CreateThumbnails(filePath, vm.MimeType, handler);
 
             return $"~/media/{fileName}";
         }
@@ -266,11 +268,9 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the list of known media handlers.
         /// </summary>
-        /// <returns></returns>
         private IEnumerable<IMediaHandler> GetMediaHandlers()
         {
-            // todo
-            yield break;
+            yield return new PhotoMediaHandler();
         }
 
         #endregion

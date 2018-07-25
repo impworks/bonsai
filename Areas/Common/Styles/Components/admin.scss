@@ -110,4 +110,14 @@
 
 .media-uploader-items {
     margin-top: 32px;
+
+    .media-uploader-preview {
+        height: 130px;
+        background-size: cover;
+        background-position: center center;
+
+        &.default {
+            background-image: url(/assets/img/unknown-other.svg);
+        }
+    }
 }
