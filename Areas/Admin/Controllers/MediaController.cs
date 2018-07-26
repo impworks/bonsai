@@ -115,9 +115,24 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Removes the media file.
         /// </summary>
+        [HttpGet]
+        [Route("remove")]
         public async Task<ActionResult> Remove(Guid id)
         {
+            var vm = await _media.RequestUpdateAsync(id);
+            return View(vm);
+        }
+
+        /// <summary>
+        /// Removes the media file.
+        /// </summary>
+        [HttpPost]
+        [Route("remove")]
+        public async Task<ActionResult> Remove(Guid id, bool confirm)
+        {
             await _media.RemoveAsync(id, User);
+            await _db.SaveChangesAsync();
+
             return RedirectToSuccess("Медиа-файл удален");
         }
     }

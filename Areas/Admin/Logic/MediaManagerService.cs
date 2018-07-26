@@ -67,7 +67,8 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync()
                                         .ConfigureAwait(false);
 
-            var items = await query.OrderBy(request.OrderBy, request.OrderDescending)
+            var items = await query.Where(x => x.IsDeleted == false)
+                                   .OrderBy(request.OrderBy, request.OrderDescending)
                                    .ProjectTo<MediaThumbnailExtendedVM>()
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
@@ -128,7 +129,7 @@ namespace Bonsai.Areas.Admin.Logic
             var media = await _db.Media
                                  .AsNoTracking()
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == id, "Медиа-файл не найден")
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден")
                                  .ConfigureAwait(false);
 
             var vm = _mapper.Map<MediaEditorVM>(media);
@@ -145,7 +146,7 @@ namespace Bonsai.Areas.Admin.Logic
             await ValidateRequestAsync(vm).ConfigureAwait(false);
 
             var media = await _db.Media
-                                 .GetAsync(x => x.Id == vm.Id, "Медиа-файл не найден")
+                                 .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден")
                                  .ConfigureAwait(false);
 
             // todo: changeset
@@ -162,7 +163,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var media = await _db.Media
-                                 .GetAsync(x => x.Id == id, "Медиа-файл не найден")
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден")
                                  .ConfigureAwait(false);
 
             // todo: changeset

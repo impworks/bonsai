@@ -59,7 +59,8 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync()
                                         .ConfigureAwait(false);
 
-            var items = await query.OrderBy(request.OrderBy, request.OrderDescending)
+            var items = await query.Where(x => x.IsDeleted == false)
+                                   .OrderBy(request.OrderBy, request.OrderDescending)
                                    .ProjectTo<PageTitleExtendedVM>()
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
@@ -80,7 +81,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<IReadOnlyDictionary<Guid, PageTitleExtendedVM>> FindPagesByIdsAsync(IReadOnlyList<Guid?> pages)
         {
             return await _db.Pages.Include(x => x.MainPhoto)
-                            .Where(x => pages.Any(y => x.Id == y))
+                            .Where(x => pages.Any(y => x.Id == y) && x.IsDeleted == false)
                             .ProjectTo<PageTitleExtendedVM>()
                             .ToDictionaryAsync(x => x.Id, x => x)
                             .ConfigureAwait(false);
@@ -117,7 +118,7 @@ namespace Bonsai.Areas.Admin.Logic
                                 .Include(x => x.MainPhoto)
                                 .Include(x => x.Relations)
                                 .Include(x => x.Aliases)
-                                .GetAsync(x => x.Id == id, "Страница не найдена")
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена")
                                 .ConfigureAwait(false);
 
             return _mapper.Map<Page, PageEditorVM>(page);
@@ -131,7 +132,7 @@ namespace Bonsai.Areas.Admin.Logic
             await ValidateRequestAsync(vm).ConfigureAwait(false);
 
             var page = await _db.Pages
-                                .GetAsync(x => x.Id == vm.Id, "Страница не найдена")
+                                .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Страница не найдена")
                                 .ConfigureAwait(false);
 
             await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
@@ -225,7 +226,7 @@ namespace Bonsai.Areas.Admin.Logic
                 return null;
 
             var media = await _db.Media
-                                 .FirstOrDefaultAsync(x => x.Key == key)
+                                 .FirstOrDefaultAsync(x => x.Key == key && x.IsDeleted == false)
                                  .ConfigureAwait(false);
 
             if(media == null)
