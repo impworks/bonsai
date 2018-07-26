@@ -37,9 +37,13 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<Data.Models.Media, MediaThumbnailExtendedVM>()
+                   .MapMember(x => x.Id, x => x.Id)
+                   .MapMember(x => x.Key, x => x.Key)
+                   .MapMember(x => x.Type, x => x.Type)
+                   .MapMember(x => x.Date, x => FuzzyDate.TryParse(x.Date))
+                   .MapMember(x => x.UploadDate, x => x.UploadDate)
                    .MapMember(x => x.Title, x => x.Title)
                    .MapMember(x => x.MediaTagsCount, x => x.Tags.Count)
-                   .MapMember(x => x.Date, x => FuzzyDate.TryParse(x.Date))
                    .MapMember(y => y.ThumbnailUrl, x => MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small));
         }
     }

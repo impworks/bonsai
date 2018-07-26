@@ -11,6 +11,7 @@ using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
@@ -22,6 +23,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using MediaTagVM = Bonsai.Areas.Admin.ViewModels.Media.MediaTagVM;
 
 namespace Bonsai.Areas.Admin.Logic
 {
@@ -155,6 +157,18 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.MediaTags.RemoveRange(media.Tags);
             media.Tags = await DeserializeTagsAsync(vm.Tags).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Returns the confirmation info for the media.
+        /// </summary>
+        public async Task<MediaThumbnailExtendedVM> RequestRemoveAsync(Guid id)
+        {
+            var media = await _db.Media
+                                 .AsNoTracking()
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
+
+            return _mapper.Map<MediaThumbnailExtendedVM>(media);
         }
 
         /// <summary>

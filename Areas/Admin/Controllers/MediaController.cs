@@ -119,7 +119,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(Guid id)
         {
-            var vm = await _media.RequestUpdateAsync(id);
+            var vm = await _media.RequestRemoveAsync(id);
             return View(vm);
         }
 

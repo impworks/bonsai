@@ -1,19 +1,15 @@
-﻿@using Bonsai.Areas.Front.Logic
-@using Bonsai.Code.DomainModel.Media
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model Bonsai.Areas.Admin.ViewModels.Media.MediaEditorVM
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Bonsai.Areas.Admin.ViewModels.Dashboard.MediaThumbnailExtendedVM
 @{
     ViewBag.Title = "Удаление медиа";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
-
-    var thumbPath = MediaPresenterService.GetSizedMediaPath(Model.FilePath, MediaSize.Small);
 }
 
 <h1>Удаление медиа</h1>
 
 <div class="card d-inline-block">
     <div class="card-body">
-        <img src="@Url.Content(thumbPath)" style="max-width: 200px" />
+        <img src="@Url.Content(Model.ThumbnailUrl)" style="max-width: 200px" />
     </div>
 </div>
 
