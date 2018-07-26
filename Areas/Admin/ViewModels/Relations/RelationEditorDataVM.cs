@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bonsai.Areas.Admin.ViewModels.Relations

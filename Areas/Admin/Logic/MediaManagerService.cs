@@ -11,7 +11,6 @@ using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
-using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
@@ -136,6 +135,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var vm = _mapper.Map<MediaEditorVM>(media);
             vm.Tags = SerializeTags(media.Tags);
+            vm.LocationId = media.Tags.FirstOrDefault(x => x.Type == MediaTagType.Location)?.ObjectId;
 
             return vm;
         }

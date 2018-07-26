@@ -46,7 +46,17 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// <summary>
         /// Serialized tag info.
         /// </summary>
-        public string Tags { get; set; }
+        public string DepictedEntities { get; set; }
+
+        /// <summary>
+        /// ID of the page or name of the location.
+        /// </summary>
+        public string Location { get; set; }
+
+        /// <summary>
+        /// ID of the page or name of the event.
+        /// </summary>
+        public string Event { get; set; }
 
         public void Configure(IProfileExpression profile)
         {
@@ -57,7 +67,9 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
                    .MapMember(x => x.Date, x => x.Date)
                    .MapMember(x => x.Title, x => x.Title)
                    .MapMember(x => x.Description, x => x.Description)
-                   .Ignore(x => x.Tags)
+                   .Ignore(x => x.DepictedEntities)
+                   .Ignore(x => x.Location)
+                   .Ignore(x => x.Event)
                    .ReverseMap()
                    .Ignore(x => x.Id)
                    .Ignore(x => x.Type)

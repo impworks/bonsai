@@ -6,6 +6,7 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -15,13 +16,15 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/media")]
     public class MediaController: AdminControllerBase
     {
-        public MediaController(MediaManagerService media, AppDbContext db)
+        public MediaController(MediaManagerService media, PagesManagerService pages, AppDbContext db)
         {
             _media = media;
+            _pages = pages;
             _db = db;
         }
 
         private readonly MediaManagerService _media;
+        private readonly PagesManagerService _pages;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -85,7 +88,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Update(Guid id)
         {
             var vm = await _media.RequestUpdateAsync(id);
-            return View(vm);
+            return await ViewEditorFormAsync(vm);
         }
 
         /// <summary>
@@ -96,7 +99,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Update(MediaEditorVM vm)
         {
             if(!ModelState.IsValid)
-                return View(vm);
+                return await ViewEditorFormAsync(vm);
 
             try
             {
@@ -108,7 +111,7 @@ namespace Bonsai.Areas.Admin.Controllers
             catch (ValidationException ex)
             {
                 SetModelState(ex);
-                return View(vm);
+                return await ViewEditorFormAsync(vm);
             }
         }
 
@@ -135,5 +138,33 @@ namespace Bonsai.Areas.Admin.Controllers
 
             return RedirectToSuccess("Медиа-файл удален");
         }
+
+        #region Helpers
+
+        /// <summary>
+        /// Displays the editor.
+        /// </summary>
+        private async Task<ActionResult> ViewEditorFormAsync(MediaEditorVM vm)
+        {
+            var pageLookup = await _pages.FindPagesByIdsAsync(new[] {vm.Location, vm.Event})
+                                         .ConfigureAwait(false);
+
+            ViewBag.Data = new MediaEditorDataVM
+            {
+                EventItem = GetPageLookup(vm.EventId),
+                LocationItem = GetPageLookup(vm.LocationId)
+            };
+
+            return View("Editor", vm);
+
+            SelectListItem[] GetPageLookup(Guid? pageId)
+            {
+                return pageLookup.TryGetValue(pageId ?? Guid.Empty, out var page)
+                    ? new[] {new SelectListItem {Selected = true, Text = page.Title, Value = page.Id.ToString()}}
+                    : Array.Empty<SelectListItem>();
+            }
+        }
+
+        #endregion
     }
 }
