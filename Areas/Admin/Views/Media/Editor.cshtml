@@ -1,0 +1,62 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Admin.ViewModels.Media
+@model Bonsai.Areas.Admin.ViewModels.Media.MediaEditorVM
+@{
+    ViewBag.Title = "Редактор медиа";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var data = (MediaEditorDataVM) ViewBag.Data;
+}
+
+<h1>Редактор медиа</h1>
+
+<form action="@Url.Action("Update", "Media", new {area = "Admin"})">
+    <input type="hidden" asp-for="Id" />
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Title">Заголовок</label>
+                    <input type="text" asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Date">Дата</label>
+                    <input type="text" asp-for="Date" class="form-control" placeholder="ГГГГ.ММ.ДД" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Location">Место</label>
+                    <select asp-for="Location" asp-items="data.LocationItem"></select>
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Event">Событие</label>
+                    <select asp-for="Event" asp-items="data.EventItem"></select>
+                    <span asp-validation-for="Event" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <img src="@data.ThumbnailUrl" style="width: 100%"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">Отмена</a>
+    </div>
+</form>

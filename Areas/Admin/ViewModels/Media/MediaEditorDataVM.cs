@@ -10,5 +10,9 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
     {
         public IEnumerable<SelectListItem> LocationItem { get; set; }
         public IEnumerable<SelectListItem> EventItem { get; set; }
+
+        public IEnumerable<MediaTagVM> DepictedEntities { get; set; }
+
+        public string ThumbnailUrl { get; set; }
     }
 }

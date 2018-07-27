@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Media;
+using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -146,22 +151,36 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private async Task<ActionResult> ViewEditorFormAsync(MediaEditorVM vm)
         {
-            var pageLookup = await _pages.FindPagesByIdsAsync(new[] {vm.Location, vm.Event})
+            var depictedEntities = JsonConvert.DeserializeObject<MediaTagVM[]>(vm.DepictedEntities);
+            var ids = depictedEntities.Select(x => x.PageId)
+                              .Concat(new[] {vm.Location, vm.Event}.Select(x => x.TryParse<Guid?>()))
+                              .ToList();
+
+            var pageLookup = await _pages.FindPagesByIdsAsync(ids)
                                          .ConfigureAwait(false);
+
+            foreach(var depicted in depictedEntities)
+                if (depicted.PageId != null && pageLookup.TryGetValue(depicted.PageId.Value, out var depPage))
+                    depicted.ObjectTitle = depPage.Title;
 
             ViewBag.Data = new MediaEditorDataVM
             {
-                EventItem = GetPageLookup(vm.EventId),
-                LocationItem = GetPageLookup(vm.LocationId)
+                EventItem = GetPageLookup(vm.Event),
+                LocationItem = GetPageLookup(vm.Location),
+                DepictedEntities = depictedEntities,
+                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(vm.FilePath, MediaSize.Medium)
             };
 
             return View("Editor", vm);
 
-            SelectListItem[] GetPageLookup(Guid? pageId)
+            SelectListItem[] GetPageLookup(string key)
             {
-                return pageLookup.TryGetValue(pageId ?? Guid.Empty, out var page)
-                    ? new[] {new SelectListItem {Selected = true, Text = page.Title, Value = page.Id.ToString()}}
-                    : Array.Empty<SelectListItem>();
+                if (key.TryParse<Guid?>() is Guid id)
+                    return pageLookup.TryGetValue(id, out var page)
+                        ? new[] {new SelectListItem {Selected = true, Text = page.Title, Value = page.Id.ToString()}}
+                        : Array.Empty<SelectListItem>();
+
+                return new[] {new SelectListItem {Selected = true, Text = key, Value = key}};
             }
         }
 

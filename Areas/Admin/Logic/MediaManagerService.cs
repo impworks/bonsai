@@ -18,6 +18,7 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -134,10 +135,22 @@ namespace Bonsai.Areas.Admin.Logic
                                  .ConfigureAwait(false);
 
             var vm = _mapper.Map<MediaEditorVM>(media);
-            vm.Tags = SerializeTags(media.Tags);
-            vm.LocationId = media.Tags.FirstOrDefault(x => x.Type == MediaTagType.Location)?.ObjectId;
+            vm.Location = GetTagValue(MediaTagType.Location);
+            vm.Event = GetTagValue(MediaTagType.Event);
+            vm.DepictedEntities = JsonConvert.SerializeObject(
+                media.Tags.Where(x => x.Type == MediaTagType.DepictedEntity)
+                     .AsQueryable()
+                     .ProjectTo<MediaTagVM>()
+                     .ToList()
+            );
 
             return vm;
+
+            string GetTagValue(MediaTagType type)
+            {
+                var tag = media.Tags.FirstOrDefault(x => x.Type == type);
+                return tag?.ObjectId?.ToString() ?? tag?.ObjectTitle;
+            }
         }
 
         /// <summary>
@@ -156,7 +169,7 @@ namespace Bonsai.Areas.Admin.Logic
             _mapper.Map(vm, media);
 
             _db.MediaTags.RemoveRange(media.Tags);
-            media.Tags = await DeserializeTagsAsync(vm.Tags).ConfigureAwait(false);
+            media.Tags = await DeserializeTagsAsync(vm).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -208,46 +221,31 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
-        /// Converts tags to a string representation.
-        /// </summary>
-        private string SerializeTags(IEnumerable<MediaTag> tags)
-        {
-            var tagExcerpts = tags.Select(x => new MediaTagVM
-            {
-                PageId = x.ObjectId,
-                ObjectTitle = x.ObjectTitle,
-                Type = x.Type,
-                Coordinates = x.Coordinates
-            });
-
-            return JsonConvert.SerializeObject(tagExcerpts);
-        }
-
-        /// <summary>
         /// Creates tag elements.
         /// </summary>
-        private async Task<ICollection<MediaTag>> DeserializeTagsAsync(string raw)
+        private async Task<ICollection<MediaTag>> DeserializeTagsAsync(MediaEditorVM vm)
         {
-            var tagVms = JsonConvert.DeserializeObject<MediaTagVM[]>(raw ?? "[]");
-
-            var relatedIds = tagVms.Where(x => x.PageId.HasValue)
-                                   .Select(x => x.PageId.Value)
-                                   .ToList();
-
-            if (relatedIds.Any())
-            {
-                var foundPageIds = await _db.Pages
-                                            .Where(x => relatedIds.Contains(x.Id))
-                                            .Select(x => x.Id)
-                                            .ToListAsync()
-                                            .ConfigureAwait(false);
-
-                var hasMissingIds = relatedIds.Except(foundPageIds).Any();
-                if(hasMissingIds)
-                    throw new ValidationException(nameof(MediaEditorVM.Tags), "Выбранная страница не существует!");
-            }
+            var tagVms = JsonConvert.DeserializeObject<IEnumerable<MediaTagVM>>(vm.DepictedEntities ?? "[]")
+                                    .ToList();
+            
+            TryParseTag(vm.Location, MediaTagType.Location);
+            TryParseTag(vm.Event, MediaTagType.Event);
 
             return tagVms.Select(x => _mapper.Map<MediaTagVM, MediaTag>(x)).ToList();
+
+            void TryParseTag(string source, MediaTagType type)
+            {
+                if (string.IsNullOrEmpty(source))
+                    return;
+
+                var id = source.TryParse<Guid?>();
+                tagVms.Add(new MediaTagVM
+                {
+                    Type = type,
+                    PageId = id,
+                    ObjectTitle = id == null ? source : null
+                });
+            }
         }
 
         /// <summary>
