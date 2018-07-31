@@ -161,6 +161,7 @@ namespace Bonsai.Areas.Admin.Logic
             await ValidateRequestAsync(vm).ConfigureAwait(false);
 
             var media = await _db.Media
+                                 .Include(x => x.Tags)
                                  .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден")
                                  .ConfigureAwait(false);
 
@@ -230,6 +231,7 @@ namespace Bonsai.Areas.Admin.Logic
                                   {
                                       Id = Guid.NewGuid(),
                                       Type = MediaTagType.DepictedEntity,
+                                      Coordinates = x.Coordinates,
                                       ObjectId = x.PageId,
                                       ObjectTitle = x.PageId == null ? x.ObjectTitle : null
                                   })

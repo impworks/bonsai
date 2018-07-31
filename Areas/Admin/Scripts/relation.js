@@ -89,10 +89,8 @@
         var url = '/admin/suggest/pages?query=' + encodeURIComponent(query);
         currTypes.forEach(function (t) { url += '&types=' + encodeURIComponent(t); });
 
-        $.ajax({
-                url: url
-            })
-            .done(function (data) {
+        $.ajax({ url: url })
+            .done(function(data) {
                 callback(data);
             });
     }
