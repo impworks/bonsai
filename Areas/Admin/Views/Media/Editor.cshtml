@@ -1,17 +1,22 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Media
+@using Bonsai.Data.Models
 @model Bonsai.Areas.Admin.ViewModels.Media.MediaEditorVM
 @{
     ViewBag.Title = "Редактор медиа";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
-    var data = (MediaEditorDataVM) ViewBag.Data;
+    var data = (MediaEditorDataVM)ViewBag.Data;
 }
 
 <h1>Редактор медиа</h1>
 
 <form action="@Url.Action("Update", "Media", new {area = "Admin"})">
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="DepictedEntities" />
+    <input type="hidden" asp-for="FilePath" />
+    <input type="hidden" asp-for="Type" />
+
     <div class="row">
         <div class="col-sm-6">
             <div class="form-row">
@@ -48,11 +53,24 @@
         </div>
 
         <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <img src="@data.ThumbnailUrl" style="width: 100%"/>
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="card">
+                        <div class="card-body media-editor-tags-wrapper">
+                            <img src="@data.ThumbnailUrl" style="width: 100%" />
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            @if(Model.Type == MediaType.Video || Model.Type == MediaType.Photo360)
+            {
+                <div class="form-row">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+            }
         </div>
     </div>
     <div class="form-group">

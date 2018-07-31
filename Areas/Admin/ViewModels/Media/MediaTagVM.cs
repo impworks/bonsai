@@ -22,11 +22,6 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         public string ObjectTitle { get; set; }
 
         /// <summary>
-        /// Type of the tag.
-        /// </summary>
-        public MediaTagType Type { get; set; }
-
-        /// <summary>
         /// Semicolon-separated coordinates of the tag.
         /// </summary>
         public string Coordinates { get; set; }
@@ -34,14 +29,9 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<MediaTag, MediaTagVM>()
-                   .MapMember(x => x.PageId, x => x.Object != null ? x.Object.Id : (Guid?) null)
-                   .MapMember(x => x.Type, x => x.Type)
                    .MapMember(x => x.ObjectTitle, x => x.ObjectTitle)
                    .MapMember(x => x.Coordinates, x => x.Coordinates)
-                   .MapMember(x => x.PageId, x => x.ObjectId)
-                   .ReverseMap()
-                   .Ignore(x => x.Id)
-                   .Ignore(x => x.Object);
+                   .MapMember(x => x.PageId, x => x.ObjectId);
         }
     }
 }

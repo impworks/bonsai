@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
@@ -153,8 +154,8 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             var depictedEntities = JsonConvert.DeserializeObject<MediaTagVM[]>(vm.DepictedEntities);
             var ids = depictedEntities.Select(x => x.PageId)
-                              .Concat(new[] {vm.Location, vm.Event}.Select(x => x.TryParse<Guid?>()))
-                              .ToList();
+                                      .Concat(new[] {vm.Location, vm.Event}.Select(x => x.TryParse<Guid?>()))
+                                      .ToList();
 
             var pageLookup = await _pages.FindPagesByIdsAsync(ids)
                                          .ConfigureAwait(false);
@@ -167,7 +168,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 EventItem = GetPageLookup(vm.Event),
                 LocationItem = GetPageLookup(vm.Location),
-                DepictedEntities = depictedEntities,
+                DepictedEntityItems = GetDepictedEntitiesList(),
                 ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(vm.FilePath, MediaSize.Medium)
             };
 
@@ -181,6 +182,27 @@ namespace Bonsai.Areas.Admin.Controllers
                         : Array.Empty<SelectListItem>();
 
                 return new[] {new SelectListItem {Selected = true, Text = key, Value = key}};
+            }
+
+            IReadOnlyList<SelectListItem> GetDepictedEntitiesList()
+            {
+                var result = new List<SelectListItem>();
+
+                foreach (var entity in depictedEntities)
+                {
+                    var title = entity.PageId is Guid id && pageLookup.TryGetValue(id, out var page)
+                        ? page.Title
+                        : entity.ObjectTitle;
+
+                    result.Add(new SelectListItem
+                    {
+                        Selected = true,
+                        Text = title,
+                        Value = entity.PageId?.ToString() ?? entity.ObjectTitle
+                    });
+                }
+
+                return result;
             }
         }
 

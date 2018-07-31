@@ -225,13 +225,20 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         private async Task<ICollection<MediaTag>> DeserializeTagsAsync(MediaEditorVM vm)
         {
-            var tagVms = JsonConvert.DeserializeObject<IEnumerable<MediaTagVM>>(vm.DepictedEntities ?? "[]")
-                                    .ToList();
+            var tags = JsonConvert.DeserializeObject<IEnumerable<MediaTagVM>>(vm.DepictedEntities ?? "[]")
+                                  .Select(x => new MediaTag
+                                  {
+                                      Id = Guid.NewGuid(),
+                                      Type = MediaTagType.DepictedEntity,
+                                      ObjectId = x.PageId,
+                                      ObjectTitle = x.PageId == null ? x.ObjectTitle : null
+                                  })
+                                  .ToList();
             
             TryParseTag(vm.Location, MediaTagType.Location);
             TryParseTag(vm.Event, MediaTagType.Event);
 
-            return tagVms.Select(x => _mapper.Map<MediaTagVM, MediaTag>(x)).ToList();
+            return tags;
 
             void TryParseTag(string source, MediaTagType type)
             {
@@ -239,10 +246,11 @@ namespace Bonsai.Areas.Admin.Logic
                     return;
 
                 var id = source.TryParse<Guid?>();
-                tagVms.Add(new MediaTagVM
+                tags.Add(new MediaTag
                 {
+                    Id = Guid.NewGuid(),
                     Type = type,
-                    PageId = id,
+                    ObjectId = id,
                     ObjectTitle = id == null ? source : null
                 });
             }
@@ -257,6 +265,30 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (!string.IsNullOrEmpty(vm.Date) && FuzzyDate.TryParse(vm.Date) == null)
                 val.Add(nameof(vm.Date), "Введите корректную дату.");
+
+            var depictedIds = JsonConvert.DeserializeObject<IEnumerable<MediaTagVM>>(vm.DepictedEntities ?? "[]")
+                                         .Select(x => x.PageId)
+                                         .ToList();
+
+            var locId = vm.Location.TryParse<Guid?>();
+            var evtId = vm.Event.TryParse<Guid?>();
+            var tagIds = depictedIds.Concat(new[] {locId, evtId})
+                                    .Where(x => x != null)
+                                    .Select(x => x.Value)
+                                    .ToList();
+
+            var existing = await _db.Pages
+                                    .Where(x => tagIds.Contains(x.Id) && !x.IsDeleted)
+                                    .ToDictionaryAsync(x => x.Id, x => true);
+
+            if (depictedIds.Any(x => x != null && !existing.ContainsKey(x.Value)))
+                val.Add(nameof(vm.DepictedEntities), "Страница не существует!");
+
+            if (locId != null && !existing.ContainsKey(locId.Value))
+                val.Add(nameof(vm.Location), "Страница не существует!");
+
+            if (evtId != null && !existing.ContainsKey(evtId.Value))
+                val.Add(nameof(vm.Event), "Страница не существует!");
 
             val.ThrowIfInvalid();
         }
