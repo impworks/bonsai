@@ -19,8 +19,6 @@
 
     setupDatePicker($('#Date'));
 
-    createPhotoTags();
-
     function setupSelectize($select, types, handler) {
         var multiple = $select.prop('multiple');
         $select.selectize({
@@ -67,34 +65,5 @@
             uiLibrary: 'bootstrap4',
             format: 'yyyy.mm.dd'
         });
-    }
-
-    function createPhotoTags() {
-        // disabled when the media type does not support it
-        if ($('#media-editor-tags-list').length > 0) {
-            return;
-        }
-
-        var template = $('#media-tag-template').html();
-        var tags = JSON.parse($entitiesField.val());
-        tags.forEach(function (tag) {
-            var coords = (tag.Coordinates || '').split(';');
-            if (coords.length < 4) {
-                return;
-            }
-
-            $(template)
-                .css({
-                    left: size(coords[0]),
-                    top: size(coords[1]),
-                    right: size(1 - coords[0] - coords[2]),
-                    bottom: size(1 - coords[1] - coords[3])
-                })
-                .appendTo($wrap);
-        });
-
-        function size(val) {
-            return (val * 100.0) + '%';
-        }
     }
 });

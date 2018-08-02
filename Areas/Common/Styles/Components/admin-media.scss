@@ -45,6 +45,11 @@
 .media-editor-tags-wrapper {
     position: relative;
 
+    img {
+        width: 100%;
+        touch-action: none;
+    }
+
     .photo-tag-editor {
         display: block;
         position: absolute;
@@ -52,45 +57,47 @@
         box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), inset 0 0 1px 0 rgba(0, 0, 0, 0.4);
         cursor: pointer;
 
-        .handle {
+        .ui-resizable-handle {
             $handle-size: 8px;
             $handle-half: $handle-size / 2;
 
+            display: none !important;
             position: absolute;
             width: $handle-size;
             height: $handle-size;
             border-radius: $handle-half;
             border: 1px #000 solid;
             background: #FFF;
+            touch-action: none;
 
-            &.handle-tl {
-                cursor: se-resize;
+            &.ui-resizable-nw {
+                cursor: nw-resize;
                 top: -$handle-half;
                 left: -$handle-half;
             }
 
-            &.handle-tr {
-                cursor: sw-resize;
+            &.ui-resizable-ne {
+                cursor: ne-resize;
                 top: -$handle-half;
                 right: -$handle-half;
             }
 
-            &.handle-bl {
-                cursor: ne-resize;
+            &.ui-resizable-sw {
+                cursor: sw-resize;
                 bottom: -$handle-half;
                 left: -$handle-half;
             }
 
-            &.handle-br {
-                cursor: nw-resize;
+            &.ui-resizable-se {
+                cursor: se-resize;
                 bottom: -$handle-half;
                 right: -$handle-half;
             }
         }
 
         &.active {
-            .handle {
-                display: block;
+            .ui-resizable-handle {
+                display: block !important;
             }
         }
     }

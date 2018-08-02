@@ -20,13 +20,14 @@ var config = {
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/magnific-popup/dist/jquery.magnific-popup.js',
             './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
-            './node_modules/gijgo/js/gijgo.js',
-            './node_modules/gijgo/js/messages/messages.ru-ru.js',
             './node_modules/toastr/toastr.js',
             './node_modules/selectize/dist/js/standalone/selectize.js',
             './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
             './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
-            './node_modules/blueimp-file-upload/js/jquery.fileupload.js'
+            './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
+            './Areas/Common/Libs/jquery-ui.js',
+            './Areas/Common/Libs/gijgo.core.js',
+            './Areas/Common/Libs/gijgo.datepicker.js'
         ],
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
