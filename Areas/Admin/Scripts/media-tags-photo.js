@@ -32,14 +32,14 @@
             }
         });
 
-    $(window).on('resize', function() {
+    $(window).on('resize', throttle(200, function() {
         wrapWidth = $wrap.outerWidth();
         wrapHeight = $wrap.outerHeight();
 
         $tags.forEach(function($tag, idx) {
             positionTag($tag, tagsData[idx]);
         });
-    });
+    }));
 
     function syncTagSize($tag, tagData) {
         // calculates pecentage from absolute size
@@ -106,7 +106,10 @@
             $removeBtn = $popup.find('.cmd-remove-tag');
 
         // sic! click doesn't work for some reason
-        $removeBtn.on('mouseup', function () {
+        $removeBtn.on('mouseup', function (e) {
+            if (e.which !== 1) {
+                return;
+            }
             // remove the tag
             $select[0].selectize.destroy();
             $tag.popover('dispose');

@@ -27,7 +27,8 @@ var config = {
             './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
             './Areas/Common/Libs/jquery-ui.js',
             './Areas/Common/Libs/gijgo.core.js',
-            './Areas/Common/Libs/gijgo.datepicker.js'
+            './Areas/Common/Libs/gijgo.datepicker.js',
+            './Areas/Common/Libs/throttle.js'
         ],
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
