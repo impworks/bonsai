@@ -15,7 +15,8 @@
         wrapHeight = $wrap.outerHeight();
 
     var $selectedTag = null;
-    var template = $('#media-tag-template').html();
+    var tagTemplate = $('#media-tag-template').html();
+    var popupTemplate = $('#media-tag-popup-template').html();
     var tagsData = JSON.parse($entitiesField.val());
     tagsData.forEach(createTag);
 
@@ -26,8 +27,7 @@
         }
 
         if (!$selectedTag.is(e.target) && $selectedTag.has(e.target).length === 0) {
-            $selectedTag.removeClass('active');
-            $selectedTag = null;
+            selectTag(null);
         }
     });
 
@@ -59,16 +59,8 @@
             return;
         }
 
-        var $tag = $(template);
+        var $tag = $(tagTemplate);
         $tag.appendTo($wrap);
-        $tag.on('mousedown', function () {
-            if ($selectedTag != null) {
-                $selectedTag.removeClass('active');
-            }
-
-            $selectedTag = $tag;
-            $tag.addClass('active');
-        });
         $tag.css({
             left: Math.round(coords[0] * wrapWidth),
             top: Math.round(coords[1] * wrapHeight),
@@ -91,5 +83,103 @@
                 syncTagSize($tag, tagData);
             }
         });
+
+        createTagPopup(tagData, $tag);
+
+        $tag.on('mousedown', function () {
+            selectTag($tag);
+        });
+    }
+
+    function createTagPopup(tagData, $tag) {
+        // adds a popup that appears when the tag is active
+        var $popup = $(popupTemplate),
+            $select = $popup.find('select'),
+            $removeBtn = $popup.find('.cmd-remove-tag');
+
+        $select.selectize({
+            create: true,
+            maxOptions: 10,
+            maxItems: 1,
+            openOnFocus: true,
+            valueField: 'id',
+            labelField: 'title',
+            sortField: 'title',
+            searchField: 'title',
+            placeholder: 'Страница или имя',
+            preload: true,
+            load: loadData,
+            onChange: function () {
+                var value = $select[0].selectize.getValue();
+                if (isGuid(value)) {
+                    tagData['PageId'] = value;
+                    tagData['ObjectTitle'] = null;
+                } else {
+                    tagData['PageId'] = null;
+                    tagData['ObjectTitle'] = value;
+                }
+
+                updateInput();
+            },
+            render: {
+                option_create: function (data, escape) {
+                    return '<div class="create">' + escape(data.input) + ' <i>(без ссылки)</i></div>';
+                }
+            }
+        });
+
+        $tag.popover({
+            animation: false,
+            container: $tag,
+            html: true,
+            content: $popup,
+            placement: 'bottom',
+            trigger: 'manual'
+        });
+
+        $removeBtn.on('click', function () {
+            // remove the tag
+            $select.selectize.destroy();
+            $tag.popover('dispose');
+            $tag.remove();
+
+            // remove the data from storage
+            var idx = tagsData.indexOf(tagData);
+            if (idx > -1) {
+                tagsData.splice(idx, 1);
+            }
+
+            updateInput();
+        });
+    }
+
+    function selectTag($tag) {
+        if ($selectedTag != null) {
+            $selectedTag.removeClass('active');
+            $selectedTag.popover('hide');
+        }
+
+        $selectedTag = $tag;
+
+        if ($selectedTag != null) {
+            $selectedTag.addClass('active');
+            $selectedTag.popover('show');
+        }
+    }
+
+    function loadData(query, callback) {
+        // loads data according to current query
+        var types = [0, 1, 4];
+        var url = '/admin/suggest/pages?query=' + encodeURIComponent(query);
+        types.forEach(function (t) { url += '&types=' + encodeURIComponent(t); });
+
+        $.ajax({ url: url })
+            .done(function (data) {
+                callback(data);
+            });
+    }
+
+    function isGuid(value) {
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
     }
 })

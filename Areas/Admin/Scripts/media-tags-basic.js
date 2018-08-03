@@ -13,7 +13,7 @@
     setupSelectize($('#Location'), locationType);
     setupSelectize($('#Event'), eventType);
     setupSelectize($('#media-editor-tags-list'), otherTypes, function($s) {
-        var data = JSON.stringify($s.selectize.getValue());
+        var data = JSON.stringify($s[0].selectize.getValue());
         $entitiesField.val(data);
     });
 
@@ -30,14 +30,14 @@
             labelField: 'title',
             sortField: 'title',
             searchField: 'title',
-            placeholder: 'Выберите страницу или введите текст',
+            placeholder: 'Выберите страницу или введите название',
             preload: true,
             load: function (query, callback) {
                 loadData(query, types, callback);
             },
-            onChange: function (value) {
+            onChange: function () {
                 if (!!handler) {
-                    handler(value, $select);
+                    handler($select);
                 }
             },
             render: {
