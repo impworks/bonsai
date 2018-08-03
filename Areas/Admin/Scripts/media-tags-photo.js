@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿$(function() {
     var $wrap = $('.media-editor-tags-wrapper');
     if ($wrap.length === 0) {
         return;
@@ -18,24 +18,32 @@
     var tagTemplate = $('#media-tag-template').html();
     var popupTemplate = $('#media-tag-popup-template').html();
     var tagsData = JSON.parse($entitiesField.val());
-    tagsData.forEach(createTag);
+    var $tags = tagsData.map(createTag);
 
-    $(document).on('mousedown', function (e) {
-        // deselect element
-        if ($selectedTag == null) {
-            return;
-        }
+    $(document).on('mousedown',
+        function(e) {
+            // deselect element
+            if ($selectedTag == null) {
+                return;
+            }
 
-        if (!$selectedTag.is(e.target) && $selectedTag.has(e.target).length === 0) {
-            selectTag(null);
-        }
+            if (!$selectedTag.is(e.target) && $selectedTag.has(e.target).length === 0) {
+                selectTag(null);
+            }
+        });
+
+    $(window).on('resize', function() {
+        wrapWidth = $wrap.outerWidth();
+        wrapHeight = $wrap.outerHeight();
+
+        $tags.forEach(function($tag, idx) {
+            positionTag($tag, tagsData[idx]);
+        });
     });
 
     function syncTagSize($tag, tagData) {
         // calculates pecentage from absolute size
-        var elemPos = $tag.position(),
-            wrapWidth = $wrap.outerWidth(),
-            wrapHeight = $wrap.outerHeight();
+        var elemPos = $tag.position();
 
         var x = 1.0 * elemPos.left / wrapWidth,
             y = 1.0 * elemPos.top / wrapHeight,
@@ -54,19 +62,13 @@
 
     function createTag(tagData) {
         // adds a resizable / draggable tag to the photo
-        var coords = (tagData.Coordinates || '').split(';');
-        if (coords.length < 4) {
-            return;
+        if ((tagData.Coordinates || '').split(';').length < 4) {
+            return null;
         }
 
         var $tag = $(tagTemplate);
         $tag.appendTo($wrap);
-        $tag.css({
-            left: Math.round(coords[0] * wrapWidth),
-            top: Math.round(coords[1] * wrapHeight),
-            width: Math.round(coords[2] * wrapWidth),
-            height: Math.round(coords[3] * wrapHeight)
-        });
+        positionTag($tag, tagData);
         $tag.draggable({
             containment: 'parent',
             scroll: false,
@@ -93,6 +95,8 @@
         $tag.on('mousedown', function () {
             selectTag($tag);
         });
+
+        return $tag;
     }
 
     function createTagPopup(tagData, $tag) {
@@ -112,6 +116,7 @@
             var idx = tagsData.indexOf(tagData);
             if (idx > -1) {
                 tagsData.splice(idx, 1);
+                $tags.splice(idx, 1);
             }
         
             updateInput();
@@ -182,6 +187,20 @@
             .done(function (data) {
                 callback(data);
             });
+    }
+
+    function positionTag($tag, tagData) {
+        var coords = (tagData.Coordinates || '').split(';');
+        if (coords.length < 4) {
+            return;
+        }
+
+        $tag.css({
+            left: Math.round(coords[0] * wrapWidth),
+            top: Math.round(coords[1] * wrapHeight),
+            width: Math.round(coords[2] * wrapWidth),
+            height: Math.round(coords[3] * wrapHeight)
+        });
     }
 
     function isGuid(value) {

@@ -30,7 +30,7 @@
             labelField: 'title',
             sortField: 'title',
             searchField: 'title',
-            placeholder: 'Выберите страницу или введите название',
+            placeholder: 'Страница или название',
             preload: true,
             load: function (query, callback) {
                 loadData(query, types, callback);
