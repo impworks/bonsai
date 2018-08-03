@@ -57,6 +57,15 @@
         box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), inset 0 0 1px 0 rgba(0, 0, 0, 0.4);
         cursor: pointer;
 
+        .ui-draggable-handle {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
         .ui-resizable-handle {
             $handle-size: 8px;
             $handle-half: $handle-size / 2;
@@ -101,9 +110,19 @@
             }
         }
     }
-}
 
+    .popover {
+        max-width: 330px;
 
-.media-tag-popup-form {
-    width: 250px;
+        .media-tag-popup-form {
+            margin-bottom: 4px;
+            margin-top: 2px;
+            width: 320px;
+
+            .selectize-control {
+                width: 250px;
+                margin-right: 12px;
+            }
+        }
+    }
 }

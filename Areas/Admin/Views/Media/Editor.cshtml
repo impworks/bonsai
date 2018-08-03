@@ -72,11 +72,16 @@
 </form>
 
 <script type="text/template" id="media-tag-template">
-    <div class="photo-tag-editor"></div>
+    <div class="photo-tag-editor">
+        <div class="ui-draggable-handle"></div>
+    </div>
 </script>
 
 <script type="text/template" id="media-tag-popup-template">
-    <form class="media-tag-popup-form">
+    <form class="media-tag-popup-form form-inline">
         <select class="form-control"></select>
+        <button type="button" class="btn btn-danger cmd-remove-tag" title="Удалить отметку">
+            <i class="fa fa-trash"></i>
+        </button>
     </form> 
 </script>

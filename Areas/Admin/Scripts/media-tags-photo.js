@@ -20,7 +20,7 @@
     var tagsData = JSON.parse($entitiesField.val());
     tagsData.forEach(createTag);
 
-    $(document).on('mouseup', function (e) {
+    $(document).on('mousedown', function (e) {
         // deselect element
         if ($selectedTag == null) {
             return;
@@ -42,7 +42,7 @@
             w = 1.0 * $tag.outerWidth() / wrapWidth,
             h = 1.0 * $tag.outerHeight() / wrapHeight;
 
-        tagData.Coordinates = [x, y, w, h].map(function (x) { return Math.round(x * 1000) / 1000; }).join(';');
+        tagData.Coordinates = [x, y, w, h].map(function (v) { return Math.round(v * 1000) / 1000; }).join(';');
 
         updateInput();
     }
@@ -70,6 +70,7 @@
         $tag.draggable({
             containment: 'parent',
             scroll: false,
+            handle: '.ui-draggable-handle',
             stop: function () {
                 syncTagSize($tag, tagData);
             }
@@ -79,6 +80,9 @@
             handles: "ne, nw, se, sw",
             minWidth: 48,
             minHeight: 48,
+            resize: function() {
+                $tag.popover('update');
+            },
             stop: function () {
                 syncTagSize($tag, tagData);
             }
@@ -96,6 +100,22 @@
         var $popup = $(popupTemplate),
             $select = $popup.find('select'),
             $removeBtn = $popup.find('.cmd-remove-tag');
+
+        // sic! click doesn't work for some reason
+        $removeBtn.on('mouseup', function () {
+            // remove the tag
+            $select[0].selectize.destroy();
+            $tag.popover('dispose');
+            $tag.remove();
+        
+            // remove the data from storage
+            var idx = tagsData.indexOf(tagData);
+            if (idx > -1) {
+                tagsData.splice(idx, 1);
+            }
+        
+            updateInput();
+        });
 
         $select.selectize({
             create: true,
@@ -135,21 +155,6 @@
             content: $popup,
             placement: 'bottom',
             trigger: 'manual'
-        });
-
-        $removeBtn.on('click', function () {
-            // remove the tag
-            $select.selectize.destroy();
-            $tag.popover('dispose');
-            $tag.remove();
-
-            // remove the data from storage
-            var idx = tagsData.indexOf(tagData);
-            if (idx > -1) {
-                tagsData.splice(idx, 1);
-            }
-
-            updateInput();
         });
     }
 
