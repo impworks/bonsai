@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -16,13 +17,15 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/pages")]
     public class PagesController: AdminControllerBase
     {
-        public PagesController(PagesManagerService pages, AppDbContext db)
+        public PagesController(PagesManagerService pages, ElasticService elastic, AppDbContext db)
         {
             _pages = pages;
+            _elastic = elastic;
             _db = db;
         }
 
         private readonly PagesManagerService _pages;
+        private readonly ElasticService _elastic;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -57,8 +60,9 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                await _pages.CreateAsync(vm, User).ConfigureAwait(false);
+                var page = await _pages.CreateAsync(vm, User).ConfigureAwait(false);
                 await _db.SaveChangesAsync().ConfigureAwait(false);
+                await _elastic.AddPageAsync(page).ConfigureAwait(false);
 
                 return RedirectToSuccess("Страница создана");
             }
@@ -92,8 +96,10 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                await _pages.UpdateAsync(vm, User).ConfigureAwait(false);
+                var page = await _pages.UpdateAsync(vm, User).ConfigureAwait(false);
                 await _db.SaveChangesAsync().ConfigureAwait(false);
+
+                await _elastic.AddPageAsync(page).ConfigureAwait(false);
 
                 return RedirectToSuccess("Страница обновлена");
             }

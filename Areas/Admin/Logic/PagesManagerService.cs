@@ -80,7 +80,8 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<IReadOnlyDictionary<Guid, PageTitleExtendedVM>> FindPagesByIdsAsync(IReadOnlyList<Guid?> pages)
         {
-            return await _db.Pages.Include(x => x.MainPhoto)
+            return await _db.Pages
+                            .Include(x => x.MainPhoto)
                             .Where(x => pages.Any(y => x.Id == y) && x.IsDeleted == false)
                             .ProjectTo<PageTitleExtendedVM>()
                             .ToDictionaryAsync(x => x.Id, x => x)
@@ -90,7 +91,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Creates the new page.
         /// </summary>
-        public async Task CreateAsync(PageEditorVM vm, ClaimsPrincipal principal)
+        public async Task<Page> CreateAsync(PageEditorVM vm, ClaimsPrincipal principal)
         {
             await ValidateRequestAsync(vm).ConfigureAwait(false);
 
@@ -106,6 +107,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.Pages.Add(page);
             _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Page = page, Key = page.Key});
+
+            return page;
         }
 
         /// <summary>
@@ -127,7 +130,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the changes to a page.
         /// </summary>
-        public async Task UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
+        public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
         {
             await ValidateRequestAsync(vm).ConfigureAwait(false);
 
@@ -152,6 +155,8 @@ namespace Bonsai.Areas.Admin.Logic
                     Title = x
                 })
             );
+
+            return page;
         }
 
         #endregion

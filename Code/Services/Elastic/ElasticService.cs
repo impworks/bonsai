@@ -123,6 +123,14 @@ namespace Bonsai.Code.Services.Elastic
         }
 
         /// <summary>
+        /// Removes a page from the index.
+        /// </summary>
+        public async Task RemovePageAsync(Page page)
+        {
+            await _client.DeleteAsync(new DeleteRequest(PAGE_INDEX, TypeName.From<PageDocument>(), page.Id));
+        }
+
+        /// <summary>
         /// Searches for the pages matching the query.
         /// </summary>
         public async Task<IReadOnlyList<PageDocumentSearchResult>> SearchAsync(string query, int page = 0)
