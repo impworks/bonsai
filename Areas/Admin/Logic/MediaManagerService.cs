@@ -116,6 +116,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.Media.Add(media);
 
+            var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
+
             return new MediaUploadResultVM
             {
                 Id = media.Id,
@@ -179,7 +182,9 @@ namespace Bonsai.Areas.Admin.Logic
                                  .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден")
                                  .ConfigureAwait(false);
 
-            // todo: changeset
+            var prevState = await RequestUpdateAsync(vm.Id).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(prevState, vm, vm.Id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
 
             _mapper.Map(vm, media);
 
@@ -208,7 +213,9 @@ namespace Bonsai.Areas.Admin.Logic
                                  .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден")
                                  .ConfigureAwait(false);
 
-            // todo: changeset
+            var prevState = await RequestUpdateAsync(id).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(prevState, null, id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
 
             media.IsDeleted = true;
         }
@@ -332,6 +339,29 @@ namespace Bonsai.Areas.Admin.Logic
         private IEnumerable<IMediaHandler> GetMediaHandlers()
         {
             yield return new PhotoMediaHandler();
+        }
+
+        /// <summary>
+        /// Gets the changeset for updates.
+        /// </summary>
+        private async Task<Changeset> GetChangesetAsync(MediaEditorVM prev, MediaEditorVM next, Guid id, ClaimsPrincipal principal)
+        {
+            if(prev == null && next == null)
+                throw new ArgumentNullException();
+
+            var userId = _userMgr.GetUserId(principal);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+
+            return new Changeset
+            {
+                Id = Guid.NewGuid(),
+                Type = ChangesetEntityType.Media,
+                Date = DateTime.Now,
+                EntityId = id,
+                Author = user,
+                OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
+                UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
+            };
         }
 
         #endregion
