@@ -40,12 +40,10 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
         {
-            var page = await _db.PageAliases
+            var page = await _db.Pages
                                 .AsNoTracking()
-                                .Where(x => x.Key == key && x.Page.IsDeleted == false)
-                                .Select(x => x.Page)
                                 .Include(x => x.MainPhoto)
-                                .FirstOrDefaultAsync()
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false)
                                 .ConfigureAwait(false);
 
             if (page == null)
@@ -63,13 +61,11 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<PageMediaVM> GetPageMediaAsync(string key)
         {
-            var page = await _db.PageAliases
+            var page = await _db.Pages
                                 .AsNoTracking()
-                                .Where(x => x.Key == key && x.Page.IsDeleted == false)
-                                .Select(x => x.Page)
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false)
                                 .ConfigureAwait(false);
 
             if (page == null)
