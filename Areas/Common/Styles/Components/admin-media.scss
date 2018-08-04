@@ -122,6 +122,15 @@
             .selectize-control {
                 width: 250px;
                 margin-right: 12px;
+
+                .selectize-input.items {
+                    .item {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 210px;
+                    }
+                }
             }
         }
     }

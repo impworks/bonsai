@@ -110,6 +110,14 @@
             updateInput();
         });
 
+        if (tagData.PageId || tagData.ObjectTitle) {
+            $('<option>')
+                .val(tagData.PageId)
+                .text(tagData.ObjectTitle)
+                .prop('selected', true)
+                .appendTo($select);
+        }
+
         $select.selectize({
             create: true,
             maxOptions: 10,

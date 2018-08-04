@@ -17,6 +17,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Dictionary;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Hosting;
@@ -134,14 +135,27 @@ namespace Bonsai.Areas.Admin.Logic
                                  .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден")
                                  .ConfigureAwait(false);
 
+            var taggedIds = media.Tags
+                                 .Where(x => x.ObjectId != null)
+                                 .Select(x => x.ObjectId.Value)
+                                 .ToList();
+
+            var tagNames = await _db.Pages
+                                    .Where(x => taggedIds.Contains(x.Id) && x.IsDeleted == false)
+                                    .ToDictionaryAsync(x => x.Id, x => x.Title)
+                                    .ConfigureAwait(false);
+
             var vm = _mapper.Map<MediaEditorVM>(media);
             vm.Location = GetTagValue(MediaTagType.Location);
             vm.Event = GetTagValue(MediaTagType.Event);
             vm.DepictedEntities = JsonConvert.SerializeObject(
                 media.Tags.Where(x => x.Type == MediaTagType.DepictedEntity)
-                     .AsQueryable()
-                     .ProjectTo<MediaTagVM>()
-                     .ToList()
+                     .Select(x => new MediaTagVM
+                     {
+                         Coordinates = x.Coordinates,
+                         PageId = x.ObjectId,
+                         ObjectTitle = tagNames.TryGetValue(x.ObjectId ?? Guid.Empty)
+                     })
             );
 
             return vm;
