@@ -125,4 +125,14 @@
             }
         }
     }
+
+    &.new {
+        img {
+            cursor: crosshair;
+        }
+
+        .photo-tag-editor:not(.new) {
+            display: none;
+        }
+    }
 }
