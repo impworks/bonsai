@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180722163319_Initial")]
+    [Migration("20180805185442_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -118,7 +118,11 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<Guid>("EntityId");
+                    b.Property<Guid?>("EditedMediaId");
+
+                    b.Property<Guid?>("EditedPageId");
+
+                    b.Property<Guid?>("EditedRelationId");
 
                     b.Property<string>("OriginalState");
 
@@ -131,6 +135,12 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("EditedMediaId");
+
+                    b.HasIndex("EditedPageId");
+
+                    b.HasIndex("EditedRelationId");
 
                     b.ToTable("Changes");
                 });
@@ -412,6 +422,18 @@ namespace Bonsai.Data.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Bonsai.Data.Models.Media", "EditedMedia")
+                        .WithMany()
+                        .HasForeignKey("EditedMediaId");
+
+                    b.HasOne("Bonsai.Data.Models.Page", "EditedPage")
+                        .WithMany()
+                        .HasForeignKey("EditedPageId");
+
+                    b.HasOne("Bonsai.Data.Models.Relation", "EditedRelation")
+                        .WithMany()
+                        .HasForeignKey("EditedRelationId");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Media", b =>

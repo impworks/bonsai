@@ -30,9 +30,34 @@ namespace Bonsai.Data.Models
         public ChangesetEntityType Type { get; set; }
 
         /// <summary>
-        /// ID of the entity that has been edited.
+        /// ID of the edited page.
         /// </summary>
-        public Guid EntityId { get; set; }
+        public Guid? EditedPageId { get; set; }
+
+        /// <summary>
+        /// Edited page.
+        /// </summary>
+        public Page EditedPage { get; set; }
+
+        /// <summary>
+        /// ID of the edited media.
+        /// </summary>
+        public Guid? EditedMediaId { get; set; }
+
+        /// <summary>
+        /// Edited media.
+        /// </summary>
+        public Media EditedMedia { get; set; }
+
+        /// <summary>
+        /// ID of the edited relation.
+        /// </summary>
+        public Guid? EditedRelationId { get; set; }
+
+        /// <summary>
+        /// Edited relation.
+        /// </summary>
+        public Relation EditedRelation { get; set; }
 
         /// <summary>
         /// The original state (before the change).

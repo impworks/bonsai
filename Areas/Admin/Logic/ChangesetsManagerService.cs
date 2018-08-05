@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,66 +33,60 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
-            var query = from c in _db.Changes.Include(x => x.Author)
-                        join p in _db.Pages on c.EntityId equals p.Id
-                        join m in _db.Media on c.EntityId equals m.Id
-                        select new
-                        {
-                            Changeset = c,
-                            Page = p,
-                            Media = m
-                        };
+            var query = _db.Changes
+                           .AsNoTracking()
+                           .Include(x => x.Author)
+                           .Include(x => x.EditedPage)
+                           .Include(x => x.EditedMedia)
+                           .Include(x => x.EditedRelation)
+                           .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.SearchQuery))
             {
                 var search = request.SearchQuery.ToLower();
-                query = query.Where(x => (x.Page != null && x.Page.Title.ToLower().Contains(search))
-                                         || x.Media != null && x.Media.Title.ToLower().Contains(search));
+                query = query.Where(x => (x.EditedPage != null && x.EditedPage.Title.ToLower().Contains(search))
+                                         || x.EditedMedia != null && x.EditedMedia.Title.ToLower().Contains(search));
             }
 
             if (request.EntityTypes?.Length > 0)
-                query = query.Where(x => request.EntityTypes.Contains(x.Changeset.Type));
+                query = query.Where(x => request.EntityTypes.Contains(x.Type));
 
             if (request.EntityId != null)
-                query = query.Where(x => x.Changeset.EntityId == request.EntityId);
+                query = query.Where(x => x.EditedPageId == request.EntityId
+                                         || x.EditedMediaId == request.EntityId
+                                         || x.EditedRelationId == request.EntityId);
 
             var totalCount = await query.CountAsync()
                                         .ConfigureAwait(false);
 
             if (request.OrderBy == nameof(Changeset.Author))
-                query = query.OrderBy(x => x.Changeset.Author.UserName, request.OrderDescending);
+                query = query.OrderBy(x => x.Author.UserName, request.OrderDescending);
             else
-                query = query.OrderBy(x => x.Changeset.Date, request.OrderDescending);
+                query = query.OrderBy(x => x.Date, request.OrderDescending);
 
-            var items = await query.Skip(PageSize * request.Page)
+            var changesets = await query.Skip(PageSize * request.Page)
                                    .Take(PageSize)
-                                   .Select(x => new ChangesetTitleVM
-                                   {
-                                       Id = x.Changeset.Id,
-                                       Date = x.Changeset.Date,
-                                       ChangeType = ChangesetTitleVM.GetChangeType(x.Changeset),
-                                       Author = x.Changeset.Author.FirstName + " " + x.Changeset.Author.LastName,
-                                       EntityId = x.Changeset.EntityId,
-                                       EntityType = x.Changeset.Type,
-                                       EntityTitle = x.Page != null
-                                           ? x.Page.Title
-                                           : x.Media.Title,
-                                       EntityThumbnailUrl = x.Media != null
-                                           ? x.Media.FilePath
-                                           : (x.Page.MainPhoto != null
-                                               ? x.Page.MainPhoto.FilePath
-                                               : null),
-                                       PageType = x.Page != null
-                                           ? x.Page.Type
-                                           : (PageType?) null
-                                   })
                                    .ToListAsync()
                                    .ConfigureAwait(false);
+
+            var items = changesets.Select(x => new ChangesetTitleVM
+                                  {
+                                      Id = x.Id,
+                                      Date = x.Date,
+                                      ChangeType = GetChangeType(x),
+                                      Author = x.Author.FirstName + " " + x.Author.LastName,
+                                      EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
+                                      EntityType = x.Type,
+                                      EntityTitle = GetEntityTitle(x),
+                                      EntityThumbnailUrl = GetEntityThumbnailUrl(x),
+                                      PageType = GetPageType(x)
+                                  })
+                                  .ToList();
 
             return new ChangesetsListVM
             {
                 Items = items,
-                PageCount = (int)Math.Ceiling((double)totalCount / PageSize),
+                PageCount = (int) Math.Ceiling((double) totalCount / PageSize),
                 Request = request
             };
         }
@@ -116,6 +111,50 @@ namespace Bonsai.Areas.Admin.Logic
                 vm.Page = 0;
 
             return vm;
+        }
+
+        /// <summary>
+        /// Returns the descriptive title for the changeset. 
+        /// </summary>
+        private string GetEntityTitle(Changeset chg)
+        {
+            return chg.EditedPage?.Title
+                   ?? chg.EditedMedia.Title
+                   ?? chg.EditedRelation.Type.GetEnumDescription();
+        }
+
+        /// <summary>
+        /// Returns the thumbnail URL for the changeset.
+        /// </summary>
+        private string GetEntityThumbnailUrl(Changeset chg)
+        {
+            return chg.EditedPage?.MainPhoto?.FilePath
+                   ?? chg.EditedMedia?.FilePath;
+        }
+
+        /// <summary>
+        /// Returns the changeset type.
+        /// </summary>
+        private ChangesetType GetChangeType(Changeset chg)
+        {
+            var wasNull = string.IsNullOrEmpty(chg.OriginalState);
+            var isNull = string.IsNullOrEmpty(chg.UpdatedState);
+
+            if(wasNull)
+                return ChangesetType.Created;
+
+            if(isNull)
+                return ChangesetType.Removed;
+
+            return ChangesetType.Updated;
+        }
+
+        /// <summary>
+        /// Returns the page type (if any).
+        /// </summary>
+        private PageType? GetPageType(Changeset chg)
+        {
+            return chg.EditedPage?.Type;
         }
 
         #endregion

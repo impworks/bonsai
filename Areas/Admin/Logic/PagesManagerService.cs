@@ -245,7 +245,7 @@ namespace Bonsai.Areas.Admin.Logic
                 Id = Guid.NewGuid(),
                 Type = ChangesetEntityType.Page,
                 Date = DateTime.Now,
-                EntityId = id,
+                EditedPageId = id,
                 Author = user,
                 OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),

@@ -126,7 +126,9 @@ namespace Bonsai.Data.Migrations
                     AppUserId = table.Column<string>(type: "text", nullable: true),
                     AuthorId = table.Column<string>(type: "text", nullable: false),
                     Date = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
-                    EntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EditedMediaId = table.Column<Guid>(type: "uuid", nullable: true),
+                    EditedPageId = table.Column<Guid>(type: "uuid", nullable: true),
+                    EditedRelationId = table.Column<Guid>(type: "uuid", nullable: true),
                     OriginalState = table.Column<string>(type: "text", nullable: true),
                     Type = table.Column<int>(type: "int4", nullable: false),
                     UpdatedState = table.Column<string>(type: "text", nullable: true)
@@ -356,6 +358,21 @@ namespace Bonsai.Data.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Changes_EditedMediaId",
+                table: "Changes",
+                column: "EditedMediaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Changes_EditedPageId",
+                table: "Changes",
+                column: "EditedPageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Changes_EditedRelationId",
+                table: "Changes",
+                column: "EditedRelationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Media_UploaderId",
                 table: "Media",
                 column: "UploaderId");
@@ -450,6 +467,30 @@ namespace Bonsai.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_Changes_Pages_EditedPageId",
+                table: "Changes",
+                column: "EditedPageId",
+                principalTable: "Pages",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Changes_Media_EditedMediaId",
+                table: "Changes",
+                column: "EditedMediaId",
+                principalTable: "Media",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Changes_Relations_EditedRelationId",
+                table: "Changes",
+                column: "EditedRelationId",
+                principalTable: "Relations",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Media_AspNetUsers_UploaderId",
                 table: "Media",
                 column: "UploaderId",
@@ -492,10 +533,10 @@ namespace Bonsai.Data.Migrations
                 name: "PageAliases");
 
             migrationBuilder.DropTable(
-                name: "Relations");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Relations");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

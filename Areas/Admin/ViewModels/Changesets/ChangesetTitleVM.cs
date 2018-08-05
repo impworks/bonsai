@@ -52,22 +52,5 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         /// Type of the page (if the changeset is page-related).
         /// </summary>
         public PageType? PageType { get; set; }
-
-        /// <summary>
-        /// Get changeset type.
-        /// </summary>
-        public static ChangesetType GetChangeType(Changeset chg)
-        {
-            var wasNull = string.IsNullOrEmpty(chg.OriginalState);
-            var isNull = string.IsNullOrEmpty(chg.UpdatedState);
-
-            if (wasNull)
-                return ChangesetType.Created;
-
-            if (isNull)
-                return ChangesetType.Removed;
-
-            return ChangesetType.Updated;
-        }
     }
 }

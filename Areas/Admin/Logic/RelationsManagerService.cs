@@ -284,7 +284,7 @@ namespace Bonsai.Areas.Admin.Logic
                 Id = Guid.NewGuid(),
                 Type = ChangesetEntityType.Relation,
                 Date = DateTime.Now,
-                EntityId = id,
+                EditedRelationId = id,
                 Author = user,
                 OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),

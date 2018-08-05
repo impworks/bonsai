@@ -357,7 +357,7 @@ namespace Bonsai.Areas.Admin.Logic
                 Id = Guid.NewGuid(),
                 Type = ChangesetEntityType.Media,
                 Date = DateTime.Now,
-                EntityId = id,
+                EditedMediaId = id,
                 Author = user,
                 OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
