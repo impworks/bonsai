@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Bonsai.Areas.Admin.ViewModels.History
+namespace Bonsai.Areas.Admin.ViewModels.Changesets
 {
     /// <summary>
     /// Kind of the change.

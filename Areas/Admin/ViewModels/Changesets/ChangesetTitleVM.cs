@@ -1,15 +1,12 @@
 ﻿using System;
-using AutoMapper;
-using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.ViewModels.History
+namespace Bonsai.Areas.Admin.ViewModels.Changesets
 {
     /// <summary>
     /// Brief information about a changeset.
     /// </summary>
-    public class ChangesetTitleVM: IMapped
+    public class ChangesetTitleVM
     {
         /// <summary>
         /// Changeset ID.
@@ -27,6 +24,16 @@ namespace Bonsai.Areas.Admin.ViewModels.History
         public ChangesetType ChangeType { get; set; }
 
         /// <summary>
+        /// Name of the changed entity.
+        /// </summary>
+        public string EntityTitle { get; set; }
+
+        /// <summary>
+        /// URL of the entity's thumbnail.
+        /// </summary>
+        public string EntityThumbnailUrl { get; set; }
+
+        /// <summary>
         /// Type of the changed entity.
         /// </summary>
         public ChangesetEntityType EntityType { get; set; }
@@ -36,17 +43,20 @@ namespace Bonsai.Areas.Admin.ViewModels.History
         /// </summary>
         public Guid EntityId { get; set; }
 
-        public void Configure(IProfileExpression profile)
-        {
-            profile.CreateMap<Changeset, ChangesetTitleVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Date, x => x.Date)
-                   .MapMember(x => x.EntityType, x => x.Type)
-                   .MapMember(x => x.EntityId, x => x.EntityId)
-                   .MapMember(x => x.ChangeType, x => GetChangeType(x));
-        }
+        /// <summary>
+        /// Author of the change.
+        /// </summary>
+        public string Author { get; set; }
 
-        private static ChangesetType GetChangeType(Changeset chg)
+        /// <summary>
+        /// Type of the page (if the changeset is page-related).
+        /// </summary>
+        public PageType? PageType { get; set; }
+
+        /// <summary>
+        /// Get changeset type.
+        /// </summary>
+        public static ChangesetType GetChangeType(Changeset chg)
         {
             var wasNull = string.IsNullOrEmpty(chg.OriginalState);
             var isNull = string.IsNullOrEmpty(chg.UpdatedState);

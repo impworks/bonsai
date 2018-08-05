@@ -31,7 +31,8 @@ namespace Bonsai.Areas.Admin.Components
             var groups = new List<MenuGroupVM>();
             groups.Add(
                 new MenuGroupVM(
-                    new MenuItemVM { Title = "Главная", Url = Url.Action("Index", "Dashboard", new { area = "Admin" }) }
+                    new MenuItemVM { Title = "Главная", Url = Url.Action("Index", "Dashboard", new { area = "Admin" }) },
+                    new MenuItemVM { Title = "Правки", Url = Url.Action("Index", "Changesets", new { area = "Admin" }) }
                 )
             );
 
