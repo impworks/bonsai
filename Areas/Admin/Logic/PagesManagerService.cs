@@ -159,6 +159,36 @@ namespace Bonsai.Areas.Admin.Logic
             return page;
         }
 
+        /// <summary>
+        /// Displays the remove confirmation form.
+        /// </summary>
+        public async Task<PageTitleExtendedVM> RequestRemoveAsync(Guid id)
+        {
+            return await _db.Pages
+                            .Where(x => x.IsDeleted)
+                            .ProjectTo<PageTitleExtendedVM>()
+                            .GetAsync(x => x.Id == id, "Страница не найдена")
+                            .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Removes the page.
+        /// </summary>
+        public async Task<Page> RemoveAsync(Guid id, ClaimsPrincipal principal)
+        {
+            var page = await _db.Pages
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена")
+                                .ConfigureAwait(false);
+
+            var prev = await RequestUpdateAsync(id).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(prev, null, id, principal).ConfigureAwait(false);
+            _db.Changes.Add(changeset);
+
+            page.IsDeleted = true;
+
+            return page;
+        }
+
         #endregion
 
         #region Helpers

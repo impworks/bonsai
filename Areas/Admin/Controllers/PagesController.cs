@@ -110,6 +110,33 @@ namespace Bonsai.Areas.Admin.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Removes the page file.
+        /// </summary>
+        [HttpGet]
+        [Route("remove")]
+        public async Task<ActionResult> Remove(Guid id)
+        {
+            var vm = await _pages.RequestRemoveAsync(id);
+            return View(vm);
+        }
+
+        /// <summary>
+        /// Removes the page file.
+        /// </summary>
+        [HttpPost]
+        [Route("remove")]
+        public async Task<ActionResult> Remove(Guid id, bool confirm)
+        {
+            var page = await _pages.RemoveAsync(id, User);
+            await _db.SaveChangesAsync();
+
+            await _elastic.RemovePageAsync(page);
+
+            return RedirectToSuccess("Медиа-файл удален");
+        }
+
         #region Helpers
 
         /// <summary>
