@@ -186,7 +186,10 @@
     }
 
     function handleResize() {
-        $(window).on('resize', throttle(200, function() {
+        $(window).on('resize', throttle(200, function (e) {
+            if (e.target !== window) {
+                return;
+            }
             wrapWidth = $wrap.outerWidth();
             wrapHeight = $wrap.outerHeight();
 
@@ -298,6 +301,8 @@
             $tagFrame.remove();
 
             selectTag($tag);
+
+            $tag.find('.media-tag-popup-form input').click();
         });
     }
 
