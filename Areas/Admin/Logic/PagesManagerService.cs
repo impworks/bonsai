@@ -152,6 +152,7 @@ namespace Bonsai.Areas.Admin.Logic
                 {
                     Id = Guid.NewGuid(),
                     Key = PageHelper.EncodeTitle(x),
+                    Page = page,
                     Title = x
                 })
             );

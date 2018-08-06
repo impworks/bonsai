@@ -144,7 +144,7 @@ namespace Bonsai.Areas.Admin.Controllers
 
             ViewBag.Data = new RelationEditorDataVM
             {
-                IsNew = vm.Id == Guid.Empty,
+                IsNew = vm.Id == null,
                 SourceItem = GetPageLookup(vm.SourceId),
                 DestinationItem = GetPageLookup(vm.DestinationId),
                 EventItem = GetPageLookup(vm.EventId),
