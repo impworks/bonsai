@@ -110,6 +110,17 @@ namespace Bonsai.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// Displays the relation removal confirmation.
+        /// </summary>
+        [HttpGet]
+        [Route("remove")]
+        public async Task<ActionResult> Remove(Guid id)
+        {
+            var vm = await _rels.RequestRemoveAsync(id);
+            return View(vm);
+        }
+
+        /// <summary>
         /// Removes the relation.
         /// </summary>
         [HttpPost]

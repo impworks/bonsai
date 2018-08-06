@@ -143,6 +143,16 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
+        /// Returns the brief information about a relation for reviewing before removal.
+        /// </summary>
+        public async Task<RelationTitleVM> RequestRemoveAsync(Guid id)
+        {
+            return await _db.Relations
+                            .ProjectTo<RelationTitleVM>()
+                            .GetAsync(x => x.Id == id, "Связь не найдена");
+        }
+
+        /// <summary>
         /// Removes the relation.
         /// </summary>
         public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
