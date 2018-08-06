@@ -27,7 +27,7 @@
                             <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank" title="Обновлено: @p.LastUpdateDate.DateTime.ToLongDateString()">@p.Title</a>
                         </td>
                         <td class="admin-row-actions">
-                            <a href="@Url.Action("Update", "Pages", new {area = "Admin", key = p.Key})">
+                            <a href="@Url.Action("Update", "Pages", new {area = "Admin", id = p.Id})">
                                 <span class="fa fa-pencil-square" title="Редактировать"></span>
                             </a>
                         </td>
