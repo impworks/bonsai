@@ -1,26 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bonsai.Areas.Admin.Logic
+namespace Bonsai.Areas.Admin.Logic.Changesets
 {
     /// <summary>
     /// The service for searching and displaying changesets.
     /// </summary>
     public class ChangesetsManagerService
     {
-        public ChangesetsManagerService(AppDbContext db)
+        public ChangesetsManagerService(IEnumerable<IChangesetRenderer> renderers, AppDbContext db)
         {
             _db = db;
+            _renderers = renderers.ToDictionary(x => x.EntityType, x => x);
         }
 
         private readonly AppDbContext _db;
+        private IReadOnlyDictionary<ChangesetEntityType, IChangesetRenderer> _renderers;
 
         #region Public methods
 
@@ -91,6 +95,29 @@ namespace Bonsai.Areas.Admin.Logic
             };
         }
 
+        /// <summary>
+        /// Returns the details for a changeset.
+        /// </summary>
+        public async Task<ChangesetDetailsVM> GetChangesetDetailsAsync(Guid id)
+        {
+            var chg = await _db.Changes
+                               .AsNoTracking()
+                               .Include(x => x.Author)
+                               .GetAsync(x => x.Id == id, "Правка не найдена");
+
+            var renderer = _renderers[chg.Type];
+            var prevData = await renderer.RenderValuesAsync(chg.OriginalState);
+            var nextData = await renderer.RenderValuesAsync(chg.UpdatedState);
+
+            return new ChangesetDetailsVM
+            {
+                Id = chg.Id,
+                Author = chg.Author.FirstName + " " + chg.Author.LastName,
+                Date = chg.Date,
+                Changes = GetDiff(prevData, nextData)
+            };
+        }
+
         #endregion
 
         #region Private helpers
@@ -155,6 +182,35 @@ namespace Bonsai.Areas.Admin.Logic
         private PageType? GetPageType(Changeset chg)
         {
             return chg.EditedPage?.Type;
+        }
+
+        /// <summary>
+        /// Returns the list of diffed values.
+        /// </summary>
+        private IReadOnlyList<ChangeVM> GetDiff(IReadOnlyList<ChangePropertyValue> prevData, IReadOnlyList<ChangePropertyValue> nextData)
+        {
+            if(prevData.Count != nextData.Count)
+                throw new InvalidOperationException("Internal error: rendered changeset values mismatch!");
+
+            var result = new List<ChangeVM>();
+
+            for (var idx = 0; idx < prevData.Count; idx++)
+            {
+                var prevValue = prevData[idx].Value;
+                var nextValue = nextData[idx].Value;
+
+                if (prevValue == nextValue)
+                    continue;
+
+                var diff = new HtmlDiff.HtmlDiff(prevValue ?? "", nextValue ?? "").Build();
+                result.Add(new ChangeVM
+                {
+                    Title = prevData[idx].Title,
+                    Diff = diff
+                });
+            }
+
+            return result;
         }
 
         #endregion

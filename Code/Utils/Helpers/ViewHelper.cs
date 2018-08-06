@@ -22,7 +22,7 @@ namespace Bonsai.Code.Utils.Helpers
             if(value == null && addEmpty)
                 list.Add(new SelectListItem { Text = "Не выбрано", Selected = true });
 
-            foreach (var entry in EnumHelper.GetEnumDescriptions<T>())
+            foreach(var entry in EnumHelper.GetEnumDescriptions<T>())
             {
                 list.Add(new SelectListItem
                 {
@@ -41,16 +41,35 @@ namespace Bonsai.Code.Utils.Helpers
         public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T value)
             where T : struct, IConvertible, IComparable
         {
-            return GetEnumSelectList((T?) value, false);
+            return GetEnumSelectList((T?)value, false);
         }
 
         /// <summary>
-            /// Returns the Gravatar URL for an email address.
-            /// </summary>
-            public static string GetGravatarUrl(string email)
+        /// Returns the Gravatar URL for an email address.
+        /// </summary>
+        public static string GetGravatarUrl(string email)
         {
             var cleanEmail = (email ?? "").ToLowerInvariant().Trim();
             return "https://www.gravatar.com/avatar/" + Md5(cleanEmail);
+        }
+
+        /// <summary>
+        /// Renders a bullet list with specified items.
+        /// </summary>
+        public static string RenderBulletList(IHtmlHelper html, IEnumerable<string> items)
+        {
+            var sb = new StringBuilder("<ul>");
+
+            foreach (var item in items)
+            {
+                sb.Append("<li>");
+                sb.Append(html.Encode(item));
+                sb.Append("</li>");
+            }
+
+            sb.Append("</ul>");
+
+            return sb.ToString();
         }
 
         #region Helpers

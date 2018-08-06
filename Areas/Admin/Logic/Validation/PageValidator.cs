@@ -73,7 +73,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
 
             T? Parse<T>(string key) where T : struct
             {
-                var value = facts[key].ToString();
+                var value = facts[key]?.ToString();
 
                 if(typeof(T) == typeof(FuzzyDate))
                     return (T?)(object)FuzzyDate.TryParse(value);

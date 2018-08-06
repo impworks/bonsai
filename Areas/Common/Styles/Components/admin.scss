@@ -83,3 +83,23 @@
         padding: 3px 15px;
     }
 }
+
+.changeset {
+    ul {
+        padding-left: 1.2em;
+    }
+
+    del {
+        color: #999;
+        background-color: #FEC8C8;
+    }
+
+    ins {
+        background-color: #cfc;
+        text-decoration: none;
+    }
+
+    dd, dt {
+        margin-bottom: 1em;
+    }
+}

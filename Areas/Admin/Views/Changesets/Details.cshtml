@@ -1,0 +1,26 @@
+﻿@using Humanizer
+@model Bonsai.Areas.Admin.ViewModels.Changesets.ChangesetDetailsVM
+@{
+    ViewBag.Title = "Просмотр правки";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>Основные данные</h1>
+
+<dl class="row">
+    <dt class="col-sm-2">Автор</dt>
+    <dd class="col-sm-10">@Model.Author</dd>
+
+    <dt class="col-sm-2">Дата</dt>
+    <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f") (@Model.Date.ToLocalTime().Humanize())</dd>
+</dl>
+
+<h1>Содержание</h1>
+
+<dl class="row changeset">
+    @foreach (var change in Model.Changes)
+    {
+        <dt class="col-sm-2">@change.Title</dt>
+        <dd class="col-sm-10">@Html.Raw(change.Diff)</dd>
+    }
+</dl>

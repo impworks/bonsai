@@ -91,6 +91,7 @@ namespace Bonsai.Data.Utils.Seed
                 foreach(var file in Directory.EnumerateFiles(mediaDir))
                     File.Delete(file);
 
+            db.Changes.RemoveRange(db.Changes.ToList());
             db.MediaTags.RemoveRange(db.MediaTags.ToList());
             db.Media.RemoveRange(db.Media.ToList());
             db.Pages.RemoveRange(db.Pages.ToList());

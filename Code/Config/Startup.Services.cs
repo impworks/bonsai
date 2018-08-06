@@ -1,4 +1,5 @@
 ﻿using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
@@ -38,6 +39,8 @@ namespace Bonsai.Code.Config
             services.AddScoped<MediaManagerService>();
             services.AddScoped<ChangesetsManagerService>();
             services.AddScoped<SuggestService>();
+
+            services.AddScoped<IChangesetRenderer, MediaChangesetRenderer>();
         }
     }
 }
