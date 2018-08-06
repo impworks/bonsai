@@ -24,6 +24,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         public string Author { get; set; }
 
         /// <summary>
+        /// Type of the change.
+        /// </summary>
+        public ChangesetType Type { get; set; }
+
+        /// <summary>
         /// Changed items.
         /// </summary>
         public IReadOnlyList<ChangeVM> Changes { get; set; }

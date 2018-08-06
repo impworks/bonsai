@@ -41,6 +41,8 @@ namespace Bonsai.Code.Config
             services.AddScoped<SuggestService>();
 
             services.AddScoped<IChangesetRenderer, MediaChangesetRenderer>();
+            services.AddScoped<IChangesetRenderer, PageChangesetRenderer>();
+            services.AddScoped<IChangesetRenderer, RelationChangesetRenderer>();
         }
     }
 }

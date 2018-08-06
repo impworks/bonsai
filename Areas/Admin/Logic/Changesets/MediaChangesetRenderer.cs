@@ -29,7 +29,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         private readonly IHtmlHelper _html;
         private readonly AppDbContext _db;
 
-        #region Public methods
+        #region IChangesetRenderer implementation
 
         /// <summary>
         /// Supported type of changed entity.
@@ -66,7 +66,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             Add("Описание", data.Description);
             Add("Место", namesLookup.TryGetValue(locId) ?? data.Location);
             Add("Событие", namesLookup.TryGetValue(eventId) ?? data.Event);
-            Add("Отметки", ViewHelper.RenderBulletList(_html, deps));
+            Add("Отметки", depicted.Length == 0 ? null : ViewHelper.RenderBulletList(_html, deps));
 
             return result;
 

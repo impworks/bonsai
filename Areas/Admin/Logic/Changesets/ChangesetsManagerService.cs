@@ -114,6 +114,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 Id = chg.Id,
                 Author = chg.Author.FirstName + " " + chg.Author.LastName,
                 Date = chg.Date,
+                Type = GetChangeType(chg),
                 Changes = GetDiff(prevData, nextData)
             };
         }
@@ -146,7 +147,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         private string GetEntityTitle(Changeset chg)
         {
             return chg.EditedPage?.Title
-                   ?? chg.EditedMedia.Title
+                   ?? chg.EditedMedia?.Title
                    ?? chg.EditedRelation.Type.GetEnumDescription();
         }
 
