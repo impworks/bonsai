@@ -178,6 +178,11 @@ namespace Bonsai.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
                     b.HasIndex("UploaderId");
 
                     b.ToTable("Media");
@@ -237,6 +242,8 @@ namespace Bonsai.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IsDeleted");
+
                     b.HasIndex("Key")
                         .IsUnique();
 
@@ -263,6 +270,9 @@ namespace Bonsai.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Key")
+                        .IsUnique();
+
                     b.HasIndex("PageId");
 
                     b.ToTable("PageAliases");
@@ -282,6 +292,8 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<bool>("IsComplementary");
 
+                    b.Property<bool>("IsDeleted");
+
                     b.Property<Guid>("SourceId");
 
                     b.Property<int>("Type");
@@ -291,6 +303,10 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("DestinationId");
 
                     b.HasIndex("EventId");
+
+                    b.HasIndex("IsComplementary");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("SourceId");
 

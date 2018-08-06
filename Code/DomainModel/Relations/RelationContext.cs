@@ -111,7 +111,9 @@ namespace Bonsai.Code.DomainModel.Relations
                     page.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(page.MainPhotoPath, MediaSize.Small);
 
                 var relations = await db.Relations
-                                        .Where(x => x.Source.IsDeleted == false && x.Destination.IsDeleted == false)
+                                        .Where(x => x.Source.IsDeleted == false
+                                                    && x.Destination.IsDeleted == false
+                                                    && x.IsDeleted == false)
                                         .Select(x => new RelationExcerpt
                                         {
                                             Id = x.Id,

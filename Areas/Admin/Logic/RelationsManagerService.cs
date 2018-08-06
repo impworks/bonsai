@@ -48,7 +48,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
-            var query = _db.Relations.Where(x => x.IsComplementary == false);
+            var query = _db.Relations.Where(x => x.IsComplementary == false && x.IsDeleted == false);
 
             if (!string.IsNullOrEmpty(request.SearchQuery))
             {
@@ -114,7 +114,9 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<RelationEditorVM> RequestUpdateAsync(Guid id)
         {
             var rel = await _db.Relations
-                               .GetAsync(x => x.Id == id, "Связь не найдена")
+                               .GetAsync(x => x.Id == id
+                                              && x.IsComplementary == false
+                                              && x.IsDeleted == false, "Связь не найдена")
                                .ConfigureAwait(false);
 
             return _mapper.Map<RelationEditorVM>(rel);
@@ -128,7 +130,9 @@ namespace Bonsai.Areas.Admin.Logic
             await ValidateRequestAsync(vm).ConfigureAwait(false);
 
             var rel = await _db.Relations
-                               .GetAsync(x => x.Id == vm.Id, "Связь не найдена")
+                               .GetAsync(x => x.Id == vm.Id
+                                              && x.IsComplementary == false
+                                              && x.IsDeleted == false, "Связь не найдена")
                                .ConfigureAwait(false);
 
             var compRel = await FindComplementaryRelationAsync(rel).ConfigureAwait(false);
@@ -148,6 +152,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<RelationTitleVM> RequestRemoveAsync(Guid id)
         {
             return await _db.Relations
+                            .Where(x => x.IsDeleted == false && x.IsComplementary == false)
                             .ProjectTo<RelationTitleVM>()
                             .GetAsync(x => x.Id == id, "Связь не найдена");
         }
@@ -158,7 +163,9 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var rel = await _db.Relations
-                               .GetAsync(x => x.Id == id, "Связь не найдена")
+                               .GetAsync(x => x.Id == id
+                                              && x.IsComplementary == false
+                                              && x.IsDeleted == false, "Связь не найдена")
                                .ConfigureAwait(false);
 
             var compRel = await FindComplementaryRelationAsync(rel).ConfigureAwait(false);
@@ -166,7 +173,7 @@ namespace Bonsai.Areas.Admin.Logic
             var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal).ConfigureAwait(false);
             _db.Changes.Add(changeset);
 
-            _db.Relations.Remove(rel);
+            rel.IsDeleted = true;
             _db.Relations.Remove(compRel);
         }
 

@@ -27,38 +27,29 @@ namespace Bonsai.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<AppUser>()
-                   .HasMany(x => x.Changes).WithOne(x => x.Author);
+            builder.Entity<AppUser>().HasMany(x => x.Changes).WithOne(x => x.Author);
+            builder.Entity<AppUser>().HasOne(x => x.Page).WithMany().IsRequired(false);
 
-            builder.Entity<AppUser>()
-                   .HasOne(x => x.Page).WithMany().IsRequired(false);
+            builder.Entity<Changeset>().HasOne(x => x.Author).WithMany();
 
-            builder.Entity<Changeset>()
-                   .HasOne(x => x.Author).WithMany();
+            builder.Entity<Page>().HasIndex(x => x.Key).IsUnique(true);
+            builder.Entity<Page>().HasIndex(x => x.IsDeleted).IsUnique(false);
+            builder.Entity<Page>().HasMany(x => x.Aliases).WithOne(x => x.Page).IsRequired();
 
-            builder.Entity<Page>()
-                   .HasIndex(x => x.Key).IsUnique(true);
+            builder.Entity<PageAlias>().HasIndex(x => x.Key).IsUnique(true);
 
-            builder.Entity<Page>()
-                   .HasMany(x => x.Aliases).WithOne(x => x.Page).IsRequired();
+            builder.Entity<Relation>().HasOne(x => x.Source).WithMany(x => x.Relations).HasForeignKey(x => x.SourceId);
+            builder.Entity<Relation>().HasOne(x => x.Destination).WithMany().HasForeignKey(x => x.DestinationId);
+            builder.Entity<Relation>().HasOne(x => x.Event).WithMany().HasForeignKey(x => x.EventId);
+            builder.Entity<Relation>().HasIndex(x => x.IsComplementary).IsUnique(false);
+            builder.Entity<Relation>().HasIndex(x => x.IsDeleted).IsUnique(false);
 
-            builder.Entity<Relation>()
-                   .HasOne(x => x.Source).WithMany(x => x.Relations).HasForeignKey(x => x.SourceId);
+            builder.Entity<Media>().HasOne(x => x.Uploader).WithMany().IsRequired(false);
+            builder.Entity<Media>().HasIndex(x => x.Key).IsUnique(true);
+            builder.Entity<Media>().HasIndex(x => x.IsDeleted).IsUnique(false);
 
-            builder.Entity<Relation>()
-                   .HasOne(x => x.Destination).WithMany().HasForeignKey(x => x.DestinationId);
-
-            builder.Entity<Relation>()
-                   .HasOne(x => x.Event).WithMany().HasForeignKey(x => x.EventId);
-
-            builder.Entity<Media>()
-                   .HasOne(x => x.Uploader).WithMany().IsRequired(false);
-
-            builder.Entity<MediaTag>()
-                   .HasOne(x => x.Media).WithMany(x => x.Tags);
-
-            builder.Entity<MediaTag>()
-                   .HasOne(x => x.Object).WithMany(x => x.MediaTags);
+            builder.Entity<MediaTag>().HasOne(x => x.Media).WithMany(x => x.Tags);
+            builder.Entity<MediaTag>().HasOne(x => x.Object).WithMany(x => x.MediaTags);
         }
     }
 }

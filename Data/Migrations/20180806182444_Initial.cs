@@ -279,6 +279,7 @@ namespace Bonsai.Data.Migrations
                     Duration = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
                     EventId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsComplementary = table.Column<bool>(type: "bool", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bool", nullable: false),
                     SourceId = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<int>(type: "int4", nullable: false)
                 },
@@ -373,6 +374,17 @@ namespace Bonsai.Data.Migrations
                 column: "EditedRelationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Media_IsDeleted",
+                table: "Media",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Media_Key",
+                table: "Media",
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Media_UploaderId",
                 table: "Media",
                 column: "UploaderId");
@@ -388,9 +400,20 @@ namespace Bonsai.Data.Migrations
                 column: "ObjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PageAliases_Key",
+                table: "PageAliases",
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PageAliases_PageId",
                 table: "PageAliases",
                 column: "PageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pages_IsDeleted",
+                table: "Pages",
+                column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pages_Key",
@@ -412,6 +435,16 @@ namespace Bonsai.Data.Migrations
                 name: "IX_Relations_EventId",
                 table: "Relations",
                 column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relations_IsComplementary",
+                table: "Relations",
+                column: "IsComplementary");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relations_IsDeleted",
+                table: "Relations",
+                column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Relations_SourceId",

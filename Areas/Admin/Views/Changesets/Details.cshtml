@@ -1,4 +1,5 @@
-﻿@using Humanizer
+﻿@using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Humanizer
 @using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.Changesets.ChangesetDetailsVM
 @{
@@ -19,12 +20,15 @@
     <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f") (@Model.Date.ToLocalTime().Humanize())</dd>
 </dl>
 
-<h1>Содержание</h1>
+@if (Model.Type != ChangesetType.Removed)
+{
+    <h1>Содержание</h1>
 
-<dl class="row changeset">
-    @foreach (var change in Model.Changes)
-    {
-        <dt class="col-sm-2">@change.Title</dt>
-        <dd class="col-sm-10">@Html.Raw(change.Diff)</dd>
-    }
-</dl>
+    <dl class="row changeset">
+        @foreach (var change in Model.Changes)
+        {
+            <dt class="col-sm-3">@change.Title</dt>
+            <dd class="col-sm-9">@Html.Raw(change.Diff)</dd>
+        }
+    </dl>
+}
