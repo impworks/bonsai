@@ -21,31 +21,6 @@ namespace Bonsai.Data.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026");
 
-            modelBuilder.Entity("Bonsai.Data.Models.AccessRule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("AllowEditing");
-
-                    b.Property<string>("AppUserId");
-
-                    b.Property<Guid>("PageId");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("PageId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AccessRules");
-                });
-
             modelBuilder.Entity("Bonsai.Data.Models.AppConfig", b =>
                 {
                     b.Property<Guid>("Id")
@@ -135,12 +110,6 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AffectedDiff")
-                        .IsRequired();
-
-                    b.Property<string>("AffectedEntityIds")
-                        .IsRequired();
-
                     b.Property<string>("AppUserId");
 
                     b.Property<string>("AuthorId")
@@ -148,16 +117,29 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<string>("SourceDiff")
-                        .IsRequired();
+                    b.Property<Guid?>("EditedMediaId");
 
-                    b.Property<Guid>("SourceEntityId");
+                    b.Property<Guid?>("EditedPageId");
+
+                    b.Property<Guid?>("EditedRelationId");
+
+                    b.Property<string>("OriginalState");
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("UpdatedState");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("EditedMediaId");
+
+                    b.HasIndex("EditedPageId");
+
+                    b.HasIndex("EditedRelationId");
 
                     b.ToTable("Changes");
                 });
@@ -176,9 +158,15 @@ namespace Bonsai.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(300);
 
+                    b.Property<bool>("IsDeleted");
+
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(30);
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<string>("Title");
 
@@ -186,11 +174,16 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<DateTimeOffset>("UploadDate");
 
-                    b.Property<string>("UploaderAuthorId");
+                    b.Property<string>("UploaderId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UploaderAuthorId");
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.HasIndex("UploaderId");
 
                     b.ToTable("Media");
                 });
@@ -225,11 +218,13 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
+                    b.Property<DateTimeOffset>("CreationDate");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Facts");
+
+                    b.Property<bool>("IsDeleted");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -239,7 +234,35 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<Guid?>("MainPhotoId");
 
-                    b.Property<int>("PageType");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.HasIndex("MainPhotoId");
+
+                    b.ToTable("Pages");
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.PageAlias", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<Guid?>("PageId")
+                        .IsRequired();
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -250,9 +273,9 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("Key")
                         .IsUnique();
 
-                    b.HasIndex("MainPhotoId");
+                    b.HasIndex("PageId");
 
-                    b.ToTable("Pages");
+                    b.ToTable("PageAliases");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>
@@ -269,6 +292,8 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<bool>("IsComplementary");
 
+                    b.Property<bool>("IsDeleted");
+
                     b.Property<Guid>("SourceId");
 
                     b.Property<int>("Type");
@@ -278,6 +303,10 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("DestinationId");
 
                     b.HasIndex("EventId");
+
+                    b.HasIndex("IsComplementary");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("SourceId");
 
@@ -391,23 +420,6 @@ namespace Bonsai.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Bonsai.Data.Models.AccessRule", b =>
-                {
-                    b.HasOne("Bonsai.Data.Models.AppUser")
-                        .WithMany("AccessRules")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("Bonsai.Data.Models.Page", "Page")
-                        .WithMany()
-                        .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Bonsai.Data.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Bonsai.Data.Models.AppUser", b =>
                 {
                     b.HasOne("Bonsai.Data.Models.Page", "Page")
@@ -425,13 +437,25 @@ namespace Bonsai.Data.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Bonsai.Data.Models.Media", "EditedMedia")
+                        .WithMany()
+                        .HasForeignKey("EditedMediaId");
+
+                    b.HasOne("Bonsai.Data.Models.Page", "EditedPage")
+                        .WithMany()
+                        .HasForeignKey("EditedPageId");
+
+                    b.HasOne("Bonsai.Data.Models.Relation", "EditedRelation")
+                        .WithMany()
+                        .HasForeignKey("EditedRelationId");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Media", b =>
                 {
-                    b.HasOne("Bonsai.Data.Models.AppUser", "UploaderAuthor")
+                    b.HasOne("Bonsai.Data.Models.AppUser", "Uploader")
                         .WithMany()
-                        .HasForeignKey("UploaderAuthorId");
+                        .HasForeignKey("UploaderId");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.MediaTag", b =>
@@ -451,6 +475,14 @@ namespace Bonsai.Data.Migrations
                     b.HasOne("Bonsai.Data.Models.Media", "MainPhoto")
                         .WithMany()
                         .HasForeignKey("MainPhotoId");
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.PageAlias", b =>
+                {
+                    b.HasOne("Bonsai.Data.Models.Page", "Page")
+                        .WithMany("Aliases")
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>

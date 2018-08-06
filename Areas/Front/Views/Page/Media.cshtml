@@ -21,7 +21,7 @@
                 {
                     <li class="list-inline-item">
                         <div class="media-thumb-wrapper">
-                            <a href="@Url.Action("ViewMedia", "Media", new { key = elem.MediaKey })" class="media-thumb-link" data-media="@elem.MediaKey">
+                            <a href="@Url.Action("ViewMedia", "Media", new { key = elem.Key })" class="media-thumb-link" data-media="@elem.Key">
                                 <img src="@Url.Content(elem.ThumbnailUrl)" alt="@Model.Title (@(elem.Date?.ShortReadableDate ?? "Дата неизвестна"))" />
                             </a>
                         </div>

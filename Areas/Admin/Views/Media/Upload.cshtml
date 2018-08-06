@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Загрузка медиа";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>Загрузка медиа</h1>
+
+<div class="card media-uploader">
+    <div class="card-body">
+        <span>Нажмите сюда для загрузки нового файла</span>
+        <input type="file" name="file" />
+    </div>
+</div>
+
+<div class="media-uploader-items row">
+
+</div>
+
+<script type="text/template" id="uploader-item-template-progress">
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-img-top media-uploader-preview default">
+
+            </div>
+            <div class="card-footer">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+                </div>
+                <span class="error text-danger text-small" style="display: none">Ошибка</span>
+                <a href="#" class="media-edit-link" target="_blank" style="display: none">
+                    <span class="fa fa-pencil"></span>
+                    Редактировать
+                </a>
+            </div>
+        </div>
+    </div>
+</script>

@@ -2,15 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
-using Bonsai.Areas.Front.ViewModels.Home;
-using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
-using Bonsai.Code.Tools;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -43,13 +41,16 @@ namespace Bonsai.Areas.Front.Logic
         public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
         {
             var page = await _db.Pages
-                                .Include(x => x.MainPhoto)
                                 .AsNoTracking()
-                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .Include(x => x.MainPhoto)
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false)
                                 .ConfigureAwait(false);
 
             if (page == null)
                 throw new KeyNotFoundException();
+
+            if (page.Key != key)
+                throw new RedirectRequiredException(page.Key);
 
             var descr = await _markdown.CompileAsync(page.Description).ConfigureAwait(false);
             return await ConfigureAsync(page, new PageDescriptionVM { Description = descr }).ConfigureAwait(false);
@@ -64,36 +65,20 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Key == key)
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false)
                                 .ConfigureAwait(false);
 
             if (page == null)
                 throw new KeyNotFoundException();
 
-            var media = page.MediaTags.Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
-            return await ConfigureAsync(page, new PageMediaVM { Media = media }).ConfigureAwait(false);
-        }
+            if(page.Key != key)
+                throw new RedirectRequiredException(page.Key);
 
-        /// <summary>
-        /// Returns the last X updated pages (for front page).
-        /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
-        {
-            return await _db.Pages
-                            .OrderByDescending(x => x.LastUpdateDate)
-                            .Take(count)
-                            .Select(x => new PageTitleExtendedVM
-                            {
-                                Title = x.Title,
-                                Key = x.Key,
-                                Type = x.PageType,
-                                UpdatedDate = x.LastUpdateDate.LocalDateTime,
-                                MainPhotoPath = x.MainPhoto != null
-                                    ? MediaPresenterService.GetSizedMediaPath(x.MainPhoto.FilePath, MediaSize.Small)
-                                    : null
-                            })
-                            .ToListAsync()
-                            .ConfigureAwait(false);
+            var media = page.MediaTags
+                            .Where(x => x.Media.IsDeleted == false)
+                            .Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
+
+            return await ConfigureAsync(page, new PageMediaVM { Media = media }).ConfigureAwait(false);
         }
 
         #endregion
@@ -108,7 +93,7 @@ namespace Bonsai.Areas.Front.Logic
         {
             vm.Title = page.Title;
             vm.Key = page.Key;
-            vm.Type = page.PageType;
+            vm.Type = page.Type;
 
             vm.InfoBlock = await GetInfoBlockAsync(page).ConfigureAwait(false);            
 
@@ -141,7 +126,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var pageFacts = JObject.Parse(page.Facts);
 
-            foreach (var group in FactDefinitions.Groups[page.PageType])
+            foreach (var group in FactDefinitions.Groups[page.Type])
             {
                 var factsVms = new List<FactModelBase>();
 

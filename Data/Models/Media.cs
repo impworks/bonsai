@@ -27,6 +27,13 @@ namespace Bonsai.Data.Models
         public MediaType Type { get; set; }
 
         /// <summary>
+        /// MIME type of the file.
+        /// </summary>
+        [Required]
+        [StringLength(100)]
+        public string MimeType { get; set; }
+
+        /// <summary>
         /// Path to the file on the server.
         /// </summary>
         [Required]
@@ -62,6 +69,11 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Reference to the user who has uploaded this media.
         /// </summary>
-        public AppUser UploaderAuthor { get; set; }
+        public AppUser Uploader { get; set; }
+
+        /// <summary>
+        /// Flag indicating that this resource is removed.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

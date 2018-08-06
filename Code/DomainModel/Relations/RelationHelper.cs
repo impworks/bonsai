@@ -12,7 +12,7 @@ namespace Bonsai.Code.DomainModel.Relations
         /// <summary>
         /// Complementary relation bindings.
         /// </summary>
-        public static IReadOnlyDictionary<RelationType, RelationType> ComplementaryRelations = new Dictionary<RelationType, RelationType>
+        public static readonly IReadOnlyDictionary<RelationType, RelationType> ComplementaryRelations = new Dictionary<RelationType, RelationType>
         {
             [RelationType.Parent] = RelationType.Child,
             [RelationType.Child] = RelationType.Parent,
@@ -30,6 +30,8 @@ namespace Bonsai.Code.DomainModel.Relations
             [RelationType.LocationVisitor] = RelationType.Location,
             [RelationType.Event] = RelationType.EventVisitor,
             [RelationType.EventVisitor] = RelationType.Event,
+
+            [RelationType.Other] = RelationType.Other
         };
 
         /// <summary>
@@ -56,6 +58,28 @@ namespace Bonsai.Code.DomainModel.Relations
         };
 
         /// <summary>
+        /// Returns possible source types for a relation.
+        /// </summary>
+        public static IReadOnlyList<PageType> SuggestSourcePageTypes(RelationType relType)
+        {
+            return RelationBindingsMap.Where(x => x.RelationTypes.Contains(relType))
+                                      .Select(x => x.SourceType)
+                                      .Distinct()
+                                      .ToList();
+        }
+
+        /// <summary>
+        /// Returns possible target types for a relation.
+        /// </summary>
+        public static IReadOnlyList<PageType> SuggestDestinationPageTypes(RelationType relType)
+        {
+            return RelationBindingsMap.Where(x => x.RelationTypes.Contains(relType))
+                                      .Select(x => x.DestinationType)
+                                      .Distinct()
+                                      .ToList();
+        }
+
+        /// <summary>
         /// Checks if the relation is allowed.
         /// </summary>
         public static bool IsRelationAllowed(PageType source, PageType target, RelationType relation)
@@ -64,7 +88,7 @@ namespace Bonsai.Code.DomainModel.Relations
                 return source == PageType.Other || target == PageType.Other;
 
             return RelationBindingsMap.Any(x => x.SourceType == source
-                                                && x.TargetType == target
+                                                && x.DestinationType == target
                                                 && x.RelationTypes.Contains(relation));
         }
 
@@ -74,6 +98,18 @@ namespace Bonsai.Code.DomainModel.Relations
         public static bool IsRelationEventReferenceAllowed(RelationType relation)
         {
             return relation == RelationType.Spouse;
+        }
+
+        /// <summary>
+        /// Checks if the relation can have a duration.
+        /// </summary>
+        public static bool IsRelationDurationAllowed(RelationType relation)
+        {
+            return relation == RelationType.Spouse
+                   || relation == RelationType.Pet
+                   || relation == RelationType.Owner
+                   || relation == RelationType.StepParent
+                   || relation == RelationType.StepChild;
         }
     }
 }

@@ -1,0 +1,108 @@
+﻿@using Bonsai.Areas.Admin.ViewModels.Dashboard
+@using Bonsai.Areas.Admin.ViewModels.Media
+@using Humanizer
+@using Impworks.Utils.Strings
+@addTagHelper *, Bonsai
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model MediaListVM
+@{
+    ViewBag.Title = "Список медиа";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var baseUrl = Url.Action("Index", "Media", new { area = "Admin" });
+}
+
+<h1>Список медиа</h1>
+
+<div class="clearfix">
+    <div class="float-left">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Upload", "Media", new {area = "Admin"})" title="Загрузить новый медиа-файл">
+            <span class="fa fa-arrow-circle-up"></span>
+            Загрузить
+        </a>
+    </div>
+    <div class="float-right">
+        <form action="@baseUrl" method="GET" class="form-inline">
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListEnumFilterComponent", new
+            {
+                request = Model.Request,
+                propName = nameof(MediaListRequestVM.Types)
+            })
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(MediaListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Название" />
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+        </form>
+    </div>
+</div>
+
+@if(Model.Items.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th width="1px"></th>
+                <th width="50%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(MediaThumbnailExtendedVM.Title), title = "Название" })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(MediaThumbnailExtendedVM.Date), title = "Снято" })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(MediaThumbnailExtendedVM.UploadDate), title = "Загружено" })</th>
+                <th width="10%">Отметки</th>
+                <th width="1px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var m in Model.Items)
+            {
+                <tr class="admin-row">
+                    <td class="admin-full-image">
+                        <a href="@Url.Action("Update", "Media", new {area = "Admin", id = m.Id})" title="Редактировать">
+                            <div class="image" style="background-image: url(@Url.Content(m.ThumbnailUrl))"></div>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Update", "Media", new {area = "Admin", id = m.Id})" title="Редактировать">
+                            @(StringHelper.Coalesce(m.Title, "—"))
+                        </a>
+                    </td>
+                    <td><span>@(m.Date?.ReadableDate ?? "—")</span></td>
+                    <td><span title="@m.UploadDate.LocalDateTime.ToLongDateString()">@m.UploadDate.Humanize()</span></td>
+                    <td>@(m.MediaTagsCount == 0 ? "—" : m.MediaTagsCount.ToString())</td>
+                    <td class="admin-row-actions">
+                        <a href="@Url.Action("Remove", "Media", new {area = "Admin", id = m.Id})">
+                            <span class="fa fa-remove" title="Удалить"></span>
+                        </a>
+
+                        <a href="@Url.Action("Index", "Changesets", new {area = "Admin", id = m.Id})">
+                            <span class="fa fa-history" title="История изменений"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    if(string.IsNullOrEmpty(Model.Request.SearchQuery))
+    {
+        <div class="alert alert-info">
+            Не добавлено ни одного файла. <br />
+            <a href="@Url.Action("Upload", "Media", new { area = "Admin" })">Загрузить новый</a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            По запросу не найдено ни одного файла.
+        </div>
+    }
+}
+
+<div class="clearfix">
+    <div class="pull-right">
+        @await Component.InvokeAsync("ListPaginatorComponent", new
+        {
+            url = baseUrl,
+            request = Model.Request,
+            pageCount = Model.PageCount
+        })
+    </div>
+</div>

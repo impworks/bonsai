@@ -1,0 +1,22 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Impworks.Utils.Format
+@model Bonsai.Areas.Admin.ViewModels.Relations.RelationTitleVM
+@{
+    ViewBag.Title = "Удаление связи";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>Удаление связи</h1>
+
+<p>
+    Вы уверены, что хотите удалить страницу связь <b>@Model.Type.GetEnumDescription()</b>
+    между страницами <b>@Model.Destination.Title</b> и <b>@Model.Source.Title</b>?<br />
+    Отменить данную операцию будет невозможно.
+</p>
+
+<form action="@Url.Action("Remove", "Relations", new {area = "Admin"})" method="POST">
+    <input type="hidden" name="confirm" value="true" />
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger" type="submit">Удалить</button>
+    <a href="@Url.Action("Index", "Relations", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+</form>

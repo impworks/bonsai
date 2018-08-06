@@ -32,7 +32,7 @@ namespace Bonsai.Code.Services
         /// </summary>
         public void ResetCache()
         {
-            _config.TryRemove("default", out var _);
+            _config.TryRemove("default", out _);
         }
 
         /// <summary>
@@ -40,15 +40,7 @@ namespace Bonsai.Code.Services
         /// </summary>
         private AppConfig LoadOrCreateConfig()
         {
-            var existing = _context.Config.FirstOrDefault();
-            if (existing != null)
-                return existing;
-
-            return new AppConfig
-            {
-                AllowGuests = false,
-                Title = "Bonsai"
-            };
+            return _context.Config.First();
         }
     }
 }

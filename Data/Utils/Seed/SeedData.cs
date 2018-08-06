@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Data.Models;
+using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Data.Utils.Seed
@@ -20,7 +21,7 @@ namespace Bonsai.Data.Utils.Seed
             // warning! this REMOVES ALL DATA AND FILES
             ClearPreviousData(db, elastic);
 
-            EnsureIdentityItemsSeeded(db);
+            EnsureSystemItemsSeeded(db);
 
             var ctx = new SeedContext(db, elastic);
 
@@ -90,6 +91,7 @@ namespace Bonsai.Data.Utils.Seed
                 foreach(var file in Directory.EnumerateFiles(mediaDir))
                     File.Delete(file);
 
+            db.Changes.RemoveRange(db.Changes.ToList());
             db.MediaTags.RemoveRange(db.MediaTags.ToList());
             db.Media.RemoveRange(db.Media.ToList());
             db.Pages.RemoveRange(db.Pages.ToList());
@@ -102,17 +104,29 @@ namespace Bonsai.Data.Utils.Seed
         }
 
         /// <summary>
-        /// Adds required Identity-related records.
+        /// Adds required records (identity, config, etc.).
         /// </summary>
-        private static void EnsureIdentityItemsSeeded(AppDbContext db)
+        private static void EnsureSystemItemsSeeded(AppDbContext db)
         {
+            void AddRole(string name) => db.Roles.Add(new IdentityRole {Name = name, NormalizedName = name.ToUpper()});
+
             if (!db.Roles.Any())
             {
-                db.Roles.Add(new IdentityRole(RoleNames.UserRole));
-                db.Roles.Add(new IdentityRole(RoleNames.AdminRole));
-
-                db.SaveChanges();
+                foreach (var role in EnumHelper.GetEnumValues<UserRole>())
+                    AddRole(role.ToString());
             }
+
+            if (!db.Config.Any())
+            {
+                db.Config.Add(new AppConfig
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Bonsai",
+                    AllowGuests = false
+                });
+            }
+
+            db.SaveChanges();
         }
     }
 }

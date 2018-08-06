@@ -1,0 +1,74 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Admin.ViewModels.Relations
+@model RelationEditorVM
+@{
+    var data = (RelationEditorDataVM) ViewBag.Data;
+    ViewBag.Title = data.IsNew ? "Создание связи" : "Редактор связи";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var formAction = Url.Action(data.IsNew ? "Create" : "Update", "Relations", new { area = "Admin" });
+
+    string ShowIf(bool cond)
+    {
+        return cond ? "" : "display: none";
+    }
+}
+
+<h1>@ViewBag.Title</h1>
+
+<form action="@formAction" method="post" id="relation-editor-form">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-row" data-tier="type">
+        <div class="form-group col-md-8">
+            <label class="form-label-required" asp-for="Type">Тип связи</label>
+            <select asp-for="Type" asp-items="data.RelationTypes"></select>
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row" data-tier="destination">
+        <div class="form-group col-md-8">
+            <label class="form-label-required" asp-for="DestinationId">@data.Properties.DestinationName</label>
+            <select asp-for="DestinationId" asp-items="data.DestinationItem"></select>
+            <span asp-validation-for="DestinationId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row" data-tier="source">
+        <div class="form-group col-md-8">
+            <label class="form-label-required" asp-for="SourceId">@data.Properties.SourceName</label>
+            <select asp-for="SourceId" asp-items="data.SourceItem"></select>
+            <span asp-validation-for="SourceId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row" data-tier="duration" style="@ShowIf(data.Properties.ShowDuration)">
+        <div class="form-group col-md-4">
+            <label asp-for="DurationStart">Начало периода</label>
+            <input type="text" class="form-control duration-start" asp-for="DurationStart" placeholder="ГГГГ.ММ.ДД" />
+            <span asp-validation-for="DurationStart" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-4">
+            <label asp-for="DurationEnd">Конец периода</label>
+            <input type="text" class="form-control duration-end" asp-for="DurationEnd" placeholder="ГГГГ.ММ.ДД" />
+            <span asp-validation-for="DurationEnd" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row" data-tier="event" style="@ShowIf(data.Properties.ShowEvent)">
+        <div class="form-group col-md-8">
+            <label asp-for="EventId">Ссылка на событие</label>
+            <select asp-for="EventId" asp-items="data.EventItem"></select>
+            <span asp-validation-for="EventId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+            <a class="btn btn-secondary" href="@Url.Action("Index", "Relations", new { area = "Admin" })">Назад</a>
+        </div>
+    </div>
+</form>

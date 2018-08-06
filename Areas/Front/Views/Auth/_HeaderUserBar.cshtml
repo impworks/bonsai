@@ -1,32 +1,15 @@
 ﻿@model Bonsai.Areas.Front.ViewModels.Auth.UserVM
-@{
-    var pageUrl = string.IsNullOrEmpty(Model?.PageKey)
-        ? null
-        : Url.Action("Description", "Page", new {key = Model.PageKey});
-}
 <div class="account">
     <div class="row align-items-center">
         @if (Model != null)
         {
             <div class="col">
-                @if (pageUrl == null)
-                {
-                    <img src="@Model.Avatar"/>
-                }
-                else
-                {
-                    <a href="@pageUrl">
-                        <img src="@Model.Avatar" />
-                    </a>
-                }
+                <span class="user-popover-toggle user-image">
+                    <img src="@Model.Avatar" />
+                </span>
             </div>
             <div class="col">
-                @Model.Name<br/>
-                @if (Model.IsAdministrator)
-                {
-                    <a href="@Url.Action("Index", "Home", new { area = "Admin" })">Управление</a><br />
-                }
-                <a href="@Url.Action("Logout", "Auth")">Выйти</a>
+                <span class="user-popover-toggle">@Model.Name</span>
             </div>
         }
         else
@@ -35,5 +18,16 @@
                 <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">Войти</a>
             </div>
         }
+    </div>
+    <div id="user-popover-contents">
+        @if (!string.IsNullOrEmpty(Model?.PageKey))
+        {
+            <a class="user-popover-link" href="@Url.Action("Description", "Page", new {key = Model.PageKey, area = "Front"})">Страница</a>
+        }
+        @if (Model?.IsAdministrator == true)
+        {
+            <a class="user-popover-link" href="@Url.Action("Index", "Dashboard", new {area = "Admin"})">Управление</a>
+        }
+        <a class="user-popover-link" href="@Url.Action("Logout", "Auth", new {area = "Front"})">Выйти</a>
     </div>
 </div>

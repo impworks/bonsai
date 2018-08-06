@@ -5,15 +5,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
-using Bonsai.Code.Tools;
-using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Front.Logic
@@ -41,6 +41,7 @@ namespace Bonsai.Areas.Front.Logic
             var media = await _db.Media
                                  .Include(x => x.Tags)
                                  .ThenInclude(x => x.Object)
+                                 .Where(x => x.IsDeleted == false)
                                  .FirstOrDefaultAsync(x => x.Id == id)
                                  .ConfigureAwait(false);
 
@@ -63,26 +64,6 @@ namespace Bonsai.Areas.Front.Logic
             };
         }
 
-        /// <summary>
-        /// Returns the last X uploaded media files (for front page).
-        /// </summary>
-        public async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMediaAsync(int count)
-        {
-            return await _db.Media
-                            .OrderByDescending(x => x.UploadDate)
-                            .Take(count)
-                            .Select(x => new MediaThumbnailExtendedVM
-                            {
-                                Type = x.Type,
-                                MediaKey = x.Key,
-                                ThumbnailUrl = GetSizedMediaPath(x.FilePath, MediaSize.Small),
-                                Date = FuzzyDate.TryParse(x.Date),
-                                UploadDate = x.UploadDate
-                            })
-                            .ToListAsync()
-                            .ConfigureAwait(false);
-        }
-
         #region Private helpers
 
         /// <summary>
@@ -97,7 +78,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Title = tag.Object?.Title ?? tag.ObjectTitle,
                 Key = tag.Object?.Key,
-                Type = tag.Object?.PageType ?? PageType.Other
+                Type = tag.Object?.Type ?? PageType.Other
             };
         }
 
@@ -172,7 +153,7 @@ namespace Bonsai.Areas.Front.Logic
             return new MediaThumbnailVM
             {
                 Type = media.Type,
-                MediaKey = media.Key,
+                Key = media.Key,
                 ThumbnailUrl = GetSizedMediaPath(media.FilePath, size),
                 Date = FuzzyDate.TryParse(media.Date)
             };

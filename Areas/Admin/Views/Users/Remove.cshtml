@@ -1,0 +1,25 @@
+﻿@using Bonsai.Areas.Admin.ViewModels.Users
+@model Bonsai.Areas.Admin.ViewModels.Users.RemoveUserVM
+@{
+    ViewBag.Title = "Удаление пользователя";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>Удаление пользователя</h1>
+
+@if (ViewBag.IsSelf)
+{
+    <p>Вы не можете удалить собственную учетную запись.</p>
+    <a class="btn btn-secondary" href="@Url.Action("Index")">Назад</a>
+}
+else
+{
+    <p>Вы уверены, что хотите удалить пользователя <b>@Model.FullName</b>?</p>
+    <p>Отменить данную операцию будет невозможно.</p>
+    <form class="@Url.Action("Remove")" method="POST">
+        @Html.HiddenFor(x => x.Id)
+        <input type="hidden" name="confirm" value="true" />
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <a class="btn btn-secondary" href="@Url.Action("Index")">Назад</a>
+    </form>
+}

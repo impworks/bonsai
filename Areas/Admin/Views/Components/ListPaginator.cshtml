@@ -1,0 +1,21 @@
+﻿@using Bonsai.Areas.Admin.ViewModels.Components
+@model IReadOnlyList<ListPaginatorPageVM>
+
+@if(Model.Count > 1)
+{
+    <ul class="pagination">
+        @foreach(var p in Model)
+        {
+            <li class="page-item @(p.IsCurrent ? "active" : "")">
+                @if(string.IsNullOrEmpty(p.Url))
+                {
+                    <span class="page-link">@p.Title</span>
+                }
+                else
+                {
+                    <a class="page-link" href="@p.Url">@p.Title</a>
+                }
+            </li>
+        }
+    </ul>
+}

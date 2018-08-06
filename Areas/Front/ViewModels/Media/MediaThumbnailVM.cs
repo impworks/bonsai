@@ -1,4 +1,4 @@
-﻿using Bonsai.Code.Tools;
+﻿using Bonsai.Code.Utils.Date;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Front.ViewModels.Media
@@ -11,7 +11,7 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         /// <summary>
         /// Full URL of the media's display page.
         /// </summary>
-        public string MediaKey { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// URL of the media's thumbnail.

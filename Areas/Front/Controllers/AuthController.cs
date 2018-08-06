@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
+using Bonsai.Code.Mvc;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Validation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,7 @@ namespace Bonsai.Areas.Front.Controllers
     /// </summary>
     [Area("Front")]
     [Route("auth")]
-    public class AuthController: Controller
+    public class AuthController: AppControllerBase
     {
         public AuthController(AuthService auth, AppConfigService cfgProvider)
         {
@@ -27,8 +28,6 @@ namespace Bonsai.Areas.Front.Controllers
 
         private readonly AuthService _auth;
         private readonly AppConfigService _cfgProvider;
-
-        protected ISession Session => HttpContext.Session;
 
         /// <summary>
         /// Displays the authorization page.
@@ -74,7 +73,7 @@ namespace Bonsai.Areas.Front.Controllers
         {
             await _auth.LogoutAsync().ConfigureAwait(false);
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { area = "Front" });
         }
 
         /// <summary>
@@ -135,16 +134,20 @@ namespace Bonsai.Areas.Front.Controllers
             if(!ModelState.IsValid)
                 return View("RegisterForm", vm);
 
-            var result = await _auth.RegisterAsync(vm, info.Login);
-            if (result.ErrorMessages.Any())
+            try
             {
-                foreach(var error in result.ErrorMessages)
-                    ModelState.AddModelError(error.Key, error.Value);
+                var result = await _auth.RegisterAsync(vm, info.Login);
+                if (result.IsValidated)
+                    return RedirectToAction("Index", "Home");
+
+                return RedirectToAction("RegisterSuccess", "Auth");
+            }
+            catch (ValidationException ex)
+            {
+                SetModelState(ex);
 
                 return View("RegisterForm", vm);
             }
-
-            return RedirectToAction("RegisterSuccess", "Auth");
         }
 
         /// <summary>
@@ -154,7 +157,7 @@ namespace Bonsai.Areas.Front.Controllers
         public ActionResult RegisterSuccess()
         {
             if (Session.Get<RegistrationInfo>() == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
 
             Session.Remove<RegistrationInfo>();
 
@@ -178,7 +181,7 @@ namespace Bonsai.Areas.Front.Controllers
                     return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         #endregion

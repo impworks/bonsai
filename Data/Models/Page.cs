@@ -31,7 +31,7 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Type of the entity described by this page.
         /// </summary>
-        public PageType PageType { get; set; }
+        public PageType Type { get; set; }
 
         /// <summary>
         /// Free text description of the entity.
@@ -42,6 +42,11 @@ namespace Bonsai.Data.Models
         /// Serialized collection of facts related to current entity.
         /// </summary>
         public string Facts { get; set; }
+
+        /// <summary>
+        /// Aliases to current page.
+        /// </summary>
+        public ICollection<PageAlias> Aliases { get; set; }
         
         /// <summary>
         /// Relations from this page to others.
@@ -61,11 +66,16 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Date of the page's creation.
         /// </summary>
-        public DateTimeOffset CreateDate { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
 
         /// <summary>
         /// Date of the page's last revision.
         /// </summary>
         public DateTimeOffset LastUpdateDate { get; set; }
+
+        /// <summary>
+        /// Flag indicating that this resource is removed.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

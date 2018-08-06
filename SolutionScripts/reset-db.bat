@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 
 cd ..
 dotnet ef database drop -f

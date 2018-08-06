@@ -1,0 +1,92 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Admin.ViewModels.Users
+@model Bonsai.Areas.Admin.ViewModels.Users.UpdateUserVM
+@{
+    ViewBag.Title = Model.IsValidated ? "Изменение пользователя" : "Валидация пользователя";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="row">
+    <div class="col-md-7 col-sm-12">
+        <form action="@Url.Action("Update")" method="post">
+            <input type="hidden" asp-for="IsValidated" />
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="LastName">Фамилия</label>
+                <div class="col-sm-9">
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="FirstName">Имя</label>
+                <div class="col-sm-9">
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="MiddleName">Отчество</label>
+                <div class="col-sm-9">
+                    <input asp-for="MiddleName" class="form-control" />
+                    <span asp-validation-for="MiddleName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="Birthday">Дата рождения</label>
+                <div class="col-sm-6">
+                    <input asp-for="Birthday" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
+                    <span asp-validation-for="Birthday" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="Email">E-mail</label>
+                <div class="col-sm-9">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            @if(!ViewBag.IsSelf)
+            {
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" asp-for="Role">Доступ</label>
+                    <div class="col-sm-9">
+                        <select asp-for="Role" asp-items="@ViewBag.UserRoles"></select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+
+            @if(!Model.IsValidated)
+            {
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Опции</label>
+                    <div class="col-sm-9">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="CreatePersonalPage" class="form-check-input" />
+                            <label class="form-check-label">Создать для пользователя собственную страницу</label>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if(!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.
+                </div>
+            }
+
+            <div class="form-group row">
+                <div class="offset-sm-3 col-sm-6">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a class="btn btn-secondary" href="@Url.Action("Index")">Отмена</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

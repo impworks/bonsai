@@ -6,8 +6,9 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services.Elastic;
-using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Impworks.Utils.Format;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -80,18 +81,20 @@ namespace Bonsai.Data.Utils.Seed
                 deathData["Value"] = death;
             }
 
+            var key = PageHelper.EncodeTitle(title);
             var page = new Page
             {
                 Id = Guid.NewGuid(),
                 Title = title,
-                Key = PageHelper.EncodeTitle(title),
-                PageType = type,
+                Key = key,
+                Type = type,
                 Description = (File.Exists(descrFile) ? File.ReadAllText(descrFile) : descrSource) ?? title,
                 Facts = factsObj.ToString(Formatting.None),
-                CreateDate = DateTimeOffset.Now,
+                CreationDate = DateTimeOffset.Now,
                 LastUpdateDate = DateTimeOffset.Now
             };
             _db.Pages.Add(page);
+            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Key = key, Title = title, Page = page});
 
             _elastic?.AddPageAsync(page).Wait();
 
@@ -103,7 +106,7 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public Relation AddRelation(Page source, RelationType type, Page target, string duration = null, Page eventPage = null)
         {
-            if(!RelationHelper.IsRelationAllowed(source.PageType, target.PageType, type))
+            if(!RelationHelper.IsRelationAllowed(source.Type, target.Type, type))
                 throw new ArgumentException("This relation is not allowed!");
 
             if (eventPage != null)
@@ -111,7 +114,7 @@ namespace Bonsai.Data.Utils.Seed
                 if(!RelationHelper.IsRelationEventReferenceAllowed(type))
                     throw new ArgumentException("This relation cannot have an event reference.");
 
-                if(eventPage.PageType != PageType.Event)
+                if(eventPage.Type != PageType.Event)
                     throw new ArgumentException("The related event page must have Event type.");
             }
 
@@ -204,7 +207,7 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public MediaTag AddMediaTag(Media media, Page page, MediaTagType type = MediaTagType.DepictedEntity, string coords = null)
         {
-            var ptype = page.PageType;
+            var ptype = page.Type;
 
             if(type == MediaTagType.DepictedEntity)
                 if(ptype != PageType.Person && ptype != PageType.Pet && ptype != PageType.Other)
@@ -239,8 +242,22 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Adds a generic media element.
         /// </summary>
-        private Media AddMedia(MediaType type, string source, string preview = null, string date = null, string description = null, Guid? explicitId = null)
+        private Media AddMedia(MediaType type, string source, string preview = null, string date = null, string description = null, Guid? explicitId = null, string mimeType = null)
         {
+            string GetDefaultMimeType()
+            {
+                if (type == MediaType.Photo)
+                    return "image/jpeg";
+
+                if (type == MediaType.Document)
+                    return "application/pdf";
+
+                if (type == MediaType.Video)
+                    return "video/mpeg";
+
+                throw new ArgumentException("Unknown MediaType!");
+            }
+
             var id = explicitId ?? Guid.NewGuid();
             var key = PageHelper.GetMediaKey(id);
             var newName = key + Path.GetExtension(source);
@@ -270,7 +287,8 @@ namespace Bonsai.Data.Utils.Seed
                 Date = date,
                 Description = description,
                 Tags = new List<MediaTag>(),
-                UploadDate = DateTimeOffset.Now
+                UploadDate = DateTimeOffset.Now,
+                MimeType = mimeType ?? GetDefaultMimeType()
             };
             _db.Media.Add(media);
             return media;

@@ -1,0 +1,29 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Bonsai.Areas.Admin.ViewModels.Dashboard.PageTitleExtendedVM
+@{
+    ViewBag.Title = "Удаление страницы";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+}
+
+<h1>Удаление страницы</h1>
+
+@if (!string.IsNullOrEmpty(Model.MainPhotoPath))
+{
+    <div class="card d-inline-block">
+        <div class="card-body">
+            <img src="@Url.Content(Model.MainPhotoPath)" style="max-width: 200px"/>
+        </div>
+    </div>
+}
+
+<p>
+    Вы уверены, что хотите удалить страницу <b>@Model.Title</b>?<br />
+    Отменить данную операцию будет невозможно.
+</p>
+
+<form action="@Url.Action("Remove", "Pages", new {area = "Admin"})" method="POST">
+    <input type="hidden" name="confirm" value="true" />
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger" type="submit">Удалить</button>
+    <a href="@Url.Action("Index", "Pages", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+</form>

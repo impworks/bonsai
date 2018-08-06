@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Areas.Front.Logic.Relations;
+using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.ViewModels.Calendar;
-using Bonsai.Areas.Front.ViewModels.Home;
-using Bonsai.Code.Tools;
-using Bonsai.Code.Utils;
+using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
+using Impworks.Utils.Strings;
 
 namespace Bonsai.Areas.Front.Logic
 {
@@ -249,7 +249,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 Key = page.Key,
                 Title = page.Title,
-                Type = page.PageType,
+                Type = page.Type,
                 MainPhotoPath = page.MainPhotoPath
             };
         }

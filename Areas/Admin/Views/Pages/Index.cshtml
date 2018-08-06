@@ -1,0 +1,102 @@
+﻿@using Bonsai.Areas.Admin.ViewModels.Dashboard
+@using Bonsai.Areas.Admin.ViewModels.Pages
+@using Humanizer
+@addTagHelper *, Bonsai
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model PagesListVM
+@{
+    ViewBag.Title = "Список страниц";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var baseUrl = Url.Action("Index", "Pages", new { area = "Admin" });
+}
+
+<h1>Список страниц</h1>
+
+<div class="clearfix">
+    <div class="float-left">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Create", "Pages", new {area = "Admin"})" title="Создать новую страницу">
+            <span class="fa fa-plus-circle"></span>
+            Создать
+        </a>
+        </div>
+    <div class="float-right">
+        <form action="@baseUrl" method="GET" class="form-inline">
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListEnumFilterComponent", new
+            {
+                request = Model.Request,
+                propName = nameof(PagesListRequestVM.Types)
+            })
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(PagesListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Название"/>
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+        </form>
+    </div>
+</div>
+
+@if(Model.Items.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th width="60%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.Title), title = "Название"})</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.CreationDate), title = "Создана"})</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.LastUpdateDate), title = "Изменена"})</th>
+                <th width="1px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var p in Model.Items)
+            {
+                <tr class="admin-row">
+                    <td>
+                        <page-image image="@p.MainPhotoPath" type="@p.Type"></page-image>
+                        <a href="@Url.Action("Update", "Pages", new {area = "Admin", id = p.Id})" title="Редактировать">
+                            @p.Title
+                        </a>
+                    </td>
+                    <td><span title="@p.CreationDate.LocalDateTime.ToLongDateString()">@p.CreationDate.Humanize()</span></td>
+                    <td><span title="@p.LastUpdateDate.LocalDateTime.ToLongDateString()">@p.LastUpdateDate.Humanize()</span></td>
+                    <td class="admin-row-actions">
+                        <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Id})">
+                            <span class="fa fa-remove" title="Удалить"></span>
+                        </a>
+                        <a href="@Url.Action("Index", "Changesets", new {area = "Admin", id = p.Id})">Scht
+                            <span class="fa fa-history" title="История изменений"></span>
+                        </a>
+                        <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank">
+                            <span class="fa fa-external-link-square" title="Просмотреть"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    if(string.IsNullOrEmpty(Model.Request.SearchQuery))
+    {
+        <div class="alert alert-info">
+            Не добавлено ни одной страницы. <br />
+            <a href="@Url.Action("Create", "Pages", new { area = "Admin" })">Создать новую</a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            По запросу не найдено ни одной страницы.
+        </div>
+    }
+}
+
+<div class="clearfix">
+    <div class="pull-right">
+        @await Component.InvokeAsync("ListPaginatorComponent", new
+        {
+            url = baseUrl,
+            request = Model.Request,
+            pageCount = Model.PageCount
+        })
+    </div>
+</div>

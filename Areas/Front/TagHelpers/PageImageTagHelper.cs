@@ -1,8 +1,8 @@
-﻿using Bonsai.Code.Utils;
-using Bonsai.Data.Models;
+﻿using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Linq;
+using Bonsai.Code.Utils.Helpers;
 
 namespace Bonsai.Areas.Front.TagHelpers
 {
@@ -39,10 +39,7 @@ namespace Bonsai.Areas.Front.TagHelpers
         /// </summary>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var type = (Type ?? PageType.Person).ToString().ToLower();
-            var image = StringHelper.Coalesce(Image, FallbackImage, $"~/assets/img/unknown-{type}.svg");
-
-            var path = _url.Content(image);
+            var path = _url.Content(PageHelper.GetPageImageUrl(Type, Image, FallbackImage));
             var className = "image";
             
             output.TagName = "div";

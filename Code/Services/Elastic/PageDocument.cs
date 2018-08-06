@@ -1,4 +1,5 @@
 ﻿using System;
+using Bonsai.Data.Models;
 
 namespace Bonsai.Code.Services.Elastic
 {
@@ -11,5 +12,6 @@ namespace Bonsai.Code.Services.Elastic
         public string Key { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int PageType { get; set; }
     }
 }

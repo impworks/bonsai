@@ -1,0 +1,93 @@
+﻿@using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Humanizer
+@using Impworks.Utils.Format
+@using Impworks.Utils.Strings
+@addTagHelper *, Bonsai
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ChangesetsListVM
+@{
+    ViewBag.Title = "Список правок";
+    Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var baseUrl = Url.Action("Index", "Changesets", new { area = "Admin" });
+}
+
+<h1>Список правок</h1>
+
+<div class="clearfix">
+    <div class="float-right">
+        <form action="@baseUrl" method="GET" class="form-inline">
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListEnumFilterComponent", new
+            {
+                request = Model.Request,
+                propName = nameof(ChangesetsListRequestVM.EntityTypes)
+            })
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(ChangesetsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Название" />
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+        </form>
+    </div>
+</div>
+
+@if(Model.Items.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th width="1px"></th>
+                <th width="30%">Название</th>
+                <th width="15%">Тип</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Date), title = "Дата" })</th>
+                <th width="15%">Действие</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Author), title = "Автор" })</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var c in Model.Items)
+            {
+                <tr class="admin-row">
+                    <td class="admin-full-image">
+                        <a href="@Url.Action("Details", "Changesets", new {area = "Admin", id = c.Id})" title="Просмотреть">
+                            <div class="image" style="background-image: url(@Url.Content(c.EntityThumbnailUrl))"></div>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Details", "Changesets", new {area = "Admin", id = c.Id})" title="Просмотреть">
+                            @(StringHelper.Coalesce(c.EntityTitle, "—"))
+                        </a>
+                    </td>
+                    <td>@c.EntityType.GetEnumDescription()</td>
+                    <td><span title="@c.Date.LocalDateTime.ToLongDateString()">@c.Date.Humanize()</span></td>
+                    <td>@c.ChangeType.GetEnumDescription()</td>
+                    <td>@c.Author</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    if(string.IsNullOrEmpty(Model.Request.SearchQuery))
+    {
+        <div class="alert alert-info">
+            Не создано ни одной правки.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            По запросу не найдено ни одной правки.
+        </div>
+    }
+}
+
+<div class="clearfix">
+    <div class="pull-right">
+        @await Component.InvokeAsync("ListPaginatorComponent", new
+        {
+            url = baseUrl,
+            request = Model.Request,
+            pageCount = Model.PageCount
+        })
+    </div>
+</div>

@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AutoMapper;
 using Bonsai.Areas.Front.ViewModels.Auth;
-using Bonsai.Code.Tools;
-using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Helpers;
+using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -19,16 +23,18 @@ namespace Bonsai.Areas.Front.Logic.Auth
     /// </summary>
     public class AuthService
     {
-        public AuthService(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, AppDbContext db)
+        public AuthService(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, AppDbContext db, IMapper mapper)
         {
             _signMgr = signInManager;
             _userMgr = userManager;
             _db = db;
+            _mapper = mapper;
         }
 
         private readonly SignInManager<AppUser> _signMgr;
         private readonly UserManager<AppUser> _userMgr;
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Attempts to authenticate the user.
@@ -82,35 +88,32 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
-            var errors = await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
-            if (errors.Any())
-                return new RegisterUserResultVM(errors);
+            await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
 
-            var id = Guid.NewGuid().ToString();
-            var user = new AppUser
-            {
-                Id = id,
-                Email = vm.Email,
-                UserName = Regex.Replace(vm.Email, "[^a-z0-9]", ""),
-                FirstName = vm.FirstName,
-                MiddleName = vm.MiddleName,
-                LastName = vm.LastName,
-                Birthday = vm.Birthday
-            };
+            var isFirstUser = (await _db.Users.AnyAsync().ConfigureAwait(false)) == false;
+
+            var user = _mapper.Map<AppUser>(vm);
+            user.Id = Guid.NewGuid().ToString();
+            user.IsValidated = isFirstUser;
 
             var createResult = await _userMgr.CreateAsync(user).ConfigureAwait(false);
             if (!createResult.Succeeded)
             {
                 var msgs = createResult.Errors.Select(x => new KeyValuePair<string, string>("", x.Description)).ToList();
-                return new RegisterUserResultVM (msgs);
+                throw new ValidationException(msgs);
             }
 
             var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
             await _userMgr.AddLoginAsync(user, login).ConfigureAwait(false);
 
+            await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.User)).ConfigureAwait(false);
+
             await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
 
-            return new RegisterUserResultVM();
+            return new RegisterUserResultVM
+            {
+                IsValidated = user.IsValidated
+            };
         }
 
         /// <summary>
@@ -127,12 +130,13 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (user == null)
                 return null;
 
-            var isAdmin = await _userMgr.IsInRoleAsync(user, RoleNames.AdminRole).ConfigureAwait(false);
+            var roles = await _userMgr.GetRolesAsync(user).ConfigureAwait(false);
+            var isAdmin = roles.Contains(nameof(UserRole.Admin)) || roles.Contains(nameof(UserRole.Editor));
 
             return new UserVM
             {
                 Name = user.FirstName + " " + user.LastName,
-                Avatar = GetGravatarUrl(user.Email),
+                Avatar = ViewHelper.GetGravatarUrl(user.Email),
                 PageKey = user.Page?.Key,
                 IsAdministrator = isAdmin,
                 IsValidated = user.IsValidated
@@ -162,28 +166,18 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Performs additional checks on the registration request.
         /// </summary>
-        private async Task<IReadOnlyList<KeyValuePair<string, string>>> ValidateRegisterRequestAsync(RegisterUserVM vm)
+        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm)
         {
-            var result = new Dictionary<string, string>();
+            var val = new Validator();
 
             if (FuzzyDate.TryParse(vm.Birthday) == null)
-                result[nameof(vm.Birthday)] = "Дата рождения указана неверно.";
+                val.Add(nameof(vm.Birthday), "Дата рождения указана неверно.");
 
             var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email).ConfigureAwait(false);
             if (emailExists)
-                result[nameof(vm.Email)] = "Адрес электронной почты уже зарегистрирован.";
+                val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
 
-            return result.ToList();
-        }
-
-        /// <summary>
-        /// Returns the Gravatar URL for a given email.
-        /// </summary>
-        private string GetGravatarUrl(string email)
-        {
-            var cleanEmail = (email ?? "").ToLowerInvariant().Trim();
-            var md5 = StringHelper.Md5(cleanEmail);
-            return "https://www.gravatar.com/avatar/" + md5;
+            val.ThrowIfInvalid();
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿/// <binding ProjectOpened='front.watch' />
+﻿/// <binding ProjectOpened='custom.watch' />
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     sass = require('gulp-sass'),
@@ -20,24 +20,37 @@ var config = {
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/magnific-popup/dist/jquery.magnific-popup.js',
             './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
-            './node_modules/gijgo/js/gijgo.js',
-            './node_modules/gijgo/js/messages/messages.ru-ru.js'
+            './node_modules/toastr/toastr.js',
+            './node_modules/selectize/dist/js/standalone/selectize.js',
+            './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+            './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
+            './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
+            './Areas/Common/Libs/jquery-ui.js',
+            './Areas/Common/Libs/gijgo.core.js',
+            './Areas/Common/Libs/gijgo.datepicker.js',
+            './Areas/Common/Libs/throttle.js'
         ],
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
             './node_modules/gijgo/fonts/*.*'
         ]
     },
-    front: {
+    content: {
         styles: {
-            root: './Areas/Front/Content/Styles/style.scss',
+            root: './Areas/Common/Styles/style.scss',
             all: [
-                './Areas/Front/Content/Styles/**/*.scss'
+                './Areas/Common/Styles/**/*.scss'
             ]
         },
         scripts: {
-            all: [
-                './Areas/Front/Content/Scripts/**/*.js'
+            front: [
+                './Areas/Front/Scripts/**/*.js'
+            ],
+            admin: [
+                './Areas/Admin/Scripts/**/*.js'
+            ],
+            common: [
+                './Areas/Common/Scripts/**/*.js'
             ]
         }
     },
@@ -49,33 +62,56 @@ var config = {
 };
 
 // ================
-// Front tasks
+// Bonsai tasks
 // ================
 
-gulp.task('front.styles', function() {
-    gulp.src(config.front.styles.root)
+gulp.task('content.styles', function() {
+    gulp.src(config.content.styles.root)
         .pipe(sass())
-        .pipe(concatcss('front.css'))
+        .pipe(concatcss('style.css'))
         .pipe(gulp.dest(config.assets.styles));
 });
 
-gulp.task('front.scripts', function () {
-    gulp.src(config.front.scripts.all)
+gulp.task('content.scripts.front', function () {
+    gulp.src(config.content.scripts.front)
         .pipe(concatjs('front.js'))
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-gulp.task('front', ['front.styles', 'front.scripts']);
+gulp.task('content.scripts.common', function () {
+    gulp.src(config.content.scripts.common)
+        .pipe(concatjs('common.js'))
+        .pipe(gulp.dest(config.assets.scripts));
+});
 
-gulp.task('front.watch', function() {
+gulp.task('content.scripts.admin', function () {
+    gulp.src(config.content.scripts.admin)
+        .pipe(concatjs('admin.js'))
+        .pipe(gulp.dest(config.assets.scripts));
+});
+
+
+gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common']);
+
+gulp.task('content.watch', function() {
     watch(
-        config.front.styles.all,
-        function () { gulp.start('front.styles'); }
+        config.content.styles.all,
+        function () { gulp.start('content.styles'); }
     );
 
     watch(
-        config.front.scripts.all,
-        function () { gulp.start('front.scripts'); }
+        config.content.scripts.front,
+        function () { gulp.start('content.scripts.front'); }
+    );
+
+    watch(
+        config.content.scripts.common,
+        function () { gulp.start('content.scripts.common'); }
+    );
+
+    watch(
+        config.content.scripts.admin,
+        function () { gulp.start('content.scripts.admin'); }
     );
 });
 
@@ -86,7 +122,7 @@ gulp.task('front.watch', function() {
 gulp.task('vendor.scripts', function () {
     gulp.src(config.vendor.scripts)
         .pipe(concatjs('vendor.js'))
-        .pipe(minjs({  }))
+        //.pipe(minjs({  }))
         .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
         .pipe(gulp.dest(config.assets.scripts));
 });
@@ -98,4 +134,4 @@ gulp.task('vendor.fonts', function() {
 
 gulp.task('vendor', ['vendor.scripts', 'vendor.fonts']);
 
-gulp.task('build', ['vendor', 'front']);
+gulp.task('build', ['vendor', 'content']);

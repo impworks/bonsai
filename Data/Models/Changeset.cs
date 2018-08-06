@@ -25,26 +25,48 @@ namespace Bonsai.Data.Models
         public AppUser Author { get; set; }
 
         /// <summary>
-        /// ID of the entity that has been edited.
+        /// Type of the changed entity.
         /// </summary>
-        public Guid SourceEntityId { get; set; }
+        public ChangesetEntityType Type { get; set; }
 
         /// <summary>
-        /// The diff of the entity's changes.
+        /// ID of the edited page.
         /// </summary>
-        [Required]
-        public string SourceDiff { get; set; }
+        public Guid? EditedPageId { get; set; }
 
         /// <summary>
-        /// IDs of entities that have been transitively affected by the change.
+        /// Edited page.
         /// </summary>
-        [Required]
-        public string AffectedEntityIds { get; set; }
+        public Page EditedPage { get; set; }
 
         /// <summary>
-        /// The diff of all other entities' changes.
+        /// ID of the edited media.
         /// </summary>
-        [Required]
-        public string AffectedDiff { get; set; }
+        public Guid? EditedMediaId { get; set; }
+
+        /// <summary>
+        /// Edited media.
+        /// </summary>
+        public Media EditedMedia { get; set; }
+
+        /// <summary>
+        /// ID of the edited relation.
+        /// </summary>
+        public Guid? EditedRelationId { get; set; }
+
+        /// <summary>
+        /// Edited relation.
+        /// </summary>
+        public Relation EditedRelation { get; set; }
+
+        /// <summary>
+        /// The original state (before the change).
+        /// </summary>
+        public string OriginalState { get; set; }
+
+        /// <summary>
+        /// The new state (after the change).
+        /// </summary>
+        public string UpdatedState { get; set; }
     }
 }

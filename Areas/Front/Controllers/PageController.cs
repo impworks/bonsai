@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
+using Bonsai.Code.Mvc;
 using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +15,7 @@ namespace Bonsai.Areas.Front.Controllers
     [Area("Front")]
     [Route("p")]
     [Authorize(Policy = AuthRequirement.Name)]
-    public class PageController: Controller
+    public class PageController: AppControllerBase
     {
         public PageController(PagePresenterService pages)
         {
@@ -32,9 +34,16 @@ namespace Bonsai.Areas.Front.Controllers
             if (encKey != key)
                 return RedirectToActionPermanent("Description", new {key = encKey});
 
-            var vm = await _pages.GetPageDescriptionAsync(encKey)
-                                 .ConfigureAwait(false);
-            return View(vm);
+            try
+            {
+                var vm = await _pages.GetPageDescriptionAsync(encKey)
+                                     .ConfigureAwait(false);
+                return View(vm);
+            }
+            catch (RedirectRequiredException ex)
+            {
+                return RedirectToActionPermanent("Description", new {key = ex.Key});
+            }
         }
 
 
@@ -48,9 +57,16 @@ namespace Bonsai.Areas.Front.Controllers
             if (encKey != key)
                 return RedirectToActionPermanent("Media", new { key = encKey });
 
-            var vm = await _pages.GetPageMediaAsync(encKey)
-                                 .ConfigureAwait(false);
-            return View(vm);
+            try
+            {
+                var vm = await _pages.GetPageMediaAsync(encKey)
+                                     .ConfigureAwait(false);
+                return View(vm);
+            }
+            catch(RedirectRequiredException ex)
+            {
+                return RedirectToActionPermanent("Description", new { key = ex.Key });
+            }
         }
     }
 }

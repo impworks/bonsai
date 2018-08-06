@@ -8,16 +8,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@config.Title &mdash; @ViewBag.Title</title>
-    <link href="@Url.Content("~/assets/styles/vendor.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/assets/styles/front.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/assets/styles/fontawesome.min.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/assets/styles/fa-regular.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/styles/style.css")" rel="stylesheet" />
 </head>
 <body>
     <div id="main-container" class="d-flex flex-column">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home", new { area = "Front" })">
                     <div class="row align-items-center">
                         <div class="col">
                             <img src="/assets/img/logo.svg">
@@ -37,6 +34,7 @@
     </div>
 
     <script src="@Url.Content("~/assets/scripts/vendor.js")"></script>
+    <script src="@Url.Content("~/assets/scripts/common.js")"></script>
     <script src="@Url.Content("~/assets/scripts/front.js")"></script>
 </body>
 </html>

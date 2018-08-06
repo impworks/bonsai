@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Bonsai.Code.Tools;
+using Bonsai.Code.Utils.Date;
 
 namespace Bonsai.Areas.Front.ViewModels.Calendar
 {

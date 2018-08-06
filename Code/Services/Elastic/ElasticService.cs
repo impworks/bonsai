@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Code.Utils;
+using Bonsai.Data.Models;
+using Impworks.Utils.Format;
+using Impworks.Utils.Strings;
 using Nest;
 using Page = Bonsai.Data.Models.Page;
 
@@ -58,6 +60,7 @@ namespace Bonsai.Code.Services.Elastic
                                 .Analyzer("index_ru")
                                 .SearchAnalyzer("search_ru")
                             )
+                             .Scalar(x => x.PageType)
                         )
                     )
                 )
@@ -91,7 +94,7 @@ namespace Bonsai.Code.Services.Elastic
                             .Custom("search_ru", ac =>
                                 ac.CharFilters("html_strip", "filter_ru_e")
                                 .Tokenizer("standard")
-                                .Filters("stopwords_ru", "delim_ru", "stop", "lowercase", "russian_morphology", "english_morphology") // todo: russian_morphology
+                                .Filters("stopwords_ru", "delim_ru", "stop", "lowercase", "russian_morphology", "english_morphology")
                             )
                         )
                     )
@@ -112,10 +115,19 @@ namespace Bonsai.Code.Services.Elastic
                 Id = page.Id,
                 Key = page.Key,
                 Title = page.Title,
-                Description = MarkdownService.Strip(page.Description)
+                PageType = (int) page.Type,
+                Description = MarkdownService.Strip(page.Description),
             };
 
             await _client.IndexAsync(doc, i => i.Index(PAGE_INDEX)).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Removes a page from the index.
+        /// </summary>
+        public async Task RemovePageAsync(Page page)
+        {
+            await _client.DeleteAsync(new DeleteRequest(PAGE_INDEX, TypeName.From<PageDocument>(), page.Id));
         }
 
         /// <summary>
@@ -195,7 +207,7 @@ namespace Bonsai.Code.Services.Elastic
         /// <summary>
         /// Returns the probable matches for the search autocomplete.
         /// </summary>
-        public async Task<IReadOnlyList<PageDocumentSearchResult>> SearchAutocompleteAsync(string query)
+        public async Task<IReadOnlyList<PageDocumentSearchResult>> SearchAutocompleteAsync(string query, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null)
         {
             PageDocumentSearchResult Map(PageDocument doc)
             {
@@ -203,20 +215,24 @@ namespace Bonsai.Code.Services.Elastic
                 {
                     Id = doc.Id,
                     Key = doc.Key,
-                    HighlightedTitle = doc.Title
+                    HighlightedTitle = doc.Title,
+                    PageType = (PageType) doc.PageType
                 };
             }
+
+            pageTypes = pageTypes ?? EnumHelper.GetEnumValues<PageType>();
 
             var result = await _client.SearchAsync<PageDocument>(
                 s => s.Index(PAGE_INDEX)
                       .Query(q =>
-                          q.Match(f => f.Field(x => x.Title)
-                                        .Query(query)
-                                        .Fuzziness(Fuzziness.Auto))
-                          || q.Prefix(f => f.Field(x => x.Title)
-                                            .Value(query))
+                                 q.Terms(f => f.Field(x => x.PageType).Terms(pageTypes))
+                                 &&
+                                 (
+                                     q.Match(f => f.Field(x => x.Title).Query(query).Fuzziness(Fuzziness.Auto))
+                                     || q.Prefix(f => f.Field(x => x.Title).Value(query))
+                                 )
                       )
-                      .Take(5)
+                      .Take(maxCount ?? 5)
             ).ConfigureAwait(false);
 
             return result.Documents.Select(Map).ToList();
@@ -225,3 +241,4 @@ namespace Bonsai.Code.Services.Elastic
         #endregion
     }
 }
+

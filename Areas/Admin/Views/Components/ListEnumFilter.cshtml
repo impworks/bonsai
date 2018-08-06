@@ -1,0 +1,10 @@
+﻿@model IReadOnlyList<Bonsai.Areas.Admin.ViewModels.Components.ListEnumFilterItemVM>
+
+<div class="btn-group btn-group-toggle mr-sm-2" data-toggle="buttons">
+    @foreach (var item in Model)
+    {
+        <label class="btn btn-sm btn-outline-secondary @(item.IsActive ? "active" : "")">
+            <input type="checkbox" name="@item.PropertyName" value="@item.Value" autocomplete="off" checked="@item.IsActive" /> @item.Title
+        </label>
+    }
+</div>

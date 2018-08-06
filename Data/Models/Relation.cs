@@ -56,6 +56,11 @@ namespace Bonsai.Data.Models
         public bool IsComplementary { get; set; }
 
         /// <summary>
+        /// Flag indicating that the relation is archived.
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
         /// Timespan of the relation.
         /// </summary>
         [StringLength(30)]
