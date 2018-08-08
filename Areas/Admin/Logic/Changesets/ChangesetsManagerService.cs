@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
+using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -103,6 +105,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             var chg = await _db.Changes
                                .AsNoTracking()
                                .Include(x => x.Author)
+                               .Include(x => x.EditedMedia)
                                .GetAsync(x => x.Id == id, "Правка не найдена");
 
             var renderer = _renderers[chg.Type];
@@ -115,6 +118,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 Author = chg.Author.FirstName + " " + chg.Author.LastName,
                 Date = chg.Date,
                 Type = GetChangeType(chg),
+                ThumbnailUrl = chg.EditedMedia != null
+                    ? MediaPresenterService.GetSizedMediaPath(chg.EditedMedia.FilePath, MediaSize.Small)
+                    : null,
                 Changes = GetDiff(prevData, nextData)
             };
         }

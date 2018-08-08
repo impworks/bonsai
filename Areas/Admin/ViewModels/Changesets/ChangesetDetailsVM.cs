@@ -29,6 +29,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         public ChangesetType Type { get; set; }
 
         /// <summary>
+        /// URL of the thumbnail (for media changesets).
+        /// </summary>
+        public string ThumbnailUrl { get; set; }
+
+        /// <summary>
         /// Changed items.
         /// </summary>
         public IReadOnlyList<ChangeVM> Changes { get; set; }
