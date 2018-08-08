@@ -12,8 +12,15 @@
 
     setupSelectize($('#Location'), locationType);
     setupSelectize($('#Event'), eventType);
-    setupSelectize($('#media-editor-tags-list'), otherTypes, function($s) {
-        var data = JSON.stringify($s[0].selectize.getValue());
+    setupSelectize($('#media-editor-tags-list'), otherTypes, function ($s) {
+        var sel = $s[0].selectize;
+        var result = sel.getValue().map(function(v) {
+            return {
+                PageId: v,
+                ObjectTitle: sel.getItem(v).text()
+            };
+        });
+        var data = JSON.stringify(result);
         $entitiesField.val(data);
     });
 

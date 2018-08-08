@@ -152,9 +152,13 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private string GetEntityTitle(Changeset chg)
         {
-            return chg.EditedPage?.Title
-                   ?? chg.EditedMedia?.Title
-                   ?? chg.EditedRelation.Type.GetEnumDescription();
+            if (chg.EditedPage != null)
+                return chg.EditedPage.Title;
+
+            if (chg.EditedMedia != null)
+                return chg.EditedMedia.Title ?? chg.EditedMedia.Type.GetEnumDescription();
+
+            return chg.EditedRelation.Type.GetEnumDescription();
         }
 
         /// <summary>
@@ -162,8 +166,11 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private string GetEntityThumbnailUrl(Changeset chg)
         {
-            return chg.EditedPage?.MainPhoto?.FilePath
-                   ?? chg.EditedMedia?.FilePath;
+            var file = chg.EditedPage?.MainPhoto?.FilePath ?? chg.EditedMedia?.FilePath;
+            if (file != null)
+                return MediaPresenterService.GetSizedMediaPath(file, MediaSize.Small);
+
+            return null;
         }
 
         /// <summary>

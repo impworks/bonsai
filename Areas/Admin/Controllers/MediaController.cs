@@ -169,7 +169,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 EventItem = GetPageLookup(vm.Event),
                 LocationItem = GetPageLookup(vm.Location),
                 DepictedEntityItems = GetDepictedEntitiesList(),
-                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(vm.FilePath, MediaSize.Medium)
+                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(vm.FilePath, MediaSize.Large)
             };
 
             return View("Editor", vm);
