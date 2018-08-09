@@ -30,6 +30,7 @@ namespace Bonsai.Areas.Admin.Controllers
                     Message = oe.Message
                 });
                 context.Result = Redirect(DefaultActionUrl);
+                context.ExceptionHandled = true;
                 return;
             }
 
