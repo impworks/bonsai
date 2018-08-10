@@ -14,22 +14,27 @@ var gulp = require('gulp'),
 
 var config = {
     vendor: {
-        scripts: [
-            './node_modules/jquery/dist/jquery.js',
-            './node_modules/popper.js/dist/umd/popper.js',
-            './node_modules/bootstrap/dist/js/bootstrap.js',
-            './node_modules/magnific-popup/dist/jquery.magnific-popup.js',
-            './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
-            './node_modules/toastr/toastr.js',
-            './node_modules/selectize/dist/js/standalone/selectize.js',
-            './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-            './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
-            './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
-            './Areas/Common/Libs/jquery-ui.js',
-            './Areas/Common/Libs/gijgo.core.js',
-            './Areas/Common/Libs/gijgo.datepicker.js',
-            './Areas/Common/Libs/throttle.js'
-        ],
+        scripts: {
+            common: [
+                './node_modules/jquery/dist/jquery.js',
+                './node_modules/popper.js/dist/umd/popper.js',
+                './node_modules/bootstrap/dist/js/bootstrap.js',
+                './node_modules/magnific-popup/dist/jquery.magnific-popup.js',
+                './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
+                './node_modules/toastr/toastr.js',
+                './node_modules/selectize/dist/js/standalone/selectize.js',
+                './Areas/Common/Libs/jquery-ui.js',
+                './Areas/Common/Libs/gijgo.core.js',
+                './Areas/Common/Libs/gijgo.datepicker.js',
+                './Areas/Common/Libs/throttle.js'
+            ],
+            admin: [
+                './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+                './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
+                './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
+                './node_modules/vue/dist/vue.js'
+            ]
+        },
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
             './node_modules/gijgo/fonts/*.*'
@@ -119,9 +124,17 @@ gulp.task('content.watch', function() {
 // Vendor tasks
 // ================
 
-gulp.task('vendor.scripts', function () {
-    gulp.src(config.vendor.scripts)
-        .pipe(concatjs('vendor.js'))
+gulp.task('vendor.scripts.common', function () {
+    gulp.src(config.vendor.scripts.common)
+        .pipe(concatjs('vendor-common.js'))
+        //.pipe(minjs({  }))
+        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+        .pipe(gulp.dest(config.assets.scripts));
+});
+
+gulp.task('vendor.scripts.admin', function () {
+    gulp.src(config.vendor.scripts.admin)
+        .pipe(concatjs('vendor-admin.js'))
         //.pipe(minjs({  }))
         .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
         .pipe(gulp.dest(config.assets.scripts));
@@ -132,6 +145,6 @@ gulp.task('vendor.fonts', function() {
         .pipe(gulp.dest(config.assets.fonts));
 });
 
-gulp.task('vendor', ['vendor.scripts', 'vendor.fonts']);
+gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.fonts']);
 
 gulp.task('build', ['vendor', 'content']);
