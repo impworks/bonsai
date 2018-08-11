@@ -12,7 +12,7 @@
 
 <form action="@formAction" method="post">
     <input type="hidden" asp-for="Id" />
-    
+
     <nav>
         <div class="nav nav-tabs" role="tablist">
             <a class="nav-item nav-link active" href="#tab-main" data-toggle="tab" role="tab">Главное</a>
@@ -52,7 +52,7 @@
                     <textarea asp-for="Facts" class="form-control" rows="20"></textarea>
                     <span asp-validation-for="Facts" class="text-danger"></span>
                 </div>
-                
+
                 <div class="form-group col-md-2">
                     <label asp-for="MainPhotoKey">Фото</label>
                     <input type="text" asp-for="MainPhotoKey" class="form-control" />
@@ -62,19 +62,31 @@
         </div>
 
         <div class="tab-pane show" id="tab-aliases" role="tabpanel">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label asp-for="Aliases">Ссылки</label>
-                    @if (Model.Aliases != null)
-                    {
-                         foreach (var alias in Model.Aliases)
-                         {
-                             <input type="text" class="form-control" name="@(nameof(Model.Aliases))" value="@alias"/>
-                         }
-                    }
-                    <span asp-validation-for="Aliases" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="Aliases">Ссылки</label>
+                <input type="hidden" asp-for="Aliases" />
+            </div>
+            <div id="editor-aliases">
+                <div class="form-row" v-for="(alias, idx) in aliases">
+                    <div class="form-group col-md-8">
+                        <div class="input-group">
+                            <input v-model="alias.value" class="form-control" :ref="'value'" v-on:change="refresh" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-danger" title="Удалить" v-on:click="removeAlias(idx)" :disabled="!canRemove">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-outline-secondary" title="Добавить новую ссылку" v-on:click="addAlias">
+                        <i class="fa fa-plus-circle"></i> Добавить
+                    </button>
                 </div>
             </div>
+
+            <span asp-validation-for="Aliases" class="text-danger"></span>
         </div>
     </div>
 

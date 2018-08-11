@@ -37,11 +37,12 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             var result = new List<ChangePropertyValue>();
             var isEmpty = string.IsNullOrEmpty(json);
             var data = JsonConvert.DeserializeObject<PageEditorVM>(StringHelper.Coalesce(json, "{}"));
+            var aliases = JsonConvert.DeserializeObject<string[]>(data.Aliases ?? "[]");
 
             Add("Название", data.Title);
             Add("Тип", isEmpty ? null :  data.Type.GetEnumDescription());
             Add("Текст", data.Description);
-            Add("Псевдонимы", data.Aliases == null ? null : ViewHelper.RenderBulletList(_html, data.Aliases));
+            Add("Псевдонимы", data.Aliases == null ? null : ViewHelper.RenderBulletList(_html, aliases));
 
             // todo: facts!
 

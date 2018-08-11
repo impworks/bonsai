@@ -261,6 +261,8 @@ namespace Bonsai.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
+                    b.Property<int>("Order");
+
                     b.Property<Guid?>("PageId")
                         .IsRequired();
 

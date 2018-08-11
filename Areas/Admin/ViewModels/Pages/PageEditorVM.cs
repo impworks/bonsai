@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AutoMapper;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
 {
@@ -49,7 +49,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// <summary>
         /// Aliases for current page.
         /// </summary>
-        public ICollection<string> Aliases { get; set; }
+        public string Aliases { get; set; }
 
         public void Configure(IProfileExpression profile)
         {
@@ -59,8 +59,8 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
                    .MapMember(x => x.Type, x => x.Type)
                    .MapMember(x => x.Description, x => x.Description)
                    .MapMember(x => x.Facts, x => x.Facts)
-                   .MapMember(x => x.Aliases, x => x.Aliases.Select(y => y.Key).ToList())
-                   .MapMember(x => x.MainPhotoKey, x => x.MainPhoto.Key);
+                   .MapMember(x => x.MainPhotoKey, x => x.MainPhoto.Key)
+                   .MapMember(x => x.Aliases, x => JsonConvert.SerializeObject(x.Aliases.OrderBy(y => y.Order).Select(y => y.Title)));
 
             profile.CreateMap<PageEditorVM, Page>()
                    .MapMember(x => x.Id, x => x.Id)
