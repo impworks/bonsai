@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Code.DomainModel.Facts;
+using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -144,8 +147,21 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private ActionResult ViewEditorForm(PageEditorVM vm)
         {
-            ViewBag.PageTypes = ViewHelper.GetEnumSelectList(vm.Type);
-            ViewBag.IsNew = vm.Id == Guid.Empty;
+            var editorTpls = FactDefinitions.Groups
+                                       .SelectMany(x => x.Value)
+                                       .SelectMany(x => x.Facts)
+                                       .Select(x => x.Kind)
+                                       .Distinct()
+                                       .Select(x => (Activator.CreateInstance(x) as FactModelBase).EditTemplatePath)
+                                       .ToList();
+
+            ViewBag.Data = new PageEditorDataVM
+            {
+                IsNew = vm.Id == Guid.Empty,
+                PageTypes = ViewHelper.GetEnumSelectList(vm.Type),
+                FactGroups = FactDefinitions.Groups,
+                EditorTemplates = editorTpls
+            };
 
             return View("Editor", vm);
         }

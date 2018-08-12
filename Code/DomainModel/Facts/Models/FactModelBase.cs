@@ -21,7 +21,7 @@ namespace Bonsai.Code.DomainModel.Facts.Models
         /// <summary>
         /// Returns the path for editor template.
         /// </summary>
-        public string EditTemplatePath => GetTemplatePath("~/Areas/Admin/Views/Editor/Facts/");
+        public string EditTemplatePath => GetTemplatePath("~/Areas/Admin/Views/Pages/Facts/");
 
         /// <summary>
         /// Flag indicating that the current fact does not contain valuable information

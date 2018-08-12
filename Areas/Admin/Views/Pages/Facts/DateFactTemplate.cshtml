@@ -1,0 +1,16 @@
+﻿<script type="text/template" id="DateFactModel">
+    <h3>
+        {{def.Name}}
+        <button type="button" class="btn btn-outline-secondary" v-if="data[def.Key] == null" title="Указать факт">
+            <i class="fa fa-plus"></i>
+        </button>
+    </h3>
+    <div v-if="data[def.Key] != null">
+        <div class="form-inline">
+            <input type="text" v-model="data[def.Key].Value" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
+            <button type="button" class="btn btn-outline-danger" v-on:click="unset(data, def.Key)" title="Удалить факт">
+                <i class="fa fa-remove"></i>
+            </button>
+        </div>
+    </div>
+</script>
