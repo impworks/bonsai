@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Bonsai.Code.DomainModel.Facts;
-using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
@@ -23,7 +22,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// <summary>
         /// Known groups of facts.
         /// </summary>
-        public IReadOnlyDictionary<PageType, FactDefinitionGroup[]> FactGroups { get; set; }
+        public IEnumerable<FactDefinitionGroup> FactGroups { get; set; }
 
         /// <summary>
         /// List of editor template files.

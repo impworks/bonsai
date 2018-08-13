@@ -46,9 +46,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("create")]
-        public async Task<ActionResult> Create()
+        public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
         {
-            return ViewEditorForm(new PageEditorVM {Type = PageType.Person});
+            return ViewEditorForm(new PageEditorVM {Type = type});
         }
 
         /// <summary>
@@ -147,19 +147,27 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private ActionResult ViewEditorForm(PageEditorVM vm)
         {
-            var editorTpls = FactDefinitions.Groups
-                                       .SelectMany(x => x.Value)
-                                       .SelectMany(x => x.Facts)
-                                       .Select(x => x.Kind)
-                                       .Distinct()
-                                       .Select(x => (Activator.CreateInstance(x) as FactModelBase).EditTemplatePath)
-                                       .ToList();
+            var groups = new[] // FactDefinitions.Groups[vm.Type]
+            {
+                new FactDefinitionGroup(
+                    "Birth",
+                    "Рождение",
+                    true,
+                    new FactDefinition<DateFactModel>("Date", "Дата рождения", "Дата"),
+                    new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
+                )
+            };
+            var editorTpls = groups.SelectMany(x => x.Facts)
+                                   .Select(x => x.Kind)
+                                   .Distinct()
+                                   .Select(x => (Activator.CreateInstance(x) as FactModelBase).EditTemplatePath)
+                                   .ToList();
 
             ViewBag.Data = new PageEditorDataVM
             {
                 IsNew = vm.Id == Guid.Empty,
                 PageTypes = ViewHelper.GetEnumSelectList(vm.Type),
-                FactGroups = FactDefinitions.Groups,
+                FactGroups = groups,
                 EditorTemplates = editorTpls
             };
 

@@ -1,5 +1,6 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Pages
+@using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 @{
     var data = (PageEditorDataVM) ViewBag.Data;
@@ -13,6 +14,7 @@
 
 <form action="@formAction" method="post">
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Type"/>
 
     <nav>
         <div class="nav nav-tabs" role="tablist">
@@ -32,8 +34,7 @@
 
                 <div class="form-group col-md-4">
                     <label asp-for="Type">Тип</label>
-                    <select asp-for="Type" class="form-control" asp-items="@data.PageTypes"></select>
-                    <span asp-validation-for="Type" class="text-danger"></span>
+                    <input type="text" readonly="readonly" class="form-control-plaintext" value="@Model.Type.GetEnumDescription()" />
                 </div>
             </div>
 
@@ -49,22 +50,15 @@
         <div class="tab-pane show" id="tab-facts" role="tabpanel">
             <div class="form-row">
                 <div class="form-group col-md-10">
-                    <label asp-for="Facts">Факты</label>
                     <input type="hidden" asp-for="Facts" />
                     <div id="editor-facts">
-                        @foreach (var realm in data.FactGroups)
+                        @foreach (var group in data.FactGroups)
                         {
-                            <div class="editor-facts-root" data-type="@realm.Key">
-                                @foreach (var group in realm.Value)
+                            <div class="editor-facts-group">
+                                <h4>@group.Title</h4>
+                                @foreach (var fact in group.Facts)
                                 {
-                                    <div class="editor-facts-group">
-                                        <h2>@group.Title</h2>
-                                        @foreach (var fact in group.Facts)
-                                        {
-                                            <h3>@fact.Title</h3>
-                                            <!-- todo -->
-                                        }
-                                    </div>
+                                    <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@fact.Id'}"></component>
                                 }
                             </div>
                         }
