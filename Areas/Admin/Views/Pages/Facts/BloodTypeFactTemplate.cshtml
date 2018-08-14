@@ -1,0 +1,30 @@
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Impworks.Utils.Format
+<script type="text/x-template" data-kind="fact-template" id="BloodTypeFactModel">
+    <div class="fact-wrapper">
+        <h6>
+            {{def.title}}
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({Type: 'A', Rhesus: null})" title="Указать факт">
+                <i class="fa fa-plus"></i>
+            </button>
+        </h6>
+        <div v-if="!empty()">
+            <div class="form-inline">
+                <select v-model="data[def.key].Type" class="form-control mr-2">
+                    @foreach(var bloodType in EnumHelper.GetEnumDescriptions<BloodType>())
+                    {
+                        <option value="@bloodType.Key">@bloodType.Value</option>
+                    }
+                </select>
+                <select v-model="data[def.key].RhesusFactor" class="form-control mr-2">
+                    <option v-bind:value="null">Неизвестно</option>
+                    <option v-bind:value="true">R+</option>
+                    <option v-bind:value="false">R-</option>
+                </select>
+                <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
+                    <i class="fa fa-remove"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>

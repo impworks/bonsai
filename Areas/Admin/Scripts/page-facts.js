@@ -4,21 +4,60 @@
         return;
     }
 
+    Vue.component('datepicker', {
+        template: '#DatePickerTemplate',
+        props: ['value'],
+
+        mounted: function() {
+            var self = this;
+            var $el = $(self.$el);
+            var $d = setupDatepicker($el);
+            $d.trigger('change')
+              .on('change', function() {
+                    self.$emit('input', this.value);
+                });
+
+            var size = this.$attrs.size;
+            var margin = this.$attrs.margin;
+            if (typeof size !== 'undefined') {
+                $el.addClass('form-control-' + size);
+                $el.closest('.input-group').addClass('input-group-' + size);
+            }
+
+            if (typeof margin !== 'undefined') {
+                $el.closest('.input-group').addClass('mr-' + margin);
+            }
+        },
+
+        watch: {
+            value: function(value) {
+                $(this.$el).val(value);
+            }
+        },
+
+        destroyed: function() {
+            $(this.$el).datepicker('destroy');
+        }
+    });
+
     var $tpls = $("script[data-kind='fact-template']");
     $tpls.each(function (idx, elem) {
-        var $elem = $(elem);
+        var id = $(elem).attr('id');
 
-        Vue.component($elem.attr('id'), {
+        Vue.component(id, {
             props: ['data', 'def'],
-            template: $elem.html(),
+            template: '#' + id,
             methods: {
                 set: function (value) {
                     Vue.set(this.data, this.def.key, value);
                 },
-                unset: function() {
+                add: function (key, value) {
+                    this.data[def.key][key].push(value);
+                },
+                unset: function () {
                     this.set(null);
                 },
-                empty: function() {
+                empty: function () {
                     return this.data[this.def.key] == null;
                 }
             }

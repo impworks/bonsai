@@ -111,6 +111,9 @@
     </div>
 </form>
 
+<script type="text/x-template" id="DatePickerTemplate">
+    <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />
+</script>
 @foreach (var tpl in data.EditorTemplates)
 {
     Html.RenderPartial(tpl);

@@ -1,0 +1,19 @@
+﻿<script type="text/x-template" data-kind="fact-template" id="AnnotatedDateFactModel">
+    <div class="fact-wrapper">
+        <h6>
+            {{def.title}}
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({Title: '', Value: ''})" title="Указать факт">
+                <i class="fa fa-plus"></i>
+            </button>
+        </h6>
+        <div v-if="!empty()">
+            <div class="form-inline">
+                <input type="text" v-model="data[def.key].Title" class="form-control form-control-sm mr-2" placeholder="Описание" />
+                <datepicker v-model="data[def.key].Value" class="form-control-sm mr-2"></datepicker>
+                <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
+                    <i class="fa fa-remove"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>

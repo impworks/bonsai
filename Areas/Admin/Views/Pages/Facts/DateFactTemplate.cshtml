@@ -1,4 +1,4 @@
-﻿<script type="text/template" data-kind="fact-template" id="DateFactModel">
+﻿<script type="text/x-template" data-kind="fact-template" id="DateFactModel">
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
@@ -8,7 +8,7 @@
         </h6>
         <div v-if="!empty()">
             <div class="form-inline">
-                <input type="text" v-model="data[def.key].Value" class="form-control form-control-sm mr-2 datepicker" placeholder="ГГГГ.ММ.ДД" />
+                <datepicker v-model="data[def.key].Value" size="sm" margin="2"></datepicker>
                 <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
                     <i class="fa fa-remove"></i>
                 </button>

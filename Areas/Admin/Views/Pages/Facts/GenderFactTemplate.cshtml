@@ -1,0 +1,21 @@
+﻿<script type="text/x-template" data-kind="fact-template" id="GenderFactModel">
+    <div class="fact-wrapper">
+        <h6>
+            {{def.title}}
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({IsMale: true})" title="Указать факт">
+                <i class="fa fa-plus"></i>
+            </button>
+        </h6>
+        <div v-if="!empty()">
+            <div class="form-inline">
+                <select v-model="data[def.key].IsMale" class="form-control mr-2">
+                    <option v-bind:value="true">Мужской</option>
+                    <option v-bind:value="false">Женский</option>
+                </select>
+                <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
+                    <i class="fa fa-remove"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
