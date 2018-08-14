@@ -114,6 +114,13 @@
 <script type="text/x-template" id="DatePickerTemplate">
     <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />
 </script>
+<script type="text/x-template" id="DurationPickerTemplate">
+    <div>
+        <datepicker v-model="start" :size="size" title="Начало"></datepicker>
+        &mdash;
+        <datepicker v-model="end" :size="size" :margin="margin" title="Конец"></datepicker>
+    </div>
+</script>
 @foreach (var tpl in data.EditorTemplates)
 {
     Html.RenderPartial(tpl);

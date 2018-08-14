@@ -9,7 +9,7 @@
         <div v-if="!empty()">
             <div class="form-inline">
                 <input type="text" v-model="data[def.key].Title" class="form-control form-control-sm mr-2" placeholder="Описание" />
-                <datepicker v-model="data[def.key].Value" class="form-control-sm mr-2"></datepicker>
+                <date-picker v-model="data[def.key].Value" class="form-control-sm mr-2"></date-picker>
                 <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
                     <i class="fa fa-remove"></i>
                 </button>

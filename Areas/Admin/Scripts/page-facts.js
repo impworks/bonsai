@@ -4,9 +4,9 @@
         return;
     }
 
-    Vue.component('datepicker', {
+    Vue.component('date-picker', {
         template: '#DatePickerTemplate',
-        props: ['value'],
+        props: ['value', 'size', 'margin'],
 
         mounted: function() {
             var self = this;
@@ -40,6 +40,32 @@
         }
     });
 
+    Vue.component('duration-picker', {
+        template: '#DurationPickerTemplate',
+        props: ['value', 'size', 'margin'],
+        data: function () {
+            var parts = (this.value || '').split('-');
+            return {
+                value: this.value,
+                start: parts.length === 2 ? parts[0] : null,
+                end: parts.length === 2 ? parts[1] : null
+            };
+        },
+        methods: {
+            refresh: function(start, end) {
+                this.value = start || end ? start + '-' + end : null;
+            }
+        },
+        watch: {
+            start: function(val) {
+                this.refresh(val, this.end);
+            },
+            end: function(val) {
+                this.refresh(this.start, val);
+            }
+        }
+    });
+
     var $tpls = $("script[data-kind='fact-template']");
     $tpls.each(function (idx, elem) {
         var id = $(elem).attr('id');
@@ -52,6 +78,12 @@
                     Vue.set(this.data, this.def.key, value);
                 },
                 add: function (key, value) {
+                    if (typeof this.data[def.key] === 'undefined') {
+                        this.set({});
+                    }
+                    if (typeof this.data[def.key][key] === 'undefined') {
+                        Vue.set(this.data[def.key], key, []);
+                    }
                     this.data[def.key][key].push(value);
                 },
                 unset: function () {
@@ -59,6 +91,11 @@
                 },
                 empty: function () {
                     return this.data[this.def.key] == null;
+                },
+                emptyList: function(key) {
+                    var root = this.data[this.def.key] || {};
+                    var arr = root[key] || [];
+                    return arr.length === 0;
                 }
             }
         });
