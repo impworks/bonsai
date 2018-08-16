@@ -10,7 +10,7 @@
         </h6>
         <div v-if="!empty()">
             <div class="form-inline">
-                <select v-model="data[def.key].Type" class="form-control mr-2">
+                <select v-model="data[def.key].Type" class="form-control form-control-sm mr-2">
                     @foreach(var bloodType in EnumHelper.GetEnumDescriptions<BloodType>())
                     {
                         <option value="@bloodType.Key">@bloodType.Value</option>

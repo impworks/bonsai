@@ -5,7 +5,7 @@
     }
 
     Vue.component('date-picker', {
-        template: '#DatePickerTemplate',
+        template: '#date-picker-template',
         props: ['value', 'size', 'margin'],
 
         mounted: function() {
@@ -17,8 +17,10 @@
                     self.$emit('input', this.value);
                 });
 
-            var size = this.$attrs.size;
-            var margin = this.$attrs.margin;
+            $d.val(this.$props.value || '');
+
+            var size = this.$props.size;
+            var margin = this.$props.margin;
             if (typeof size !== 'undefined') {
                 $el.addClass('form-control-' + size);
                 $el.closest('.input-group').addClass('input-group-' + size);
@@ -41,19 +43,19 @@
     });
 
     Vue.component('duration-picker', {
-        template: '#DurationPickerTemplate',
+        template: '#duration-picker-template',
         props: ['value', 'size', 'margin'],
         data: function () {
-            var parts = (this.value || '').split('-');
+            var parts = (this.$props.value || '').split('-');
             return {
-                value: this.value,
                 start: parts.length === 2 ? parts[0] : null,
                 end: parts.length === 2 ? parts[1] : null
             };
         },
         methods: {
             refresh: function(start, end) {
-                this.value = start || end ? start + '-' + end : null;
+                this.value = start || end ? (start || '') + '-' + (end || '') : null;
+                this.$emit('input', this.value);
             }
         },
         watch: {
@@ -77,12 +79,12 @@
                 set: function (value) {
                     Vue.set(this.data, this.def.key, value);
                 },
-                add: function (key, value) {
+                add: function (value) {
                     if (typeof this.data[def.key] === 'undefined') {
                         this.set({});
                     }
-                    if (typeof this.data[def.key][key] === 'undefined') {
-                        Vue.set(this.data[def.key], key, []);
+                    if (typeof this.data[def.key]['Values'] === 'undefined') {
+                        Vue.set(this.data[def.key], 'Values', []);
                     }
                     this.data[def.key][key].push(value);
                 },
@@ -92,19 +94,30 @@
                 empty: function () {
                     return this.data[this.def.key] == null;
                 },
-                emptyList: function(key) {
+                emptyList: function() {
+                    return this.getList().length === 0;
+                },
+                getList: function() {
                     var root = this.data[this.def.key] || {};
-                    var arr = root[key] || [];
-                    return arr.length === 0;
+                    return root['Values'] || [];
                 }
             }
         });
     });
 
+    var globalData = JSON.parse($facts.val() || '{}');
     var editor = new Vue({
         el: '#editor-facts',
         data: {
-            data: JSON.parse($facts.val() || '{}')
+            data: globalData
+        },
+        watch: {
+            data: {
+                deep: true,
+                handler: function() {
+                    $facts.val(JSON.stringify(globalData));
+                }
+            }
         }
     });
 });

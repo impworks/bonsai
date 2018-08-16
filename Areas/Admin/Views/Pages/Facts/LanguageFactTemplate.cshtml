@@ -1,4 +1,6 @@
-﻿<script type="text/x-template" data-kind="fact-template" id="HumanNameFactModel">
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Impworks.Utils.Format
+<script type="text/x-template" data-kind="fact-template" id="LanguageFactModel">
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
@@ -8,9 +10,14 @@
         </h6>
         <div v-if="!emptyList()" v-for="row in getList()" class="fact-list">
             <div class="form-inline fact-list-item">
-                <input type="text" v-model="row.LastName" class="form-control form-control-sm mr-2" placeholder="Фамилия" />
-                <input type="text" v-model="row.FirstName" class="form-control form-control-sm mr-2" placeholder="Имя" />
-                <input type="text" v-model="row.MiddleName" class="form-control form-control-sm mr-2" placeholder="Отчество" />
+                <input type="text" v-model="row.Name" class="form-control form-control-sm mr-2" placeholder="Название" />
+                <select v-model="row.Proficiency" class="form-control form-control-sm mr-2">
+                    <option v-bind:value="null">Не указано</option>
+                    @foreach(var prof in EnumHelper.GetEnumDescriptions<LanguageProficiency>())
+                    {
+                        <option value="@prof.Key">@prof.Value</option>
+                    }
+                </select>
                 <duration-picker v-model="row.Duration" size="sm" margin="2" />
                 <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
                     <i class="fa fa-remove"></i>

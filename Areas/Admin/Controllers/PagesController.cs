@@ -147,16 +147,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private ActionResult ViewEditorForm(PageEditorVM vm)
         {
-            var groups = new[] // FactDefinitions.Groups[vm.Type]
-            {
-                new FactDefinitionGroup(
-                    "Birth",
-                    "Рождение",
-                    true,
-                    new FactDefinition<DateFactModel>("Date", "Дата рождения", "Дата"),
-                    new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
-                )
-            };
+            var groups = FactDefinitions.Groups[vm.Type];
             var editorTpls = groups.SelectMany(x => x.Facts)
                                    .Select(x => x.Kind)
                                    .Distinct()

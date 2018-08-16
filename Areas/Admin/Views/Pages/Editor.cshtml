@@ -58,7 +58,8 @@
                                 <h4>@group.Title</h4>
                                 @foreach (var fact in group.Facts)
                                 {
-                                    <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@fact.Id'}"></component>
+                                    var id = group.Id + "." + fact.Id;
+                                    <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@id'}"></component>
                                 }
                             </div>
                         }
@@ -111,14 +112,14 @@
     </div>
 </form>
 
-<script type="text/x-template" id="DatePickerTemplate">
+<script type="text/x-template" id="date-picker-template">
     <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />
 </script>
-<script type="text/x-template" id="DurationPickerTemplate">
+<script type="text/x-template" id="duration-picker-template">
     <div>
-        <datepicker v-model="start" :size="size" title="Начало"></datepicker>
+        <date-picker v-model="start" v-bind:size="size" title="Начало"></date-picker>
         &mdash;
-        <datepicker v-model="end" :size="size" :margin="margin" title="Конец"></datepicker>
+        <date-picker v-model="end" v-bind:size="size" v-bind:margin="margin" title="Конец"></date-picker>
     </div>
 </script>
 @foreach (var tpl in data.EditorTemplates)
