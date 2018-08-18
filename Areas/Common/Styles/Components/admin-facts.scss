@@ -6,4 +6,28 @@
 
 .fact-wrapper {
     margin-bottom: 1em;
+
+    .fact-list {
+        .row {
+            .fact-list-item {
+                border: 1px #ccc solid;
+                padding-top: 15px;
+                margin-left: 15px;
+            }
+
+            &:not(:first-child) .fact-list-item {
+                border-top: 0;
+            }
+        }
+    }
+}
+
+.form-fact {
+    position: relative;
+
+    .btn-remove-fact {
+        position: absolute;
+        right: 5px;
+        top: 0;
+    }
 }

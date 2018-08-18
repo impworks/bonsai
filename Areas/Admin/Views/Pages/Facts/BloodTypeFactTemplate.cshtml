@@ -8,22 +8,30 @@
                 <i class="fa fa-plus"></i>
             </button>
         </h6>
-        <div v-if="!empty()">
-            <div class="form-inline">
-                <select v-model="data[def.key].Type" class="form-control form-control-sm mr-2">
-                    @foreach(var bloodType in EnumHelper.GetEnumDescriptions<BloodType>())
-                    {
-                        <option value="@bloodType.Key">@bloodType.Value</option>
-                    }
-                </select>
-                <select v-model="data[def.key].RhesusFactor" class="form-control mr-2">
-                    <option v-bind:value="null">Неизвестно</option>
-                    <option v-bind:value="true">R+</option>
-                    <option v-bind:value="false">R-</option>
-                </select>
-                <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
-                    <i class="fa fa-remove"></i>
-                </button>
+        <div v-if="!empty()" class="row">
+            <div class="form form-fact col-sm-8">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Тип</label>
+                        <select v-model="data[def.key].Type" class="form-control form-control-sm mr-2">
+                            @foreach(var bloodType in EnumHelper.GetEnumDescriptions<BloodType>())
+                            {
+                                <option value="@bloodType.Key">@bloodType.Value</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <button type="button" class="btn btn-sm btn-outline-danger btn-remove-fact" v-on:click="unset" title="Удалить факт">
+                            <i class="fa fa-remove"></i>
+                        </button>
+                        <label>Резус</label>
+                        <select v-model="data[def.key].RhesusFactor" class="form-control form-control-sm mr-2">
+                            <option v-bind:value="null">Неизвестно</option>
+                            <option v-bind:value="true">Положительный (R+)</option>
+                            <option v-bind:value="false">Отрицательный (R-)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

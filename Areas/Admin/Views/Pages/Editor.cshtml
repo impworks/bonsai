@@ -116,10 +116,15 @@
     <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />
 </script>
 <script type="text/x-template" id="duration-picker-template">
-    <div>
-        <date-picker v-model="start" v-bind:size="size" title="Начало"></date-picker>
-        &mdash;
-        <date-picker v-model="end" v-bind:size="size" v-bind:margin="margin" title="Конец"></date-picker>
+    <div class="form-row">
+        <div class="form-group col-sm-4">
+            <label>От</label>
+            <date-picker v-model="start" v-bind:size="size"></date-picker>
+        </div>
+        <div class="form-group col-sm-4">
+            <label>До</label>
+            <date-picker v-model="end" v-bind:size="size"></date-picker>
+        </div>
     </div>
 </script>
 @foreach (var tpl in data.EditorTemplates)

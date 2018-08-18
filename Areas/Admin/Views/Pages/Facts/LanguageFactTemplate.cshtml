@@ -8,20 +8,30 @@
                 <i class="fa fa-plus"></i>
             </button>
         </h6>
-        <div v-if="!emptyList()" v-for="row in getList()" class="fact-list">
-            <div class="form-inline fact-list-item">
-                <input type="text" v-model="row.Name" class="form-control form-control-sm mr-2" placeholder="Название" />
-                <select v-model="row.Proficiency" class="form-control form-control-sm mr-2">
-                    <option v-bind:value="null">Не указано</option>
-                    @foreach(var prof in EnumHelper.GetEnumDescriptions<LanguageProficiency>())
-                    {
-                        <option value="@prof.Key">@prof.Value</option>
-                    }
-                </select>
-                <duration-picker v-model="row.Duration" size="sm" margin="2" />
-                <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
-                    <i class="fa fa-remove"></i>
-                </button>
+        <div v-if="!emptyList()" class="fact-list">
+            <div class="row" v-for="row in getList()">
+                <div class="col-sm-8 form form-fact fact-list-item">
+                    <div class="form-row">
+                        <div class="form-group col-sm-8">
+                            <label>Язык</label>
+                            <input type="text" v-model="row.Name" class="form-control form-control-sm mr-2" />
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-fact" v-on:click="remove(row)" title="Удалить факт">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                            <label>Уровень</label>
+                            <select v-model="row.Proficiency" class="form-control form-control-sm mr-2">
+                                <option v-bind:value="null">Не указано</option>
+                                @foreach(var prof in EnumHelper.GetEnumDescriptions<LanguageProficiency>())
+                                {
+                                    <option value="@prof.Key">@prof.Value</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <duration-picker v-model="row.Duration" size="sm" margin="2" />
+                </div>
             </div>
         </div>
     </div>

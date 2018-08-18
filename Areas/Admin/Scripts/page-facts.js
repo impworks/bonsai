@@ -80,13 +80,22 @@
                     Vue.set(this.data, this.def.key, value);
                 },
                 add: function (value) {
-                    if (typeof this.data[def.key] === 'undefined') {
+                    var key = this.def.key;
+                    var v = 'Values';
+                    if (typeof this.data[key] === 'undefined') {
                         this.set({});
                     }
-                    if (typeof this.data[def.key]['Values'] === 'undefined') {
-                        Vue.set(this.data[def.key], 'Values', []);
+                    if (typeof this.data[key][v] === 'undefined') {
+                        Vue.set(this.data[key], v, []);
                     }
-                    this.data[def.key][key].push(value);
+                    this.data[key][v].push(value);
+                },
+                remove: function(elem) {
+                    var array = this.data[this.def.key]['Values'];
+                    var itemId = array.indexOf(elem);
+                    if (itemId !== -1) {
+                        array.splice(itemId, 1);
+                    }
                 },
                 unset: function () {
                     this.set(null);
