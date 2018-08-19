@@ -8,11 +8,11 @@
         </h6>
         <div v-if="!empty()">
             <div class="form-inline">
-                <select v-model="data[def.key].IsMale" class="form-control mr-2">
+                <select v-model="data[def.key].IsMale" class="form-control form-control-sm mr-2">
                     <option v-bind:value="true">Мужской</option>
                     <option v-bind:value="false">Женский</option>
                 </select>
-                <button type="button" class="btn btn-outline-danger" v-on:click="unset" title="Удалить факт">
+                <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="unset" title="Удалить факт">
                     <i class="fa fa-remove"></i>
                 </button>
             </div>

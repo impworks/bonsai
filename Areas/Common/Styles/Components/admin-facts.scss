@@ -20,6 +20,19 @@
             }
         }
     }
+
+    .fact-long {
+        display: flex;
+        flex-direction: row;
+
+        input.form-control {
+            flex-grow: 1;
+        }
+
+        .btn-remove-fact {
+            flex-shrink: 1;
+        }
+    }
 }
 
 .form-fact {
