@@ -51,19 +51,26 @@
             <div class="form-row">
                 <div class="form-group col-md-10">
                     <input type="hidden" asp-for="Facts" />
-                    <div id="editor-facts">
-                        @foreach (var group in data.FactGroups)
-                        {
-                            <div class="editor-facts-group">
-                                <h4>@group.Title</h4>
-                                @foreach (var fact in group.Facts)
-                                {
-                                    var id = group.Id + "." + fact.Id;
-                                    <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@id'}"></component>
-                                }
-                            </div>
-                        }
-                    </div>
+                    @if (data.FactGroups.Any())
+                    {
+                        <div id="editor-facts">
+                            @foreach (var group in data.FactGroups)
+                            {
+                                <div class="editor-facts-group">
+                                    <h4>@group.Title</h4>
+                                    @foreach (var fact in group.Facts)
+                                    {
+                                        var id = group.Id + "." + fact.Id;
+                                        <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@id'}"></component>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Для данного типа страницы указание фактов недоступно.</p>
+                    }
                     <span asp-validation-for="Facts" class="text-danger"></span>
                 </div>
 
