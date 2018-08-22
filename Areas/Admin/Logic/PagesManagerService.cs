@@ -147,12 +147,18 @@ namespace Bonsai.Areas.Admin.Logic
             page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
 
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id).ConfigureAwait(false);
+
+            var aliasValues = JsonConvert.DeserializeObject<List<string>>(vm.Aliases ?? "[]");
+            if(!aliasValues.Contains(vm.Title))
+                aliasValues.Add(vm.Title);
+
             _db.PageAliases.AddRange(
-                vm.Aliases.Select(x => new PageAlias
+                aliasValues.Select((x, idx) => new PageAlias
                 {
                     Id = Guid.NewGuid(),
                     Key = PageHelper.EncodeTitle(x),
                     Page = page,
+                    Order = idx,
                     Title = x
                 })
             );
@@ -227,6 +233,9 @@ namespace Bonsai.Areas.Admin.Logic
             if (otherPage)
                 val.Add(nameof(PageEditorVM.Title), "Страница с таким названием уже существует.");
 
+            if (!IsDeserializable<string[]>(vm.Aliases))
+                val.Add(nameof(PageEditorVM.Aliases), "Псевдонимы указаны неверно!");
+
             val.ThrowIfInvalid();
         }
 
@@ -272,6 +281,25 @@ namespace Bonsai.Areas.Admin.Logic
                 throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), "Медиа-файл не является фотографией!");
 
             return media;
+        }
+
+        /// <summary>
+        /// Checks if the serialized field contains valid data.
+        /// </summary>
+        private bool IsDeserializable<T>(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return true;
+
+            try
+            {
+                JsonConvert.DeserializeObject<T>(value);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion

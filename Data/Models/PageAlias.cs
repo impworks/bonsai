@@ -28,6 +28,11 @@ namespace Bonsai.Data.Models
         public string Key { get; set; }
 
         /// <summary>
+        /// Order of the fact in editor.
+        /// </summary>
+        public int Order { get; set; }
+
+        /// <summary>
         /// Related page.
         /// </summary>
         public Page Page { get; set; }

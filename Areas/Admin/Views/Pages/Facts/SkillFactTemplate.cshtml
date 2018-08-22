@@ -1,0 +1,38 @@
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Impworks.Utils.Format
+<script type="text/x-template" data-kind="fact-template" id="SkillFactModel">
+    <div class="fact-wrapper">
+        <h6>
+            {{def.title}}
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({})" title="Указать факт">
+                <i class="fa fa-plus"></i>
+            </button>
+        </h6>
+        <div v-if="!emptyList()" class="fact-list">
+            <div class="row" v-for="row in getList()">
+                <div class="col-sm-8 form form-fact fact-list-item">
+                    <div class="form-row">
+                        <div class="form-group col-sm-8">
+                            <label>Название</label>
+                            <input type="text" v-model="row.Name" class="form-control form-control-sm mr-2" />
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-fact" v-on:click="remove(row)" title="Удалить факт">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                            <label>Уровень</label>
+                            <select v-model="row.Proficiency" class="form-control form-control-sm mr-2">
+                                <option v-bind:value="null">Не указано</option>
+                                @foreach(var prof in EnumHelper.GetEnumDescriptions<SkillProficiency>())
+                                {
+                                    <option value="@prof.Key">@prof.Value</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <duration-picker v-model="row.Duration" size="sm" margin="2" />
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

@@ -12,7 +12,7 @@ using System;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180806182444_Initial")]
+    [Migration("20180811160233_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -261,6 +261,8 @@ namespace Bonsai.Data.Migrations
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(200);
+
+                    b.Property<int>("Order");
 
                     b.Property<Guid?>("PageId")
                         .IsRequired();

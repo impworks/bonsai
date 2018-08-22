@@ -1,0 +1,34 @@
+﻿<script type="text/x-template" data-kind="fact-template" id="HumanNameFactModel">
+    <div class="fact-wrapper">
+        <h6>
+            {{def.title}}
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({})" title="Указать факт">
+                <i class="fa fa-plus"></i>
+            </button>
+        </h6>
+        <div v-if="!emptyList()" class="fact-list">
+            <div class="row" v-for="row in getList()">
+                <div class="col-sm-8 form form-fact fact-list-item">
+                    <div class="form-row">
+                        <div class="form-group col-sm-4">
+                            <label>Фамилия</label>
+                            <input type="text" v-model="row.LastName" class="form-control form-control-sm mr-2" />
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Имя</label>
+                            <input type="text" v-model="row.FirstName" class="form-control form-control-sm mr-2" placeholder="Имя" />
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-fact" v-on:click="remove(row)" title="Удалить факт">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                            <label>Отчество</label>
+                            <input type="text" v-model="row.MiddleName" class="form-control form-control-sm mr-2" placeholder="Отчество" />
+                        </div>
+                    </div>
+                    <duration-picker v-model="row.Duration" size="sm" />
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

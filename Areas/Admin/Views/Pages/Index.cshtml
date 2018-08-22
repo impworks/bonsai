@@ -1,6 +1,8 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Areas.Admin.ViewModels.Pages
+@using Bonsai.Data.Models
 @using Humanizer
+@using Impworks.Utils.Format
 @addTagHelper *, Bonsai
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model PagesListVM
@@ -15,11 +17,19 @@
 
 <div class="clearfix">
     <div class="float-left">
-        <a class="btn btn-outline-secondary" href="@Url.Action("Create", "Pages", new {area = "Admin"})" title="Создать новую страницу">
-            <span class="fa fa-plus-circle"></span>
-            Создать
-        </a>
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="Создать новую страницу">
+                <span class="fa fa-plus-circle"></span>
+                Создать
+            </button>
+            <div class="dropdown-menu">
+                @foreach (var elem in EnumHelper.GetEnumDescriptions<PageType>())
+                {
+                    <a href="@Url.Action("Create", "Pages", new {area = "Admin", type = elem.Key})" class="dropdown-item">@elem.Value</a>
+                }
+            </div>
         </div>
+    </div>
     <div class="float-right">
         <form action="@baseUrl" method="GET" class="form-inline">
             @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })

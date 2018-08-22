@@ -1,13 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Code.DomainModel.Facts;
+using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Linq;
+using Impworks.Utils.Dictionary;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -27,6 +35,18 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly PagesManagerService _pages;
         private readonly ElasticService _elastic;
         private readonly AppDbContext _db;
+        
+        /// <summary>
+        /// Readable captions of the fields.
+        /// </summary>
+        private static IDictionary<string, string> FieldCaptions = new Dictionary<string, string>
+        {
+            [nameof(PageEditorVM.Title)] = "Заголовок",
+            [nameof(PageEditorVM.Description)] = "Текст",
+            [nameof(PageEditorVM.Facts)] = "Факты",
+            [nameof(PageEditorVM.Aliases)] = "Ссылки",
+            [nameof(PageEditorVM.MainPhotoKey)] = "Фото",
+        };
 
         /// <summary>
         /// Displays the list of pages.
@@ -43,9 +63,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("create")]
-        public async Task<ActionResult> Create()
+        public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
         {
-            return ViewEditorForm(new PageEditorVM {Type = PageType.Person});
+            return ViewEditorForm(new PageEditorVM {Type = type});
         }
 
         /// <summary>
@@ -89,10 +109,10 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("update")]
-        public async Task<ActionResult> Update(PageEditorVM vm)
+        public async Task<ActionResult> Update(PageEditorVM vm, string tab)
         {
             if(!ModelState.IsValid)
-                return ViewEditorForm(vm);
+                return ViewEditorForm(vm, tab);
 
             try
             {
@@ -106,7 +126,7 @@ namespace Bonsai.Areas.Admin.Controllers
             catch (ValidationException ex)
             {
                 SetModelState(ex);
-                return ViewEditorForm(vm);
+                return ViewEditorForm(vm, tab);
             }
         }
 
@@ -142,10 +162,28 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Displays the editor form.
         /// </summary>
-        private ActionResult ViewEditorForm(PageEditorVM vm)
+        private ActionResult ViewEditorForm(PageEditorVM vm, string tab = null)
         {
-            ViewBag.PageTypes = ViewHelper.GetEnumSelectList(vm.Type);
-            ViewBag.IsNew = vm.Id == Guid.Empty;
+            var groups = FactDefinitions.Groups[vm.Type];
+            var editorTpls = groups.SelectMany(x => x.Facts)
+                                   .Select(x => x.Kind)
+                                   .Distinct()
+                                   .Select(x => (Activator.CreateInstance(x) as FactModelBase).EditTemplatePath)
+                                   .ToList();
+
+            var errorFields = ModelState.Where(x => x.Value.ValidationState == ModelValidationState.Invalid)
+                                        .Select(x => FieldCaptions.TryGetValue(x.Key))
+                                        .JoinString(", ");
+
+            ViewBag.Data = new PageEditorDataVM
+            {
+                IsNew = vm.Id == Guid.Empty,
+                PageTypes = ViewHelper.GetEnumSelectList(vm.Type),
+                FactGroups = groups,
+                EditorTemplates = editorTpls,
+                Tab = StringHelper.Coalesce(tab, "main"),
+                ErrorFields = errorFields
+            };
 
             return View("Editor", vm);
         }

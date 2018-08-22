@@ -76,7 +76,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
             foreach (var page in context.Pages.Values)
             {
                 if(page.BirthDate >= page.DeathDate)
-                    AddViolation("Дата рождения не может быть раньше даты смерти", page.Id);
+                    AddViolation("Дата рождения не может быть позже даты смерти", page.Id);
             }
         }
 
@@ -121,9 +121,10 @@ namespace Bonsai.Areas.Admin.Logic.Validation
 
                 visited[id] = true;
 
-                foreach(var rel in context.Relations[id])
-                    if(rel.Type == RelationType.Parent)
-                        CheckLoopsInternal(rel.DestinationId);
+                if(context.Relations.ContainsKey(id))
+                    foreach(var rel in context.Relations[id])
+                        if(rel.Type == RelationType.Parent)
+                            CheckLoopsInternal(rel.DestinationId);
             }
         }
 

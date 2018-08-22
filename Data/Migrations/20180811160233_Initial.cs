@@ -256,6 +256,7 @@ namespace Bonsai.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    Order = table.Column<int>(type: "int4", nullable: false),
                     PageId = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                 },
