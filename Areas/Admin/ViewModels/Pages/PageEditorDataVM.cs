@@ -33,5 +33,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// Currently active tab.
         /// </summary>
         public string Tab { get; set; }
+
+        /// <summary>
+        /// List of comma-separated fields that contain errors.
+        /// </summary>
+        public string ErrorFields { get; set; }
     }
 }

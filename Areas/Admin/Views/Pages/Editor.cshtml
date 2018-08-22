@@ -1,6 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Pages
-@using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 @{
     var data = (PageEditorDataVM)ViewBag.Data;
@@ -12,10 +11,10 @@
 
 <h1>@ViewBag.Title</h1>
 
-@if(!ViewContext.ViewData.ModelState.IsValid)
+@if(!string.IsNullOrEmpty(data.ErrorFields))
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
-        Не удалось сохранить страницу. Некоторые поля заполнены неверно!
+        Неверно заполнены поля: @data.ErrorFields
         <button type="button" class="close" data-dismiss="alert">
             <span>&times;</span>
         </button>

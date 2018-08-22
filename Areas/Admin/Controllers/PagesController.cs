@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
@@ -10,8 +11,11 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Linq;
+using Impworks.Utils.Dictionary;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -31,6 +35,18 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly PagesManagerService _pages;
         private readonly ElasticService _elastic;
         private readonly AppDbContext _db;
+        
+        /// <summary>
+        /// Readable captions of the fields.
+        /// </summary>
+        private static IDictionary<string, string> FieldCaptions = new Dictionary<string, string>
+        {
+            [nameof(PageEditorVM.Title)] = "Заголовок",
+            [nameof(PageEditorVM.Description)] = "Текст",
+            [nameof(PageEditorVM.Facts)] = "Факты",
+            [nameof(PageEditorVM.Aliases)] = "Ссылки",
+            [nameof(PageEditorVM.MainPhotoKey)] = "Фото",
+        };
 
         /// <summary>
         /// Displays the list of pages.
@@ -155,13 +171,18 @@ namespace Bonsai.Areas.Admin.Controllers
                                    .Select(x => (Activator.CreateInstance(x) as FactModelBase).EditTemplatePath)
                                    .ToList();
 
+            var errorFields = ModelState.Where(x => x.Value.ValidationState == ModelValidationState.Invalid)
+                                        .Select(x => FieldCaptions.TryGetValue(x.Key))
+                                        .JoinString(", ");
+
             ViewBag.Data = new PageEditorDataVM
             {
                 IsNew = vm.Id == Guid.Empty,
                 PageTypes = ViewHelper.GetEnumSelectList(vm.Type),
                 FactGroups = groups,
                 EditorTemplates = editorTpls,
-                Tab = StringHelper.Coalesce(tab, "main")
+                Tab = StringHelper.Coalesce(tab, "main"),
+                ErrorFields = errorFields
             };
 
             return View("Editor", vm);
