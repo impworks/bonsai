@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -16,6 +18,7 @@ using Impworks.Utils.Dictionary;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -65,7 +68,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("create")]
         public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
         {
-            return ViewEditorForm(new PageEditorVM {Type = type});
+            return await ViewEditorFormAsync(new PageEditorVM {Type = type});
         }
 
         /// <summary>
@@ -76,7 +79,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Create(PageEditorVM vm)
         {
             if(!ModelState.IsValid)
-                return ViewEditorForm(vm);
+                return await ViewEditorFormAsync(vm);
 
             try
             {
@@ -89,7 +92,7 @@ namespace Bonsai.Areas.Admin.Controllers
             catch (ValidationException ex)
             {
                 SetModelState(ex);
-                return ViewEditorForm(vm);
+                return await ViewEditorFormAsync(vm);
             }
         }
 
@@ -101,7 +104,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Update(Guid id)
         {
             var vm = await _pages.RequestUpdateAsync(id);
-            return ViewEditorForm(vm);
+            return await ViewEditorFormAsync(vm);
         }
 
         /// <summary>
@@ -112,7 +115,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Update(PageEditorVM vm, string tab)
         {
             if(!ModelState.IsValid)
-                return ViewEditorForm(vm, tab);
+                return await ViewEditorFormAsync(vm, tab);
 
             try
             {
@@ -126,7 +129,7 @@ namespace Bonsai.Areas.Admin.Controllers
             catch (ValidationException ex)
             {
                 SetModelState(ex);
-                return ViewEditorForm(vm, tab);
+                return await ViewEditorFormAsync(vm, tab);
             }
         }
 
@@ -162,7 +165,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Displays the editor form.
         /// </summary>
-        private ActionResult ViewEditorForm(PageEditorVM vm, string tab = null)
+        private async Task<ActionResult> ViewEditorFormAsync(PageEditorVM vm, string tab = null)
         {
             var groups = FactDefinitions.Groups[vm.Type];
             var editorTpls = groups.SelectMany(x => x.Facts)
@@ -175,6 +178,8 @@ namespace Bonsai.Areas.Admin.Controllers
                                         .Select(x => FieldCaptions.TryGetValue(x.Key))
                                         .JoinString(", ");
 
+            var photoThumbUrl = await GetMainPhotoThumbnailUrlAsync(vm.MainPhotoKey);
+
             ViewBag.Data = new PageEditorDataVM
             {
                 IsNew = vm.Id == Guid.Empty,
@@ -182,10 +187,30 @@ namespace Bonsai.Areas.Admin.Controllers
                 FactGroups = groups,
                 EditorTemplates = editorTpls,
                 Tab = StringHelper.Coalesce(tab, "main"),
-                ErrorFields = errorFields
+                ErrorFields = errorFields,
+                MainPhotoThumbnailUrl = photoThumbUrl
             };
 
             return View("Editor", vm);
+        }
+
+        /// <summary>
+        /// Returns the thumbnail preview for a photo.
+        /// </summary>
+        private async Task<string> GetMainPhotoThumbnailUrlAsync(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+                return null;
+
+            var path = await _db.Media
+                                .Where(x => x.Key == key && x.Type == MediaType.Photo)
+                                .Select(x => x.FilePath)
+                                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(path))
+                return null;
+
+            return MediaPresenterService.GetSizedMediaPath(path, MediaSize.Small);
         }
 
         #endregion
