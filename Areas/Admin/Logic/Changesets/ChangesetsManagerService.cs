@@ -62,8 +62,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                          || x.EditedMediaId == request.EntityId
                                          || x.EditedRelationId == request.EntityId);
 
-            var totalCount = await query.CountAsync()
-                                        .ConfigureAwait(false);
+            var totalCount = await query.CountAsync();
 
             if (request.OrderBy == nameof(Changeset.Author))
                 query = query.OrderBy(x => x.Author.UserName, request.OrderDescending);
@@ -72,8 +71,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             var changesets = await query.Skip(PageSize * request.Page)
                                    .Take(PageSize)
-                                   .ToListAsync()
-                                   .ConfigureAwait(false);
+                                   .ToListAsync();
 
             var items = changesets.Select(x => new ChangesetTitleVM
                                   {

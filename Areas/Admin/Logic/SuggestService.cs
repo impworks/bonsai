@@ -33,7 +33,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestPagesAsync(string query, IReadOnlyList<PageType> types = null)
         {
-            var search = await _elastic.SearchAutocompleteAsync(query, types, 100).ConfigureAwait(false);
+            var search = await _elastic.SearchAutocompleteAsync(query, types, 100);
 
             var ids = search.Select(x => x.Id).ToList();
             var idsOrder = ids.Select((val, id) => new { Value = val, Index = id })
@@ -42,8 +42,7 @@ namespace Bonsai.Areas.Admin.Logic
             var pages = await _db.Pages
                                  .Where(x => ids.Contains(x.Id))
                                  .ProjectTo<PageTitleExtendedVM>()
-                                 .ToListAsync()
-                                 .ConfigureAwait(false);
+                                 .ToListAsync();
 
             // URL is global for easier usage in JSON
             foreach (var page in pages)

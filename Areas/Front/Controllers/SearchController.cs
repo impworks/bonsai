@@ -30,7 +30,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("~/util/search/{*query}")]
         public async Task<IReadOnlyList<PageTitleVM>> Autocomplete(string query)
         {
-            var hints = await _search.SearchAutocompleteAsync(query).ConfigureAwait(false);
+            var hints = await _search.SearchAutocompleteAsync(query);
             return hints;
         }
 
@@ -41,7 +41,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("")]
         public async Task<ActionResult> Search([FromQuery] string query)
         {
-            var results = await _search.SearchAsync(query).ConfigureAwait(false);
+            var results = await _search.SearchAsync(query);
             var vm = new SearchVM {Query = query, Results = results};
             return View(vm);
         }
@@ -53,7 +53,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("results")]
         public async Task<ActionResult> SearchResults([FromQuery] string query, [FromQuery] int page = 0)
         {
-            var results = await _search.SearchAsync(query, Math.Max(0, page)).ConfigureAwait(false);
+            var results = await _search.SearchAsync(query, Math.Max(0, page));
 
             if(results.Count > 0)
                 return View(results);

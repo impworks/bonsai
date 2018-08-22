@@ -36,7 +36,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Index(RelationsListRequestVM request)
         {
-            var rels = await _rels.GetRelationsAsync(request).ConfigureAwait(false);
+            var rels = await _rels.GetRelationsAsync(request);
             return View(rels);
         }
 
@@ -47,7 +47,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("create")]
         public async Task<ActionResult> Create()
         {
-            return await ViewEditorFormAsync(new RelationEditorVM { Type = RelationType.Child }).ConfigureAwait(false);
+            return await ViewEditorFormAsync(new RelationEditorVM { Type = RelationType.Child });
         }
 
         /// <summary>
@@ -58,19 +58,19 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Create(RelationEditorVM vm)
         {
             if(!ModelState.IsValid)
-                return await ViewEditorFormAsync(vm).ConfigureAwait(false);
+                return await ViewEditorFormAsync(vm);
 
             try
             {
-                await _rels.CreateAsync(vm, User).ConfigureAwait(false);
-                await _db.SaveChangesAsync().ConfigureAwait(false);
+                await _rels.CreateAsync(vm, User);
+                await _db.SaveChangesAsync();
 
                 return RedirectToSuccess("Связь создана");
             }
             catch(ValidationException ex)
             {
                 SetModelState(ex);
-                return await ViewEditorFormAsync(vm).ConfigureAwait(false);
+                return await ViewEditorFormAsync(vm);
             }
         }
 
@@ -81,8 +81,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("update")]
         public async Task<ActionResult> Update(Guid id)
         {
-            var vm = await _rels.RequestUpdateAsync(id).ConfigureAwait(false);
-            return await ViewEditorFormAsync(vm).ConfigureAwait(false);
+            var vm = await _rels.RequestUpdateAsync(id);
+            return await ViewEditorFormAsync(vm);
         }
 
         /// <summary>
@@ -97,15 +97,15 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                await _rels.UpdateAsync(vm, User).ConfigureAwait(false);
-                await _db.SaveChangesAsync().ConfigureAwait(false);
+                await _rels.UpdateAsync(vm, User);
+                await _db.SaveChangesAsync();
 
                 return RedirectToSuccess("Связь обновлена");
             }
             catch(ValidationException ex)
             {
                 SetModelState(ex);
-                return await ViewEditorFormAsync(vm).ConfigureAwait(false);
+                return await ViewEditorFormAsync(vm);
             }
         }
 
@@ -127,8 +127,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(Guid id, bool confirm)
         {
-            await _rels.RemoveAsync(id, User).ConfigureAwait(false);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            await _rels.RemoveAsync(id, User);
+            await _db.SaveChangesAsync();
 
             return RedirectToSuccess("Связь удалена");
         }
@@ -150,8 +150,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private async Task<ActionResult> ViewEditorFormAsync(RelationEditorVM vm)
         {
-            var pageLookup = await _pages.FindPagesByIdsAsync(new[] {vm.SourceId, vm.DestinationId, vm.EventId})
-                                         .ConfigureAwait(false);
+            var pageLookup = await _pages.FindPagesByIdsAsync(new[] {vm.SourceId, vm.DestinationId, vm.EventId});
 
             ViewBag.Data = new RelationEditorDataVM
             {

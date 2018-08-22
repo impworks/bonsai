@@ -52,8 +52,8 @@ namespace Bonsai.Code.Services
 
             var body = Markdown.ToHtml(markdown, _render);
 
-            body = await ProcessMediaAsync(body).ConfigureAwait(false);
-            body = await ProcessLinksAsync(body).ConfigureAwait(false);
+            body = await ProcessMediaAsync(body);
+            body = await ProcessLinksAsync(body);
 
             return body;
         }
@@ -88,8 +88,7 @@ namespace Bonsai.Code.Services
             var existingMedia = await _db.Media
                                          .AsNoTracking()
                                          .Where(x => keys.Values.Contains(x.Id))
-                                         .ToDictionaryAsync(x => x.Key, x => x.FilePath)
-                                         .ConfigureAwait(false);
+                                         .ToDictionaryAsync(x => x.Key, x => x.FilePath);
 
             string Wrapper(string classes, string body) => $@"<div class=""media-wrapper-inline {classes}"">{body}</div>";
 
@@ -134,8 +133,7 @@ namespace Bonsai.Code.Services
             var existingPages = await _db.Pages
                                          .AsNoTracking()
                                          .Where(x => keys.Values.Contains(x.Key))
-                                         .ToDictionaryAsync(x => x.Key, x => true)
-                                         .ConfigureAwait(false);
+                                         .ToDictionaryAsync(x => x.Key, x => true);
 
             return LinkRegex.Replace(html, m =>
             {

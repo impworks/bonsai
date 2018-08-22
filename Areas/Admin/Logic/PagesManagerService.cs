@@ -56,16 +56,14 @@ namespace Bonsai.Areas.Admin.Logic
             if (request.Types?.Length > 0)
                 query = query.Where(x => request.Types.Contains(x.Type));
 
-            var totalCount = await query.CountAsync()
-                                        .ConfigureAwait(false);
+            var totalCount = await query.CountAsync();
 
             var items = await query.Where(x => x.IsDeleted == false)
                                    .OrderBy(request.OrderBy, request.OrderDescending)
                                    .ProjectTo<PageTitleExtendedVM>()
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
-                                   .ToListAsync()
-                                   .ConfigureAwait(false);
+                                   .ToListAsync();
 
             return new PagesListVM
             {
@@ -84,8 +82,7 @@ namespace Bonsai.Areas.Admin.Logic
                             .Include(x => x.MainPhoto)
                             .Where(x => pages.Any(y => x.Id == y) && x.IsDeleted == false)
                             .ProjectTo<PageTitleExtendedVM>()
-                            .ToDictionaryAsync(x => x.Id, x => x)
-                            .ConfigureAwait(false);
+                            .ToDictionaryAsync(x => x.Id, x => x);
         }
         
         /// <summary>
@@ -93,16 +90,16 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<Page> CreateAsync(PageEditorVM vm, ClaimsPrincipal principal)
         {
-            await ValidateRequestAsync(vm).ConfigureAwait(false);
+            await ValidateRequestAsync(vm);
 
             var page = _mapper.Map<Page>(vm);
             page.Id = Guid.NewGuid();
             page.CreationDate = DateTimeOffset.Now;
-            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
+            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey);
 
-            await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
+            await _validator.ValidateAsync(page, vm.Facts);
 
-            var changeset = await GetChangesetAsync(null, vm, page.Id, principal).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(null, vm, page.Id, principal);
             _db.Changes.Add(changeset);
 
             _db.Pages.Add(page);
@@ -121,8 +118,7 @@ namespace Bonsai.Areas.Admin.Logic
                                 .Include(x => x.MainPhoto)
                                 .Include(x => x.Relations)
                                 .Include(x => x.Aliases)
-                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена")
-                                .ConfigureAwait(false);
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
 
             return _mapper.Map<Page, PageEditorVM>(page);
         }
@@ -132,21 +128,20 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
         {
-            await ValidateRequestAsync(vm).ConfigureAwait(false);
+            await ValidateRequestAsync(vm);
 
             var page = await _db.Pages
-                                .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Страница не найдена")
-                                .ConfigureAwait(false);
+                                .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Страница не найдена");
 
-            await _validator.ValidateAsync(page, vm.Facts).ConfigureAwait(false);
+            await _validator.ValidateAsync(page, vm.Facts);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, vm.Id, principal).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, vm.Id, principal);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
-            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey).ConfigureAwait(false);
+            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey);
 
-            await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id).ConfigureAwait(false);
+            await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id);
 
             var aliasValues = JsonConvert.DeserializeObject<List<string>>(vm.Aliases ?? "[]");
             if(!aliasValues.Contains(vm.Title))
@@ -174,8 +169,7 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Pages
                             .Where(x => x.IsDeleted)
                             .ProjectTo<PageTitleExtendedVM>()
-                            .GetAsync(x => x.Id == id, "Страница не найдена")
-                            .ConfigureAwait(false);
+                            .GetAsync(x => x.Id == id, "Страница не найдена");
         }
 
         /// <summary>
@@ -184,11 +178,10 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<Page> RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var page = await _db.Pages
-                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена")
-                                .ConfigureAwait(false);
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
 
-            var prev = await RequestUpdateAsync(id).ConfigureAwait(false);
-            var changeset = await GetChangesetAsync(prev, null, id, principal).ConfigureAwait(false);
+            var prev = await RequestUpdateAsync(id);
+            var changeset = await GetChangesetAsync(prev, null, id, principal);
             _db.Changes.Add(changeset);
 
             page.IsDeleted = true;
@@ -227,8 +220,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var key = PageHelper.EncodeTitle(vm.Title);
             var otherPage = await _db.PageAliases
-                                     .AnyAsync(x => x.Key == key && x.Page.Id != vm.Id)
-                                     .ConfigureAwait(false);
+                                     .AnyAsync(x => x.Key == key && x.Page.Id != vm.Id);
 
             if (otherPage)
                 val.Add(nameof(PageEditorVM.Title), "Страница с таким названием уже существует.");
@@ -248,7 +240,7 @@ namespace Bonsai.Areas.Admin.Logic
                 throw new ArgumentNullException();
 
             var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
 
             return new Changeset
             {
@@ -271,8 +263,7 @@ namespace Bonsai.Areas.Admin.Logic
                 return null;
 
             var media = await _db.Media
-                                 .FirstOrDefaultAsync(x => x.Key == key && x.IsDeleted == false)
-                                 .ConfigureAwait(false);
+                                 .FirstOrDefaultAsync(x => x.Key == key && x.IsDeleted == false);
 
             if(media == null)
                 throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), "Фотография не найдена!");

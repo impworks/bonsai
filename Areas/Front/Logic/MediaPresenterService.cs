@@ -42,13 +42,12 @@ namespace Bonsai.Areas.Front.Logic
                                  .Include(x => x.Tags)
                                  .ThenInclude(x => x.Object)
                                  .Where(x => x.IsDeleted == false)
-                                 .FirstOrDefaultAsync(x => x.Id == id)
-                                 .ConfigureAwait(false);
+                                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (media == null)
                 throw new KeyNotFoundException();
 
-            var descr = await _markdown.CompileAsync(media.Description).ConfigureAwait(false);
+            var descr = await _markdown.CompileAsync(media.Description);
 
             return new MediaVM
             {

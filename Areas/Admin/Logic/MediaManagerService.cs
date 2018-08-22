@@ -67,16 +67,14 @@ namespace Bonsai.Areas.Admin.Logic
             if(request.Types?.Length > 0)
                 query = query.Where(x => request.Types.Contains(x.Type));
 
-            var totalCount = await query.CountAsync()
-                                        .ConfigureAwait(false);
+            var totalCount = await query.CountAsync();
 
             var items = await query.Where(x => x.IsDeleted == false)
                                    .OrderBy(request.OrderBy, request.OrderDescending)
                                    .ProjectTo<MediaThumbnailExtendedVM>()
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
-                                   .ToListAsync()
-                                   .ConfigureAwait(false);
+                                   .ToListAsync();
 
             return new MediaListVM
             {
@@ -99,7 +97,7 @@ namespace Bonsai.Areas.Admin.Logic
                 throw new UploadException("Неизвестный тип файла!");
 
             var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
 
             var filePath = await SaveUploadAsync(vm, key, handler);
 
@@ -116,7 +114,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.Media.Add(media);
 
-            var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal);
             _db.Changes.Add(changeset);
 
             return new MediaUploadResultVM
@@ -135,8 +133,7 @@ namespace Bonsai.Areas.Admin.Logic
             var media = await _db.Media
                                  .AsNoTracking()
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден")
-                                 .ConfigureAwait(false);
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
 
             var taggedIds = media.Tags
                                  .Where(x => x.ObjectId != null)
@@ -145,8 +142,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var tagNames = await _db.Pages
                                     .Where(x => taggedIds.Contains(x.Id) && x.IsDeleted == false)
-                                    .ToDictionaryAsync(x => x.Id, x => x.Title)
-                                    .ConfigureAwait(false);
+                                    .ToDictionaryAsync(x => x.Id, x => x.Title);
 
             var vm = _mapper.Map<MediaEditorVM>(media);
             vm.Location = GetTagValue(MediaTagType.Location);
@@ -175,21 +171,20 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task UpdateAsync(MediaEditorVM vm, ClaimsPrincipal principal)
         {
-            await ValidateRequestAsync(vm).ConfigureAwait(false);
+            await ValidateRequestAsync(vm);
 
             var media = await _db.Media
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден")
-                                 .ConfigureAwait(false);
+                                 .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден");
 
-            var prevState = await RequestUpdateAsync(vm.Id).ConfigureAwait(false);
-            var changeset = await GetChangesetAsync(prevState, vm, vm.Id, principal).ConfigureAwait(false);
+            var prevState = await RequestUpdateAsync(vm.Id);
+            var changeset = await GetChangesetAsync(prevState, vm, vm.Id, principal);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, media);
 
             _db.MediaTags.RemoveRange(media.Tags);
-            media.Tags = await DeserializeTagsAsync(vm).ConfigureAwait(false);
+            media.Tags = await DeserializeTagsAsync(vm);
         }
 
         /// <summary>
@@ -210,11 +205,10 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var media = await _db.Media
-                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден")
-                                 .ConfigureAwait(false);
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
 
-            var prevState = await RequestUpdateAsync(id).ConfigureAwait(false);
-            var changeset = await GetChangesetAsync(prevState, null, id, principal).ConfigureAwait(false);
+            var prevState = await RequestUpdateAsync(id);
+            var changeset = await GetChangesetAsync(prevState, null, id, principal);
             _db.Changes.Add(changeset);
 
             media.IsDeleted = true;
@@ -350,7 +344,7 @@ namespace Bonsai.Areas.Admin.Logic
                 throw new ArgumentNullException();
 
             var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
 
             return new Changeset
             {

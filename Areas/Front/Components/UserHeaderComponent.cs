@@ -21,7 +21,7 @@ namespace Bonsai.Areas.Front.Components
         /// </summary>
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var user = await _auth.GetCurrentUserAsync(HttpContext.User).ConfigureAwait(false);
+            var user = await _auth.GetCurrentUserAsync(HttpContext.User);
             ViewBag.ReturnUrl = Request.Path.ToString();
             return View("~/Areas/Front/Views/Auth/_HeaderUserBar.cshtml", user);
         }

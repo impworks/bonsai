@@ -31,7 +31,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Index()
         {
-            var vm = await _configMgr.RequestUpdateAsync().ConfigureAwait(false);
+            var vm = await _configMgr.RequestUpdateAsync();
             return View(vm);
         }
 
@@ -42,8 +42,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Update(UpdateAppConfigVM vm)
         {
-            await _configMgr.UpdateAsync(vm).ConfigureAwait(false);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            await _configMgr.UpdateAsync(vm);
+            await _db.SaveChangesAsync();
 
             _config.ResetCache();
 

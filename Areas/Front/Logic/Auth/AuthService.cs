@@ -41,18 +41,18 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<LoginResultVM> LoginAsync()
         {
-            var info = await _signMgr.GetExternalLoginInfoAsync().ConfigureAwait(false);
+            var info = await _signMgr.GetExternalLoginInfoAsync();
             if (info == null)
                 return new LoginResultVM(LoginStatus.Failed);
 
-            var result = await _signMgr.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true).ConfigureAwait(false);
+            var result = await _signMgr.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
             if (result.IsLockedOut || result.IsNotAllowed)
                 return new LoginResultVM(LoginStatus.LockedOut, info);
 
             if(!result.Succeeded)
                 return new LoginResultVM(LoginStatus.NewUser, info);
 
-            var user = await FindUserAsync(info.LoginProvider, info.ProviderKey).ConfigureAwait(false);
+            var user = await FindUserAsync(info.LoginProvider, info.ProviderKey);
             if (!user.IsValidated)
                 return new LoginResultVM(LoginStatus.Unvalidated, info);
 
@@ -64,7 +64,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task LogoutAsync()
         {
-            await _signMgr.SignOutAsync().ConfigureAwait(false);
+            await _signMgr.SignOutAsync();
         }
 
         /// <summary>
@@ -88,15 +88,15 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
-            await ValidateRegisterRequestAsync(vm).ConfigureAwait(false);
+            await ValidateRegisterRequestAsync(vm);
 
-            var isFirstUser = (await _db.Users.AnyAsync().ConfigureAwait(false)) == false;
+            var isFirstUser = (await _db.Users.AnyAsync()) == false;
 
             var user = _mapper.Map<AppUser>(vm);
             user.Id = Guid.NewGuid().ToString();
             user.IsValidated = isFirstUser;
 
-            var createResult = await _userMgr.CreateAsync(user).ConfigureAwait(false);
+            var createResult = await _userMgr.CreateAsync(user);
             if (!createResult.Succeeded)
             {
                 var msgs = createResult.Errors.Select(x => new KeyValuePair<string, string>("", x.Description)).ToList();
@@ -104,11 +104,11 @@ namespace Bonsai.Areas.Front.Logic.Auth
             }
 
             var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
-            await _userMgr.AddLoginAsync(user, login).ConfigureAwait(false);
+            await _userMgr.AddLoginAsync(user, login);
 
-            await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.User)).ConfigureAwait(false);
+            await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.User));
 
-            await _signMgr.SignInAsync(user, true).ConfigureAwait(false);
+            await _signMgr.SignInAsync(user, true);
 
             return new RegisterUserResultVM
             {
@@ -124,13 +124,13 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (principal == null)
                 return null;
 
-            var user = await _userMgr.GetUserAsync(principal).ConfigureAwait(false)
-                       ?? await FindUserAsync(principal.Identity.AuthenticationType, _userMgr.GetUserId(principal)).ConfigureAwait(false);
+            var user = await _userMgr.GetUserAsync(principal)
+                       ?? await FindUserAsync(principal.Identity.AuthenticationType, _userMgr.GetUserId(principal));
 
             if (user == null)
                 return null;
 
-            var roles = await _userMgr.GetRolesAsync(user).ConfigureAwait(false);
+            var roles = await _userMgr.GetRolesAsync(user);
             var isAdmin = roles.Contains(nameof(UserRole.Admin)) || roles.Contains(nameof(UserRole.Editor));
 
             return new UserVM
@@ -152,15 +152,13 @@ namespace Bonsai.Areas.Front.Logic.Auth
         {
             var login = await _db.UserLogins
                                  .FirstOrDefaultAsync(x => x.LoginProvider == provider
-                                                           && x.ProviderKey == key)
-                                 .ConfigureAwait(false);
+                                                           && x.ProviderKey == key);
 
             if (login == null)
                 return null;
 
             return await _db.Users
-                            .FirstOrDefaultAsync(x => x.Id == login.UserId)
-                            .ConfigureAwait(false);
+                            .FirstOrDefaultAsync(x => x.Id == login.UserId);
         }
 
         /// <summary>
@@ -173,7 +171,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (FuzzyDate.TryParse(vm.Birthday) == null)
                 val.Add(nameof(vm.Birthday), "Дата рождения указана неверно.");
 
-            var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email).ConfigureAwait(false);
+            var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email);
             if (emailExists)
                 val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
 

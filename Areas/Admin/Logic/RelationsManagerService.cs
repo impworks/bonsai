@@ -61,8 +61,7 @@ namespace Bonsai.Areas.Admin.Logic
             if (request.Types?.Length > 0)
                 query = query.Where(x => request.Types.Contains(x.Type));
 
-            var totalCount = await query.CountAsync()
-                                        .ConfigureAwait(false);
+            var totalCount = await query.CountAsync();
 
             if (request.OrderBy == nameof(RelationTitleVM.Destination))
                 query = query.OrderBy(x => x.Destination.Title, request.OrderDescending);
@@ -74,8 +73,7 @@ namespace Bonsai.Areas.Admin.Logic
             var items = await query.ProjectTo<RelationTitleVM>()
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
-                                   .ToListAsync()
-                                   .ConfigureAwait(false);
+                                   .ToListAsync();
 
             return new RelationsListVM
             {
@@ -90,7 +88,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task CreateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
         {
-            await ValidateRequestAsync(vm).ConfigureAwait(false);
+            await ValidateRequestAsync(vm);
 
             var rel = _mapper.Map<Relation>(vm);
             rel.Id = Guid.NewGuid();
@@ -100,9 +98,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             var rels = new[] {rel, compRel};
 
-            await _validator.ValidateAsync(rels).ConfigureAwait(false);
+            await _validator.ValidateAsync(rels);
 
-            var changeset = await GetChangesetAsync(null, vm, rel.Id, principal).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(null, vm, rel.Id, principal);
             _db.Changes.Add(changeset);
 
             _db.Relations.AddRange(rels);
@@ -116,8 +114,7 @@ namespace Bonsai.Areas.Admin.Logic
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == id
                                               && x.IsComplementary == false
-                                              && x.IsDeleted == false, "Связь не найдена")
-                               .ConfigureAwait(false);
+                                              && x.IsDeleted == false, "Связь не найдена");
 
             return _mapper.Map<RelationEditorVM>(rel);
         }
@@ -127,23 +124,22 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
         {
-            await ValidateRequestAsync(vm).ConfigureAwait(false);
+            await ValidateRequestAsync(vm);
 
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == vm.Id
                                               && x.IsComplementary == false
-                                              && x.IsDeleted == false, "Связь не найдена")
-                               .ConfigureAwait(false);
+                                              && x.IsDeleted == false, "Связь не найдена");
 
-            var compRel = await FindComplementaryRelationAsync(rel).ConfigureAwait(false);
+            var compRel = await FindComplementaryRelationAsync(rel);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, principal).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, principal);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, rel);
             MapComplementaryRelation(rel, compRel);
 
-            await _validator.ValidateAsync(new[] {rel, compRel}).ConfigureAwait(false);
+            await _validator.ValidateAsync(new[] {rel, compRel});
         }
 
         /// <summary>
@@ -165,12 +161,11 @@ namespace Bonsai.Areas.Admin.Logic
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == id
                                               && x.IsComplementary == false
-                                              && x.IsDeleted == false, "Связь не найдена")
-                               .ConfigureAwait(false);
+                                              && x.IsDeleted == false, "Связь не найдена");
 
-            var compRel = await FindComplementaryRelationAsync(rel).ConfigureAwait(false);
+            var compRel = await FindComplementaryRelationAsync(rel);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal).ConfigureAwait(false);
+            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal);
             _db.Changes.Add(changeset);
 
             rel.IsDeleted = true;
@@ -223,8 +218,7 @@ namespace Bonsai.Areas.Admin.Logic
             var pageIds = new [] {vm.SourceId, vm.DestinationId, vm.EventId ?? Guid.Empty};
             var pages = await _db.Pages
                                  .Where(x => pageIds.Contains(x.Id))
-                                 .ToDictionaryAsync(x => x.Id, x => x.Type)
-                                 .ConfigureAwait(false);
+                                 .ToDictionaryAsync(x => x.Id, x => x.Type);
 
             var sourceType = pages.TryGetNullableValue(vm.SourceId ?? Guid.Empty);
             var destType = pages.TryGetNullableValue(vm.DestinationId ?? Guid.Empty);
@@ -276,8 +270,7 @@ namespace Bonsai.Areas.Admin.Logic
                                             .AnyAsync(x => x.SourceId == vm.SourceId
                                                            && x.DestinationId == vm.DestinationId
                                                            && x.Type == vm.Type
-                                                           && x.Id != vm.Id)
-                                            .ConfigureAwait(false);
+                                                           && x.Id != vm.Id);
 
             if (existingRelation)
                 val.Add(nameof(vm.DestinationId), "Такая связь уже существует!");
@@ -294,7 +287,7 @@ namespace Bonsai.Areas.Admin.Logic
                 throw new ArgumentNullException();
 
             var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден").ConfigureAwait(false);
+            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
 
             return new Changeset
             {
@@ -331,8 +324,7 @@ namespace Bonsai.Areas.Admin.Logic
                             .FirstOrDefaultAsync(x => x.SourceId == rel.DestinationId
                                                       && x.DestinationId == rel.SourceId
                                                       && x.Type == compRelType
-                                                      && x.IsComplementary)
-                            .ConfigureAwait(false);
+                                                      && x.IsComplementary);
         }
 
         #endregion

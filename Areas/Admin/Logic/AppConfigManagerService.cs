@@ -28,8 +28,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return await _db.Config
                             .ProjectTo<UpdateAppConfigVM>()
-                            .FirstAsync()
-                            .ConfigureAwait(false);
+                            .FirstAsync();
         }
 
         /// <summary>
@@ -38,8 +37,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task UpdateAsync(UpdateAppConfigVM request)
         {
             var config = await _db.Config
-                                  .FirstAsync()
-                                  .ConfigureAwait(false);
+                                  .FirstAsync();
 
             _mapper.Map(request, config);
         }

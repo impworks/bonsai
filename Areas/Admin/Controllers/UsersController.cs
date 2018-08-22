@@ -34,7 +34,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Index([FromQuery] UsersListRequestVM vm)
         {
-            var users = await _users.GetUsersAsync(vm).ConfigureAwait(false);
+            var users = await _users.GetUsersAsync(vm);
             return View(users);
         }
 
@@ -45,7 +45,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(string id)
         {
-            var vm = await _users.RequestRemoveAsync(id).ConfigureAwait(false);
+            var vm = await _users.RequestRemoveAsync(id);
             ViewBag.IsSelf = _userMgr.GetUserId(User) == id;
             return View(vm);
         }
@@ -57,7 +57,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(string id, bool confirm)
         {
-            await _users.RemoveAsync(id, User).ConfigureAwait(false);
+            await _users.RemoveAsync(id, User);
             return RedirectToSuccess("Пользователь удален");
         }
 
@@ -68,7 +68,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("update")]
         public async Task<ActionResult> Update(string id)
         {
-            var vm = await _users.RequestUpdateAsync(id).ConfigureAwait(false);
+            var vm = await _users.RequestUpdateAsync(id);
             return ViewUpdateForm(vm);
         }
 
@@ -84,8 +84,8 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                await _users.UpdateAsync(vm, User).ConfigureAwait(false);
-                await _db.SaveChangesAsync().ConfigureAwait(false);
+                await _users.UpdateAsync(vm, User);
+                await _db.SaveChangesAsync();
 
                 return RedirectToSuccess("Пользователь обновлен");
             }

@@ -104,7 +104,7 @@ namespace Bonsai.Code.DomainModel.Relations
                                         LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId"" AND m.""IsDeleted"" = false
                                         WHERE p.""IsDeleted"" = false
                                     ) AS t
-                                  ").ConfigureAwait(false);
+                                  ");
 
                 var pages = pagesSource.ToList();
                 foreach (var page in pages)
@@ -125,8 +125,7 @@ namespace Bonsai.Code.DomainModel.Relations
                                             IsComplementary = x.IsComplementary
                                         })
                                         .GroupBy(x => x.SourceId)
-                                        .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList())
-                                        .ConfigureAwait(false);
+                                        .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList());
 
                 return new RelationContext
                 {

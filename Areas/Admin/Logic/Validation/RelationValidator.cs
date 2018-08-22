@@ -32,7 +32,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
             if(firstRel == null)
                 throw new ArgumentNullException();
 
-            var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
+            var context = await RelationContext.LoadContextAsync(_db);
             foreach(var rel in relations)
                 context.Augment(CreateExcerpt(rel));
 

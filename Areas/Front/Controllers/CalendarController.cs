@@ -28,7 +28,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("grid")]
         public async Task<ActionResult> MonthGrid([FromQuery] int year, [FromQuery] int month)
         {
-            var vm = await _calendar.GetMonthEventsAsync(year, month).ConfigureAwait(false);
+            var vm = await _calendar.GetMonthEventsAsync(year, month);
             return View(vm);
         }
 
@@ -38,7 +38,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("list")]
         public async Task<ActionResult> DayList([FromQuery] int year, [FromQuery] int month, [FromQuery] int? day = null)
         {
-            var vm = await _calendar.GetDayEventsAsync(year, month, day).ConfigureAwait(false);
+            var vm = await _calendar.GetDayEventsAsync(year, month, day);
             return View(vm);
         }
     }

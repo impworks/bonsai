@@ -43,8 +43,7 @@ namespace Bonsai.Areas.Front.Logic
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.MainPhoto)
-                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false)
-                                .ConfigureAwait(false);
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false);
 
             if (page == null)
                 throw new KeyNotFoundException();
@@ -52,8 +51,8 @@ namespace Bonsai.Areas.Front.Logic
             if (page.Key != key)
                 throw new RedirectRequiredException(page.Key);
 
-            var descr = await _markdown.CompileAsync(page.Description).ConfigureAwait(false);
-            return await ConfigureAsync(page, new PageDescriptionVM { Description = descr }).ConfigureAwait(false);
+            var descr = await _markdown.CompileAsync(page.Description);
+            return await ConfigureAsync(page, new PageDescriptionVM { Description = descr });
         }
 
         /// <summary>
@@ -65,8 +64,7 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false)
-                                .ConfigureAwait(false);
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false);
 
             if (page == null)
                 throw new KeyNotFoundException();
@@ -78,7 +76,7 @@ namespace Bonsai.Areas.Front.Logic
                             .Where(x => x.Media.IsDeleted == false)
                             .Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
 
-            return await ConfigureAsync(page, new PageMediaVM { Media = media }).ConfigureAwait(false);
+            return await ConfigureAsync(page, new PageMediaVM { Media = media });
         }
 
         #endregion
@@ -95,7 +93,7 @@ namespace Bonsai.Areas.Front.Logic
             vm.Key = page.Key;
             vm.Type = page.Type;
 
-            vm.InfoBlock = await GetInfoBlockAsync(page).ConfigureAwait(false);            
+            vm.InfoBlock = await GetInfoBlockAsync(page);            
 
             return vm;
         }
@@ -106,7 +104,7 @@ namespace Bonsai.Areas.Front.Logic
         private async Task<InfoBlockVM> GetInfoBlockAsync(Page page)
         {
             var factGroups = GetPersonalFacts(page).ToList();
-            var relations = await _relations.GetRelationsForPage(page.Id).ConfigureAwait(false);
+            var relations = await _relations.GetRelationsForPage(page.Id);
 
             return new InfoBlockVM
             {

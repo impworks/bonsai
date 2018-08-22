@@ -32,7 +32,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return;
             }
 
-            var user = await _userMgr.GetUserAsync(context.User).ConfigureAwait(false);
+            var user = await _userMgr.GetUserAsync(context.User);
             if(user?.IsValidated == true)
                 context.Succeed(requirement);
         }

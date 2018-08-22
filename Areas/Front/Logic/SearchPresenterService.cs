@@ -35,14 +35,13 @@ namespace Bonsai.Areas.Front.Logic
             if(q.Length < MIN_QUERY_LENGTH)
                 return new SearchResultVM[0];
 
-            var matches = await _elastic.SearchAsync(q, page).ConfigureAwait(false);
+            var matches = await _elastic.SearchAsync(q, page);
             var ids = matches.Select(x => x.Id);
 
             var details = await _db.Pages
                                    .Where(x => ids.Contains(x.Id) && x.IsDeleted == false)
                                    .Select(x => new { x.Id, x.MainPhoto.FilePath, x.LastUpdateDate, PageType = x.Type })
-                                   .ToDictionaryAsync(x => x.Id, x => x)
-                                   .ConfigureAwait(false);
+                                   .ToDictionaryAsync(x => x.Id, x => x);
 
             var results = matches.Select(x => new SearchResultVM
             {
@@ -66,8 +65,7 @@ namespace Bonsai.Areas.Front.Logic
             if(q.Length < MIN_QUERY_LENGTH)
                 return new PageTitleVM[0];
 
-            var results = await _elastic.SearchAutocompleteAsync(q)
-                                        .ConfigureAwait(false);
+            var results = await _elastic.SearchAutocompleteAsync(q);
 
             return results.Select(x => new PageTitleVM {Title = x.HighlightedTitle, Key = x.Key, Type = PageType.Other})
                           .ToList();

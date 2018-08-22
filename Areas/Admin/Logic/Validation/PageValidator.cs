@@ -30,7 +30,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         /// </summary>
         public async Task ValidateAsync(Page page, string rawFacts)
         {
-            var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
+            var context = await RelationContext.LoadContextAsync(_db);
             AugmentRelationContext(context, page, rawFacts);
 
             var core = new ValidatorCore();

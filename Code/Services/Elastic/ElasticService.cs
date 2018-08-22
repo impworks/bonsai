@@ -119,7 +119,7 @@ namespace Bonsai.Code.Services.Elastic
                 Description = MarkdownService.Strip(page.Description),
             };
 
-            await _client.IndexAsync(doc, i => i.Index(PAGE_INDEX)).ConfigureAwait(false);
+            await _client.IndexAsync(doc, i => i.Index(PAGE_INDEX));
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Bonsai.Code.Services.Elastic
                                     x => x.Field(f => f.Description)
                                 )
                       )
-            ).ConfigureAwait(false);
+            );
 
             return result.Hits.Select(Map).ToList();
         }
@@ -233,7 +233,7 @@ namespace Bonsai.Code.Services.Elastic
                                  )
                       )
                       .Take(maxCount ?? 5)
-            ).ConfigureAwait(false);
+            );
 
             return result.Documents.Select(Map).ToList();
         }

@@ -42,7 +42,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
-            var query = await LoadUsersAsync().ConfigureAwait(false);
+            var query = await LoadUsersAsync();
 
             if (!string.IsNullOrEmpty(request.SearchQuery))
             {
@@ -75,12 +75,11 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var user = await _db.Users
                                 .AsNoTracking()
-                                .GetAsync(x => x.Id == id, "Пользователь не найден")
-                                .ConfigureAwait(false);
+                                .GetAsync(x => x.Id == id, "Пользователь не найден");
 
             var vm = _mapper.Map<UpdateUserVM>(user);
 
-            var roles = await _userMgr.GetRolesAsync(user).ConfigureAwait(false);
+            var roles = await _userMgr.GetRolesAsync(user);
             if (roles.Count > 0 && Enum.TryParse<UserRole>(roles.First(), out var role))
                 vm.Role = role;
 
@@ -92,11 +91,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task UpdateAsync(UpdateUserVM request, ClaimsPrincipal currUser)
         {
-            await ValidateUpdateRequestAsync(request).ConfigureAwait(false);
+            await ValidateUpdateRequestAsync(request);
 
             var user = await _db.Users
-                                .GetAsync(x => x.Id == request.Id, "Пользователь не найден")
-                                .ConfigureAwait(false);
+                                .GetAsync(x => x.Id == request.Id, "Пользователь не найден");
 
             _mapper.Map(request, user);
             user.IsValidated = true;
@@ -104,10 +102,10 @@ namespace Bonsai.Areas.Admin.Logic
             if(!IsSelf(request.Id, currUser))
             {
                 var allRoles = EnumHelper.GetEnumValues<UserRole>().Select(x => x.ToString());
-                await _userMgr.RemoveFromRolesAsync(user, allRoles).ConfigureAwait(false);
+                await _userMgr.RemoveFromRolesAsync(user, allRoles);
 
                 var role = request.Role.ToString();
-                await _userMgr.AddToRoleAsync(user, role).ConfigureAwait(false);
+                await _userMgr.AddToRoleAsync(user, role);
             }
         }
 
@@ -118,8 +116,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var user = await _db.Users
                                 .AsNoTracking()
-                                .GetAsync(x => x.Id == id, "Пользователь не найден")
-                                .ConfigureAwait(false);
+                                .GetAsync(x => x.Id == id, "Пользователь не найден");
 
             return _mapper.Map<RemoveUserVM>(user);
         }
@@ -135,12 +132,11 @@ namespace Bonsai.Areas.Admin.Logic
             var user = await _db.Users
                                 .Include(x => x.Changes)
                                 .Include(x => x.Page)
-                                .GetAsync(x => x.Id == id, "Пользователь не найден")
-                                .ConfigureAwait(false);
+                                .GetAsync(x => x.Id == id, "Пользователь не найден");
 
             if (user.Page == null && user.Changes.Count == 0)
             {
-                await _userMgr.DeleteAsync(user).ConfigureAwait(false);
+                await _userMgr.DeleteAsync(user);
                 return;
             }
 
@@ -183,18 +179,15 @@ namespace Bonsai.Areas.Admin.Logic
         private async Task<IQueryable<UserTitleVM>> LoadUsersAsync()
         {
             var roles = await _db.Roles
-                                 .ToDictionaryAsync(x => x.Id, x => Enum.Parse<UserRole>(x.Name))
-                                 .ConfigureAwait(false);
+                                 .ToDictionaryAsync(x => x.Id, x => Enum.Parse<UserRole>(x.Name));
 
             var userBindings = await _db.UserRoles
-                                        .ToDictionaryAsync(x => x.UserId, x => x.RoleId)
-                                        .ConfigureAwait(false);
+                                        .ToDictionaryAsync(x => x.UserId, x => x.RoleId);
 
             var users = await _db.Users
                                  .Where(x => x.LockoutEnd != DateTimeOffset.MaxValue)
                                  .ProjectTo<UserTitleVM>()
-                                 .ToListAsync()
-                                 .ConfigureAwait(false);
+                                 .ToListAsync();
 
             foreach (var user in users)
             {
@@ -214,8 +207,7 @@ namespace Bonsai.Areas.Admin.Logic
             var val = new Validator();
 
             var emailUsed = await _db.Users
-                                     .AnyAsync(x => x.Id != request.Id && x.Email == request.Email)
-                                     .ConfigureAwait(false);
+                                     .AnyAsync(x => x.Id != request.Id && x.Email == request.Email);
 
             if (emailUsed)
                 val.Add(nameof(request.Email), "Адрес почты уже используется другим пользователем");

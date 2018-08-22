@@ -17,8 +17,7 @@ namespace Bonsai.Code.Utils.Helpers
         public static async Task<T> GetAsync<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate, string error)
             where T: class
         {
-            var result = await source.FirstOrDefaultAsync(predicate)
-                                     .ConfigureAwait(false);
+            var result = await source.FirstOrDefaultAsync(predicate);
 
             if(result == null)
                 throw new OperationException(error);
@@ -33,8 +32,7 @@ namespace Bonsai.Code.Utils.Helpers
             where T : class
         {
             var existing = await source.Where(predicate)
-                                       .ToListAsync()
-                                       .ConfigureAwait(false);
+                                       .ToListAsync();
 
             source.RemoveRange(existing);
         }

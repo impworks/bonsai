@@ -71,8 +71,8 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("logout")]
         public async Task<ActionResult> Logout()
         {
-            await _auth.LogoutAsync().ConfigureAwait(false);
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
+            await _auth.LogoutAsync();
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             return RedirectToAction("Index", "Home", new { area = "Front" });
         }
 
@@ -82,7 +82,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("loginCallback")]
         public async Task<ActionResult> LoginCallback(string returnUrl)
         {
-            var result = await _auth.LoginAsync().ConfigureAwait(false);
+            var result = await _auth.LoginAsync();
 
             if (result.Status == LoginStatus.Succeeded)
                 return RedirectLocal(returnUrl);

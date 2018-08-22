@@ -28,8 +28,7 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<CalendarMonthVM> GetMonthEventsAsync(int year, int month)
         {
-            var context = await RelationContext.LoadContextAsync(_db)
-                                               .ConfigureAwait(false);
+            var context = await RelationContext.LoadContextAsync(_db);
 
             var range = GetDisplayedRange(year, month);
             var events = GetPageEvents(year, month, context)
@@ -51,7 +50,7 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<CalendarDayVM> GetDayEventsAsync(int year, int month, int? day)
         {
-            var context = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
+            var context = await RelationContext.LoadContextAsync(_db);
             var events = GetPageEvents(year, month, context)
                          .Concat(GetRelationEvents(year, month, context))
                          .Where(x => x.Day == day)

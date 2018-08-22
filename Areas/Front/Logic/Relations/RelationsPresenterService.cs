@@ -98,7 +98,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         public async Task<IReadOnlyList<RelationCategoryVM>> GetRelationsForPage(Guid pageId)
         {
-            var ctx = await RelationContext.LoadContextAsync(_db).ConfigureAwait(false);
+            var ctx = await RelationContext.LoadContextAsync(_db);
 
             var cats = new []
             {

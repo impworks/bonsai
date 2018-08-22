@@ -28,8 +28,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}")]
         public async Task<ActionResult> ViewMedia(string key)
         {
-            var vm = await _media.GetMediaAsync(key)
-                                 .ConfigureAwait(false);
+            var vm = await _media.GetMediaAsync(key);
 
             return View(vm);
         }

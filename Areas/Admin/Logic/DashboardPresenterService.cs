@@ -26,9 +26,9 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<DashboardVM> GetDashboardAsync()
         {
-            var pages = await GetLastUpdatedPagesAsync(5).ConfigureAwait(false);
-            var media = await GetLastUploadedMediaAsync(5).ConfigureAwait(false);
-            var users = await GetNewUsersAsync().ConfigureAwait(false);
+            var pages = await GetLastUpdatedPagesAsync(5);
+            var media = await GetLastUploadedMediaAsync(5);
+            var users = await GetNewUsersAsync();
 
             return new DashboardVM
             {
@@ -49,8 +49,7 @@ namespace Bonsai.Areas.Admin.Logic
                             .OrderByDescending(x => x.LastUpdateDate)
                             .Take(count)
                             .ProjectTo<PageTitleExtendedVM>()
-                            .ToListAsync()
-                            .ConfigureAwait(false);
+                            .ToListAsync();
         }
 
         
@@ -63,8 +62,7 @@ namespace Bonsai.Areas.Admin.Logic
                             .OrderByDescending(x => x.UploadDate)
                             .Take(count)
                             .ProjectTo<MediaThumbnailExtendedVM>()
-                            .ToListAsync()
-                            .ConfigureAwait(false);
+                            .ToListAsync();
         }
 
         /// <summary>
@@ -76,8 +74,7 @@ namespace Bonsai.Areas.Admin.Logic
                             .Where(x => x.IsValidated == false)
                             .ProjectTo<UserTitleVM>()
                             .OrderBy(x => x.FullName)
-                            .ToListAsync()
-                            .ConfigureAwait(false);
+                            .ToListAsync();
         }
 
         #endregion

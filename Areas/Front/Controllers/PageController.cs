@@ -36,8 +36,7 @@ namespace Bonsai.Areas.Front.Controllers
 
             try
             {
-                var vm = await _pages.GetPageDescriptionAsync(encKey)
-                                     .ConfigureAwait(false);
+                var vm = await _pages.GetPageDescriptionAsync(encKey);
                 return View(vm);
             }
             catch (RedirectRequiredException ex)
@@ -59,8 +58,7 @@ namespace Bonsai.Areas.Front.Controllers
 
             try
             {
-                var vm = await _pages.GetPageMediaAsync(encKey)
-                                     .ConfigureAwait(false);
+                var vm = await _pages.GetPageMediaAsync(encKey);
                 return View(vm);
             }
             catch(RedirectRequiredException ex)

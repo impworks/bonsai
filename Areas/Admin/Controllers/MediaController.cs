@@ -157,8 +157,7 @@ namespace Bonsai.Areas.Admin.Controllers
                                       .Concat(new[] {vm.Location, vm.Event}.Select(x => x.TryParse<Guid?>()))
                                       .ToList();
 
-            var pageLookup = await _pages.FindPagesByIdsAsync(ids)
-                                         .ConfigureAwait(false);
+            var pageLookup = await _pages.FindPagesByIdsAsync(ids);
 
             foreach(var depicted in depictedEntities)
                 if (depicted.PageId != null && pageLookup.TryGetValue(depicted.PageId.Value, out var depPage))

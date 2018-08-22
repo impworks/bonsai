@@ -25,8 +25,8 @@ namespace Bonsai.Areas.Admin.Components
         /// </summary>
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var user = await _userMgr.GetUserAsync(HttpContext.User).ConfigureAwait(false);
-            var roles = await _userMgr.GetRolesAsync(user).ConfigureAwait(false);
+            var user = await _userMgr.GetUserAsync(HttpContext.User);
+            var roles = await _userMgr.GetRolesAsync(user);
 
             var groups = new List<MenuGroupVM>();
             groups.Add(

@@ -54,7 +54,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(PagesListRequestVM request)
         {
-            var vm = await _pages.GetPagesAsync(request).ConfigureAwait(false);
+            var vm = await _pages.GetPagesAsync(request);
             return View(vm);
         }
 
@@ -80,9 +80,9 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                var page = await _pages.CreateAsync(vm, User).ConfigureAwait(false);
-                await _db.SaveChangesAsync().ConfigureAwait(false);
-                await _elastic.AddPageAsync(page).ConfigureAwait(false);
+                var page = await _pages.CreateAsync(vm, User);
+                await _db.SaveChangesAsync();
+                await _elastic.AddPageAsync(page);
 
                 return RedirectToSuccess("Страница создана");
             }
@@ -100,7 +100,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("update")]
         public async Task<ActionResult> Update(Guid id)
         {
-            var vm = await _pages.RequestUpdateAsync(id).ConfigureAwait(false);
+            var vm = await _pages.RequestUpdateAsync(id);
             return ViewEditorForm(vm);
         }
 
@@ -116,10 +116,10 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                var page = await _pages.UpdateAsync(vm, User).ConfigureAwait(false);
-                await _db.SaveChangesAsync().ConfigureAwait(false);
+                var page = await _pages.UpdateAsync(vm, User);
+                await _db.SaveChangesAsync();
 
-                await _elastic.AddPageAsync(page).ConfigureAwait(false);
+                await _elastic.AddPageAsync(page);
 
                 return RedirectToSuccess("Страница обновлена");
             }

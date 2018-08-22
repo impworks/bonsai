@@ -23,7 +23,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Index()
         {
-            var vm = await _dash.GetDashboardAsync().ConfigureAwait(false);
+            var vm = await _dash.GetDashboardAsync();
             return View(vm);
         }
     }
