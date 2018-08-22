@@ -28,5 +28,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// List of editor template files.
         /// </summary>
         public IReadOnlyList<string> EditorTemplates { get; set; }
+
+        /// <summary>
+        /// Currently active tab.
+        /// </summary>
+        public string Tab { get; set; }
     }
 }

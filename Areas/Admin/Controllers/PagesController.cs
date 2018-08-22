@@ -10,6 +10,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -92,10 +93,10 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("update")]
-        public async Task<ActionResult> Update(PageEditorVM vm)
+        public async Task<ActionResult> Update(PageEditorVM vm, string tab)
         {
             if(!ModelState.IsValid)
-                return ViewEditorForm(vm);
+                return ViewEditorForm(vm, tab);
 
             try
             {
@@ -109,7 +110,7 @@ namespace Bonsai.Areas.Admin.Controllers
             catch (ValidationException ex)
             {
                 SetModelState(ex);
-                return ViewEditorForm(vm);
+                return ViewEditorForm(vm, tab);
             }
         }
 
@@ -145,7 +146,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Displays the editor form.
         /// </summary>
-        private ActionResult ViewEditorForm(PageEditorVM vm)
+        private ActionResult ViewEditorForm(PageEditorVM vm, string tab = null)
         {
             var groups = FactDefinitions.Groups[vm.Type];
             var editorTpls = groups.SelectMany(x => x.Facts)
@@ -159,7 +160,8 @@ namespace Bonsai.Areas.Admin.Controllers
                 IsNew = vm.Id == Guid.Empty,
                 PageTypes = ViewHelper.GetEnumSelectList(vm.Type),
                 FactGroups = groups,
-                EditorTemplates = editorTpls
+                EditorTemplates = editorTpls,
+                Tab = StringHelper.Coalesce(tab, "main")
             };
 
             return View("Editor", vm);

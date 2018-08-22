@@ -3,7 +3,7 @@
 @using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 @{
-    var data = (PageEditorDataVM) ViewBag.Data;
+    var data = (PageEditorDataVM)ViewBag.Data;
     ViewBag.Title = data.IsNew ? "Новая страница" : "Редактирование страницы";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
@@ -12,69 +12,46 @@
 
 <h1>@ViewBag.Title</h1>
 
+@if(!ViewContext.ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        Не удалось сохранить страницу. Некоторые поля заполнены неверно!
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
 <form action="@formAction" method="post">
     <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="Type"/>
+    <input type="hidden" asp-for="Type" />
+    <input type="hidden" name="tab" id="tab" value="@data.Tab" />
 
     <nav>
         <div class="nav nav-tabs" role="tablist">
-            <a class="nav-item nav-link active" href="#tab-main" data-toggle="tab" role="tab">Главное</a>
-            <a class="nav-item nav-link" href="#tab-facts" data-toggle="tab" role="tab">Факты</a>
-            <a class="nav-item nav-link" href="#tab-aliases" data-toggle="tab" role="tab">Ссылки</a>
+            <a class="nav-item nav-link @(data.Tab == "main" ? "active" : "")" href="#tab-main" data-toggle="tab" data-tab-track="tab" data-tab-track-id="main" role="tab">Главное</a>
+            <a class="nav-item nav-link @(data.Tab == "facts" ? "active" : "")" href="#tab-facts" data-toggle="tab" data-tab-track="tab" data-tab-track-id="facts" role="tab">Факты</a>
+            <a class="nav-item nav-link @(data.Tab == "aliases" ? "active" : "")" href="#tab-aliases" data-toggle="tab" data-tab-track="tab" data-tab-track-id="aliases" role="tab">Ссылки</a>
         </div>
     </nav>
     <div class="tab-content">
-        <div class="tab-pane show active" id="tab-main" role="tabpanel">
+        <div class="tab-pane show @(data.Tab == "main" ? "active" : "")" id="tab-main" role="tabpanel">
             <div class="form-row">
-                <div class="form-group col-md-8">
+                <div class="form-group col-md-12">
                     <label asp-for="Title">Заголовок</label>
                     <input type="text" class="form-control" asp-for="Title" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
-
-                <div class="form-group col-md-4">
-                    <label asp-for="Type">Тип</label>
-                    <input type="text" readonly="readonly" class="form-control-plaintext" value="@Model.Type.GetEnumDescription()" />
-                </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-9">
                     <label asp-for="Description">Текст</label>
                     <textarea asp-for="Description" class="form-control" rows="20"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
-            </div>
-        </div>
-
-        <div class="tab-pane show" id="tab-facts" role="tabpanel">
-            <div class="form-row">
-                <div class="form-group col-md-10">
-                    <input type="hidden" asp-for="Facts" />
-                    @if (data.FactGroups.Any())
-                    {
-                        <div id="editor-facts">
-                            @foreach (var group in data.FactGroups)
-                            {
-                                <div class="editor-facts-group">
-                                    <h4>@group.Title</h4>
-                                    @foreach (var fact in group.Facts)
-                                    {
-                                        var id = group.Id + "." + fact.Id;
-                                        <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@id'}"></component>
-                                    }
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <p>Для данного типа страницы указание фактов недоступно.</p>
-                    }
-                    <span asp-validation-for="Facts" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-md-2">
+                
+                <div class="form-group col-md-3">
                     <label asp-for="MainPhotoKey">Фото</label>
                     <input type="text" asp-for="MainPhotoKey" class="form-control" />
                     <span asp-validation-for="MainPhotoKey" class="text-danger"></span>
@@ -82,11 +59,36 @@
             </div>
         </div>
 
-        <div class="tab-pane show" id="tab-aliases" role="tabpanel">
+        <div class="tab-pane show @(data.Tab == "facts" ? "active" : "")" id="tab-facts" role="tabpanel">
             <div class="form-group">
-                <label asp-for="Aliases">Ссылки</label>
-                <input type="hidden" asp-for="Aliases" />
+                <input type="hidden" asp-for="Facts" />
+                @if(data.FactGroups.Any())
+                {
+                    <div id="editor-facts">
+                        @foreach(var group in data.FactGroups)
+                        {
+                            <div class="editor-facts-group">
+                                <h4>@group.Title</h4>
+                                @foreach(var fact in group.Facts)
+                                {
+                                    var id = group.Id + "." + fact.Id;
+                                    <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@id'}"></component>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>Для данного типа страницы указание фактов недоступно.</p>
+                }
+                <span asp-validation-for="Facts" class="text-danger"></span>
             </div>
+        </div>
+
+        <div class="tab-pane show @(data.Tab == "aliases" ? "active" : "")" id="tab-aliases" role="tabpanel">
+            <input type="hidden" asp-for="Aliases" />
+
             <div id="editor-aliases">
                 <div class="form-row" v-for="(alias, idx) in aliases">
                     <div class="form-group col-md-8">
@@ -134,7 +136,7 @@
         </div>
     </div>
 </script>
-@foreach (var tpl in data.EditorTemplates)
+@foreach(var tpl in data.EditorTemplates)
 {
     Html.RenderPartial(tpl);
 }
