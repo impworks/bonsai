@@ -103,7 +103,13 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             _db.Pages.Add(page);
-            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Page = page, Key = page.Key});
+            _db.PageAliases.Add(new PageAlias
+            {
+                Id = Guid.NewGuid(),
+                Page = page,
+                Key = page.Key,
+                Title = page.Title
+            });
 
             return page;
         }
