@@ -144,6 +144,8 @@
 
 <input type="file" id="main-photo-file" class="input-hidden" name="file" />
 
+@Html.Partial("~/Areas/Admin/Views/Components/MediaPicker.cshtml");
+
 <script type="text/x-template" id="date-picker-template">
     <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />
 </script>
@@ -159,6 +161,7 @@
         </div>
     </div>
 </script>
+
 @foreach(var tpl in data.EditorTemplates)
 {
     Html.RenderPartial(tpl);

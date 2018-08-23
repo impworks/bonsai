@@ -107,3 +107,9 @@
 .CodeMirror {
     height: 400px;
 }
+
+.scrollable {
+    overflow-y: scroll;
+    height: 300px;
+    max-height: 500px;
+}

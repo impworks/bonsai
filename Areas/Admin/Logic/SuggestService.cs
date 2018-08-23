@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
@@ -56,9 +58,9 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Suggests media of specified types.
         /// </summary>
-        public async Task<IReadOnlyList<MediaThumbnailVM>> SuggestMediaAsync(string query, int count, int offset, MediaType[] types = null)
+        public async Task<IReadOnlyList<MediaThumbnailVM>> SuggestMediaAsync(string query, int? count, int? offset, MediaType[] types = null)
         {
-            var q = _db.Media.AsQueryable();
+            var q = _db.Media.AsNoTracking();
 
             if (!string.IsNullOrEmpty(query))
                 q = q.Where(x => EF.Functions.ILike(x.Title, query) || EF.Functions.ILike(x.Description, query));
@@ -66,16 +68,20 @@ namespace Bonsai.Areas.Admin.Logic
             if (types?.Length > 0)
                 q = q.Where(x => types.Contains(x.Type));
 
-            count = Math.Clamp(count, 1, 100);
-            offset = Math.Max(offset, 0);
+            count = Math.Clamp(count ?? 100, 1, 100);
+            offset = Math.Max(offset ?? 0, 0);
 
             var media = await q.OrderByDescending(x => x.UploadDate)
-                               .Skip(offset)
-                               .Take(count)
-                               .ProjectTo<MediaThumbnailVM>()
+                               .Skip(offset.Value)
+                               .Take(count.Value)
                                .ToListAsync();
 
-            return media;
+            var vms = media.Select(x => MediaPresenterService.GetMediaThumbnail(x, MediaSize.Small)).ToList();
+
+            foreach (var vm in vms)
+                vm.ThumbnailUrl = _url.Content(vm.ThumbnailUrl);
+
+            return vms;
         }
 
         #region Helpers

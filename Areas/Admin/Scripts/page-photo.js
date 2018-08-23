@@ -13,6 +13,12 @@
         $input.click();
     });
 
+    $editor.find('.cmd-pick').on('click', function() {
+        pickMedia([0], function(data) {
+            setImage(data.thumbnailUrl, data.key);
+        });
+    });
+
     $input.fileupload({
         url: '/admin/media/upload',
         sequentialUploads: true,

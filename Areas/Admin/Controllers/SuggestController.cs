@@ -46,7 +46,7 @@ namespace Bonsai.Areas.Admin.Controllers
 
         [HttpGet]
         [Route("media")]
-        public async Task<ActionResult> SuggestMedia(string query, int count, int offset, MediaType[] types = null)
+        public async Task<ActionResult> SuggestMedia(string query = null, int? count = null, int? offset = null, MediaType[] types = null)
         {
             var media = await _suggest.SuggestMediaAsync(query, count, offset, types);
             return Json(media);
