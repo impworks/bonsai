@@ -145,7 +145,7 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
-            page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey);
+            page.MainPhotoId = (await FindMainPhotoAsync(vm.MainPhotoKey))?.Id;
 
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id);
 

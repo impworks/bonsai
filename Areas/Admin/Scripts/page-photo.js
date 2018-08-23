@@ -16,8 +16,9 @@
     $input.fileupload({
         url: '/admin/media/upload',
         sequentialUploads: true,
-        add: function(e, data) {
+        add: function (e, data) {
             data.submit();
+            $input = $('#main-photo-file'); // gets new link to a recreated input
         },
         done: function (e, data) {
             var body = JSON.parse(data.response().jqXHR.responseText);

@@ -64,6 +64,11 @@ namespace Bonsai.Data.Models
         public Media MainPhoto { get; set; }
 
         /// <summary>
+        /// FK of the main photo.
+        /// </summary>
+        public Guid? MainPhotoId { get; set; }
+
+        /// <summary>
         /// Date of the page's creation.
         /// </summary>
         public DateTimeOffset CreationDate { get; set; }

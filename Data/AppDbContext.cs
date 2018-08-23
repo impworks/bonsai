@@ -35,6 +35,7 @@ namespace Bonsai.Data
             builder.Entity<Page>().HasIndex(x => x.Key).IsUnique(true);
             builder.Entity<Page>().HasIndex(x => x.IsDeleted).IsUnique(false);
             builder.Entity<Page>().HasMany(x => x.Aliases).WithOne(x => x.Page).IsRequired();
+            builder.Entity<Page>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
 
             builder.Entity<PageAlias>().HasIndex(x => x.Key).IsUnique(true);
 
