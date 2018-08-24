@@ -1,42 +1,45 @@
 ﻿$(function() {
-    var $dialog = $('.modal-media-picker');
+    var $dialog = $('.media-picker');
     if ($dialog.length === 0) {
         return;
     }
 
     window.pickMedia = pickMedia;
 
+    var vue = new Vue({
+        el: $('.modal.media-picker .modal-content')[0],
+        data: {
+            types: [],
+            isTypeSelectionEnabled: true,
+            query: '',
+            media: [],
+            picked: null
+        },
+        methods: {
+            toggleType: function (t) {
+                var idx = this.types.indexOf(t);
+                if (idx === -1) {
+                    this.types.push(t);
+                } else {
+                    this.types.splice(idx, 1);
+                }
+            },
+            isTypeEnabled: function (t) {
+                return this.types.indexOf(t) !== -1;
+            },
+            pick: function (elem) {
+                this.picked = elem;
+                this.$nextTick(function () {
+                    $dialog.modal('hide');
+                });
+            }
+        }
+    });
+
     function pickMedia(types, successHandler, failHandler) {
         $dialog.modal('show');
 
-        var vue = new Vue({
-            el: $('.modal.show.modal-media-picker')[0],
-            data: {
-                types: types || [],
-                isTypeSelectionEnabled: !types || !types.length,
-                query: '',
-                media: [],
-                picked: null
-            },
-            methods: {
-                toggleType: function (t) {
-                    var idx = this.types.indexOf(t);
-                    if (idx === -1) {
-                        this.types.push(t);
-                    } else {
-                        this.types.splice(idx, 1);
-                    }
-                },
-                isTypeEnabled: function (t) {
-                    return this.types.indexOf(t) !== -1;
-                },
-                pick: function (elem) {
-                    this.picked = elem;
-                    $dialog.modal('hide');
-                }
-            }
-        });
-
+        resetForm(types);
         loadItems(vue);
 
         $dialog.on('hide.bs.modal', function () {
@@ -49,8 +52,7 @@
                     successHandler(vue.picked);
                 }
             }
-
-            vue.$destroy();
+        
             $dialog.off('hide.bs.modal');
         });
     }
@@ -85,5 +87,13 @@
         }
 
         return url;
+    }
+
+    function resetForm(types) {
+        vue.types = types || [];
+        vue.isTypeSelectionEnabled = !types || !types.length;
+        vue.query = '';
+        vue.media = [];
+        vue.picked = null;
     }
 });
