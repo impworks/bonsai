@@ -106,10 +106,17 @@
 
 .CodeMirror {
     height: 400px;
+
+    .CodeMirror-selected {
+        background: #3390ff;
+    }
+
+    span.CodeMirror-selectedtext {
+        color: #fff;
+    }
 }
 
 .scrollable {
-    overflow-y: scroll;
-    height: 300px;
-    max-height: 500px;
+    overflow-y: auto;
+    height: 500px;
 }

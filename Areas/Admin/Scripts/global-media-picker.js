@@ -29,9 +29,11 @@
             },
             pick: function (elem) {
                 this.picked = elem;
-                this.$nextTick(function () {
-                    $dialog.modal('hide');
-                });
+                $dialog.modal('hide');
+            },
+            search: function() {
+                this.media.splice(0);
+                loadItems(this);
             }
         }
     });
@@ -79,6 +81,10 @@
             for (var i = 0; i < model.types.length; i++) {
                 parts.push('types=' + encodeURIComponent(model.types[i]));
             }
+        }
+
+        if (model.media && model.media.length > 0) {
+            parts.push('offset=' + model.media.length);
         }
 
         var url = '/admin/suggest/media';

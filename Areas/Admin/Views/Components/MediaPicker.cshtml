@@ -1,7 +1,7 @@
 ﻿@using Bonsai.Data.Models
 @using Impworks.Utils.Format
 <div class="modal media-picker" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Выбор медиа</h5>
@@ -20,17 +20,20 @@
                                     <button type="button" class="btn btn-outline-secondary" v-on:click="toggleType(@val)" v-bind:class="{active: isTypeEnabled(@val)}">@mt.Value</button>
                                 }
                             </div>
-                            <input class="form-control form-control-sm" placeholder="Поиск" v-model="query" />
+                            <input class="form-control form-control-sm mr-2" placeholder="Поиск" v-model="query" v-on:keydown.enter="search()" />
+                            <button type="button" class="btn btn-outline-secondary" title="Найти" v-on:click="search()">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="alert alert-info" v-if="!media || !media.length">По вашему запросу ничего не найдено.</div>
-                <div class="scrollable" v-if="media && media.length">
-                    <ul class="list-inline">
+                <div class="scrollable">
+                    <div class="alert alert-info" v-if="!media || !media.length">По вашему запросу ничего не найдено.</div>
+                    <ul class="list-inline" v-if="media && media.length">
                         <li v-for="m in media" class="list-inline-item">
                             <div class="media-thumb-wrapper">
-                                <div class="media-thumb-square clickable" v-bind:style="{ 'background-image': 'url(' + m.thumbnailUrl + ')' }" v-on:click="pick(m)"/>
+                                <div class="media-thumb-square clickable" v-bind:style="{ 'background-image': 'url(' + m.thumbnailUrl + ')' }" v-on:click="pick(m)" />
                             </div>
                         </li>
                     </ul>
