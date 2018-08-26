@@ -1,0 +1,59 @@
+﻿#editor-facts {
+    .editor-facts-group {
+        h4 {
+            margin-bottom: 1em;
+        }
+
+        .fact-wrapper {
+            margin-bottom: 1em;
+
+            .fact-list {
+                .row {
+                    .fact-list-item {
+                        border: 1px #ccc solid;
+                        padding-top: 15px;
+                        margin-left: 15px;
+                    }
+
+                    &:not(:first-child) .fact-list-item {
+                        border-top: 0;
+                    }
+                }
+            }
+
+            .fact-long {
+                display: flex;
+                flex-direction: row;
+
+                input.form-control {
+                    flex-grow: 1;
+                }
+
+                .btn-remove-fact {
+                    flex-shrink: 1;
+                }
+            }
+        }
+
+        .form-fact {
+            position: relative;
+
+            .btn-remove-fact {
+                position: absolute;
+                right: 5px;
+                top: 0;
+            }
+        }
+    }
+}
+
+#editor-main-photo {
+    .main-photo-wrapper {
+        .main-photo {
+            width: 100%;
+            height: auto;
+
+            margin-bottom: 15px;
+        }
+    }
+}

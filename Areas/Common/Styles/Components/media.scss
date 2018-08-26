@@ -12,7 +12,7 @@
 
 .media-thumb-wrapper {
     display: inline-block;
-    width: 200px;
+    width: 120px;
     padding: 10px;
     border: $panel-inner-border;
     vertical-align: top;
@@ -20,6 +20,16 @@
     img {
         width: 100%;
     }
+
+    .media-thumb-square {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        background-size: cover;
+        background-position: center center;
+    }
+
+    margin-bottom: 10px;
 }
 
 .mfp-content {

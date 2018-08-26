@@ -26,7 +26,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("relations")]
-        public async Task<ActionResult> SuggestRelations()
+        public ActionResult SuggestRelations()
         {
             var names = EnumHelper.GetEnumDescriptions<RelationType>();
             var data = names.Select(x => new ListItem<RelationType>(x.Key, x.Value));
@@ -42,6 +42,14 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             var pages = await _suggest.SuggestPagesAsync(query, types);
             return Json(pages);
+        }
+
+        [HttpGet]
+        [Route("media")]
+        public async Task<ActionResult> SuggestMedia(string query = null, int? count = null, int? offset = null, MediaType[] types = null)
+        {
+            var media = await _suggest.SuggestMediaAsync(query, count, offset, types);
+            return Json(media);
         }
     }
 }

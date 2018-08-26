@@ -38,5 +38,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// List of comma-separated fields that contain errors.
         /// </summary>
         public string ErrorFields { get; set; }
+
+        /// <summary>
+        /// Thumbnail URL for the selected main photo.
+        /// </summary>
+        public string MainPhotoThumbnailUrl { get; set; }
     }
 }

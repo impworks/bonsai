@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Bonsai.Data.Migrations
 {
@@ -13,10 +12,10 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,9 +26,9 @@ namespace Bonsai.Data.Migrations
                 name: "Config",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AllowGuests = table.Column<bool>(type: "bool", nullable: false),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 200, nullable: false),
+                    AllowGuests = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,11 +39,11 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int4", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true),
-                    RoleId = table.Column<string>(type: "text", nullable: false)
+                    RoleId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,8 +60,8 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    RoleId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,11 +78,11 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int4", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -94,10 +93,10 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    ProviderKey = table.Column<string>(type: "text", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,10 +107,10 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,16 +121,16 @@ namespace Bonsai.Data.Migrations
                 name: "Changes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AppUserId = table.Column<string>(type: "text", nullable: true),
-                    AuthorId = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
-                    EditedMediaId = table.Column<Guid>(type: "uuid", nullable: true),
-                    EditedPageId = table.Column<Guid>(type: "uuid", nullable: true),
-                    EditedRelationId = table.Column<Guid>(type: "uuid", nullable: true),
-                    OriginalState = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<int>(type: "int4", nullable: false),
-                    UpdatedState = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<Guid>(nullable: false),
+                    Date = table.Column<DateTimeOffset>(nullable: false),
+                    AuthorId = table.Column<string>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    EditedPageId = table.Column<Guid>(nullable: true),
+                    EditedMediaId = table.Column<Guid>(nullable: true),
+                    EditedRelationId = table.Column<Guid>(nullable: true),
+                    OriginalState = table.Column<string>(nullable: true),
+                    UpdatedState = table.Column<string>(nullable: true),
+                    AppUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -142,17 +141,17 @@ namespace Bonsai.Data.Migrations
                 name: "Media",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    FilePath = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bool", nullable: false),
-                    Key = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
-                    MimeType = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<int>(type: "int4", nullable: false),
-                    UploadDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
-                    UploaderId = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<Guid>(nullable: false),
+                    Key = table.Column<string>(maxLength: 30, nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    MimeType = table.Column<string>(maxLength: 100, nullable: false),
+                    FilePath = table.Column<string>(maxLength: 300, nullable: false),
+                    Date = table.Column<string>(maxLength: 30, nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    UploadDate = table.Column<DateTimeOffset>(nullable: false),
+                    UploaderId = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -163,16 +162,16 @@ namespace Bonsai.Data.Migrations
                 name: "Pages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Facts = table.Column<string>(type: "text", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bool", nullable: false),
-                    Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    LastUpdateDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
-                    MainPhotoId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    Type = table.Column<int>(type: "int4", nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 200, nullable: false),
+                    Key = table.Column<string>(maxLength: 200, nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    Facts = table.Column<string>(nullable: true),
+                    MainPhotoId = table.Column<Guid>(nullable: true),
+                    CreationDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,27 +188,27 @@ namespace Bonsai.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int4", nullable: false),
-                    Birthday = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bool", nullable: false),
-                    FirstName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    IsValidated = table.Column<bool>(type: "bool", nullable: false),
-                    LastName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bool", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamptz", nullable: true),
-                    MiddleName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    PageId = table.Column<Guid>(type: "uuid", nullable: true),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bool", nullable: false),
-                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
-                    TwoFactorEnabled = table.Column<bool>(type: "bool", nullable: false),
-                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    IsValidated = table.Column<bool>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 256, nullable: true),
+                    LastName = table.Column<string>(maxLength: 256, nullable: true),
+                    MiddleName = table.Column<string>(maxLength: 256, nullable: true),
+                    Birthday = table.Column<string>(maxLength: 10, nullable: true),
+                    PageId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -226,12 +225,12 @@ namespace Bonsai.Data.Migrations
                 name: "MediaTags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Coordinates = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    MediaId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ObjectId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ObjectTitle = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<int>(type: "int4", nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    MediaId = table.Column<Guid>(nullable: false),
+                    ObjectId = table.Column<Guid>(nullable: true),
+                    ObjectTitle = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
+                    Coordinates = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,11 +253,11 @@ namespace Bonsai.Data.Migrations
                 name: "PageAliases",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Key = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    Order = table.Column<int>(type: "int4", nullable: false),
-                    PageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 200, nullable: false),
+                    Key = table.Column<string>(maxLength: 200, nullable: false),
+                    Order = table.Column<int>(nullable: false),
+                    PageId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -275,14 +274,14 @@ namespace Bonsai.Data.Migrations
                 name: "Relations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DestinationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Duration = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true),
-                    EventId = table.Column<Guid>(type: "uuid", nullable: true),
-                    IsComplementary = table.Column<bool>(type: "bool", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bool", nullable: false),
-                    SourceId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Type = table.Column<int>(type: "int4", nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    SourceId = table.Column<Guid>(nullable: false),
+                    DestinationId = table.Column<Guid>(nullable: false),
+                    EventId = table.Column<Guid>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
+                    IsComplementary = table.Column<bool>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Duration = table.Column<string>(maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
