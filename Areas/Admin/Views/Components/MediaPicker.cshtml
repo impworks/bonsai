@@ -32,11 +32,12 @@
                     <div class="alert alert-info" v-if="!media || !media.length">По вашему запросу ничего не найдено.</div>
                     <ul class="list-inline" v-if="media && media.length">
                         <li v-for="m in media" class="list-inline-item">
-                            <div class="media-thumb-wrapper">
+                            <div class="media-thumb-wrapper" title="Выбрать">
                                 <div class="media-thumb-square clickable" v-bind:style="{ 'background-image': 'url(' + m.thumbnailUrl + ')' }" v-on:click="pick(m)" />
                             </div>
                         </li>
                     </ul>
+                    <div class="scroll-end" style="height: 5px"></div>
                 </div>
             </div>
         </div>

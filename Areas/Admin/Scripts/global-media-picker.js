@@ -6,17 +6,21 @@
 
     window.pickMedia = pickMedia;
 
+    var $component = $('.modal.media-picker .modal-content');
+    var isLoading = false;
+
     var vue = new Vue({
-        el: $('.modal.media-picker .modal-content')[0],
+        el: $component[0],
         data: {
             types: [],
             isTypeSelectionEnabled: true,
             query: '',
             media: [],
-            picked: null
+            picked: null,
+            isScrollEnd: false
         },
         methods: {
-            toggleType: function (t) {
+            toggleType: function(t) {
                 var idx = this.types.indexOf(t);
                 if (idx === -1) {
                     this.types.push(t);
@@ -24,16 +28,15 @@
                     this.types.splice(idx, 1);
                 }
             },
-            isTypeEnabled: function (t) {
+            isTypeEnabled: function(t) {
                 return this.types.indexOf(t) !== -1;
             },
-            pick: function (elem) {
+            pick: function(elem) {
                 this.picked = elem;
                 $dialog.modal('hide');
             },
             search: function() {
-                this.media.splice(0);
-                loadItems(this);
+                loadMedia(this, true);
             }
         }
     });
@@ -41,8 +44,10 @@
     function pickMedia(types, successHandler, failHandler) {
         $dialog.modal('show');
 
-        resetForm(types);
-        loadItems(vue);
+        resetFilter(types);
+        loadMedia(vue, true);
+
+        setupScrolling(vue);
 
         $dialog.on('hide.bs.modal', function () {
             if (vue.picked === null) {
@@ -59,15 +64,28 @@
         });
     }
 
-    function loadItems(model) {
+    function loadMedia(model, clear) {
+        isLoading = true;
+        if (!!clear) {
+            model.media.splice(0);
+        }
+
         var url = buildUrl(model);
-        $.ajax(url).done(function (data) {
-            if (data && data.length) {
-                for (var i = 0; i < data.length; i++) {
-                    model.media.push(data[i]);
+        $.ajax(url).done(function(data) {
+                if (data && data.length) {
+                    for (var i = 0; i < data.length; i++) {
+                        model.media.push(data[i]);
+                    }
                 }
-            }
-        });
+
+                model.isScrollEnd = data.length === 0;
+            })
+            .fail(function() {
+                toastr.error('Не удалось загрузить медиа-файлы');
+            })
+            .always(function() {
+                isLoading = false;
+            });
     }
 
     function buildUrl(model) {
@@ -95,11 +113,29 @@
         return url;
     }
 
-    function resetForm(types) {
+    function resetFilter(types) {
         vue.types = types || [];
         vue.isTypeSelectionEnabled = !types || !types.length;
         vue.query = '';
         vue.media = [];
         vue.picked = null;
+    }
+
+    function setupScrolling(model) {
+        var $scroll = $('.modal.show .scrollable');
+        var $scrollEnd = $scroll.find('.scroll-end');
+        var obs = new IntersectionObserver(
+            function(entries) {
+                var entry = entries[0];
+                if (entry.intersectionRatio >= 0.5 && !isLoading && !model.isScrollEnd) {
+                    loadMedia(model, false);
+                }
+            },
+            {
+                root: $scroll[0],
+                threshold: 0.5
+            }
+        );
+        obs.observe($scrollEnd[0]);
     }
 });
