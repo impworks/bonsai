@@ -61,19 +61,27 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             var deps = depicted.Select(x => string.Format("{0} ({1})", namesLookup[x.PageId ?? Guid.Empty] ?? x.ObjectTitle, x.Coordinates));
 
-            Add("Название", data.Title);
-            Add("Дата", data.Date != null ? FuzzyDate.Parse(data.Date).ReadableDate : null);
-            Add("Описание", data.Description);
-            Add("Место", namesLookup.TryGetValue(locId) ?? data.Location);
-            Add("Событие", namesLookup.TryGetValue(eventId) ?? data.Event);
-            Add("Отметки", depicted.Length == 0 ? null : ViewHelper.RenderBulletList(_html, deps));
+            Add(nameof(MediaEditorVM.Title), "Название", data.Title);
+            Add(nameof(MediaEditorVM.Date), "Дата", data.Date != null ? FuzzyDate.Parse(data.Date).ReadableDate : null);
+            Add(nameof(MediaEditorVM.Description), "Описание", data.Description);
+            Add(nameof(MediaEditorVM.Location), "Место", namesLookup.TryGetValue(locId) ?? data.Location);
+            Add(nameof(MediaEditorVM.Event), "Событие", namesLookup.TryGetValue(eventId) ?? data.Event);
+            Add(nameof(MediaEditorVM.DepictedEntities), "Отметки", depicted.Length == 0 ? null : ViewHelper.RenderBulletList(_html, deps));
 
             return result;
 
-            void Add(string name, string value)
+            void Add(string prop, string name, string value)
             {
-                result.Add(new ChangePropertyValue(name, value));
+                result.Add(new ChangePropertyValue(prop, name, value));
             }
+        }
+
+        /// <summary>
+        /// Returns custom diffs.
+        /// </summary>
+        public string GetCustomDiff(string propName, string oldValue, string newValue)
+        {
+            return null;
         }
 
         #endregion

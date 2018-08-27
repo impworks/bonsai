@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using Impworks.Utils.Format;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bonsai.Code.Utils.Helpers
@@ -70,6 +71,18 @@ namespace Bonsai.Code.Utils.Helpers
             sb.Append("</ul>");
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Renders the media thumbnail in a wrapper.
+        /// </summary>
+        public static string RenderMediaThumbnail(string url)
+        {
+            return $@"
+                <div class=""media-thumb-wrapper"">
+                    <div class=""media-thumb-square"" style=""background-image: url('{url}')""></div>
+                </div>
+            ";
         }
 
         #region Helpers

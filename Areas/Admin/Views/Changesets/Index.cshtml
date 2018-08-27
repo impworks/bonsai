@@ -48,7 +48,7 @@
                 <tr class="admin-row">
                     <td class="admin-full-image">
                         <a href="@Url.Action("Details", "Changesets", new {area = "Admin", id = c.Id})" title="Просмотреть">
-                            <div class="image" style="background-image: url(@Url.Content(c.EntityThumbnailUrl))"></div>
+                            <div class="image" style="background-image: url('@Url.Content(c.EntityThumbnailUrl)')"></div>
                         </a>
                     </td>
                     <td>

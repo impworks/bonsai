@@ -92,11 +92,28 @@
     del {
         color: #999;
         background-color: #FEC8C8;
+
+        &.img {
+            text-decoration: none;
+            background-color: transparent;
+
+            .media-thumb-wrapper {
+                background-color: #FEC8C8;
+            }
+        }
     }
 
     ins {
         background-color: #cfc;
         text-decoration: none;
+
+        &.img {
+            background-color: transparent;
+
+            .media-thumb-wrapper {
+                background-color: #cfc;
+            }
+        }
     }
 
     dd, dt {

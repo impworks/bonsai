@@ -15,5 +15,10 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// Renders JSON representation of an editor into a set of property values.
         /// </summary>
         Task<IReadOnlyList<ChangePropertyValue>> RenderValuesAsync(string json);
+
+        /// <summary>
+        /// Returns a customized diff for fields that are not supported by standard diff.
+        /// </summary>
+        string GetCustomDiff(string propName, string oldValue, string newValue);
     }
 }

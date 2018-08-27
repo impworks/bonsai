@@ -90,8 +90,8 @@
                 {
                     <li class="list-inline-item">
                         <div class="media-thumb-wrapper">
-                            <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = m.Key})" class="media-link" data-media="@m.Key">
-                                <img src="@Url.Content(m.ThumbnailUrl)" alt="@(m.UploadDate.LocalDateTime.ToShortDateString())" />
+                            <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = m.Key})" class="media-thumb-link" data-media="@m.Key">
+                                <div class="media-thumb-square" style="background-image: url('@Url.Content(m.ThumbnailUrl)')"></div>
                             </a>
                         </div>
                     </li>

@@ -49,19 +49,27 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                        .Where(x => pageIds.Contains(x.Id))
                                        .ToDictionaryAsync(x => x.Id, x => x.Title);
 
-            Add("Основная страница", namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
-            Add("Связанная страница", namesLookup.TryGetValue(data.SourceId ?? Guid.Empty));
-            Add("Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetEnumDescription());
-            Add("Событие", namesLookup.TryGetValue(data.EventId ?? Guid.Empty));
-            Add("Начало", FuzzyDate.TryParse(data.DurationStart)?.ReadableDate);
-            Add("Конец", FuzzyDate.TryParse(data.DurationEnd)?.ReadableDate);
+            Add(nameof(RelationEditorVM.DestinationId), "Основная страница", namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
+            Add(nameof(RelationEditorVM.SourceId), "Связанная страница", namesLookup.TryGetValue(data.SourceId ?? Guid.Empty));
+            Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetEnumDescription());
+            Add(nameof(RelationEditorVM.EventId), "Событие", namesLookup.TryGetValue(data.EventId ?? Guid.Empty));
+            Add(nameof(RelationEditorVM.DurationStart), "Начало", FuzzyDate.TryParse(data.DurationStart)?.ReadableDate);
+            Add(nameof(RelationEditorVM.DurationEnd), "Конец", FuzzyDate.TryParse(data.DurationEnd)?.ReadableDate);
             
             return result;
 
-            void Add(string name, string value)
+            void Add(string prop, string name, string value)
             {
-                result.Add(new ChangePropertyValue(name, value));
+                result.Add(new ChangePropertyValue(prop, name, value));
             }
+        }
+
+        /// <summary>
+        /// Returns custom diffs.
+        /// </summary>
+        public string GetCustomDiff(string propName, string oldValue, string newValue)
+        {
+            return null;
         }
 
         #endregion

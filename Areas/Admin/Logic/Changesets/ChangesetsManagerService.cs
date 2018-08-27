@@ -43,6 +43,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                            .AsNoTracking()
                            .Include(x => x.Author)
                            .Include(x => x.EditedPage)
+                            .ThenInclude(x => x.MainPhoto)
                            .Include(x => x.EditedMedia)
                            .Include(x => x.EditedRelation)
                            .AsQueryable();
@@ -119,7 +120,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 ThumbnailUrl = chg.EditedMedia != null
                     ? MediaPresenterService.GetSizedMediaPath(chg.EditedMedia.FilePath, MediaSize.Small)
                     : null,
-                Changes = GetDiff(prevData, nextData)
+                Changes = GetDiff(prevData, nextData, renderer)
             };
         }
 
@@ -199,7 +200,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// <summary>
         /// Returns the list of diffed values.
         /// </summary>
-        private IReadOnlyList<ChangeVM> GetDiff(IReadOnlyList<ChangePropertyValue> prevData, IReadOnlyList<ChangePropertyValue> nextData)
+        private IReadOnlyList<ChangeVM> GetDiff(IReadOnlyList<ChangePropertyValue> prevData, IReadOnlyList<ChangePropertyValue> nextData, IChangesetRenderer renderer)
         {
             if(prevData.Count != nextData.Count)
                 throw new InvalidOperationException("Internal error: rendered changeset values mismatch!");
@@ -214,7 +215,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 if (prevValue == nextValue)
                     continue;
 
-                var diff = new HtmlDiff.HtmlDiff(prevValue ?? "", nextValue ?? "").Build();
+                var diff = renderer.GetCustomDiff(prevData[idx].PropertyName, prevValue, nextValue)
+                           ?? new HtmlDiff.HtmlDiff(prevValue ?? "", nextValue ?? "").Build();
+
                 result.Add(new ChangeVM
                 {
                     Title = prevData[idx].Title,

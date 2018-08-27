@@ -122,7 +122,6 @@ namespace Bonsai.Areas.Admin.Logic
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.MainPhoto)
-                                .Include(x => x.Relations)
                                 .Include(x => x.Aliases)
                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
 
@@ -137,6 +136,8 @@ namespace Bonsai.Areas.Admin.Logic
             await ValidateRequestAsync(vm);
 
             var page = await _db.Pages
+                                .Include(x => x.Aliases)
+                                .Include(x => x.MainPhoto)
                                 .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Страница не найдена");
 
             await _validator.ValidateAsync(page, vm.Facts);
