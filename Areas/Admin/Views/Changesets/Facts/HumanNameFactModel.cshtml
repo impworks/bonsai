@@ -1,0 +1,14 @@
+﻿@model Bonsai.Code.DomainModel.Facts.Models.HumanNameFactModel
+@Model.ShortTitle:
+<ul>
+    @foreach(var name in Model.Values)
+    {
+        <li>
+            @name.LastName @name.FirstName @name.MiddleName
+            @if(name.Duration != null)
+            {
+                <span>: @name.Duration.Value.ShortReadableRange</span>
+            }
+        </li>
+    }
+</ul>

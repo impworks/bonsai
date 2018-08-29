@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,7 @@ namespace Bonsai.Code.Config
 
             services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
+            services.AddScoped<ViewRenderService>();
 
             if(Environment.IsProduction())
             {

@@ -1,0 +1,14 @@
+﻿@model Bonsai.Code.DomainModel.Facts.Models.StringListFactModel
+@Model.ShortTitle:
+<ul>
+    @foreach(var str in Model.Values)
+    {
+        <li>
+            @str.Value
+            @if(str.Duration != null)
+            {
+                <span>: @str.Duration.Value.ShortReadableRange</span>
+            }
+        </li>
+    }
+</ul>

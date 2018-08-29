@@ -1,0 +1,19 @@
+﻿@using Impworks.Utils.Format
+@model Bonsai.Code.DomainModel.Facts.Models.LanguageFactModel
+@Model.ShortTitle:
+<ul>
+    @foreach(var lang in Model.Values)
+    {
+        <li>
+            @lang.Name
+            @if(lang.Proficiency != null)
+            {
+                <span>(@lang.Proficiency.Value.GetEnumDescription())</span>
+            }
+            @if(lang.Duration != null)
+            {
+                <span>: @lang.Duration.Value.ShortReadableRange</span>
+            }
+        </li>
+    }
+</ul>

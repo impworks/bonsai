@@ -171,7 +171,7 @@ namespace Bonsai.Areas.Admin.Controllers
             var editorTpls = groups.SelectMany(x => x.Facts)
                                    .Select(x => x.Kind)
                                    .Distinct()
-                                   .Select(x => (Activator.CreateInstance(x) as FactModelBase).EditTemplatePath)
+                                   .Select(x => $"~/Areas/Admin/Views/Pages/Facts/{x.Name}.cshtml")
                                    .ToList();
 
             var errorFields = ModelState.Where(x => x.Value.ValidationState == ModelValidationState.Invalid)

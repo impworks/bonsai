@@ -1,0 +1,19 @@
+﻿@using Impworks.Utils.Format
+@model Bonsai.Code.DomainModel.Facts.Models.SkillFactModel
+@Model.ShortTitle:
+<ul>
+    @foreach(var skill in Model.Values)
+    {
+        <li>
+            @skill.Name
+            @if(skill.Proficiency != null)
+            {
+                <span>(@skill.Proficiency.Value.GetEnumDescription())</span>
+            }
+            @if(skill.Duration != null)
+            {
+                <span>: @skill.Duration.Value.ShortReadableRange</span>
+            }
+        </li>
+    }
+</ul>

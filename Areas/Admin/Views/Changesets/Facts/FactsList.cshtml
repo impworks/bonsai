@@ -1,0 +1,14 @@
+﻿@model IList<Bonsai.Areas.Front.ViewModels.Page.InfoBlock.FactGroupVM>
+
+@foreach (var group in Model)
+{
+    <h6>@group.Definition.Title</h6>
+    <ul>
+        @foreach (var fact in group.Facts)
+        {
+            <li>
+                @Html.Partial("~/Areas/Admin/Views/Changesets/Facts/" + fact.Definition.Kind.Name + ".cshtml", fact)
+            </li>
+        }
+    </ul>
+}
