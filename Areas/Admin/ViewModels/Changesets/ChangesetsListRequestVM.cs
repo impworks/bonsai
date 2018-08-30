@@ -15,6 +15,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         public Guid? EntityId { get; set; }
 
         /// <summary>
+        /// Filter by author.
+        /// </summary>
+        public string UserId { get; set; }
+
+        /// <summary>
         /// Found entity types.
         /// </summary>
         public ChangesetEntityType[] EntityTypes { get; set; }

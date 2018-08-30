@@ -10,6 +10,7 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Changesets", new { area = "Admin" });
+    var data = (ChangesetsListDataVM)ViewBag.Data;
 }
 
 <h1>Список правок</h1>
@@ -17,7 +18,31 @@
 <div class="clearfix">
     <div class="float-right">
         <form action="@baseUrl" method="GET" class="form-inline">
-            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new
+            {
+                request = Model.Request,
+                include = new[] { nameof(ChangesetsListRequestVM.EntityId), nameof(ChangesetsListRequestVM.UserId) }
+            })
+            @if(data.UserTitle != null)
+            {
+                @await Component.InvokeAsync("ListItemFilterComponent", new
+                {
+                    url = baseUrl,
+                    request = Model.Request,
+                    propName = nameof(ChangesetsListRequestVM.UserId),
+                    title = data.UserTitle
+                })
+            }
+            @if(data.EntityTitle != null)
+            {
+                @await Component.InvokeAsync("ListItemFilterComponent", new
+                {
+                    url = baseUrl,
+                    request = Model.Request,
+                    propName = nameof(ChangesetsListRequestVM.EntityId),
+                    title = data.EntityTitle
+                })
+            }
             @await Component.InvokeAsync("ListEnumFilterComponent", new
             {
                 request = Model.Request,

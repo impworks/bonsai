@@ -63,6 +63,9 @@
                         <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = user.Id})" title="Удалить">
                             <span class="fa fa-remove"></span>
                         </a>
+                        <a href="@Url.Action("Index", "Changesets", new {area = "Admin", userId = user.Id})" title="История изменений">
+                            <span class="fa fa-history"></span>
+                        </a>
                     </td>
                 </tr>
             }

@@ -37,7 +37,7 @@
         <div class="tab-pane show @(data.Tab == "main" ? "active" : "")" id="tab-main" role="tabpanel">
             <div class="form-row">
                 <div class="form-group col-md-12">
-                    <label asp-for="Title">Заголовок</label>
+                    <label asp-for="Title" class="form-label-required">Заголовок</label>
                     <input type="text" class="form-control" asp-for="Title" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
