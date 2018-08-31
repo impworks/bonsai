@@ -56,14 +56,48 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
-        /// Suggests media of specified types.
+        /// Returns the pickable pages.
         /// </summary>
-        public async Task<IReadOnlyList<MediaThumbnailVM>> SuggestMediaAsync(string query, int? count, int? offset, MediaType[] types = null)
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetPickablePagesAsync(string query, int? count, int? offset, PageType[] types = null)
+        {
+            var q = _db.Pages.AsQueryable();
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                var queryLower = query.ToLower();
+                q = q.Where(x => x.Aliases.Any(y => y.Title.ToLower().Contains(queryLower)));
+            }
+
+            if (types?.Length > 0)
+                q = q.Where(x => types.Contains(x.Type));
+
+            count = Math.Clamp(count ?? 100, 1, 100);
+            offset = Math.Max(offset ?? 0, 0);
+            
+            var vms = await q.OrderBy(x => x.Title)
+                               .Skip(offset.Value)
+                               .Take(count.Value)
+                               .ProjectTo<PageTitleExtendedVM>()
+                               .ToListAsync();
+
+            foreach (var vm in vms)
+                vm.MainPhotoPath = GetFullThumbnailPath(vm);
+
+            return vms;
+        }
+
+        /// <summary>
+        /// Returns the pickable media.
+        /// </summary>
+        public async Task<IReadOnlyList<MediaThumbnailVM>> GetPickableMediaAsync(string query, int? count, int? offset, MediaType[] types = null)
         {
             var q = _db.Media.AsNoTracking();
 
             if (!string.IsNullOrEmpty(query))
-                q = q.Where(x => EF.Functions.ILike(x.Title, query) || EF.Functions.ILike(x.Description, query));
+            {
+                var queryLower = query.ToLower();
+                q = q.Where(x => x.Title.ToLower().Contains(queryLower));
+            }
 
             if (types?.Length > 0)
                 q = q.Where(x => types.Contains(x.Type));
@@ -97,3 +131,4 @@ namespace Bonsai.Areas.Admin.Logic
         #endregion
     }
 }
+

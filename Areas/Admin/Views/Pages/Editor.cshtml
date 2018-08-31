@@ -49,13 +49,13 @@
                     <textarea asp-for="Description" class="form-control md-editor" data-md-pick-media="true" rows="10"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
-                
+
                 <div class="form-group col-md-3">
                     <label>Фото</label>
                     <input type="hidden" asp-for="MainPhotoKey" />
                     <div id="editor-main-photo">
                         <div class="main-photo-wrapper">
-                            @if (data.MainPhotoThumbnailUrl != null)
+                            @if(data.MainPhotoThumbnailUrl != null)
                             {
                                 <img src="@Url.Content(data.MainPhotoThumbnailUrl)" class="main-photo" />
                             }
@@ -145,6 +145,7 @@
 <input type="file" id="main-photo-file" class="input-hidden" name="file" />
 
 @Html.Partial("~/Areas/Admin/Views/Components/MediaPicker.cshtml")
+@Html.Partial("~/Areas/Admin/Views/Components/PagePicker.cshtml")
 
 <script type="text/x-template" id="date-picker-template">
     <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />

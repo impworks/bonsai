@@ -11,7 +11,7 @@ namespace Bonsai.Areas.Admin.Controllers
     /// <summary>
     /// Controller for ajax lookups.
     /// </summary>
-    [Route("admin/suggest")]
+    [Route("admin")]
     public class SuggestController: AdminControllerBase
     {
         public SuggestController(SuggestService suggest)
@@ -25,7 +25,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// Suggests relation types.
         /// </summary>
         [HttpGet]
-        [Route("relations")]
+        [Route("suggest/relations")]
         public ActionResult SuggestRelations()
         {
             var names = EnumHelper.GetEnumDescriptions<RelationType>();
@@ -37,18 +37,32 @@ namespace Bonsai.Areas.Admin.Controllers
         /// Suggests pages for relation source / media tag.
         /// </summary>
         [HttpGet]
-        [Route("pages")]
-        public async Task<ActionResult> SuggestPages(string query, PageType[] types = null)
+        [Route("suggest/pages")]
+        public async Task<ActionResult> SuggestPages(string query, int? count = null, int? offset = null, PageType[] types = null)
         {
             var pages = await _suggest.SuggestPagesAsync(query, types);
             return Json(pages);
         }
 
+        /// <summary>
+        /// Returns data for page picker.
+        /// </summary>
         [HttpGet]
-        [Route("media")]
-        public async Task<ActionResult> SuggestMedia(string query = null, int? count = null, int? offset = null, MediaType[] types = null)
+        [Route("pick/pages")]
+        public async Task<ActionResult> PickPages(string query = null, int? count = null, int? offset = null, PageType[] types = null)
         {
-            var media = await _suggest.SuggestMediaAsync(query, count, offset, types);
+            var media = await _suggest.GetPickablePagesAsync(query, count, offset, types);
+            return Json(media);
+        }
+
+        /// <summary>
+        /// Returns data for media picker.
+        /// </summary>
+        [HttpGet]
+        [Route("pick/media")]
+        public async Task<ActionResult> PickMedia(string query = null, int? count = null, int? offset = null, MediaType[] types = null)
+        {
+            var media = await _suggest.GetPickableMediaAsync(query, count, offset, types);
             return Json(media);
         }
     }
