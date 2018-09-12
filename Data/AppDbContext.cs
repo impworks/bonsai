@@ -19,6 +19,7 @@ namespace Bonsai.Data
         public virtual DbSet<Changeset> Changes => Set<Changeset>();
         public virtual DbSet<Media> Media => Set<Media>();
         public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
+        public virtual DbSet<MediaEncodingJob> MediaJobs => Set<MediaEncodingJob>();
         public virtual DbSet<Page> Pages => Set<Page>();
         public virtual DbSet<PageAlias> PageAliases => Set<PageAlias>();
         public virtual DbSet<Relation> Relations => Set<Relation>();
@@ -48,6 +49,8 @@ namespace Bonsai.Data
             builder.Entity<Media>().HasOne(x => x.Uploader).WithMany().IsRequired(false);
             builder.Entity<Media>().HasIndex(x => x.Key).IsUnique(true);
             builder.Entity<Media>().HasIndex(x => x.IsDeleted).IsUnique(false);
+
+            builder.Entity<MediaEncodingJob>().HasOne(x => x.Media).WithOne().HasForeignKey<MediaEncodingJob>(x => x.MediaId).IsRequired(true);
 
             builder.Entity<MediaTag>().HasOne(x => x.Media).WithMany(x => x.Tags);
             builder.Entity<MediaTag>().HasOne(x => x.Object).WithMany(x => x.MediaTags);

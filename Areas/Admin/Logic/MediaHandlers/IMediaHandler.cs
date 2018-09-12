@@ -9,6 +9,11 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
     public interface IMediaHandler
     {
         /// <summary>
+        /// Flag indicating that the media is immediately available (does not need to wait for encoding).
+        /// </summary>
+        bool IsImmediate { get; }
+
+        /// <summary>
         /// List of mime types this handler accepts.
         /// </summary>
         string[] SupportedMimeTypes { get; }

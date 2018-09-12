@@ -9,8 +9,6 @@ namespace Bonsai.Code.Config
 {
     public partial class Startup
     {
-
-
         /// <summary>
         /// Registers Automapper.
         /// </summary>

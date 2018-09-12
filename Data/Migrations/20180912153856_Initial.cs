@@ -151,11 +151,30 @@ namespace Bonsai.Data.Migrations
                     Description = table.Column<string>(nullable: true),
                     UploadDate = table.Column<DateTimeOffset>(nullable: false),
                     UploaderId = table.Column<string>(nullable: true),
+                    IsProcessed = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Media", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MediaEncodingJob",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    MediaId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaEncodingJob", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MediaEncodingJob_Media_MediaId",
+                        column: x => x.MediaId,
+                        principalTable: "Media",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -390,6 +409,12 @@ namespace Bonsai.Data.Migrations
                 column: "UploaderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MediaEncodingJob_MediaId",
+                table: "MediaEncodingJob",
+                column: "MediaId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MediaTags_MediaId",
                 table: "MediaTags",
                 column: "MediaId");
@@ -558,6 +583,9 @@ namespace Bonsai.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Config");
+
+            migrationBuilder.DropTable(
+                name: "MediaEncodingJob");
 
             migrationBuilder.DropTable(
                 name: "MediaTags");

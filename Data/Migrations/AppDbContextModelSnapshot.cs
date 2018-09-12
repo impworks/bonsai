@@ -158,6 +158,8 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<bool>("IsProcessed");
+
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(30);
@@ -184,6 +186,21 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("UploaderId");
 
                     b.ToTable("Media");
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.MediaEncodingJob", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("MediaId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MediaId")
+                        .IsUnique();
+
+                    b.ToTable("MediaEncodingJob");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.MediaTag", b =>
@@ -456,6 +473,14 @@ namespace Bonsai.Data.Migrations
                     b.HasOne("Bonsai.Data.Models.AppUser", "Uploader")
                         .WithMany()
                         .HasForeignKey("UploaderId");
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.MediaEncodingJob", b =>
+                {
+                    b.HasOne("Bonsai.Data.Models.Media", "Media")
+                        .WithOne()
+                        .HasForeignKey("Bonsai.Data.Models.MediaEncodingJob", "MediaId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.MediaTag", b =>
