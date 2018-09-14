@@ -332,7 +332,8 @@ namespace Bonsai.Areas.Admin.Logic
             using (var fs = new FileStream(filePath, FileMode.CreateNew))
                 await vm.Data.CopyToAsync(fs);
 
-            MediaHandlerHelper.CreateThumbnails(filePath, vm.MimeType, handler);
+            using(var frame = handler.ExtractThumbnail(filePath, vm.MimeType))
+                MediaHandlerHelper.CreateThumbnails(filePath, frame);
 
             return $"~/media/{fileName}";
         }
