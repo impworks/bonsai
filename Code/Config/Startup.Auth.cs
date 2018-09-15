@@ -21,7 +21,10 @@ namespace Bonsai.Code.Config
                     p.Requirements.Add(new AuthRequirement());
                 });
 
-                opts.AddPolicy(AdminAuthRequirement.Name, p => { p.RequireRole(nameof(UserRole.Admin), nameof(UserRole.Editor)); });
+                opts.AddPolicy(AdminAuthRequirement.Name, p =>
+                {
+                    p.RequireRole(nameof(UserRole.Admin), nameof(UserRole.Editor));
+                });
             });
 
             services.AddScoped<IAuthorizationHandler, AuthHandler>();

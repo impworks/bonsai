@@ -291,3 +291,5 @@ wwwroot/assets/styles/
 wwwroot/assets/scripts/
 wwwroot/assets/fonts/
 wwwroot/media/
+
+External/**/*.*

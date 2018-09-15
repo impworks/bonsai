@@ -72,6 +72,11 @@ namespace Bonsai.Data.Models
         public AppUser Uploader { get; set; }
 
         /// <summary>
+        /// Flag indicating that this resource has been encoded and can be viewed.
+        /// </summary>
+        public bool IsProcessed { get; set; }
+
+        /// <summary>
         /// Flag indicating that this resource is removed.
         /// </summary>
         public bool IsDeleted { get; set; }

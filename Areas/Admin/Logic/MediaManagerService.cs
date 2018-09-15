@@ -33,13 +33,13 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class MediaManagerService
     {
-        public MediaManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper, IHostingEnvironment env)
+        public MediaManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper, IHostingEnvironment env, IEnumerable<IMediaHandler> mediaHandlers)
         {
             _db = db;
             _mapper = mapper;
             _userMgr = userMgr;
             _env = env;
-            _mediaHandlers = GetMediaHandlers().ToList();
+            _mediaHandlers = mediaHandlers.ToList();
         }
 
         private readonly AppDbContext _db;
@@ -110,19 +110,24 @@ namespace Bonsai.Areas.Admin.Logic
                 FilePath = filePath,
                 UploadDate = DateTimeOffset.Now,
                 Uploader = user,
+                IsProcessed = handler.IsImmediate
             };
 
             _db.Media.Add(media);
 
+            if (!handler.IsImmediate)
+            {
+                _db.MediaJobs.Add(new MediaEncodingJob
+                {
+                    Id = Guid.NewGuid(),
+                    MediaId = media.Id
+                });
+            }
+
             var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal);
             _db.Changes.Add(changeset);
 
-            return new MediaUploadResultVM
-            {
-                Id = media.Id,
-                Key = media.Key,
-                ThumbnailPath = MediaPresenterService.GetSizedMediaPath(filePath, MediaSize.Small)
-            };
+            return _mapper.Map<MediaUploadResultVM>(media);
         }
 
         /// <summary>
@@ -212,6 +217,17 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             media.IsDeleted = true;
+        }
+
+        /// <summary>
+        /// Returns the thumbnails for the media files.
+        /// </summary>
+        public async Task<IReadOnlyList<MediaUploadResultVM>> GetThumbnailsAsync(IEnumerable<Guid> ids)
+        {
+            return await _db.Media
+                            .Where(x => ids.Contains(x.Id))
+                            .ProjectTo<MediaUploadResultVM>()
+                            .ToListAsync();
         }
 
         #endregion
@@ -322,17 +338,10 @@ namespace Bonsai.Areas.Admin.Logic
             using (var fs = new FileStream(filePath, FileMode.CreateNew))
                 await vm.Data.CopyToAsync(fs);
 
-            MediaHandlerHelper.CreateThumbnails(filePath, vm.MimeType, handler);
+            using(var frame = handler.ExtractThumbnail(filePath, vm.MimeType))
+                MediaHandlerHelper.CreateThumbnails(filePath, frame);
 
             return $"~/media/{fileName}";
-        }
-
-        /// <summary>
-        /// Returns the list of known media handlers.
-        /// </summary>
-        private IEnumerable<IMediaHandler> GetMediaHandlers()
-        {
-            yield return new PhotoMediaHandler();
         }
 
         /// <summary>

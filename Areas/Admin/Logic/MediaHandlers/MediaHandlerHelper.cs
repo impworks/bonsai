@@ -43,16 +43,13 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Creates thumbnails.
         /// </summary>
-        public static void CreateThumbnails(string path, string mime, IMediaHandler handler)
+        public static void CreateThumbnails(string path, Image frame)
         {
-            using (var frame = handler.ExtractThumbnail(path, mime))
+            foreach (var size in Sizes)
             {
-                foreach (var size in Sizes)
-                {
-                    var thumbPath = MediaPresenterService.GetSizedMediaPath(path, size.Key);
-                    using (var image = ResizeToFit(frame, size.Value))
-                        image.Save(thumbPath, JpegEncoder, JpegEncoderArgs);
-                }
+                var thumbPath = MediaPresenterService.GetSizedMediaPath(path, size.Key);
+                using (var image = ResizeToFit(frame, size.Value))
+                    image.Save(thumbPath, JpegEncoder, JpegEncoderArgs);
             }
         }
 

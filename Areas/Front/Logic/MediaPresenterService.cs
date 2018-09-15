@@ -51,6 +51,7 @@ namespace Bonsai.Areas.Front.Logic
             return new MediaVM
             {
                 Type = media.Type,
+                IsProcessed = media.IsProcessed,
                 Title = media.Title,
                 Description = descr,
                 Date = FuzzyDate.TryParse(media.Date),

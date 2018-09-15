@@ -4,7 +4,7 @@ using Bonsai.Data.Models;
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
-    /// MediaHandler for creating thumbnails for
+    /// MediaHandler for creating thumbnails for photos.
     /// </summary>
     public class PhotoMediaHandler: IMediaHandler
     {
@@ -13,6 +13,11 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
             "image/jpeg",
             "image/png"
         };
+
+        /// <summary>
+        /// Flag indicating that the media does not need any encoding.
+        /// </summary>
+        public bool IsImmediate => true;
 
         /// <summary>
         /// Supported file types.

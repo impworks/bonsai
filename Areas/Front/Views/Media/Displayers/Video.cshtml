@@ -1,10 +1,20 @@
-﻿@using Bonsai.Areas.Front.ViewModels.Media
-@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
+﻿@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 
-
-<div class="video-wrapper">
-    <video class="media-video" controls poster="@Url.Content(Model.PreviewPath)" preload="auto">
-        <source src="@Url.Content(Model.OriginalPath)" type="video/mp4" />
-        <div class="alert alert-warning">Ваш браузер не поддерживает просмотр видео.</div>
-    </video>
-</div>
+@if(Model.IsProcessed)
+{
+    <div class="video-wrapper">
+        <video class="media-video" controls poster="@Url.Content(Model.PreviewPath)" preload="auto">
+            <source src="@Url.Content(Model.OriginalPath)" type="video/mp4" />
+            <div class="alert alert-warning">Ваш браузер не поддерживает просмотр видео.</div>
+        </video>
+    </div>
+}
+else
+{
+    <div class="photo-wrapper">
+        <img src="@Url.Content(Model.PreviewPath)" class="media-photo" alt="Видео обрабатывается..." />
+    </div>
+    <div class="alert alert-info">
+        Видео будет доступно после обработки. Попробуйте перезагрузить страницу.
+    </div>
+}

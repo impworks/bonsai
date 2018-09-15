@@ -1,5 +1,6 @@
 ﻿using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Changesets;
+using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
@@ -14,7 +15,7 @@ namespace Bonsai.Code.Config
         /// <summary>
         /// Register application-level services.
         /// </summary>
-        public void ConfigureAppServices(IServiceCollection services)
+        private void ConfigureAppServices(IServiceCollection services)
         {
             // common
             services.AddScoped<MarkdownService>();
@@ -43,6 +44,11 @@ namespace Bonsai.Code.Config
             services.AddScoped<IChangesetRenderer, MediaChangesetRenderer>();
             services.AddScoped<IChangesetRenderer, PageChangesetRenderer>();
             services.AddScoped<IChangesetRenderer, RelationChangesetRenderer>();
+
+            services.AddScoped<IMediaHandler, PhotoMediaHandler>();
+            services.AddScoped<IMediaHandler, VideoMediaHandler>();
+
+            services.AddHostedService<MediaEncoderService>();
         }
     }
 }
