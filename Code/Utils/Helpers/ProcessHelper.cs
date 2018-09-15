@@ -12,7 +12,7 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Invokes the process.
         /// </summary>
-        public static async Task InvokeProcessAsync(string file, string args)
+        public static async Task InvokeAsync(string file, string args)
         {
             using (var proc = CreateProcess(file, args))
                 await InvokeInternalAsync(proc, p => p.ExitCode);
@@ -21,7 +21,7 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Invokes the process and returns its output as a string.
         /// </summary>
-        public static async Task<string> GetProcessOutputAsync(string file, string args)
+        public static async Task<string> GetOutputAsync(string file, string args)
         {
             using(var proc = CreateProcess(file, args))
                 return await InvokeInternalAsync(proc, p => p.StandardOutput.ReadToEnd());

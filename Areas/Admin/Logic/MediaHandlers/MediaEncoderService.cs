@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Strings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,7 +38,6 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         private readonly IServiceProvider _services;
         private readonly IHostingEnvironment _env;
         private readonly CancellationTokenSource _cancellationSource;
-
 
         private Thread _thread;
 
@@ -99,7 +101,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
                         if (job != null)
                         {
                             if (job.Media.Type == MediaType.Video)
-                                await EncodeVideo(job);
+                                await EncodeVideoAsync(job);
                             else
                                 throw new ArgumentException("Unsupported media type: ");
 
@@ -136,13 +138,49 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Encodes a video file.
         /// </summary>
-        private async Task EncodeVideo(MediaEncodingJob job)
+        private async Task EncodeVideoAsync(MediaEncodingJob job)
         {
-            // duration: ffprobe -i <input> -show_entries format=duration -v quiet -of csv="p=0"
-            // frame: ffmpeg -i <input> -y -f mjpeg -vframes 1 -ss <seconds> <output>
-            // encode: ffmpeg -i <input> -f mp4 -vcodec libx264 -preset veryslow -profile:v main -acodec aac -hide_banner -movflags +faststart -threads 0 <output>
+            var path = job.Media.FilePath.Replace("~/", "");
+            var inputPath = Path.Combine(_env.WebRootPath, path);
+            var encodedPath = Path.ChangeExtension(inputPath, ".mp4");
 
-            // todo
+            await CreateVideoThumbnailAsync(inputPath);
+            await EncodeVideoToMp4Async(inputPath, encodedPath);
+
+            job.Media.IsProcessed = true;
+            job.Media.FilePath = Path.ChangeExtension(job.Media.FilePath, ".mp4");
+        }
+
+        /// <summary>
+        /// Extracts a screenshot from the center of the video.
+        /// </summary>
+        private async Task CreateVideoThumbnailAsync(string path)
+        {
+            var durationRaw = await ProcessHelper.GetOutputAsync(GetFFPath("ffprobe"), $@"-i ""{path}"" -show_entries format=duration -v quiet -of csv=""p=0""");
+            var duration = durationRaw.Parse<double>();
+            var middle = (int) (duration / 2);
+
+            var screenPath = Path.ChangeExtension(path, ".jpg");
+            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{path}"" -y -f mjpeg -vframes 1 -ss {middle} ""{screenPath}""");
+
+            using(var img = Image.FromFile(screenPath))
+                MediaHandlerHelper.CreateThumbnails(screenPath, img);
+
+            File.Delete(screenPath);
+        }
+
+        /// <summary>
+        /// Encodes the video to MP4.
+        /// </summary>
+        private async Task EncodeVideoToMp4Async(string inputPath, string outputPath)
+        {
+            if (inputPath == outputPath)
+                return;
+
+            // todo: check actual format?
+
+            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{inputPath}"" -f mp4 -vcodec libx264 -preset veryslow -profile:v main -acodec aac -hide_banner -movflags +faststart -threads 0 ""{outputPath}""");
+            File.Delete(inputPath);
         }
 
         #endregion
