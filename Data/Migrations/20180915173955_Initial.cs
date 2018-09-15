@@ -160,7 +160,7 @@ namespace Bonsai.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MediaEncodingJob",
+                name: "MediaJobs",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -168,9 +168,9 @@ namespace Bonsai.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MediaEncodingJob", x => x.Id);
+                    table.PrimaryKey("PK_MediaJobs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MediaEncodingJob_Media_MediaId",
+                        name: "FK_MediaJobs_Media_MediaId",
                         column: x => x.MediaId,
                         principalTable: "Media",
                         principalColumn: "Id",
@@ -409,8 +409,8 @@ namespace Bonsai.Data.Migrations
                 column: "UploaderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MediaEncodingJob_MediaId",
-                table: "MediaEncodingJob",
+                name: "IX_MediaJobs_MediaId",
+                table: "MediaJobs",
                 column: "MediaId",
                 unique: true);
 
@@ -585,7 +585,7 @@ namespace Bonsai.Data.Migrations
                 name: "Config");
 
             migrationBuilder.DropTable(
-                name: "MediaEncodingJob");
+                name: "MediaJobs");
 
             migrationBuilder.DropTable(
                 name: "MediaTags");

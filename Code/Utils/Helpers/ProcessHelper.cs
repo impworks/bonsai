@@ -56,7 +56,6 @@ namespace Bonsai.Code.Utils.Helpers
             var tcs = new TaskCompletionSource<T>();
             p.Exited += (s, e) => tcs.SetResult(result(p));
             p.Start();
-            p.BeginOutputReadLine();
             return tcs.Task;
         }
 

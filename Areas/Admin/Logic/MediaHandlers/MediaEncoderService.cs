@@ -108,8 +108,6 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
                             db.MediaJobs.Remove(job);
                             await db.SaveChangesAsync();
                         }
-
-                        await Task.Delay(TimeSpan.FromSeconds(30), Token);
                     }
                     catch (TaskCanceledException)
                     {
@@ -119,6 +117,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
                     {
                         Log.Logger.Error(ex.Demystify(), "An error occured while encoding media.");
                     }
+
+                    await Task.Delay(TimeSpan.FromSeconds(30), Token);
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
             var middle = (int) (duration / 2);
 
             var screenPath = Path.ChangeExtension(path, ".jpg");
-            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{path}"" -y -f mjpeg -vframes 1 -ss {middle} ""{screenPath}""");
+            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{path}"" -y -vframes 1 -ss {middle} ""{screenPath}""");
 
             using(var img = Image.FromFile(screenPath))
                 MediaHandlerHelper.CreateThumbnails(screenPath, img);
@@ -179,7 +179,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
             // todo: check actual format?
 
-            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{inputPath}"" -f mp4 -vcodec libx264 -preset veryslow -profile:v main -acodec aac -hide_banner -movflags +faststart -threads 0 ""{outputPath}""");
+            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{inputPath}"" -f mp4 -vcodec libx264 -preset fast -profile:v main -acodec aac -hide_banner -movflags +faststart -threads 0 ""{outputPath}""");
             File.Delete(inputPath);
         }
 

@@ -200,7 +200,7 @@ namespace Bonsai.Data.Migrations
                     b.HasIndex("MediaId")
                         .IsUnique();
 
-                    b.ToTable("MediaEncodingJob");
+                    b.ToTable("MediaJobs");
                 });
 
             modelBuilder.Entity("Bonsai.Data.Models.MediaTag", b =>
