@@ -13,14 +13,17 @@
                 displayError(data.context, body.description);
             } else {
                 displaySuccess(data.context, body);
+                refreshThumbnail(data.context, body.id);
             }
         },
         fail: function (e, data) {
             displayError(data.context);
         },
         progress: function(e, data) {
-            var prog = parseInt(data.loaded / data.total * 100, 10);
-            data.context.find('progress').text(prog + '%');
+            var percent = parseInt(data.loaded / data.total * 100, 10) + '%';
+            data.context.find('.progress-bar')
+                .css({width: percent})
+                .text(percent);
         }
     });
 
@@ -49,5 +52,18 @@
     function createUploadItem() {
         var html = $('#uploader-item-template-progress').html();
         return $(html).appendTo('.media-uploader-items');
+    }
+
+    function refreshThumbnail($ctx, id) {
+        $.ajax('/admin/media/thumbs?ids=' + encodeURIComponent(id))
+            .done(function (raw) {
+                var data = raw[0];
+                if (data.isProcessed) {
+                    $ctx.find('.media-uploader-preview')
+                        .css('background-image', 'url(' + data.thumbnailPath + '?' + new Date().getTime() + ')');
+                } else {
+                    setTimeout(function() { refreshThumbnail($ctx, id); }, 5000);
+                }
+            });
     }
 });

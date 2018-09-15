@@ -31,6 +31,11 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         public MediaType Type { get; set; }
 
         /// <summary>
+        /// Flag indicating that the media has been successfully encoded.
+        /// </summary>
+        public bool IsProcessed { get; set; }
+
+        /// <summary>
         /// Description of the media (HTML).
         /// </summary>
         public string Description { get; set; }

@@ -87,6 +87,21 @@ namespace Bonsai.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// Returns the thumbnail status for all specified media files.
+        /// </summary>
+        [HttpGet]
+        [Route("thumbs")]
+        public async Task<ActionResult> GetThumbnails(IEnumerable<Guid> ids)
+        {
+            var vms = await _media.GetThumbnailsAsync(ids);
+
+            foreach(var vm in vms)
+                vm.ThumbnailPath = Url.Content(vm.ThumbnailPath);
+
+            return Json(vms);
+        }
+
+        /// <summary>
         /// Displays the update form for a media file.
         /// </summary>
         [HttpGet]

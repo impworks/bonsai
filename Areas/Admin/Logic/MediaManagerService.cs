@@ -127,12 +127,7 @@ namespace Bonsai.Areas.Admin.Logic
             var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal);
             _db.Changes.Add(changeset);
 
-            return new MediaUploadResultVM
-            {
-                Id = media.Id,
-                Key = media.Key,
-                ThumbnailPath = MediaPresenterService.GetSizedMediaPath(filePath, MediaSize.Small)
-            };
+            return _mapper.Map<MediaUploadResultVM>(media);
         }
 
         /// <summary>
@@ -222,6 +217,17 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             media.IsDeleted = true;
+        }
+
+        /// <summary>
+        /// Returns the thumbnails for the media files.
+        /// </summary>
+        public async Task<IReadOnlyList<MediaUploadResultVM>> GetThumbnailsAsync(IEnumerable<Guid> ids)
+        {
+            return await _db.Media
+                            .Where(x => ids.Contains(x.Id))
+                            .ProjectTo<MediaUploadResultVM>()
+                            .ToListAsync();
         }
 
         #endregion

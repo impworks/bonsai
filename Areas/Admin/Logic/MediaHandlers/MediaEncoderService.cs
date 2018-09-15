@@ -144,8 +144,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
             var inputPath = Path.Combine(_env.WebRootPath, path);
             var encodedPath = Path.ChangeExtension(inputPath, ".mp4");
 
-            await CreateVideoThumbnailAsync(inputPath);
             await EncodeVideoToMp4Async(inputPath, encodedPath);
+            await CreateVideoThumbnailAsync(encodedPath);
 
             job.Media.IsProcessed = true;
             job.Media.FilePath = Path.ChangeExtension(job.Media.FilePath, ".mp4");
