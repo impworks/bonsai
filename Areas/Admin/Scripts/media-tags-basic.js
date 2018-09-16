@@ -60,7 +60,7 @@
         var url = '/admin/suggest/pages?query=' + encodeURIComponent(query);
         types.forEach(function (t) { url += '&types=' + encodeURIComponent(t); });
 
-        $.ajax({ url: url })
+        $.ajax(url)
             .done(function (data) {
                 callback(data);
             });
