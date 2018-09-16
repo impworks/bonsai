@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
+using Bonsai.Areas.Admin.ViewModels.Media;
+using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Logic.Changesets
 {
@@ -27,7 +31,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         }
 
         private readonly AppDbContext _db;
-        private IReadOnlyDictionary<ChangesetEntityType, IChangesetRenderer> _renderers;
+        private readonly IReadOnlyDictionary<ChangesetEntityType, IChangesetRenderer> _renderers;
 
         #region Public methods
 
@@ -117,12 +121,41 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 Id = chg.Id,
                 Author = chg.Author.FirstName + " " + chg.Author.LastName,
                 Date = chg.Date,
-                Type = GetChangeType(chg),
+                ChangeType = GetChangeType(chg),
+                EntityType = chg.Type,
                 ThumbnailUrl = chg.EditedMedia != null
                     ? MediaPresenterService.GetSizedMediaPath(chg.EditedMedia.FilePath, MediaSize.Small)
                     : null,
                 Changes = GetDiff(prevData, nextData, renderer)
             };
+        }
+
+        /// <summary>
+        /// Restores the contents of an entity to the state befor an edit.
+        /// </summary>
+        public async Task<IVersionable> GetReverseEditorStateAsync(Guid id)
+        {
+            var chg = await _db.Changes
+                               .AsNoTracking()
+                               .GetAsync(x => x.Id == id, "Правка не найдена");
+
+            if (string.IsNullOrEmpty(chg.OriginalState))
+                throw new OperationException("Правка не может быть отменена");
+
+            switch (chg.Type)
+            {
+                case ChangesetEntityType.Media:
+                    return JsonConvert.DeserializeObject<MediaEditorVM>(chg.OriginalState);
+
+                case ChangesetEntityType.Page:
+                    return JsonConvert.DeserializeObject<PageEditorVM>(chg.OriginalState);
+
+                case ChangesetEntityType.Relation:
+                    return JsonConvert.DeserializeObject<RelationEditorVM>(chg.OriginalState);
+
+                default:
+                    throw new ArgumentException($"Неизвестный тип сущности: {chg.Type}!");
+            }
         }
 
         #endregion

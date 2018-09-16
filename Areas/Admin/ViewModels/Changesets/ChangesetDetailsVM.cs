@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.ViewModels.Changesets
 {
@@ -26,7 +27,12 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         /// <summary>
         /// Type of the change.
         /// </summary>
-        public ChangesetType Type { get; set; }
+        public ChangesetType ChangeType { get; set; }
+
+        /// <summary>
+        /// Type of the changed entity.
+        /// </summary>
+        public ChangesetEntityType EntityType { get; set; }
 
         /// <summary>
         /// URL of the thumbnail (for media changesets).

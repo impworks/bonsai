@@ -65,6 +65,7 @@
                 <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Date), title = "Дата" })</th>
                 <th width="15%">Действие</th>
                 <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Author), title = "Автор" })</th>
+                <th width="1px"></th>
             </tr>
         </thead>
         <tbody>
@@ -85,6 +86,11 @@
                     <td><span title="@c.Date.LocalDateTime.ToLongDateString()">@c.Date.Humanize()</span></td>
                     <td>@c.ChangeType.GetEnumDescription()</td>
                     <td>@c.Author</td>
+                    <td class="admin-row-actions">
+                        <a href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = c.Id})">
+                            <span class="fa fa-history" title="Восстановить"></span>
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>

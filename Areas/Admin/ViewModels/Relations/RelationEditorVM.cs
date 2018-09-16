@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
@@ -10,12 +11,12 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
     /// <summary>
     /// Editable details of a relation.
     /// </summary>
-    public class RelationEditorVM: IMapped
+    public class RelationEditorVM: IMapped, IVersionable
     {
         /// <summary>
         /// Surrogate ID.
         /// </summary>
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// ID of the source page.

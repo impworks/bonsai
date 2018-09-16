@@ -13,7 +13,7 @@
 
         <dl class="row">
             <dt class="col-sm-2">Действие</dt>
-            <dd class="col-sm-10">@Model.Type.GetEnumDescription()</dd>
+            <dd class="col-sm-10">@Model.ChangeType.GetEnumDescription()</dd>
 
             <dt class="col-sm-2">Автор</dt>
             <dd class="col-sm-10">@Model.Author</dd>
@@ -22,7 +22,7 @@
             <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f") (@Model.Date.ToLocalTime().Humanize())</dd>
         </dl>
 
-        @if(Model.Type != ChangesetType.Removed && Model.Changes.Any())
+        @if(Model.ChangeType != ChangesetType.Removed && Model.Changes.Any())
         {
             <h1>Содержание</h1>
 
@@ -46,3 +46,4 @@
         </div>
     }
 </div>
+<a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new { area = "Admin", id = Model.Id })">Восстановить</a>

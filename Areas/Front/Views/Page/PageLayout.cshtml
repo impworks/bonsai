@@ -1,13 +1,12 @@
-﻿@using Bonsai.Areas.Front.ViewModels;
-@using Bonsai.Areas.Front.ViewModels.Page
+﻿@using Bonsai.Areas.Front.ViewModels.Page
 @model PageVMBase
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
     ViewBag.PageModel = Model;
     var pageVm = (PageTitleVM)ViewBag.PageModel;
     var actions = new[] {
-        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "far fa-newspaper"},
-        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "far fa-image"}
+        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "fa-user"},
+        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "fa-image"}
     };
 }
 
@@ -21,14 +20,7 @@
             @foreach(var action in actions)
             {
                 <li class="nav-item">
-                    @if(action.Active)
-                    {
-                        <a class="nav-link active" href="@action.Url"><i class="@action.Icon"></i> @action.Title</a>
-                    }
-                    else
-                    {
-                        <a class="nav-link" href="@action.Url"><i class="@action.Icon"></i> @action.Title</a>
-                    }
+                    <a class="nav-link @(action.Active ? "active" : "")" href="@action.Url"><i class="fa @action.Icon"></i> @action.Title</a>
                 </li>
             }
         </ul>
