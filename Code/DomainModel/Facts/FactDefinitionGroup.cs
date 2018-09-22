@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Bonsai.Code.DomainModel.Facts
 {
@@ -7,12 +8,12 @@ namespace Bonsai.Code.DomainModel.Facts
     /// </summary>
     public class FactDefinitionGroup
     {
-        public FactDefinitionGroup(string id, string title, bool isMain, params IFactDefinition[] facts)
+        public FactDefinitionGroup(string id, string title, bool isMain, params IFactDefinition[] defs)
         {
             Id = id;
             Title = title;
             IsMain = isMain;
-            Facts = facts;
+            Defs = defs;
         }
 
         /// <summary>
@@ -33,6 +34,7 @@ namespace Bonsai.Code.DomainModel.Facts
         /// <summary>
         /// Nested fact definitions.
         /// </summary>
-        public IReadOnlyList<IFactDefinition> Facts { get; }
+        [JsonIgnore]
+        public IReadOnlyList<IFactDefinition> Defs { get; }
     }
 }

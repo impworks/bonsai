@@ -74,7 +74,8 @@ namespace Bonsai.Areas.Front.Logic
 
             var media = page.MediaTags
                             .Where(x => x.Media.IsDeleted == false)
-                            .Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small));
+                            .Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small))
+                            .ToList();
 
             return await ConfigureAsync(page, new PageMediaVM { Media = media });
         }
@@ -128,7 +129,7 @@ namespace Bonsai.Areas.Front.Logic
             {
                 var factsVms = new List<FactModelBase>();
 
-                foreach (var fact in group.Facts)
+                foreach (var fact in group.Defs)
                 {
                     var key = group.Id + "." + fact.Id;
                     var factInfo = pageFacts[key];

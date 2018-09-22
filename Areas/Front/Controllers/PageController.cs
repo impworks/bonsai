@@ -2,6 +2,7 @@
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Code.Mvc;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -17,12 +18,14 @@ namespace Bonsai.Areas.Front.Controllers
     [Authorize(Policy = AuthRequirement.Name)]
     public class PageController: AppControllerBase
     {
-        public PageController(PagePresenterService pages)
+        public PageController(PagePresenterService pages, CacheService cache)
         {
             _pages = pages;
+            _cache = cache;
         }
 
         private readonly PagePresenterService _pages;
+        private readonly CacheService _cache;
 
         /// <summary>
         /// Displays the page description.
@@ -36,7 +39,7 @@ namespace Bonsai.Areas.Front.Controllers
 
             try
             {
-                var vm = await _pages.GetPageDescriptionAsync(encKey);
+                var vm = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageDescriptionAsync(key));
                 return View(vm);
             }
             catch (RedirectRequiredException ex)
@@ -58,7 +61,7 @@ namespace Bonsai.Areas.Front.Controllers
 
             try
             {
-                var vm = await _pages.GetPageMediaAsync(encKey);
+                var vm = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageMediaAsync(key));
                 return View(vm);
             }
             catch(RedirectRequiredException ex)

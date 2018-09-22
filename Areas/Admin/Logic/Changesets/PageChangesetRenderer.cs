@@ -118,7 +118,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             foreach (var group in FactDefinitions.Groups[pageType])
             {
                 var groupVm = new FactGroupVM { Definition = group, Facts = new List<FactModelBase>() };
-                foreach (var fact in group.Facts)
+                foreach (var fact in group.Defs)
                 {
                     var key = group.Id + "." + fact.Id;
                     var factInfo = facts[key];

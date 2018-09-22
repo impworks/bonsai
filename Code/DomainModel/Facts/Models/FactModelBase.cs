@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Bonsai.Code.DomainModel.Facts.Models
+﻿namespace Bonsai.Code.DomainModel.Facts.Models
 {
     /// <summary>
     /// Base class for all fact templates.
@@ -10,7 +8,6 @@ namespace Bonsai.Code.DomainModel.Facts.Models
         /// <summary>
         /// Definition of the current fact.
         /// </summary>
-        [JsonIgnore]
         public IFactDefinition Definition { get; set; }
 
         /// <summary>

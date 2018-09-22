@@ -2,6 +2,7 @@
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Code.Mvc;
+using Bonsai.Code.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +16,14 @@ namespace Bonsai.Areas.Front.Controllers
     [Authorize(Policy = AuthRequirement.Name)]
     public class MediaController: AppControllerBase
     {
-        public MediaController(MediaPresenterService media)
+        public MediaController(MediaPresenterService media, CacheService cache)
         {
             _media = media;
+            _cache = cache;
         }
 
         private readonly MediaPresenterService _media;
+        private readonly CacheService _cache;
 
         /// <summary>
         /// Displays media and details.
@@ -28,8 +31,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}")]
         public async Task<ActionResult> ViewMedia(string key)
         {
-            var vm = await _media.GetMediaAsync(key);
-
+            var vm = await _cache.GetOrAddAsync(key, async() => await _media.GetMediaAsync(key));
             return View(vm);
         }
     }

@@ -168,7 +168,7 @@ namespace Bonsai.Areas.Admin.Controllers
         private async Task<ActionResult> ViewEditorFormAsync(PageEditorVM vm, string tab = null)
         {
             var groups = FactDefinitions.Groups[vm.Type];
-            var editorTpls = groups.SelectMany(x => x.Facts)
+            var editorTpls = groups.SelectMany(x => x.Defs)
                                    .Select(x => x.Kind)
                                    .Distinct()
                                    .Select(x => $"~/Areas/Admin/Views/Pages/Facts/{x.Name}.cshtml")
