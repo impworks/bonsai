@@ -7,6 +7,7 @@ using Bonsai.Areas.Admin.ViewModels.Changesets;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Admin.ViewModels.Relations;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +68,10 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Revert(Guid id)
         {
             var vm = await _changes.GetChangesetDetailsAsync(id);
+
+            if (vm.ChangeType != ChangesetType.Removed && vm.ChangeType != ChangesetType.Updated)
+                throw new OperationException("Эта правка не может быть отменена");
+
             return View(vm);
         }
 
@@ -80,11 +85,11 @@ namespace Bonsai.Areas.Admin.Controllers
             var vm = await _changes.GetReverseEditorStateAsync(id);
 
             if (vm is MediaEditorVM mvm)
-                await _media.UpdateAsync(mvm, User);
+                await _media.UpdateAsync(mvm, User, id);
             else if (vm is PageEditorVM pvm)
-                await _pages.UpdateAsync(pvm, User);
+                await _pages.UpdateAsync(pvm, User, id);
             else if (vm is RelationEditorVM rvm)
-                await _rels.UpdateAsync(rvm, User);
+                await _rels.UpdateAsync(rvm, User, id);
 
             await _db.SaveChangesAsync();
 

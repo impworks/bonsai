@@ -87,9 +87,12 @@
                     <td>@c.ChangeType.GetEnumDescription()</td>
                     <td>@c.Author</td>
                     <td class="admin-row-actions">
-                        <a href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = c.Id})">
-                            <span class="fa fa-history" title="Восстановить"></span>
-                        </a>
+                        @if (c.ChangeType == ChangesetType.Updated || c.ChangeType == ChangesetType.Removed)
+                        {
+                            <a href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = c.Id})">
+                                <span class="fa fa-history" title="Восстановить"></span>
+                            </a>
+                        }
                     </td>
                 </tr>
             }

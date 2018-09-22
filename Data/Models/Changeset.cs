@@ -30,6 +30,11 @@ namespace Bonsai.Data.Models
         public ChangesetEntityType Type { get; set; }
 
         /// <summary>
+        /// Original changeset which has been reverted by the current one.
+        /// </summary>
+        public Guid? RevertedChangesetId { get; set; }
+
+        /// <summary>
         /// ID of the edited page.
         /// </summary>
         public Guid? EditedPageId { get; set; }

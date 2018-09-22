@@ -157,7 +157,7 @@ namespace Bonsai.Areas.Admin.Controllers
 
             await _elastic.RemovePageAsync(page);
 
-            return RedirectToSuccess("Медиа-файл удален");
+            return RedirectToSuccess("Страница удалена");
         }
 
         #region Helpers

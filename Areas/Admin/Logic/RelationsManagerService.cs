@@ -100,7 +100,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(rels);
 
-            var changeset = await GetChangesetAsync(null, vm, rel.Id, principal);
+            var changeset = await GetChangesetAsync(null, vm, rel.Id, principal, null);
             _db.Changes.Add(changeset);
 
             _db.Relations.AddRange(rels);
@@ -122,22 +122,24 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the relation.
         /// </summary>
-        public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
+        public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null)
         {
             await ValidateRequestAsync(vm);
 
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == vm.Id
                                               && x.IsComplementary == false
-                                              && x.IsDeleted == false, "Связь не найдена");
+                                              && (x.IsDeleted == false || revertedId != null),
+                                         "Связь не найдена");
 
             var compRel = await FindComplementaryRelationAsync(rel);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, principal);
+            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, principal, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, rel);
             MapComplementaryRelation(rel, compRel);
+            rel.IsDeleted = rel.IsDeleted && revertedId != null;
 
             await _validator.ValidateAsync(new[] {rel, compRel});
         }
@@ -165,7 +167,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var compRel = await FindComplementaryRelationAsync(rel);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal);
+            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal, null);
             _db.Changes.Add(changeset);
 
             rel.IsDeleted = true;
@@ -281,7 +283,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Gets the changeset for updates.
         /// </summary>
-        private async Task<Changeset> GetChangesetAsync(RelationEditorVM prev, RelationEditorVM next, Guid id, ClaimsPrincipal principal)
+        private async Task<Changeset> GetChangesetAsync(RelationEditorVM prev, RelationEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId)
         {
             if(prev == null && next == null)
                 throw new ArgumentNullException();
@@ -292,6 +294,7 @@ namespace Bonsai.Areas.Admin.Logic
             return new Changeset
             {
                 Id = Guid.NewGuid(),
+                RevertedChangesetId = revertedId,
                 Type = ChangesetEntityType.Relation,
                 Date = DateTime.Now,
                 EditedRelationId = id,

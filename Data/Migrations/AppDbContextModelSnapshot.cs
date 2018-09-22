@@ -123,6 +123,8 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("OriginalState");
 
+                    b.Property<Guid?>("RevertedChangesetId");
+
                     b.Property<int>("Type");
 
                     b.Property<string>("UpdatedState");

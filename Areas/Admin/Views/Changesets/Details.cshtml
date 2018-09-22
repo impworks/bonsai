@@ -46,4 +46,8 @@
         </div>
     }
 </div>
-<a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new { area = "Admin", id = Model.Id })">Восстановить</a>
+
+@if (Model.ChangeType == ChangesetType.Updated || Model.ChangeType == ChangesetType.Removed)
+{
+    <a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = Model.Id})">Восстановить</a>
+}

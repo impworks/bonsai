@@ -211,6 +211,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private ChangesetType GetChangeType(Changeset chg)
         {
+            if (chg.RevertedChangesetId != null)
+                return ChangesetType.Restored;
+
             var wasNull = string.IsNullOrEmpty(chg.OriginalState);
             var isNull = string.IsNullOrEmpty(chg.UpdatedState);
 
