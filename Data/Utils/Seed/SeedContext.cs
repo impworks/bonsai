@@ -288,6 +288,7 @@ namespace Bonsai.Data.Utils.Seed
                 Description = description,
                 Tags = new List<MediaTag>(),
                 UploadDate = DateTimeOffset.Now,
+                IsProcessed = true,
                 MimeType = mimeType ?? GetDefaultMimeType()
             };
             _db.Media.Add(media);

@@ -125,6 +125,7 @@ namespace Bonsai.Data.Migrations
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     AuthorId = table.Column<string>(nullable: false),
                     Type = table.Column<int>(nullable: false),
+                    RevertedChangesetId = table.Column<Guid>(nullable: true),
                     EditedPageId = table.Column<Guid>(nullable: true),
                     EditedMediaId = table.Column<Guid>(nullable: true),
                     EditedRelationId = table.Column<Guid>(nullable: true),

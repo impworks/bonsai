@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AutoMapper;
+using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
@@ -12,7 +13,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
     /// <summary>
     /// Detailed information about a page's contents.
     /// </summary>
-    public class PageEditorVM: IMapped
+    public class PageEditorVM: IMapped, IVersionable
     {
         /// <summary>
         /// Surrogate ID.

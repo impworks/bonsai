@@ -124,7 +124,7 @@ namespace Bonsai.Areas.Admin.Logic
                 });
             }
 
-            var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal);
+            var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal, null);
             _db.Changes.Add(changeset);
 
             return _mapper.Map<MediaUploadResultVM>(media);
@@ -174,19 +174,21 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the media data.
         /// </summary>
-        public async Task UpdateAsync(MediaEditorVM vm, ClaimsPrincipal principal)
+        public async Task UpdateAsync(MediaEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null)
         {
             await ValidateRequestAsync(vm);
 
             var media = await _db.Media
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден");
+                                 .GetAsync(x => x.Id == vm.Id && (x.IsDeleted == false || revertedId != null),
+                                           "Медиа-файл не найден");
 
             var prevState = await RequestUpdateAsync(vm.Id);
-            var changeset = await GetChangesetAsync(prevState, vm, vm.Id, principal);
+            var changeset = await GetChangesetAsync(prevState, vm, vm.Id, principal, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, media);
+            media.IsDeleted = media.IsDeleted && revertedId != null;
 
             _db.MediaTags.RemoveRange(media.Tags);
             media.Tags = await DeserializeTagsAsync(vm);
@@ -213,7 +215,7 @@ namespace Bonsai.Areas.Admin.Logic
                                  .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
 
             var prevState = await RequestUpdateAsync(id);
-            var changeset = await GetChangesetAsync(prevState, null, id, principal);
+            var changeset = await GetChangesetAsync(prevState, null, id, principal, null);
             _db.Changes.Add(changeset);
 
             media.IsDeleted = true;
@@ -347,7 +349,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Gets the changeset for updates.
         /// </summary>
-        private async Task<Changeset> GetChangesetAsync(MediaEditorVM prev, MediaEditorVM next, Guid id, ClaimsPrincipal principal)
+        private async Task<Changeset> GetChangesetAsync(MediaEditorVM prev, MediaEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId)
         {
             if(prev == null && next == null)
                 throw new ArgumentNullException();
@@ -358,6 +360,7 @@ namespace Bonsai.Areas.Admin.Logic
             return new Changeset
             {
                 Id = Guid.NewGuid(),
+                RevertedChangesetId = revertedId,
                 Type = ChangesetEntityType.Media,
                 Date = DateTime.Now,
                 EditedMediaId = id,

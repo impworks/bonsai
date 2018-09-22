@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180915173955_Initial")]
+    [Migration("20180922135619_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,8 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid?>("EditedRelationId");
 
                     b.Property<string>("OriginalState");
+
+                    b.Property<Guid?>("RevertedChangesetId");
 
                     b.Property<int>("Type");
 

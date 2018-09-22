@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
@@ -10,7 +11,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
     /// <summary>
     /// Editable details of a media file.
     /// </summary>
-    public class MediaEditorVM: IMapped
+    public class MediaEditorVM: IMapped, IVersionable
     {
         /// <summary>
         /// Surrogate ID.

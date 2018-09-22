@@ -23,6 +23,12 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         /// The entity has been removed.
         /// </summary>
         [Description("Удалено")]
-        Removed
+        Removed,
+
+        /// <summary>
+        /// The previous changeset has been reverted.
+        /// </summary>
+        [Description("Восстановлено")]
+        Restored
     }
 }

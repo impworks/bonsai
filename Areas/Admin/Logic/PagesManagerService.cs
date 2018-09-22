@@ -99,7 +99,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(page, vm.Facts);
 
-            var changeset = await GetChangesetAsync(null, vm, page.Id, principal);
+            var changeset = await GetChangesetAsync(null, vm, page.Id, principal, null);
             _db.Changes.Add(changeset);
 
             _db.Pages.Add(page);
@@ -131,22 +131,24 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the changes to a page.
         /// </summary>
-        public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal)
+        public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null)
         {
             await ValidateRequestAsync(vm);
 
             var page = await _db.Pages
                                 .Include(x => x.Aliases)
                                 .Include(x => x.MainPhoto)
-                                .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Страница не найдена");
+                                .GetAsync(x => x.Id == vm.Id && (x.IsDeleted == false || revertedId != null),
+                                          "Страница не найдена");
 
             await _validator.ValidateAsync(page, vm.Facts);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, vm.Id, principal);
+            var changeset = await GetChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, vm.Id, principal, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
             page.MainPhotoId = (await FindMainPhotoAsync(vm.MainPhotoKey))?.Id;
+            page.IsDeleted = page.IsDeleted && revertedId != null;
 
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id);
 
@@ -174,7 +176,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<PageTitleExtendedVM> RequestRemoveAsync(Guid id)
         {
             return await _db.Pages
-                            .Where(x => x.IsDeleted)
+                            .Where(x => x.IsDeleted == false)
                             .ProjectTo<PageTitleExtendedVM>()
                             .GetAsync(x => x.Id == id, "Страница не найдена");
         }
@@ -188,7 +190,7 @@ namespace Bonsai.Areas.Admin.Logic
                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
 
             var prev = await RequestUpdateAsync(id);
-            var changeset = await GetChangesetAsync(prev, null, id, principal);
+            var changeset = await GetChangesetAsync(prev, null, id, principal, null);
             _db.Changes.Add(changeset);
 
             page.IsDeleted = true;
@@ -241,7 +243,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Gets the changeset for updates.
         /// </summary>
-        private async Task<Changeset> GetChangesetAsync(PageEditorVM prev, PageEditorVM next, Guid id, ClaimsPrincipal principal)
+        private async Task<Changeset> GetChangesetAsync(PageEditorVM prev, PageEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId)
         {
             if(prev == null && next == null)
                 throw new ArgumentNullException();
@@ -252,6 +254,7 @@ namespace Bonsai.Areas.Admin.Logic
             return new Changeset
             {
                 Id = Guid.NewGuid(),
+                RevertedChangesetId = revertedId,
                 Type = ChangesetEntityType.Page,
                 Date = DateTime.Now,
                 EditedPageId = id,
