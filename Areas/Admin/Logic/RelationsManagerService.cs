@@ -7,6 +7,7 @@ using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -26,18 +27,20 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class RelationsManagerService
     {
-        public RelationsManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr, RelationValidator validator)
+        public RelationsManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr, RelationValidator validator, CacheService cache)
         {
             _db = db;
             _mapper = mapper;
             _userMgr = userMgr;
             _validator = validator;
+            _cache = cache;
         }
 
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userMgr;
         private readonly RelationValidator _validator;
+        private readonly CacheService _cache;
 
         /// <summary>
         /// Returns the found relations.
@@ -104,6 +107,8 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             _db.Relations.AddRange(rels);
+
+            _cache.Clear();
         }
 
         /// <summary>
@@ -142,6 +147,8 @@ namespace Bonsai.Areas.Admin.Logic
             rel.IsDeleted = rel.IsDeleted && revertedId != null;
 
             await _validator.ValidateAsync(new[] {rel, compRel});
+
+            _cache.Clear();
         }
 
         /// <summary>
@@ -172,6 +179,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             rel.IsDeleted = true;
             _db.Relations.Remove(compRel);
+
+            _cache.Clear();
         }
 
         /// <summary>

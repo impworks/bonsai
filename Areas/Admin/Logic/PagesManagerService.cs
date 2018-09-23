@@ -8,6 +8,8 @@ using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -24,18 +26,20 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class PagesManagerService
     {
-        public PagesManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr, PageValidator validator)
+        public PagesManagerService(AppDbContext db, IMapper mapper, UserManager<AppUser> userMgr, PageValidator validator, CacheService cache)
         {
             _db = db;
             _mapper = mapper;
             _userMgr = userMgr;
             _validator = validator;
+            _cache = cache;
         }
 
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userMgr;
         private readonly PageValidator _validator;
+        private readonly CacheService _cache;
 
         #region Public methods
 
@@ -143,7 +147,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(page, vm.Facts);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<PageEditorVM>(page), vm, vm.Id, principal, revertedId);
+            var prevVm = _mapper.Map<PageEditorVM>(page);
+            var changeset = await GetChangesetAsync(prevVm, vm, vm.Id, principal, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
@@ -166,6 +171,11 @@ namespace Bonsai.Areas.Admin.Logic
                     Title = x
                 })
             );
+
+            if (prevVm.Title != vm.Title || prevVm.Facts != vm.Facts)
+                _cache.Clear();
+            else
+                _cache.Remove<PageDescriptionVM>(vm.Id.ToString());
 
             return page;
         }
@@ -194,6 +204,8 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             page.IsDeleted = true;
+
+            _cache.Clear();
 
             return page;
         }

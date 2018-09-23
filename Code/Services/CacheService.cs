@@ -74,6 +74,14 @@ namespace Bonsai.Code.Services
             _cache.TryRemove((typeof(T), id), out _);
         }
 
+        /// <summary>
+        /// Clears the entire cache.
+        /// </summary>
+        public void Clear()
+        {
+            _cache.Clear();
+        }
+
         #endregion
 
         #region IDisposable implementation
