@@ -390,21 +390,24 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         private async Task ClearCacheAsync(Media media)
         {
-            _cache.Remove<MediaVM>(media.Id.ToString());
+            _cache.Remove<MediaVM>(media.Key);
 
-            foreach(var tag in media.Tags)
-                if(tag.ObjectId is Guid id)
-                    _cache.Remove<PageMediaVM>(id.ToString());
+            foreach (var tag in media.Tags)
+            {
+                var key = tag.Object?.Key;
+                if(key != null)
+                    _cache.Remove<PageMediaVM>(key);
+            }
 
             var pagesWithMain = await _db.Pages
                                          .Where(x => x.MainPhotoId == media.Id)
-                                         .Select(x => x.Id.ToString())
+                                         .Select(x => x.Key)
                                          .ToListAsync();
 
-            foreach (var id in pagesWithMain)
+            foreach (var key in pagesWithMain)
             {
-                _cache.Remove<PageMediaVM>(id);
-                _cache.Remove<PageDescriptionVM>(id);
+                _cache.Remove<PageMediaVM>(key);
+                _cache.Remove<PageDescriptionVM>(key);
             }
         }
 

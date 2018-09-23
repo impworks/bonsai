@@ -175,7 +175,7 @@ namespace Bonsai.Areas.Admin.Logic
             if (prevVm.Title != vm.Title || prevVm.Facts != vm.Facts)
                 _cache.Clear();
             else
-                _cache.Remove<PageDescriptionVM>(vm.Id.ToString());
+                _cache.Remove<PageDescriptionVM>(page.Key);
 
             return page;
         }
