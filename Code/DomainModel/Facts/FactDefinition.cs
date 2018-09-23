@@ -17,6 +17,7 @@ namespace Bonsai.Code.DomainModel.Facts
             Kind = typeof(T);
 
             var parts = (shortTitle ?? title).Split('|');
+            ShortTitle = shortTitle;
             ShortTitleSingle = parts.First();
             ShortTitleMultiple = parts.Last();
         }
@@ -30,6 +31,12 @@ namespace Bonsai.Code.DomainModel.Facts
         /// Readable title.
         /// </summary>
         public string Title { get; }
+
+        /// <summary>
+        /// The original short title.
+        /// Required for json deserialization.
+        /// </summary>
+        public string ShortTitle { get; }
 
         /// <summary>
         /// Short title for displaying in the info block (with single value).

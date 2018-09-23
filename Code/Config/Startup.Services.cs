@@ -20,6 +20,7 @@ namespace Bonsai.Code.Config
             // common
             services.AddScoped<MarkdownService>();
             services.AddScoped<AppConfigService>();
+            services.AddScoped<CacheService>();
 
             // frontend
             services.AddScoped<RelationsPresenterService>();

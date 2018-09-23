@@ -10,8 +10,9 @@ using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
-using Bonsai.Areas.Front.Logic;
-using Bonsai.Code.DomainModel.Media;
+using Bonsai.Areas.Front.ViewModels.Media;
+using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -33,13 +34,21 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class MediaManagerService
     {
-        public MediaManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper, IHostingEnvironment env, IEnumerable<IMediaHandler> mediaHandlers)
+        public MediaManagerService(
+            AppDbContext db,
+            UserManager<AppUser> userMgr,
+            IMapper mapper,
+            IHostingEnvironment env,
+            IEnumerable<IMediaHandler> mediaHandlers,
+            CacheService cache
+        )
         {
             _db = db;
             _mapper = mapper;
             _userMgr = userMgr;
             _env = env;
             _mediaHandlers = mediaHandlers.ToList();
+            _cache = cache;
         }
 
         private readonly AppDbContext _db;
@@ -47,6 +56,7 @@ namespace Bonsai.Areas.Admin.Logic
         private readonly UserManager<AppUser> _userMgr;
         private readonly IHostingEnvironment _env;
         private readonly IReadOnlyList<IMediaHandler> _mediaHandlers;
+        private readonly CacheService _cache;
 
         #region Public methods
 
@@ -192,6 +202,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.MediaTags.RemoveRange(media.Tags);
             media.Tags = await DeserializeTagsAsync(vm);
+
+            await ClearCacheAsync(media);
         }
 
         /// <summary>
@@ -212,6 +224,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var media = await _db.Media
+                                 .Include(x => x.Tags)
                                  .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
 
             var prevState = await RequestUpdateAsync(id);
@@ -219,6 +232,8 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             media.IsDeleted = true;
+
+            await ClearCacheAsync(media);
         }
 
         /// <summary>
@@ -368,6 +383,32 @@ namespace Bonsai.Areas.Admin.Logic
                 OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
             };
+        }
+
+        /// <summary>
+        /// Clears the related pages from cache.
+        /// </summary>
+        private async Task ClearCacheAsync(Media media)
+        {
+            _cache.Remove<MediaVM>(media.Key);
+
+            foreach (var tag in media.Tags)
+            {
+                var key = tag.Object?.Key;
+                if(key != null)
+                    _cache.Remove<PageMediaVM>(key);
+            }
+
+            var pagesWithMain = await _db.Pages
+                                         .Where(x => x.MainPhotoId == media.Id)
+                                         .Select(x => x.Key)
+                                         .ToListAsync();
+
+            foreach (var key in pagesWithMain)
+            {
+                _cache.Remove<PageMediaVM>(key);
+                _cache.Remove<PageDescriptionVM>(key);
+            }
         }
 
         #endregion

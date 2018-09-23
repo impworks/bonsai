@@ -90,7 +90,7 @@
                         {
                             <div class="editor-facts-group">
                                 <h4>@group.Title</h4>
-                                @foreach(var fact in group.Facts)
+                                @foreach(var fact in group.Defs)
                                 {
                                     var id = group.Id + "." + fact.Id;
                                     <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@id'}"></component>

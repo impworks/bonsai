@@ -122,7 +122,7 @@ namespace Bonsai.Code.DomainModel.Facts
 
             Definitions = Groups.ToDictionary(
                 x => x.Key,
-                x => x.Value.SelectMany(y => y.Facts.Select(z => new { Key = y.Id + "." + z.Id, Fact = z }))
+                x => x.Value.SelectMany(y => y.Defs.Select(z => new { Key = y.Id + "." + z.Id, Fact = z }))
                       .ToDictionary(y => y.Key, y => y.Fact)
             );
         }

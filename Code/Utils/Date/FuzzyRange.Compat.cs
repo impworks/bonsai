@@ -18,7 +18,7 @@ namespace Bonsai.Code.Utils.Date
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                var value = reader.Value.ToString();
+                var value = reader.Value?.ToString();
 
                 if(objectType == typeof(FuzzyRange?))
                     return FuzzyRange.TryParse(value);
