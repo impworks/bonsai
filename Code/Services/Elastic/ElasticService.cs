@@ -33,7 +33,12 @@ namespace Bonsai.Code.Services.Elastic
         /// </summary>
         public void ClearPreviousData()
         {
-            if (_client.IndexExists(PAGE_INDEX).Exists)
+            var result = _client.IndexExists(PAGE_INDEX);
+
+            if (!result.IsValid)
+                throw result.OriginalException;
+
+            if (result.Exists)
                 _client.DeleteIndex(PAGE_INDEX);
         }
 

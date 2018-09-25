@@ -18,9 +18,6 @@ namespace Bonsai.Data.Utils.Seed
         /// </summary>
         public static void EnsureSeeded(AppDbContext db, ElasticService elastic = null)
         {
-            // warning! this REMOVES ALL DATA AND FILES
-            ClearPreviousData(db, elastic);
-
             EnsureSystemItemsSeeded(db);
 
             var ctx = new SeedContext(db, elastic);
@@ -84,7 +81,7 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Removes all previous records and files.
         /// </summary>
-        private static void ClearPreviousData(AppDbContext db, ElasticService elastic)
+        public static void ClearPreviousData(AppDbContext db, ElasticService elastic)
         {
             var mediaDir = @".\wwwroot\media";
             if(Directory.Exists(mediaDir))

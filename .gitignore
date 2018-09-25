@@ -293,3 +293,7 @@ wwwroot/assets/fonts/
 wwwroot/media/
 
 External/**/*.*
+
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
