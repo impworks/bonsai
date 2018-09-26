@@ -121,9 +121,20 @@ header {
     .user-popover-link {
         display: block;
         padding: 10px;
+        text-decoration: none;
 
         &:not(:last-of-type) {
             border-bottom: $panel-inner-border;
+        }
+
+        &:hover {
+            span {
+                text-decoration: underline;
+            }
+        }
+
+        .fa {
+            margin-right: 5px;
         }
     }
 }

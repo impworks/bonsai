@@ -23,7 +23,7 @@ namespace Bonsai.Areas.Front.Components
         {
             var user = await _auth.GetCurrentUserAsync(HttpContext.User);
             ViewBag.ReturnUrl = Request.Path.ToString();
-            return View("~/Areas/Front/Views/Auth/_HeaderUserBar.cshtml", user);
+            return View("~/Areas/Front/Views/Components/UserHeader.cshtml", user);
         }
     }
 }
