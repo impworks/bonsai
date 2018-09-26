@@ -101,7 +101,7 @@
 }
 else
 {
-    if(string.IsNullOrEmpty(Model.Request.SearchQuery))
+    if(Model.Request.IsEmpty())
     {
         <div class="alert alert-info">
             Не создано ни одной правки.

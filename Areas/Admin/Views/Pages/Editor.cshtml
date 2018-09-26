@@ -7,6 +7,7 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var formAction = Url.Action(data.IsNew ? "Create" : "Update", "Pages", new { area = "Admin" });
+    var hasPhoto = data.MainPhotoThumbnailUrl != null;
 }
 
 <h1>@ViewBag.Title</h1>
@@ -55,7 +56,7 @@
                     <input type="hidden" asp-for="MainPhotoKey" />
                     <div id="editor-main-photo">
                         <div class="main-photo-wrapper">
-                            @if(data.MainPhotoThumbnailUrl != null)
+                            @if(hasPhoto)
                             {
                                 <img src="@Url.Content(data.MainPhotoThumbnailUrl)" class="main-photo" />
                             }
@@ -70,7 +71,7 @@
                                 </button>
                             </div>
                             <div class="btn-group btn-group-sm">
-                                <button type="button" class="btn btn-outline-danger cmd-remove" title="Удалить">
+                                <button type="button" class="btn btn-outline-danger cmd-remove" style="display: @(hasPhoto ? "inline-block": "none")" title="Удалить">
                                     <i class="fa fa-remove"></i>
                                 </button>
                             </div>

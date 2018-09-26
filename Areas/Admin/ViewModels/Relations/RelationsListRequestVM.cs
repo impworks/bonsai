@@ -12,5 +12,14 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         /// Allowed types of relations.
         /// </summary>
         public RelationType[] Types { get; set; }
+
+        /// <summary>
+        /// Checks if the request has no filter applied.
+        /// </summary>
+        public override bool IsEmpty()
+        {
+            return base.IsEmpty()
+                   && (Types == null || Types.Length == 0);
+        }
     }
 }

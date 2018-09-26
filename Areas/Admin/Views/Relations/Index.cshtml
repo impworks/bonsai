@@ -61,7 +61,7 @@
                         <span class="fa fa-remove" title="Удалить"></span>
                     </a>
                     <a href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = r.Id})">
-                        <span class="fa fa-files-o" title="История изменений"></span>
+                        <span class="fa fa-database" title="История изменений"></span>
                     </a>
                 </td>
             </tr>
@@ -71,7 +71,7 @@
 }
 else
 {
-    if(string.IsNullOrEmpty(Model.Request.SearchQuery))
+    if(Model.Request.IsEmpty())
     {
         <div class="alert alert-info">
             Не добавлено ни одной связи. <br />
