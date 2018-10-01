@@ -21,7 +21,21 @@
     </div>
     <div class="float-right">
         <form action="@baseUrl" method="GET" class="form-inline">
-            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new
+            {
+                request = Model.Request,
+                include = new [] { nameof(RelationsListRequestVM.EntityId) }
+            })
+            @if(Model.EntityTitle != null)
+            {
+                @await Component.InvokeAsync("ListItemFilterComponent", new
+                {
+                    url = baseUrl,
+                    request = Model.Request,
+                    propName = nameof(RelationsListRequestVM.EntityId),
+                    title = Model.EntityTitle
+                })
+            }
             <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(RelationsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя страницы" />
             <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
         </form>

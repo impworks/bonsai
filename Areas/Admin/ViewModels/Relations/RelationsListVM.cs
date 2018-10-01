@@ -7,5 +7,9 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
     /// </summary>
     public class RelationsListVM: ListResultVM<RelationsListRequestVM, RelationTitleVM>
     {
+        /// <summary>
+        /// Title of the page to filter by.
+        /// </summary>
+        public string EntityTitle { get; set; }
     }
 }

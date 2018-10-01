@@ -1,5 +1,24 @@
 ﻿@import '../variables.scss';
 
+.content {
+    .content-header {
+        h1, .dropdown {
+            float: left;
+        }
+
+        .dropdown {
+            margin-top: 30px;
+            margin-left: 10px;
+        }
+
+        &::after {
+            display: block;
+            clear: both;
+            content: " ";
+        }
+    }
+}
+
 .nav.nav-tabs {
     margin: 1rem 0;
 

@@ -9,6 +9,7 @@ using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -36,6 +37,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Index(RelationsListRequestVM request)
         {
+            ViewBag.Data = await GetDataAsync(request);
             var rels = await _rels.GetRelationsAsync(request);
             return View(rels);
         }
@@ -177,6 +179,29 @@ namespace Bonsai.Areas.Admin.Controllers
                     ? new[] {new SelectListItem {Selected = true, Text = page.Title, Value = page.Id.ToString()}}
                     : Array.Empty<SelectListItem>();
             }
+        }
+
+        /// <summary>
+        /// Loads extra data for the filter.
+        /// </summary>
+        private async Task<RelationsListDataVM> GetDataAsync(RelationsListRequestVM request)
+        {
+            var data = new RelationsListDataVM();
+
+            if (request.EntityId != null)
+            {
+                var title = await _db.Pages
+                                     .Where(x => x.Id == request.EntityId)
+                                     .Select(x => x.Title)
+                                     .FirstOrDefaultAsync();
+
+                if (title != null)
+                    data.EntityTitle = title;
+                else
+                    request.EntityId = null;
+            }
+
+            return data;
         }
 
         #endregion

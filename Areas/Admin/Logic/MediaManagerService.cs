@@ -69,29 +69,30 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
+            var result = new MediaListVM { Request = request };
+            await FillAdditionalDataAsync(request, result);
+
             var query = _db.Media.Include(x => x.Tags).AsQueryable();
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
                 query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
 
+            if (request.EntityId != null)
+                query = query.Where(x => x.Tags.Any(y => y.ObjectId == request.EntityId));
+
             if(request.Types?.Length > 0)
                 query = query.Where(x => request.Types.Contains(x.Type));
 
             var totalCount = await query.CountAsync();
+            result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
-            var items = await query.Where(x => x.IsDeleted == false)
+            result.Items = await query.Where(x => x.IsDeleted == false)
                                    .OrderBy(request.OrderBy, request.OrderDescending)
                                    .ProjectTo<MediaThumbnailExtendedVM>()
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
                                    .ToListAsync();
-
-            return new MediaListVM
-            {
-                Items = items,
-                PageCount = (int)Math.Ceiling((double)totalCount / PageSize),
-                Request = request
-            };
+            return result;
         }
 
         /// <summary>
@@ -408,6 +409,25 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 _cache.Remove<PageMediaVM>(key);
                 _cache.Remove<PageDescriptionVM>(key);
+            }
+        }
+        
+        /// <summary>
+        /// Loads extra data for the filter.
+        /// </summary>
+        private async Task FillAdditionalDataAsync(MediaListRequestVM request, MediaListVM data)
+        {
+            if (request.EntityId != null)
+            {
+                var title = await _db.Pages
+                                     .Where(x => x.Id == request.EntityId)
+                                     .Select(x => x.Title)
+                                     .FirstOrDefaultAsync();
+
+                if (title != null)
+                    data.EntityTitle = title;
+                else
+                    request.EntityId = null;
             }
         }
 

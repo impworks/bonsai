@@ -9,3 +9,17 @@
         margin-right: 8px;
     }
 }
+
+.dropdown.dropdown-icons {
+    .dropdown-menu {
+        padding: 0;
+
+        .dropdown-item {
+            padding-left: 10px;
+
+            .fa {
+                margin-right: 5px;
+            }
+        }
+    }
+}

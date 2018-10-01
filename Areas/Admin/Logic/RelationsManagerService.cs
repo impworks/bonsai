@@ -51,7 +51,15 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
+            var result = new RelationsListVM {Request = request};
+            await FillAdditionalDataAsync(request, result);
+
             var query = _db.Relations.Where(x => x.IsComplementary == false && x.IsDeleted == false);
+
+            if (request.EntityId != null)
+                query = query.Where(x => x.DestinationId == request.EntityId
+                                         || x.SourceId == request.EntityId
+                                         || x.EventId == request.EntityId);
 
             if (!string.IsNullOrEmpty(request.SearchQuery))
             {
@@ -65,6 +73,7 @@ namespace Bonsai.Areas.Admin.Logic
                 query = query.Where(x => request.Types.Contains(x.Type));
 
             var totalCount = await query.CountAsync();
+            result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
             if (request.OrderBy == nameof(RelationTitleVM.Destination))
                 query = query.OrderBy(x => x.Destination.Title, request.OrderDescending);
@@ -73,17 +82,12 @@ namespace Bonsai.Areas.Admin.Logic
             else
                 query = query.OrderBy(x => x.Type, request.OrderDescending);
 
-            var items = await query.ProjectTo<RelationTitleVM>()
+            result.Items = await query.ProjectTo<RelationTitleVM>()
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
                                    .ToListAsync();
 
-            return new RelationsListVM
-            {
-                Items = items,
-                PageCount = (int) Math.Ceiling((double) totalCount / PageSize),
-                Request = request
-            };
+            return result;
         }
 
         /// <summary>
@@ -337,6 +341,26 @@ namespace Bonsai.Areas.Admin.Logic
                                                       && x.DestinationId == rel.SourceId
                                                       && x.Type == compRelType
                                                       && x.IsComplementary);
+        }
+
+                
+        /// <summary>
+        /// Loads extra data for the filter.
+        /// </summary>
+        private async Task FillAdditionalDataAsync(RelationsListRequestVM request, RelationsListVM data)
+        {
+            if (request.EntityId != null)
+            {
+                var title = await _db.Pages
+                                     .Where(x => x.Id == request.EntityId)
+                                     .Select(x => x.Title)
+                                     .FirstOrDefaultAsync();
+
+                if (title != null)
+                    data.EntityTitle = title;
+                else
+                    request.EntityId = null;
+            }
         }
 
         #endregion

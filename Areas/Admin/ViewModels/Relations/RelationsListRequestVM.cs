@@ -1,4 +1,5 @@
-﻿using Bonsai.Areas.Admin.ViewModels.Common;
+﻿using System;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.ViewModels.Relations
@@ -8,6 +9,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
     /// </summary>
     public class RelationsListRequestVM: ListRequestVM
     {
+        /// <summary>
+        /// Filter by entity.
+        /// </summary>
+        public Guid? EntityId { get; set; }
+
         /// <summary>
         /// Allowed types of relations.
         /// </summary>
@@ -19,6 +25,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         public override bool IsEmpty()
         {
             return base.IsEmpty()
+                   && EntityId == null
                    && (Types == null || Types.Length == 0);
         }
     }

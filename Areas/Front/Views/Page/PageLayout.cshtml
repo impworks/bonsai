@@ -1,9 +1,10 @@
-﻿@using Bonsai.Areas.Front.ViewModels.Page
+﻿@using Bonsai.Areas.Front.ViewModels.Auth
+@using Bonsai.Areas.Front.ViewModels.Page
 @model PageVMBase
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
-    ViewBag.PageModel = Model;
-    var pageVm = (PageTitleVM)ViewBag.PageModel;
+    var pageVm = (PageTitleVM)Model;
+    var user = (UserVM)ViewBag.User;
     var actions = new[] {
         new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "fa-user"},
         new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "fa-image"}
@@ -15,9 +16,30 @@
         @Html.Partial("InfoBlock/InfoBlock", Model.InfoBlock)
     </div>
     <div class="content col">
-        <h1>@pageVm.Title</h1>
+        <div class="content-header">
+            <h1>@pageVm.Title</h1>
+            @if (user.IsAdministrator)
+            {
+                <span class="dropdown dropdown-icons">
+                    <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="dropdown">
+                        <i class="fa fa-cog"></i>
+                    </button>
+                    <span class="dropdown-menu">
+                        <a class="dropdown-item" href="@Url.Action("Update", "Pages", new {area = "Admin", id = pageVm.Id})">
+                            <i class="fa fa-fw fa-file-text-o"></i> Текст и факты
+                        </a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Relations", new {area = "Admin", entityId = pageVm.Id})">
+                            <i class="fa fa-fw fa-retweet"></i> Связи
+                        </a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Media", new {area = "Admin", entityId = pageVm.Id})">
+                            <i class="fa fa-fw fa-picture-o"></i> Медиа
+                        </a>
+                    </span>
+                </span>
+            }
+        </div>
         <ul class="nav nav-tabs">
-            @foreach(var action in actions)
+            @foreach (var action in actions)
             {
                 <li class="nav-item">
                     <a class="nav-link @(action.Active ? "active" : "")" href="@action.Url"><i class="fa @action.Icon"></i> @action.Title</a>

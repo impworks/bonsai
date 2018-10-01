@@ -45,6 +45,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var results = matches.Select(x => new SearchResultVM
             {
+                Id = x.Id,
                 Key = x.Key,
                 Title = x.HighlightedTitle,
                 Type = details[x.Id].PageType,
@@ -67,7 +68,7 @@ namespace Bonsai.Areas.Front.Logic
 
             var results = await _elastic.SearchAutocompleteAsync(q);
 
-            return results.Select(x => new PageTitleVM {Title = x.HighlightedTitle, Key = x.Key, Type = PageType.Other})
+            return results.Select(x => new PageTitleVM { Id = x.Id, Title = x.HighlightedTitle, Key = x.Key, Type = PageType.Other})
                           .ToList();
         }
     }

@@ -14,6 +14,7 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
+using Impworks.Utils.Strings;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -44,6 +45,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             request = NormalizeListRequest(request);
 
+            var result = new ChangesetsListVM { Request = request };
+            await FillAdditionalDataAsync(request, result);
+
             var query = _db.Changes
                            .AsNoTracking()
                            .Include(x => x.Author)
@@ -69,6 +73,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                          || x.EditedRelationId == request.EntityId);
 
             var totalCount = await query.CountAsync();
+            result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
             if (request.OrderBy == nameof(Changeset.Author))
                 query = query.OrderBy(x => x.Author.UserName, request.OrderDescending);
@@ -76,29 +81,24 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 query = query.OrderBy(x => x.Date, request.OrderDescending);
 
             var changesets = await query.Skip(PageSize * request.Page)
-                                   .Take(PageSize)
-                                   .ToListAsync();
+                                        .Take(PageSize)
+                                        .ToListAsync();
 
-            var items = changesets.Select(x => new ChangesetTitleVM
-                                  {
-                                      Id = x.Id,
-                                      Date = x.Date,
-                                      ChangeType = GetChangeType(x),
-                                      Author = x.Author.FirstName + " " + x.Author.LastName,
-                                      EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
-                                      EntityType = x.Type,
-                                      EntityTitle = GetEntityTitle(x),
-                                      EntityThumbnailUrl = GetEntityThumbnailUrl(x),
-                                      PageType = GetPageType(x)
-                                  })
-                                  .ToList();
+            result.Items = changesets.Select(x => new ChangesetTitleVM
+                                     {
+                                         Id = x.Id,
+                                         Date = x.Date,
+                                         ChangeType = GetChangeType(x),
+                                         Author = x.Author.FirstName + " " + x.Author.LastName,
+                                         EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
+                                         EntityType = x.Type,
+                                         EntityTitle = GetEntityTitle(x),
+                                         EntityThumbnailUrl = GetEntityThumbnailUrl(x),
+                                         PageType = GetPageType(x)
+                                     })
+                                     .ToList();
 
-            return new ChangesetsListVM
-            {
-                Items = items,
-                PageCount = (int) Math.Ceiling((double) totalCount / PageSize),
-                Request = request
-            };
+            return result;
         }
 
         /// <summary>
@@ -263,6 +263,56 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Returns the additional filter data.
+        /// </summary>
+        private async Task FillAdditionalDataAsync(ChangesetsListRequestVM request, ChangesetsListVM data)
+        {
+            if (!string.IsNullOrEmpty(request.UserId))
+            {
+                var user = await _db.Users
+                                    .Where(x => x.Id == request.UserId)
+                                    .Select(x => new {x.FirstName, x.LastName})
+                                    .FirstOrDefaultAsync();
+
+                if (user != null)
+                    data.UserTitle = user.FirstName + " " + user.LastName;
+                else
+                    request.UserId = null;
+            }
+
+            if (request.EntityId != null)
+            {
+                var title = await GetPageTitleAsync()
+                            ?? await GetMediaTitleAsync();
+
+                if (title != null)
+                    data.EntityTitle = title;
+                else
+                    request.EntityId = null;
+            }
+
+            async Task<string> GetPageTitleAsync()
+            {
+                return await _db.Pages
+                                .Where(x => x.Id == request.EntityId)
+                                .Select(x => x.Title)
+                                .FirstOrDefaultAsync();
+            }
+
+            async Task<string> GetMediaTitleAsync()
+            {
+                var media = await _db.Media
+                                     .Where(x => x.Id == request.EntityId)
+                                     .Select(x => new {Title = x.Title})
+                                     .FirstOrDefaultAsync();
+
+                return media == null
+                    ? null
+                    : StringHelper.Coalesce(media.Title, "Медиа");
+            }
         }
 
         #endregion

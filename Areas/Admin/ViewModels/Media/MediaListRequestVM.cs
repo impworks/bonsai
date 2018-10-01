@@ -1,4 +1,5 @@
-﻿using Bonsai.Areas.Admin.ViewModels.Common;
+﻿using System;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.ViewModels.Media
@@ -8,6 +9,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
     /// </summary>
     public class MediaListRequestVM: ListRequestVM
     {
+        /// <summary>
+        /// Related page.
+        /// </summary>
+        public Guid? EntityId { get; set; }
+
         /// <summary>
         /// Related media types.
         /// </summary>
@@ -19,6 +25,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         public override bool IsEmpty()
         {
             return base.IsEmpty()
+                   && EntityId == null
                    && (Types == null || Types.Length == 0);
         }
     }

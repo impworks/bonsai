@@ -1,4 +1,5 @@
-﻿using Bonsai.Data.Models;
+﻿using System;
+using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Front.ViewModels.Page
 {
@@ -7,6 +8,11 @@ namespace Bonsai.Areas.Front.ViewModels.Page
     /// </summary>
     public class PageTitleVM
     {
+        /// <summary>
+        /// Surrogate ID of the page.
+        /// </summary>
+        public Guid? Id { get; set; }
+
         /// <summary>
         /// Title of the page (displayed in the header).
         /// </summary>

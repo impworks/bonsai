@@ -246,6 +246,7 @@ namespace Bonsai.Areas.Front.Logic
         {
             return new PageTitleExtendedVM
             {
+                Id = page.Id,
                 Key = page.Key,
                 Title = page.Title,
                 Type = page.Type,
