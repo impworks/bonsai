@@ -1,6 +1,6 @@
 ﻿using Bonsai.Areas.Admin.Logic.Auth;
 using Bonsai.Areas.Admin.Utils;
-using Bonsai.Code.Mvc;
+using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

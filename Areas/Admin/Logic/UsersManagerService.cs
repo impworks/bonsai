@@ -71,13 +71,13 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Retrieves the default values for an update operation.
         /// </summary>
-        public async Task<UpdateUserVM> RequestUpdateAsync(string id)
+        public async Task<UserEditorVM> RequestUpdateAsync(string id)
         {
             var user = await _db.Users
                                 .AsNoTracking()
                                 .GetAsync(x => x.Id == id, "Пользователь не найден");
 
-            var vm = _mapper.Map<UpdateUserVM>(user);
+            var vm = _mapper.Map<UserEditorVM>(user);
 
             var roles = await _userMgr.GetRolesAsync(user);
             if (roles.Count > 0 && Enum.TryParse<UserRole>(roles.First(), out var role))
@@ -89,7 +89,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the user.
         /// </summary>
-        public async Task UpdateAsync(UpdateUserVM request, ClaimsPrincipal currUser)
+        public async Task UpdateAsync(UserEditorVM request, ClaimsPrincipal currUser)
         {
             await ValidateUpdateRequestAsync(request);
 
@@ -153,6 +153,17 @@ namespace Bonsai.Areas.Admin.Logic
                    && _userMgr.GetUserId(principal) == id;
         }
 
+        /// <summary>
+        /// Checks if the personal page should be created for this user.
+        /// </summary>
+        public async Task<bool> CanCreatePersonalPageAsync(UserEditorVM vm)
+        {
+            return await _db.Users
+                            .Where(x => x.Id == vm.Id)
+                            .Select(x => x.Page == null)
+                            .FirstOrDefaultAsync();
+        }
+
         #region Private helpers
 
         /// <summary>
@@ -202,7 +213,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Performs additional checks on the request.
         /// </summary>
-        private async Task ValidateUpdateRequestAsync(UpdateUserVM request)
+        private async Task ValidateUpdateRequestAsync(UserEditorVM request)
         {
             var val = new Validator();
 

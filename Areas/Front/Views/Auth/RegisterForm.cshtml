@@ -1,15 +1,26 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Front.ViewModels.Auth
 @model Bonsai.Areas.Front.ViewModels.Auth.RegisterUserVM
 @{
     ViewBag.Title = "Регистрация";
     Layout = "~/Areas/Front/Views/Layout.cshtml";
+
+    var data = (RegisterUserDataVM) ViewBag.Data;
 }
 
 <div class="content text">
     <h1>Регистрация</h1>
 
     <p>Для создания учетной записи, пожалуйста, введите необходимую информацию.</p>
-    <p>Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.</p>
+    @if (data.IsFirstUser)
+    {
+        <p>Ваша учетная запись получит права администратора.</p>
+    }
+    else
+    {
+        <p>Проверьте, что ввели актуальные данные - на русском языке и без ошибок.</p>
+        <p>Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.</p>
+    }
 
     <div class="row">
         <div class="col-md-7 col-sm-12">
@@ -49,6 +60,20 @@
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
+                
+                @if (data.IsFirstUser)
+                {
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label form-label-required">Опции</label>
+                        <div class="col-sm-9">
+                            <div class="form-check">
+                                <input asp-for="CreatePersonalPage" class="form-check-input" />
+                                <label asp-for="CreatePersonalPage" class="form-check-label">Создать личную страницу</label>
+                                <span asp-validation-for="CreatePersonalPage" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                }
                 
                 @if(!ViewData.ModelState.IsValid)
                 {

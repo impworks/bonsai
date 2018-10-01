@@ -91,8 +91,8 @@ namespace Bonsai.Data.Utils.Seed
             db.Changes.RemoveRange(db.Changes.ToList());
             db.MediaTags.RemoveRange(db.MediaTags.ToList());
             db.Media.RemoveRange(db.Media.ToList());
-            db.Pages.RemoveRange(db.Pages.ToList());
             db.Relations.RemoveRange(db.Relations.ToList());
+            db.Pages.RemoveRange(db.Pages.ToList().Except(db.Users.Select(x => x.Page).Where(x => x != null).ToList()));
 
             db.SaveChanges();
 

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bonsai.Areas.Front.ViewModels.Auth;
@@ -15,6 +12,7 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 
 namespace Bonsai.Areas.Front.Logic.Auth
 {
@@ -90,7 +88,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         {
             await ValidateRegisterRequestAsync(vm);
 
-            var isFirstUser = (await _db.Users.AnyAsync()) == false;
+            var isFirstUser = await IsFirstUserAsync();
 
             var user = _mapper.Map<AppUser>(vm);
             user.Id = Guid.NewGuid().ToString();
@@ -112,7 +110,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
 
             return new RegisterUserResultVM
             {
-                IsValidated = user.IsValidated
+                IsValidated = user.IsValidated,
+                User = user,
+                Principal = await _signMgr.CreateUserPrincipalAsync(user)
             };
         }
 
@@ -124,8 +124,11 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (principal == null)
                 return null;
 
-            var user = await _userMgr.GetUserAsync(principal)
-                       ?? await FindUserAsync(principal.Identity.AuthenticationType, _userMgr.GetUserId(principal));
+            var id = _userMgr.GetUserId(principal);
+            var user = await _db.Users
+                                .AsNoTracking()
+                                .Include(x => x.Page)
+                                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
                 return null;
@@ -141,6 +144,14 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 IsAdministrator = isAdmin,
                 IsValidated = user.IsValidated
             };
+        }
+
+        /// <summary>
+        /// Checks if there are users existing in the database.
+        /// </summary>
+        public async Task<bool> IsFirstUserAsync()
+        {
+            return await _db.Users.AnyAsync() == false;
         }
 
         #region Private helpers

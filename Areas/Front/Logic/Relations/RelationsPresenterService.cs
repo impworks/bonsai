@@ -153,6 +153,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
             if (page.Type != PageType.Person && page.Type != PageType.Pet)
                 yield break;
 
+            if (!ctx.Relations.ContainsKey(pageId))
+                yield break;
+
             var spouses = ctx.Relations[pageId]
                              .Where(x => x.Type == RelationType.Spouse)
                              .OrderBy(x => x.Duration);

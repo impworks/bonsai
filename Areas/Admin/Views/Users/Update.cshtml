@@ -1,9 +1,11 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Users
-@model Bonsai.Areas.Admin.ViewModels.Users.UpdateUserVM
+@model Bonsai.Areas.Admin.ViewModels.Users.UserEditorVM
 @{
     ViewBag.Title = Model.IsValidated ? "Изменение пользователя" : "Валидация пользователя";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var data = (UserEditorDataVM) ViewBag.Data;
 }
 
 <h1>@ViewBag.Title</h1>
@@ -50,18 +52,18 @@
                 </div>
             </div>
 
-            @if(!ViewBag.IsSelf)
+            @if(!data.IsSelf)
             {
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label" asp-for="Role">Доступ</label>
                     <div class="col-sm-9">
-                        <select asp-for="Role" asp-items="@ViewBag.UserRoles"></select>
+                        <select asp-for="Role" asp-items="@data.UserRoles"></select>
                         <span asp-validation-for="Role" class="text-danger"></span>
                     </div>
                 </div>
             }
 
-            @if(!Model.IsValidated)
+            @if(data.CanCreatePersonalPage)
             {
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Опции</label>
