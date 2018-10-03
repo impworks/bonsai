@@ -91,7 +91,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task CreateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
         {
-            await ValidateRequestAsync(vm);
+            await ValidateRequestAsync(vm, isNew: true);
 
             var rel = _mapper.Map<Relation>(vm);
             rel.Id = Guid.NewGuid();
@@ -129,7 +129,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null)
         {
-            await ValidateRequestAsync(vm);
+            await ValidateRequestAsync(vm, isNew: false);
 
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == vm.Id
@@ -222,30 +222,37 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Checks if the create/update request contains valid data.
         /// </summary>
-        private async Task ValidateRequestAsync(RelationEditorVM vm)
+        private async Task ValidateRequestAsync(RelationEditorVM vm, bool isNew)
         {
             var val = new Validator();
 
-            var pageIds = new [] {vm.SourceId, vm.DestinationId, vm.EventId ?? Guid.Empty};
+            vm.SourceIds = vm.SourceIds ?? new Guid[0];
+
+            var pageIds = vm.SourceIds
+                            .Concat(new [] {vm.DestinationId ?? Guid.Empty, vm.EventId ?? Guid.Empty})
+                            .ToList();
+
             var pages = await _db.Pages
                                  .Where(x => pageIds.Contains(x.Id))
                                  .ToDictionaryAsync(x => x.Id, x => x.Type);
 
-            var sourceType = pages.TryGetNullableValue(vm.SourceId ?? Guid.Empty);
+            var sourceTypes = vm.SourceIds.Select(x => pages.TryGetNullableValue(x)).ToList();
             var destType = pages.TryGetNullableValue(vm.DestinationId ?? Guid.Empty);
             var eventType = pages.TryGetNullableValue(vm.EventId ?? Guid.Empty);
 
-            if(vm.SourceId == null)
-                val.Add(nameof(vm.SourceId), "Выберите страницу");
-            else if (sourceType == null)
-                val.Add(nameof(vm.SourceId), "Страница не найдена");
+            if(vm.SourceIds == null || vm.SourceIds.Length == 0)
+                val.Add(nameof(vm.SourceIds), "Выберите страницу");
+            else if (isNew == false && vm.SourceIds.Length > 1)
+                val.Add(nameof(vm.SourceIds), "При редактировании может быть указана только одна страница");
+            else if (sourceTypes.Any(x => x == null))
+                val.Add(nameof(vm.SourceIds), "Страница не найдена");
 
             if(vm.DestinationId == null)
                 val.Add(nameof(vm.DestinationId), "Выберите страницу");
             else if (destType == null)
                 val.Add(nameof(vm.DestinationId), "Страница не найдена");
 
-            if (sourceType != null && destType != null && !RelationHelper.IsRelationAllowed(sourceType.Value, destType.Value, vm.Type))
+            if (destType != null && sourceTypes.Any(x => x != null && !RelationHelper.IsRelationAllowed(x.Value, destType.Value, vm.Type)))
                 val.Add(nameof(vm.Type), "Тип связи недопустимм для данных страниц");
 
             if (vm.EventId != null)
@@ -278,7 +285,7 @@ namespace Bonsai.Areas.Admin.Logic
             }
 
             var existingRelation = await _db.Relations
-                                            .AnyAsync(x => x.SourceId == vm.SourceId
+                                            .AnyAsync(x => vm.SourceIds.Contains(x.SourceId)
                                                            && x.DestinationId == vm.DestinationId
                                                            && x.Type == vm.Type
                                                            && x.Id != vm.Id);

@@ -21,7 +21,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         /// <summary>
         /// ID of the source page.
         /// </summary>
-        public Guid? SourceId { get; set; }
+        public Guid[] SourceIds { get; set; }
 
         /// <summary>
         /// ID of the second page.
@@ -52,7 +52,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         {
             profile.CreateMap<Relation, RelationEditorVM>()
                    .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.SourceId, x => x.SourceId)
+                   .MapMember(x => x.SourceIds, x => new [] { x.SourceId })
                    .MapMember(x => x.DestinationId, x => x.DestinationId)
                    .MapMember(x => x.EventId, x => x.EventId)
                    .MapMember(x => x.Type, x => x.Type)

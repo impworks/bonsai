@@ -12,7 +12,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
 
         public RelationEditorPropertiesVM Properties { get; set; }
 
-        public IEnumerable<SelectListItem> SourceItem { get; set; }
+        public IEnumerable<SelectListItem> SourceItems { get; set; }
         public IEnumerable<SelectListItem> DestinationItem { get; set; }
         public IEnumerable<SelectListItem> EventItem { get; set; }
         public IEnumerable<SelectListItem> RelationTypes { get; set; }

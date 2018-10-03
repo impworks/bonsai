@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
@@ -150,14 +151,15 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private async Task<ActionResult> ViewEditorFormAsync(RelationEditorVM vm)
         {
-            var pageLookup = await _pages.FindPagesByIdsAsync(new[] {vm.SourceId, vm.DestinationId, vm.EventId});
+            var pageIds = new[] {vm.DestinationId, vm.EventId}.Concat(vm.SourceIds.Cast<Guid?>()).ToList();
+            var pageLookup = await _pages.FindPagesByIdsAsync(pageIds);
 
             ViewBag.Data = new RelationEditorDataVM
             {
                 IsNew = vm.Id == null,
-                SourceItem = GetPageLookup(vm.SourceId),
-                DestinationItem = GetPageLookup(vm.DestinationId),
-                EventItem = GetPageLookup(vm.EventId),
+                SourceItems = GetPageLookup(vm.SourceIds),
+                DestinationItem = GetPageLookup(vm.DestinationId ?? Guid.Empty),
+                EventItem = GetPageLookup(vm.EventId ?? Guid.Empty),
 
                 Properties = _rels.GetPropertiesForRelationType(vm.Type),
                 RelationTypes = EnumHelper.GetEnumValues<RelationType>()
@@ -171,11 +173,15 @@ namespace Bonsai.Areas.Admin.Controllers
 
             return View("Editor", vm);
 
-            SelectListItem[] GetPageLookup(Guid? pageId)
+            IReadOnlyList<SelectListItem> GetPageLookup(params Guid[] ids)
             {
-                return pageLookup.TryGetValue(pageId ?? Guid.Empty, out var page)
-                    ? new[] {new SelectListItem {Selected = true, Text = page.Title, Value = page.Id.ToString()}}
-                    : Array.Empty<SelectListItem>();
+                var result = new List<SelectListItem>();
+
+                foreach(var id in ids)
+                    if(id != null && pageLookup.TryGetValue(id, out var page))
+                        result.Add(new SelectListItem { Selected = true, Text = page.Title, Value = page.Id.ToString() });
+
+                return result;
             }
         }
 
