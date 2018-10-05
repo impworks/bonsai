@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -97,17 +98,24 @@ namespace Bonsai.Areas.Admin.Logic
         {
             await ValidateRequestAsync(vm, isNew: true);
 
-            var rel = _mapper.Map<Relation>(vm);
-            rel.Id = Guid.NewGuid();
+            var rels = new List<Relation>();
 
-            var compRel = new Relation {Id = Guid.NewGuid()};
-            MapComplementaryRelation(rel, compRel);
+            foreach (var srcId in vm.SourceIds)
+            {
+                var rel = _mapper.Map<Relation>(vm);
+                rel.Id = Guid.NewGuid();
+                rel.SourceId = srcId;
 
-            var rels = new[] {rel, compRel};
+                var compRel = new Relation {Id = Guid.NewGuid()};
+                MapComplementaryRelation(rel, compRel);
+
+                rels.Add(rel);
+                rels.Add(compRel);
+            }
 
             await _validator.ValidateAsync(rels);
 
-            var changeset = await GetChangesetAsync(null, vm, rel.Id, principal, null);
+            var changeset = await GetChangesetAsync(null, vm, rels.First().Id, principal, null);
             _db.Changes.Add(changeset);
 
             _db.Relations.AddRange(rels);

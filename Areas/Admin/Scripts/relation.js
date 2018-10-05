@@ -98,7 +98,7 @@
     function setupPagePicker($elem, typesDef) {
         $elem.selectize({
             maxOptions: 10,
-            maxItems: 1,
+            maxItems: $elem.data('multiple') === 'True' ? 99 : 1,
             openOnFocus: true,
             valueField: 'id',
             labelField: 'title',

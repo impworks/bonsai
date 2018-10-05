@@ -45,6 +45,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             var result = new List<ChangePropertyValue>();
             var data = JsonConvert.DeserializeObject<RelationEditorVM>(StringHelper.Coalesce(json, "{}"));
 
+            if (data.SourceIds == null)
+                data.SourceIds = Array.Empty<Guid>();
+
             var pageIds = data.SourceIds
                               .Concat(new[] {data.DestinationId ?? Guid.Empty, data.EventId ?? Guid.Empty})
                               .ToList();

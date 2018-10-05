@@ -153,12 +153,15 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private async Task<ActionResult> ViewEditorFormAsync(RelationEditorVM vm)
         {
+            if(vm.SourceIds == null)
+                vm.SourceIds = Array.Empty<Guid>();
+
             var pageIds = new[] {vm.DestinationId, vm.EventId}.Concat(vm.SourceIds.Cast<Guid?>()).ToList();
             var pageLookup = await _pages.FindPagesByIdsAsync(pageIds);
 
             ViewBag.Data = new RelationEditorDataVM
             {
-                IsNew = vm.Id == null,
+                IsNew = vm.Id == Guid.Empty,
                 SourceItems = GetPageLookup(vm.SourceIds),
                 DestinationItem = GetPageLookup(vm.DestinationId ?? Guid.Empty),
                 EventItem = GetPageLookup(vm.EventId ?? Guid.Empty),
@@ -180,7 +183,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 var result = new List<SelectListItem>();
 
                 foreach(var id in ids)
-                    if(id != null && pageLookup.TryGetValue(id, out var page))
+                    if(pageLookup.TryGetValue(id, out var page))
                         result.Add(new SelectListItem { Selected = true, Text = page.Title, Value = page.Id.ToString() });
 
                 return result;

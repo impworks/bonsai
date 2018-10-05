@@ -38,7 +38,7 @@
     <div class="form-row" data-tier="source">
         <div class="form-group col-md-8">
             <label class="form-label-required" asp-for="SourceIds">@data.Properties.SourceName</label>
-            <select asp-for="SourceIds" asp-items="data.SourceItems"></select>
+            <select asp-for="SourceIds" asp-items="data.SourceItems" data-multiple="@data.IsNew.ToString()"></select>
             <span asp-validation-for="SourceIds" class="text-danger"></span>
         </div>
     </div>
