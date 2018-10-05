@@ -6,7 +6,10 @@
         <div class="list-group">
             @foreach(var item in group.Items)
             {
-                <a href="@item.Url" class="list-group-item list-group-item-action @(item.IsSelected ? "active" : "")">@item.Title</a>
+                <a href="@item.Url" class="list-group-item list-group-item-action @(item.IsSelected ? "active" : "")">
+                    <i class="fa fa-fw fa-@(item.Icon)"></i>
+                    @item.Title
+                </a>
             }
         </div>
         <br />

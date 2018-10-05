@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
-using Bonsai.Code.Mvc;
+using Bonsai.Code.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

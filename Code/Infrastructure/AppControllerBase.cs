@@ -1,9 +1,8 @@
-﻿using Bonsai.Code.Utils;
-using Bonsai.Code.Utils.Validation;
+﻿using Bonsai.Code.Utils.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bonsai.Code.Mvc
+namespace Bonsai.Code.Infrastructure
 {
     /// <summary>
     /// Base class for all Bonsai-app controllers.

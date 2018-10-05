@@ -8,7 +8,7 @@ namespace Bonsai.Areas.Admin.Components
     public class OperationMessageComponent: ViewComponent
     {
         /// <summary>
-        /// Displays the menu.
+        /// Displays the notification.
         /// </summary>
         public async Task<IViewComponentResult> InvokeAsync()
         {

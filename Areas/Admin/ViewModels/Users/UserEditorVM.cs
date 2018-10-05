@@ -9,7 +9,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
     /// <summary>
     /// VM for editing a user.
     /// </summary>
-    public class UpdateUserVM: RegisterUserVM
+    public class UserEditorVM: RegisterUserVM
     {
         /// <summary>
         /// Surrogate user ID.
@@ -28,16 +28,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         public UserRole Role { get; set; }
 
         /// <summary>
-        /// Flag indicating that the user must be granted a page.
-        /// </summary>
-        public bool CreatePersonalPage { get; set; }
-
-        /// <summary>
         /// Configures automatic mapping.
         /// </summary>
         public override void Configure(IProfileExpression profile)
         {
-            profile.CreateMap<UpdateUserVM, AppUser>()
+            profile.CreateMap<UserEditorVM, AppUser>()
                    .ForMember(x => x.Birthday, opt => opt.MapFrom(x => x.Birthday))
                    .ForMember(x => x.FirstName, opt => opt.MapFrom(x => x.FirstName))
                    .ForMember(x => x.MiddleName, opt => opt.MapFrom(x => x.MiddleName))
@@ -46,7 +41,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
                    .ForMember(x => x.UserName, opt => opt.MapFrom(x => Regex.Replace(x.Email, "[^a-z0-9]", "")))
                    .ForAllOtherMembers(x => x.Ignore());
 
-            profile.CreateMap<AppUser, UpdateUserVM>()
+            profile.CreateMap<AppUser, UserEditorVM>()
                    .ForMember(x => x.Role, opt => opt.Ignore())
                    .ForMember(x => x.CreatePersonalPage, opt => opt.Ignore());
         }

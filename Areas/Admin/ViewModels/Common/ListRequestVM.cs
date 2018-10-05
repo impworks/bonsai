@@ -26,6 +26,15 @@
         public int Page { get; set; }
 
         /// <summary>
+        /// Checks if the request is empty.
+        /// </summary>
+        public virtual bool IsEmpty()
+        {
+            return string.IsNullOrEmpty(SearchQuery)
+                   && Page == 0;
+        }
+
+        /// <summary>
         /// Creates a clone of this object.
         /// </summary>
         public static T Clone<T>(T request) where T: ListRequestVM => (T) request.MemberwiseClone();

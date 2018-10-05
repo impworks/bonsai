@@ -16,6 +16,11 @@
         public string Url { get; set; }
 
         /// <summary>
+        /// Icon class.
+        /// </summary>
+        public string Icon { get; set; }
+
+        /// <summary>
         /// Flag indicating that the element is selected.
         /// </summary>
         public bool IsSelected { get; set; }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
-using Bonsai.Code.Mvc;
+using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
@@ -18,13 +18,15 @@ namespace Bonsai.Areas.Front.Controllers
     [Authorize(Policy = AuthRequirement.Name)]
     public class PageController: AppControllerBase
     {
-        public PageController(PagePresenterService pages, CacheService cache)
+        public PageController(PagePresenterService pages, AuthService auth, CacheService cache)
         {
             _pages = pages;
+            _auth = auth;
             _cache = cache;
         }
 
         private readonly PagePresenterService _pages;
+        private readonly AuthService _auth;
         private readonly CacheService _cache;
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace Bonsai.Areas.Front.Controllers
 
             try
             {
+                ViewBag.User = await _auth.GetCurrentUserAsync(User);
                 var vm = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageDescriptionAsync(key));
                 return View(vm);
             }

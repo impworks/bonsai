@@ -1,5 +1,13 @@
 ﻿.side-menu {
     margin-top: 1.5rem;
+
+    .list-group-item {
+        padding: 0.75rem;
+
+        .fa {
+            margin-right: 6px;
+        }
+    }
 }
 
 .admin-row {

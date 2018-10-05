@@ -8,6 +8,8 @@ using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Areas.Admin.ViewModels.Users;
+using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
@@ -18,6 +20,7 @@ using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Areas.Admin.Logic
 {
@@ -107,15 +110,46 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             _db.Pages.Add(page);
-            _db.PageAliases.Add(new PageAlias
-            {
-                Id = Guid.NewGuid(),
-                Page = page,
-                Key = page.Key,
-                Title = page.Title
-            });
+
+            var aliasValues = JsonConvert.DeserializeObject<List<string>>(vm.Aliases ?? "[]");
+            if(!aliasValues.Contains(vm.Title))
+                aliasValues.Add(vm.Title);
+
+            _db.PageAliases.AddRange(
+                aliasValues.Select((x, idx) =>
+                    new PageAlias
+                    {
+                        Id = Guid.NewGuid(),
+                        Page = page,
+                        Key = PageHelper.EncodeTitle(x),
+                        Title = x,
+                        Order = idx
+                    }
+                )
+            );
 
             return page;
+        }
+
+        /// <summary>
+        /// Creates a default page for the user.
+        /// </summary>
+        public async Task<Page> CreateDefaultUserPageAsync(RegisterUserVM vm, ClaimsPrincipal principal)
+        {
+            var name = new[] {vm.LastName, vm.FirstName, vm.MiddleName}
+                       .Where(x => !string.IsNullOrWhiteSpace(x))
+                       .Select(x => x.Trim())
+                       .JoinString(" ");
+
+            var createVm = new PageEditorVM
+            {
+                Title = name,
+                Description = name,
+                Type = PageType.Person,
+                Facts = new JObject { ["Birth.Date"] = new JObject { ["Value"] = vm.Birthday } }.ToString()
+            };
+
+            return await CreateAsync(createVm, principal);
         }
 
         /// <summary>

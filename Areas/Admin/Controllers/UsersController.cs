@@ -16,14 +16,16 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/users")]
     public class UsersController: AdminControllerBase
     {
-        public UsersController(UsersManagerService users, UserManager<AppUser> userMgr, AppDbContext db)
+        public UsersController(UsersManagerService users, PagesManagerService pages, UserManager<AppUser> userMgr, AppDbContext db)
         {
             _users = users;
+            _pages = pages;
             _userMgr = userMgr;
             _db = db;
         }
 
         private readonly UsersManagerService _users;
+        private readonly PagesManagerService _pages;
         private readonly UserManager<AppUser> _userMgr;
         private readonly AppDbContext _db;
 
@@ -69,7 +71,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Update(string id)
         {
             var vm = await _users.RequestUpdateAsync(id);
-            return ViewUpdateForm(vm);
+            return await ViewUpdateFormAsync(vm);
         }
 
         /// <summary>
@@ -77,14 +79,18 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("update")]
-        public async Task<ActionResult> Update(UpdateUserVM vm)
+        public async Task<ActionResult> Update(UserEditorVM vm)
         {
             if (!ModelState.IsValid)
-                return ViewUpdateForm(vm);
+                return await ViewUpdateFormAsync(vm);
 
             try
             {
                 await _users.UpdateAsync(vm, User);
+
+                if (vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
+                    await _pages.CreateDefaultUserPageAsync(vm, User);
+
                 await _db.SaveChangesAsync();
 
                 return RedirectToSuccess("Пользователь обновлен");
@@ -92,7 +98,7 @@ namespace Bonsai.Areas.Admin.Controllers
             catch (ValidationException ex)
             {
                 SetModelState(ex);
-                return ViewUpdateForm(vm);
+                return await ViewUpdateFormAsync(vm);
             }
         }
 
@@ -101,10 +107,14 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Displays the UpdateUser form.
         /// </summary>
-        private ActionResult ViewUpdateForm(UpdateUserVM vm)
+        private async Task<ActionResult> ViewUpdateFormAsync(UserEditorVM vm)
         {
-            ViewBag.IsSelf = _users.IsSelf(vm.Id, User);
-            ViewBag.UserRoles = ViewHelper.GetEnumSelectList(vm.Role);
+            ViewBag.Data = new UserEditorDataVM
+            {
+                IsSelf = _users.IsSelf(vm.Id, User),
+                UserRoles = ViewHelper.GetEnumSelectList(vm.Role),
+                CanCreatePersonalPage = await _users.CanCreatePersonalPageAsync(vm)
+            };
 
             return View("Update", vm);
         }

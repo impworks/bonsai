@@ -49,6 +49,11 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         public string Birthday { get; set; }
 
         /// <summary>
+        /// Flag indicating that the user must be granted a page.
+        /// </summary>
+        public bool CreatePersonalPage { get; set; }
+
+        /// <summary>
         /// Configures Automapper maps.
         /// </summary>
         public virtual void Configure(IProfileExpression profile)

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
@@ -49,8 +50,8 @@ namespace Bonsai.Code.Config
         {
             if (Environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage()
-                   .UseBrowserLink();
+                app.UseBrowserLink()
+                   .UseDeveloperExceptionPage();
             }
 
             if (Environment.IsProduction())
@@ -58,7 +59,11 @@ namespace Bonsai.Code.Config
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
             }
 
-            InitDatabase(app);
+            if (Configuration["SeedData:Enable"].TryParse<bool>())
+            {
+                var clearAll = Configuration["SeedData:Enable"].TryParse<bool>();
+                InitDatabase(app, clearAll);
+            }
 
             var culture = CultureInfo.GetCultureInfo("ru-RU");
 

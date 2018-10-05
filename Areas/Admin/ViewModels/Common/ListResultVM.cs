@@ -6,6 +6,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Common
     /// Base VM for all result list views.
     /// </summary>
     public class ListResultVM<TRequest, TEntity>
+        where TRequest: ListRequestVM
     {
         /// <summary>
         /// Current search query.

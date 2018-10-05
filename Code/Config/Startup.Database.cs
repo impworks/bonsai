@@ -6,7 +6,6 @@ using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
 using Dapper;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,17 +35,21 @@ namespace Bonsai.Code.Config
         /// <summary>
         /// Applies database migrations and seeds data.
         /// </summary>
-        private void InitDatabase(IApplicationBuilder app)
+        private void InitDatabase(IApplicationBuilder app, bool clearAll)
         {
             using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var context = scope.ServiceProvider.GetService<AppDbContext>();
-                var elastic = scope.ServiceProvider.GetService<ElasticService>();
+                var sp = scope.ServiceProvider;
+
+                var context = sp.GetService<AppDbContext>();
+                var elastic = sp.GetService<ElasticService>();
 
                 context.EnsureDatabaseCreated();
 
-                if(Environment.IsDevelopment())
-                    SeedData.EnsureSeeded(context, elastic);
+                if(clearAll)
+                    SeedData.ClearPreviousData(context, elastic);
+
+                SeedData.EnsureSeeded(context, elastic);
             }
         }
     }

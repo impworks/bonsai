@@ -21,7 +21,21 @@
     </div>
     <div class="float-right">
         <form action="@baseUrl" method="GET" class="form-inline">
-            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new
+            {
+                request = Model.Request,
+                include = new [] { nameof(RelationsListRequestVM.EntityId) }
+            })
+            @if(Model.EntityTitle != null)
+            {
+                @await Component.InvokeAsync("ListItemFilterComponent", new
+                {
+                    url = baseUrl,
+                    request = Model.Request,
+                    propName = nameof(RelationsListRequestVM.EntityId),
+                    title = Model.EntityTitle
+                })
+            }
             <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(RelationsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя страницы" />
             <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
         </form>
@@ -61,7 +75,7 @@
                         <span class="fa fa-remove" title="Удалить"></span>
                     </a>
                     <a href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = r.Id})">
-                        <span class="fa fa-files-o" title="История изменений"></span>
+                        <span class="fa fa-database" title="История изменений"></span>
                     </a>
                 </td>
             </tr>
@@ -71,11 +85,10 @@
 }
 else
 {
-    if(string.IsNullOrEmpty(Model.Request.SearchQuery))
+    if(Model.Request.IsEmpty())
     {
         <div class="alert alert-info">
             Не добавлено ни одной связи. <br />
-            <a href="@Url.Action("Create", "Relations", new { area = "Admin" })">Создать новую</a>
         </div>
     }
     else

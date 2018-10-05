@@ -90,6 +90,7 @@ namespace Bonsai.Areas.Front.Logic
         private async Task<T> ConfigureAsync<T>(Page page, T vm)
             where T : PageVMBase
         {
+            vm.Id = page.Id;
             vm.Title = page.Title;
             vm.Key = page.Key;
             vm.Type = page.Type;

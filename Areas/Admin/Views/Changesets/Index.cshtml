@@ -10,7 +10,6 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Changesets", new { area = "Admin" });
-    var data = (ChangesetsListDataVM)ViewBag.Data;
 }
 
 <h1>Список правок</h1>
@@ -23,24 +22,24 @@
                 request = Model.Request,
                 include = new[] { nameof(ChangesetsListRequestVM.EntityId), nameof(ChangesetsListRequestVM.UserId) }
             })
-            @if(data.UserTitle != null)
+            @if(Model.UserTitle != null)
             {
                 @await Component.InvokeAsync("ListItemFilterComponent", new
                 {
                     url = baseUrl,
                     request = Model.Request,
                     propName = nameof(ChangesetsListRequestVM.UserId),
-                    title = data.UserTitle
+                    title = Model.UserTitle
                 })
             }
-            @if(data.EntityTitle != null)
+            @if(Model.EntityTitle != null)
             {
                 @await Component.InvokeAsync("ListItemFilterComponent", new
                 {
                     url = baseUrl,
                     request = Model.Request,
                     propName = nameof(ChangesetsListRequestVM.EntityId),
-                    title = data.EntityTitle
+                    title = Model.EntityTitle
                 })
             }
             @await Component.InvokeAsync("ListEnumFilterComponent", new
@@ -101,7 +100,7 @@
 }
 else
 {
-    if(string.IsNullOrEmpty(Model.Request.SearchQuery))
+    if(Model.Request.IsEmpty())
     {
         <div class="alert alert-info">
             Не создано ни одной правки.

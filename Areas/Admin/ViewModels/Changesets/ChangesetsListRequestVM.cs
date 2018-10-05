@@ -23,5 +23,16 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         /// Found entity types.
         /// </summary>
         public ChangesetEntityType[] EntityTypes { get; set; }
+
+        /// <summary>
+        /// Checks if the request has no filter applied.
+        /// </summary>
+        public override bool IsEmpty()
+        {
+            return base.IsEmpty()
+                && EntityId == null
+                && string.IsNullOrEmpty(UserId)
+                && (EntityTypes == null || EntityTypes.Length == 0);
+        }
     }
 }

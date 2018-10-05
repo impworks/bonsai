@@ -8,5 +8,9 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
     /// </summary>
     public class MediaListVM: ListResultVM<MediaListRequestVM, MediaThumbnailExtendedVM>
     {
+        /// <summary>
+        /// Title of the page to filter by.
+        /// </summary>
+        public string EntityTitle { get; set; }
     }
 }

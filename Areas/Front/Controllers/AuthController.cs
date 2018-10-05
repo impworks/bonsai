@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
-using Bonsai.Code.Mvc;
+using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Validation;
+using Bonsai.Data;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Front.Controllers
 {
@@ -20,14 +22,18 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("auth")]
     public class AuthController: AppControllerBase
     {
-        public AuthController(AuthService auth, AppConfigService cfgProvider)
+        public AuthController(AuthService auth, PagesManagerService pages, AppConfigService cfgProvider, AppDbContext db)
         {
             _auth = auth;
+            _pages = pages;
             _cfgProvider = cfgProvider;
+            _db = db;
         }
 
         private readonly AuthService _auth;
+        private readonly PagesManagerService _pages;
         private readonly AppConfigService _cfgProvider;
+        private readonly AppDbContext _db;
 
         /// <summary>
         /// Displays the authorization page.
@@ -114,10 +120,11 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         [HttpGet]
         [Route("register")]
-        public ActionResult Register()
+        public async Task<ActionResult> Register()
         {
             var vm = Session.Get<RegistrationInfo>()?.FormData ?? new RegisterUserVM();
-            return View("RegisterForm", vm);
+            vm.CreatePersonalPage = true;
+            return await ViewRegisterFormAsync(vm);
         }
 
         /// <summary>
@@ -132,21 +139,28 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToAction("Login");
 
             if(!ModelState.IsValid)
-                return View("RegisterForm", vm);
+                return await ViewRegisterFormAsync(vm);
 
             try
             {
                 var result = await _auth.RegisterAsync(vm, info.Login);
-                if (result.IsValidated)
-                    return RedirectToAction("Index", "Home");
+                if (!result.IsValidated)
+                    return RedirectToAction("RegisterSuccess", "Auth");
 
-                return RedirectToAction("RegisterSuccess", "Auth");
+                if (vm.CreatePersonalPage)
+                {
+                    _db.Entry(result.User).State = EntityState.Unchanged;
+                    result.User.Page = await _pages.CreateDefaultUserPageAsync(vm, result.Principal);
+                    await _db.SaveChangesAsync();
+                }
+
+                return RedirectToAction("Index", "Home");
             }
             catch (ValidationException ex)
             {
                 SetModelState(ex);
 
-                return View("RegisterForm", vm);
+                return await ViewRegisterFormAsync(vm);
             }
         }
 
@@ -182,6 +196,19 @@ namespace Bonsai.Areas.Front.Controllers
             }
 
             return RedirectToAction("Index", "Dashboard");
+        }
+
+        /// <summary>
+        /// Displays the registration form.
+        /// </summary>
+        private async Task<ActionResult> ViewRegisterFormAsync(RegisterUserVM vm)
+        {
+            ViewBag.Data = new RegisterUserDataVM
+            {
+                IsFirstUser = await _auth.IsFirstUserAsync()
+            };
+
+            return View("RegisterForm", vm);
         }
 
         #endregion
