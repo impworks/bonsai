@@ -15,14 +15,14 @@ A family wiki engine (in Russian).
 
 #### Front-end:
 
-<a href="https://i.imgur.com/ITBdXtl.png"><img src="https://i.imgur.com/ITBdXtl.png" width="250px" /></a>
-<a href="https://i.imgur.com/rYgZ4Ai.png"><img src="https://i.imgur.com/rYgZ4Ai.png" width="250px" /></a>
-<a href="https://i.imgur.com/9jEKDrm.png"><img src="https://i.imgur.com/9jEKDrm.png" width="250px" /></a>
+<a href="https://user-images.githubusercontent.com/604496/46574247-037d4f00-c9a9-11e8-8585-0d574dda2600.png"><img src="https://user-images.githubusercontent.com/604496/46574252-1859e280-c9a9-11e8-821f-daeaaac7de3f.png" /></a>
+<a href="https://user-images.githubusercontent.com/604496/46574259-2c054900-c9a9-11e8-8ecc-ca542053f665.png"><img src="https://user-images.githubusercontent.com/604496/46574288-9a4a0b80-c9a9-11e8-8373-2a7d3e00289c.png" /></a>
+<a href="https://user-images.githubusercontent.com/604496/46574262-31629380-c9a9-11e8-9ea6-18fbe63f239f.png"><img src="https://user-images.githubusercontent.com/604496/46574291-9f0ebf80-c9a9-11e8-8656-8a54dd2f2be7.png" /></a>
 
 #### Admin panel:
 
-<a href="https://i.imgur.com/vwxacIE.png"><img src="https://i.imgur.com/vwxacIE.png" width="250px" /></a>
-<a href="https://i.imgur.com/iMp3HHG.png"><img src="https://i.imgur.com/iMp3HHG.png" width="250px" /></a>
+<a href="https://user-images.githubusercontent.com/604496/46574266-3f181900-c9a9-11e8-828d-9d9a5db25acb.png"><img src="https://user-images.githubusercontent.com/604496/46574292-a209b000-c9a9-11e8-8193-cd99fc1f5f91.png" /></a>
+<a href="https://user-images.githubusercontent.com/604496/46574268-43443680-c9a9-11e8-974f-f8a60fbeaa74.png"><img src="https://user-images.githubusercontent.com/604496/46574297-a504a080-c9a9-11e8-8612-d3e5cd1592a4.png" /></a>
 
 ### Installation
 
