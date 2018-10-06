@@ -5,6 +5,7 @@ using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -22,16 +23,18 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("auth")]
     public class AuthController: AppControllerBase
     {
-        public AuthController(AuthService auth, PagesManagerService pages, AppConfigService cfgProvider, AppDbContext db)
+        public AuthController(AuthService auth, PagesManagerService pages, ElasticService elastic, AppConfigService cfgProvider, AppDbContext db)
         {
             _auth = auth;
             _pages = pages;
+            _elastic = elastic;
             _cfgProvider = cfgProvider;
             _db = db;
         }
 
         private readonly AuthService _auth;
         private readonly PagesManagerService _pages;
+        private readonly ElasticService _elastic;
         private readonly AppConfigService _cfgProvider;
         private readonly AppDbContext _db;
 
@@ -152,6 +155,8 @@ namespace Bonsai.Areas.Front.Controllers
                     _db.Entry(result.User).State = EntityState.Unchanged;
                     result.User.Page = await _pages.CreateDefaultUserPageAsync(vm, result.Principal);
                     await _db.SaveChangesAsync();
+
+                    await _elastic.AddPageAsync(result.User.Page);
                 }
 
                 return RedirectToAction("Index", "Home");

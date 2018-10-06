@@ -57,6 +57,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                        .ToDictionaryAsync(x => x.Id, x => x.Title);
 
             Add(nameof(RelationEditorVM.DestinationId), "Основная страница", namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
+            Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetEnumDescription());
 
             if (data.SourceIds.Length == 1)
             {
@@ -72,7 +73,6 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 Add(nameof(RelationEditorVM.SourceIds), "Связанные страницы", ViewHelper.RenderBulletList(_html, pageNames));
             }
 
-            Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetEnumDescription());
             Add(nameof(RelationEditorVM.EventId), "Событие", namesLookup.TryGetValue(data.EventId ?? Guid.Empty));
             Add(nameof(RelationEditorVM.DurationStart), "Начало", FuzzyDate.TryParse(data.DurationStart)?.ReadableDate);
             Add(nameof(RelationEditorVM.DurationEnd), "Конец", FuzzyDate.TryParse(data.DurationEnd)?.ReadableDate);

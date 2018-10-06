@@ -60,7 +60,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
                    .MapMember(x => x.DurationEnd, x => FuzzyRange.TrySplit(x.Duration)[1])
                    .ReverseMap()
                    .MapMember(x => x.Duration, x => FuzzyRange.TryCombine(x.DurationStart, x.DurationEnd))
-                   .ForMember(x => x.Id, opt => opt.Ignore());
+                   .MapMember(x => x.SourceId, x => x.SourceIds != null && x.SourceIds.Length > 0 ? x.SourceIds[0] : Guid.Empty);
         }
     }
 }

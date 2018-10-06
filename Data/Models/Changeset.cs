@@ -14,6 +14,11 @@ namespace Bonsai.Data.Models
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Shared value for a group of changesets that were created from a single user action.
+        /// </summary>
+        public Guid? GroupId { get; set; }
+
+        /// <summary>
         /// Edit date.
         /// </summary>
         public DateTimeOffset Date { get; set; }

@@ -99,7 +99,10 @@ namespace Bonsai.Areas.Admin.Logic
             await ValidateRequestAsync(vm, isNew: true);
 
             var rels = new List<Relation>();
+            var changesets = new List<Changeset>();
+            var groupId = vm.SourceIds.Length > 1 ? Guid.NewGuid() : (Guid?) null;
 
+            var user = await GetUserAsync(principal);
             foreach (var srcId in vm.SourceIds)
             {
                 var rel = _mapper.Map<Relation>(vm);
@@ -111,13 +114,13 @@ namespace Bonsai.Areas.Admin.Logic
 
                 rels.Add(rel);
                 rels.Add(compRel);
+
+                changesets.Add(GetChangeset(null, _mapper.Map<RelationEditorVM>(rel), rel.Id, user, null, groupId));
             }
 
             await _validator.ValidateAsync(rels);
 
-            var changeset = await GetChangesetAsync(null, vm, rels.First().Id, principal, null);
-            _db.Changes.Add(changeset);
-
+            _db.Changes.AddRange(changesets);
             _db.Relations.AddRange(rels);
 
             _cache.Clear();
@@ -151,7 +154,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             var compRel = await FindComplementaryRelationAsync(rel);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, principal, revertedId);
+            var user = await GetUserAsync(principal);
+            var changeset = GetChangeset(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, user, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, rel);
@@ -186,7 +190,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             var compRel = await FindComplementaryRelationAsync(rel);
 
-            var changeset = await GetChangesetAsync(_mapper.Map<RelationEditorVM>(rel), null, id, principal, null);
+            var user = await GetUserAsync(principal);
+            var changeset = GetChangeset(_mapper.Map<RelationEditorVM>(rel), null, id, user, null);
             _db.Changes.Add(changeset);
 
             rel.IsDeleted = true;
@@ -311,18 +316,16 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Gets the changeset for updates.
         /// </summary>
-        private async Task<Changeset> GetChangesetAsync(RelationEditorVM prev, RelationEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId)
+        private Changeset GetChangeset(RelationEditorVM prev, RelationEditorVM next, Guid id, AppUser user, Guid? revertedId, Guid? groupId = null)
         {
             if(prev == null && next == null)
                 throw new ArgumentNullException();
-
-            var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
 
             return new Changeset
             {
                 Id = Guid.NewGuid(),
                 RevertedChangesetId = revertedId,
+                GroupId = groupId,
                 Type = ChangesetEntityType.Relation,
                 Date = DateTime.Now,
                 EditedRelationId = id,
@@ -357,7 +360,6 @@ namespace Bonsai.Areas.Admin.Logic
                                                       && x.Type == compRelType
                                                       && x.IsComplementary);
         }
-
                 
         /// <summary>
         /// Loads extra data for the filter.
@@ -376,6 +378,15 @@ namespace Bonsai.Areas.Admin.Logic
                 else
                     request.EntityId = null;
             }
+        }
+
+        /// <summary>
+        /// Returns the user corresponding to this principal.
+        /// </summary>
+        private async Task<AppUser> GetUserAsync(ClaimsPrincipal principal)
+        {
+            var userId = _userMgr.GetUserId(principal);
+            return await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
         }
 
         #endregion

@@ -121,6 +121,8 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<Guid?>("EditedRelationId");
 
+                    b.Property<Guid?>("GroupId");
+
                     b.Property<string>("OriginalState");
 
                     b.Property<Guid?>("RevertedChangesetId");

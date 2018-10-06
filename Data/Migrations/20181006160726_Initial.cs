@@ -122,6 +122,7 @@ namespace Bonsai.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    GroupId = table.Column<Guid>(nullable: true),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     AuthorId = table.Column<string>(nullable: false),
                     Type = table.Column<int>(nullable: false),
