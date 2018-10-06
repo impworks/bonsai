@@ -11,6 +11,19 @@ A family wiki engine (in Russian).
 * Fact storage
 * Access control
 
+### Screenshots
+
+#### Front-end:
+
+<a href="https://i.imgur.com/ITBdXtl.png"><img src="https://i.imgur.com/ITBdXtl.png" width="250px" /></a>
+<a href="https://i.imgur.com/rYgZ4Ai.png"><img src="https://i.imgur.com/rYgZ4Ai.png" width="250px" /></a>
+<a href="https://i.imgur.com/9jEKDrm.png"><img src="https://i.imgur.com/9jEKDrm.png" width="250px" /></a>
+
+#### Admin panel:
+
+<a href="https://i.imgur.com/vwxacIE.png"><img src="https://i.imgur.com/vwxacIE.png" width="250px" /></a>
+<a href="https://i.imgur.com/iMp3HHG.png"><img src="https://i.imgur.com/iMp3HHG.png" width="250px" /></a>
+
 ### Installation
 
 1. Install PostgreSQL server (9.6+)
