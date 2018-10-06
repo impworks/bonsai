@@ -35,7 +35,7 @@ namespace Bonsai.Code.Config
         /// <summary>
         /// Applies database migrations and seeds data.
         /// </summary>
-        private void InitDatabase(IApplicationBuilder app, bool clearAll)
+        private void InitDatabase(IApplicationBuilder app, bool clearAll, bool seedSample)
         {
             using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -45,11 +45,13 @@ namespace Bonsai.Code.Config
                 var elastic = sp.GetService<ElasticService>();
 
                 context.EnsureDatabaseCreated();
+                SeedData.EnsureSystemItemsSeeded(context);
 
                 if(clearAll)
                     SeedData.ClearPreviousData(context, elastic);
 
-                SeedData.EnsureSeeded(context, elastic);
+                if(seedSample)
+                    SeedData.EnsureSampleDataSeeded(context, elastic);
             }
         }
     }

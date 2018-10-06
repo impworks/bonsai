@@ -16,10 +16,8 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Seeds sample data.
         /// </summary>
-        public static void EnsureSeeded(AppDbContext db, ElasticService elastic = null)
+        public static void EnsureSampleDataSeeded(AppDbContext db, ElasticService elastic = null)
         {
-            EnsureSystemItemsSeeded(db);
-
             var ctx = new SeedContext(db, elastic);
 
             var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleHumanFacts.json");
@@ -103,7 +101,7 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Adds required records (identity, config, etc.).
         /// </summary>
-        private static void EnsureSystemItemsSeeded(AppDbContext db)
+        public static void EnsureSystemItemsSeeded(AppDbContext db)
         {
             void AddRole(string name) => db.Roles.Add(new IdentityRole {Name = name, NormalizedName = name.ToUpper()});
 

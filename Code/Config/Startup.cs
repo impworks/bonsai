@@ -59,11 +59,9 @@ namespace Bonsai.Code.Config
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
             }
 
-            if (Configuration["SeedData:Enable"].TryParse<bool>())
-            {
-                var clearAll = Configuration["SeedData:Enable"].TryParse<bool>();
-                InitDatabase(app, clearAll);
-            }
+            var seed = Configuration["SeedData:Enable"].TryParse<bool>();
+            var clear = Configuration["SeedData:ClearAll"].TryParse<bool>();
+            InitDatabase(app, clear, seed);
 
             var culture = CultureInfo.GetCultureInfo("ru-RU");
 
