@@ -11,11 +11,11 @@
                 <span class="fact-item-main">@item.Name</span>
                 @if (item.Proficiency != null)
                 {
-                    <span class="fact-item-extra">@item.Proficiency.Value.GetEnumDescription()</span>
+                    <span class="fact-item-extra">(@item.Proficiency.Value.GetEnumDescription())</span>
                 }
                 @if (item.Duration != null)
                 {
-                    <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
+                    <span class="fact-item-extra" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
                 }
             </div>
         }

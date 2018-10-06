@@ -13,7 +13,7 @@
             <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
             if (item.Duration != null && !isSingle)
             {
-                <span class="fact-item-range" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
+                <span class="fact-item-extra" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
             }
         }
     </td>

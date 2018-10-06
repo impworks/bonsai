@@ -96,6 +96,9 @@
                     if (itemId !== -1) {
                         array.splice(itemId, 1);
                     }
+                    if (array.length === 0) {
+                        delete this.data[this.def.key];
+                    }
                 },
                 unset: function () {
                     this.set(null);

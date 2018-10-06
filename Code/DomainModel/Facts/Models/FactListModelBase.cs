@@ -11,7 +11,12 @@
         public T[] Values { get; set; }
 
         /// <summary>
-        /// Returns the appropriate 
+        /// Flag indicating that this fact does not contain any data.
+        /// </summary>
+        public override bool IsHidden => Values == null || Values.Length == 0;
+
+        /// <summary>
+        /// Returns the appropriate short title depending on the number of values.
         /// </summary>
         public override string ShortTitle => Values.Length == 1 ? Definition.ShortTitleSingle : Definition.ShortTitleMultiple;
     }
