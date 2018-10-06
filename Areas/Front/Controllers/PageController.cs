@@ -64,6 +64,7 @@ namespace Bonsai.Areas.Front.Controllers
 
             try
             {
+                ViewBag.User = await _auth.GetCurrentUserAsync(User);
                 var vm = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageMediaAsync(key));
                 return View(vm);
             }
