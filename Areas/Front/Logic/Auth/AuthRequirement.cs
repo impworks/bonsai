@@ -4,6 +4,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
 {
     /// <summary>
     /// Empty requirement class.
+    /// Is validated by <see cref="AuthHandler" />.
     /// </summary>
     public class AuthRequirement: IAuthorizationRequirement
     {

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180922135619_Initial")]
+    [Migration("20181006160726_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,6 +122,8 @@ namespace Bonsai.Data.Migrations
                     b.Property<Guid?>("EditedPageId");
 
                     b.Property<Guid?>("EditedRelationId");
+
+                    b.Property<Guid?>("GroupId");
 
                     b.Property<string>("OriginalState");
 

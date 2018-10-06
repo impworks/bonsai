@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Dictionary;
@@ -20,11 +21,13 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
     /// </summary>
     public class RelationChangesetRenderer: IChangesetRenderer
     {
-        public RelationChangesetRenderer(AppDbContext db)
+        public RelationChangesetRenderer(IHtmlHelper html, AppDbContext db)
         {
+            _html = html;
             _db = db;
         }
 
+        private readonly IHtmlHelper _html;
         private readonly AppDbContext _db;
 
         #region IChangesetRenderer implementation
@@ -42,17 +45,34 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             var result = new List<ChangePropertyValue>();
             var data = JsonConvert.DeserializeObject<RelationEditorVM>(StringHelper.Coalesce(json, "{}"));
 
-            var pageIds = new[] {data.SourceId, data.DestinationId, data.EventId}.Where(x => x != null)
-                                                                                 .Select(x => x.Value)
-                                                                                 .ToList();
+            if (data.SourceIds == null)
+                data.SourceIds = Array.Empty<Guid>();
+
+            var pageIds = data.SourceIds
+                              .Concat(new[] {data.DestinationId ?? Guid.Empty, data.EventId ?? Guid.Empty})
+                              .ToList();
 
             var namesLookup = await _db.Pages
                                        .Where(x => pageIds.Contains(x.Id))
                                        .ToDictionaryAsync(x => x.Id, x => x.Title);
 
             Add(nameof(RelationEditorVM.DestinationId), "Основная страница", namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
-            Add(nameof(RelationEditorVM.SourceId), "Связанная страница", namesLookup.TryGetValue(data.SourceId ?? Guid.Empty));
             Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetEnumDescription());
+
+            if (data.SourceIds.Length == 1)
+            {
+                var name = namesLookup.TryGetValue(data.SourceIds[0]);
+                Add(nameof(RelationEditorVM.SourceIds), "Связанная страница", name);
+            }
+            else
+            {
+                var pageNames = data.SourceIds
+                                    .Select(x => namesLookup.TryGetValue(x))
+                                    .Where(x => !string.IsNullOrEmpty(x));
+
+                Add(nameof(RelationEditorVM.SourceIds), "Связанные страницы", ViewHelper.RenderBulletList(_html, pageNames));
+            }
+
             Add(nameof(RelationEditorVM.EventId), "Событие", namesLookup.TryGetValue(data.EventId ?? Guid.Empty));
             Add(nameof(RelationEditorVM.DurationStart), "Начало", FuzzyDate.TryParse(data.DurationStart)?.ReadableDate);
             Add(nameof(RelationEditorVM.DurationEnd), "Конец", FuzzyDate.TryParse(data.DurationEnd)?.ReadableDate);

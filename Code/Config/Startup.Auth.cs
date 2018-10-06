@@ -1,6 +1,5 @@
 ﻿using Bonsai.Areas.Admin.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Auth;
-using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,18 +15,12 @@ namespace Bonsai.Code.Config
         {
             services.AddAuthorization(opts =>
             {
-                opts.AddPolicy(AuthRequirement.Name, p =>
-                {
-                    p.Requirements.Add(new AuthRequirement());
-                });
-
-                opts.AddPolicy(AdminAuthRequirement.Name, p =>
-                {
-                    p.RequireRole(nameof(UserRole.Admin), nameof(UserRole.Editor));
-                });
+                opts.AddPolicy(AuthRequirement.Name, p => p.Requirements.Add(new AuthRequirement()));
+                opts.AddPolicy(AdminAuthRequirement.Name, p => p.Requirements.Add(new AdminAuthRequirement()));
             });
 
             services.AddScoped<IAuthorizationHandler, AuthHandler>();
+            services.AddScoped<IAuthorizationHandler, AdminAuthHandler>();
 
             services.AddAuthentication(IdentityConstants.ApplicationScheme)
                     .AddFacebook(opts =>
