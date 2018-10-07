@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using Bonsai.Areas.Front.ViewModels.Auth;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.ViewModels.Users
@@ -28,20 +30,27 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         public UserRole Role { get; set; }
 
         /// <summary>
+        /// ID of the personal page.
+        /// </summary>
+        public Guid? PersonalPageId { get; set; }
+
+        /// <summary>
         /// Configures automatic mapping.
         /// </summary>
         public override void Configure(IProfileExpression profile)
         {
             profile.CreateMap<UserEditorVM, AppUser>()
-                   .ForMember(x => x.Birthday, opt => opt.MapFrom(x => x.Birthday))
-                   .ForMember(x => x.FirstName, opt => opt.MapFrom(x => x.FirstName))
-                   .ForMember(x => x.MiddleName, opt => opt.MapFrom(x => x.MiddleName))
-                   .ForMember(x => x.LastName, opt => opt.MapFrom(x => x.LastName))
-                   .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
+                   .MapMember(x => x.Birthday, x => x.Birthday)
+                   .MapMember(x => x.FirstName, x => x.FirstName)
+                   .MapMember(x => x.MiddleName, x => x.MiddleName)
+                   .MapMember(x => x.LastName, x => x.LastName)
+                   .MapMember(x => x.Email, x => x.Email)
+                   .MapMember(x => x.PageId, x => x.PersonalPageId)
                    .ForMember(x => x.UserName, opt => opt.MapFrom(x => Regex.Replace(x.Email, "[^a-z0-9]", "")))
                    .ForAllOtherMembers(x => x.Ignore());
 
             profile.CreateMap<AppUser, UserEditorVM>()
+                   .MapMember(x => x.PersonalPageId, x => x.PageId)
                    .ForMember(x => x.Role, opt => opt.Ignore())
                    .ForMember(x => x.CreatePersonalPage, opt => opt.Ignore());
         }
