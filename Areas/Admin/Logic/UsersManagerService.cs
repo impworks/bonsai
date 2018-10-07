@@ -89,7 +89,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the user.
         /// </summary>
-        public async Task UpdateAsync(UserEditorVM request, ClaimsPrincipal currUser)
+        public async Task<AppUser> UpdateAsync(UserEditorVM request, ClaimsPrincipal currUser)
         {
             await ValidateUpdateRequestAsync(request);
 
@@ -107,6 +107,8 @@ namespace Bonsai.Areas.Admin.Logic
                 var role = request.Role.ToString();
                 await _userMgr.AddToRoleAsync(user, role);
             }
+
+            return user;
         }
 
         /// <summary>
@@ -222,6 +224,14 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (emailUsed)
                 val.Add(nameof(request.Email), "Адрес почты уже используется другим пользователем");
+
+            if (request.PersonalPageId != null)
+            {
+                var exists = await _db.Pages
+                                      .AnyAsync(x => x.Id == request.PersonalPageId);
+                if (!exists)
+                    val.Add(nameof(request.PersonalPageId), "Страница не существует");
+            }
 
             val.ThrowIfInvalid();
         }

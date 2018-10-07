@@ -29,7 +29,7 @@ namespace Bonsai.Data
             base.OnModelCreating(builder);
 
             builder.Entity<AppUser>().HasMany(x => x.Changes).WithOne(x => x.Author);
-            builder.Entity<AppUser>().HasOne(x => x.Page).WithMany().IsRequired(false);
+            builder.Entity<AppUser>().HasOne(x => x.Page).WithMany().IsRequired(false).HasForeignKey(x => x.PageId);
 
             builder.Entity<Changeset>().HasOne(x => x.Author).WithMany();
 

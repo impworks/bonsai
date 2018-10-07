@@ -21,6 +21,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         /// <summary>
         /// Available roles for the user.
         /// </summary>
-        public IReadOnlyList<SelectListItem> UserRoles { get; set; }
+        public IReadOnlyList<SelectListItem> UserRoleItems { get; set; }
+
+        /// <summary>
+        /// Selected page (if any).
+        /// </summary>
+        public IReadOnlyList<SelectListItem> PageItems { get; set; }
     }
 }

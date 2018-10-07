@@ -146,7 +146,23 @@ namespace Bonsai.Areas.Admin.Logic
                 Title = name,
                 Description = name,
                 Type = PageType.Person,
-                Facts = new JObject { ["Birth.Date"] = new JObject { ["Value"] = vm.Birthday } }.ToString()
+                Facts = new JObject
+                {
+                    ["Birth.Date"] = new JObject { ["Value"] = vm.Birthday },
+                    ["Main.Name"] = new JObject
+                    {
+                        ["Values"] = new JArray
+                        {
+                            new JObject
+                            {
+                                ["FirstName"] = vm.FirstName,
+                                ["MiddleName"] = vm.MiddleName,
+                                ["LastName"] = vm.LastName
+                            }
+                        }
+                    }
+
+                }.ToString()
             };
 
             return await CreateAsync(createVm, principal);

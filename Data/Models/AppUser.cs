@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
@@ -42,6 +43,11 @@ namespace Bonsai.Data.Models
         /// User's own page.
         /// </summary>
         public Page Page { get; set; }
+
+        /// <summary>
+        /// ID of the page.
+        /// </summary>
+        public Guid? PageId { get; set; }
 
         /// <summary>
         /// Changes created by this user.

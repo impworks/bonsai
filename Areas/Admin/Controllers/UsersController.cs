@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Code.Utils.Helpers;
@@ -7,6 +10,8 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -86,10 +91,14 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                await _users.UpdateAsync(vm, User);
+                if(vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
+                {
+                    var page = await _pages.CreateDefaultUserPageAsync(vm, User);
+                    vm.PersonalPageId = page.Id;
+                    vm.CreatePersonalPage = false;
+                }
 
-                if (vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
-                    await _pages.CreateDefaultUserPageAsync(vm, User);
+                await _users.UpdateAsync(vm, User);
 
                 await _db.SaveChangesAsync();
 
@@ -109,14 +118,37 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private async Task<ActionResult> ViewUpdateFormAsync(UserEditorVM vm)
         {
+            var canCreate = await _users.CanCreatePersonalPageAsync(vm);
+            var pageItems = await GetPageItemsAsync(vm);
+
             ViewBag.Data = new UserEditorDataVM
             {
                 IsSelf = _users.IsSelf(vm.Id, User),
-                UserRoles = ViewHelper.GetEnumSelectList(vm.Role),
-                CanCreatePersonalPage = await _users.CanCreatePersonalPageAsync(vm)
+                UserRoleItems = ViewHelper.GetEnumSelectList(vm.Role),
+                CanCreatePersonalPage = canCreate,
+                PageItems = pageItems
             };
 
             return View("Update", vm);
+        }
+
+        /// <summary>
+        /// Returns the select list for a page picker.
+        /// </summary>
+        private async Task<IReadOnlyList<SelectListItem>> GetPageItemsAsync(UserEditorVM vm)
+        {
+            if (vm.PersonalPageId != null)
+            {
+                var page = await _db.Pages
+                                    .Where(x => x.Id == vm.PersonalPageId)
+                                    .Select(x => x.Title)
+                                    .FirstOrDefaultAsync();
+
+                if (!string.IsNullOrEmpty(page))
+                    return new[] {new SelectListItem(page, vm.PersonalPageId.Value.ToString(), true)};
+            }
+
+            return Array.Empty<SelectListItem>();
         }
 
         #endregion
