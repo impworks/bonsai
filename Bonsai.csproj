@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -9,9 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Data\Utils\Seed\SampleHumanFacts.json" />
+    <Content Remove="Data\Utils\Seed\SamplePetFacts.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Utils\Seed\Media\" />
     <Folder Include="wwwroot\media\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\Utils\Seed\SampleHumanFacts.json" />
+    <None Include="Data\Utils\Seed\SamplePetFacts.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,8 +45,6 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.1" />
     <PackageReference Include="NEST" Version="6.2.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.1.1" />
@@ -49,6 +57,10 @@
       <Content Update="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="wwwroot\media\**\*.*" CopyToPublishDirectory="Never" />
     </ItemGroup>
 
     <ItemGroup>
