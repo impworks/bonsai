@@ -327,6 +327,27 @@ namespace Bonsai.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PageDrafts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    PageId = table.Column<Guid>(nullable: true),
+                    UserId = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(nullable: false),
+                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PageDrafts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PageDrafts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -436,6 +457,16 @@ namespace Bonsai.Data.Migrations
                 name: "IX_PageAliases_PageId",
                 table: "PageAliases",
                 column: "PageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PageDrafts_PageId",
+                table: "PageDrafts",
+                column: "PageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PageDrafts_UserId",
+                table: "PageDrafts",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pages_IsDeleted",
@@ -594,6 +625,9 @@ namespace Bonsai.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "PageAliases");
+
+            migrationBuilder.DropTable(
+                name: "PageDrafts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

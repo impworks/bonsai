@@ -1,7 +1,7 @@
 ﻿$(function() {
     $('.md-editor').each(function (idx, elem) {
         var allowMedia = $(elem).data('md-pick-media');
-        new SimpleMDE({
+        var editor = new SimpleMDE({
             element: elem,
             blockStyles: {
                 bold: '**',
@@ -11,6 +11,11 @@
             toolbar: buildStatusBar(allowMedia),
             spellChecker: false,
             status: false
+        });
+
+        editor.codemirror.on('change', function () {
+            editor.codemirror.save();
+            $(elem).change();
         });
     });
 

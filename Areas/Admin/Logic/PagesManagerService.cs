@@ -8,7 +8,6 @@ using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
-using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Services;
@@ -91,6 +90,18 @@ namespace Bonsai.Areas.Admin.Logic
                             .ProjectTo<PageTitleExtendedVM>()
                             .ToDictionaryAsync(x => x.Id, x => x);
         }
+
+        /// <summary>
+        /// Returns the editor's new state (blank or restored from a draft).
+        /// </summary>
+        public async Task<PageEditorVM> RequestCreateAsync(PageType type, ClaimsPrincipal principal)
+        {
+            var draft = await GetPageDraftAsync(null, principal);
+            if (draft != null)
+                return JsonConvert.DeserializeObject<PageEditorVM>(draft.Content);
+
+            return new PageEditorVM {Type = type};
+        }
         
         /// <summary>
         /// Creates the new page.
@@ -127,6 +138,8 @@ namespace Bonsai.Areas.Admin.Logic
                     }
                 )
             );
+
+            await DiscardPageDraftAsync(null, principal);
 
             return page;
         }
@@ -171,8 +184,15 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the original data for the editor form.
         /// </summary>
-        public async Task<PageEditorVM> RequestUpdateAsync(Guid id)
+        public async Task<PageEditorVM> RequestUpdateAsync(Guid id, ClaimsPrincipal principal, bool force = false)
         {
+            if (!force)
+            {
+                var draft = await GetPageDraftAsync(id, principal);
+                if (draft != null)
+                    return JsonConvert.DeserializeObject<PageEditorVM>(draft.Content);
+            }
+
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.MainPhoto)
@@ -227,6 +247,9 @@ namespace Bonsai.Areas.Admin.Logic
             else
                 _cache.Remove<PageDescriptionVM>(page.Key);
 
+            if(revertedId == null)
+                await DiscardPageDraftAsync(vm.Id, principal);
+
             return page;
         }
 
@@ -249,7 +272,7 @@ namespace Bonsai.Areas.Admin.Logic
             var page = await _db.Pages
                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
 
-            var prev = await RequestUpdateAsync(id);
+            var prev = await RequestUpdateAsync(id, principal, force: true);
             var changeset = await GetChangesetAsync(prev, null, id, principal, null);
             _db.Changes.Add(changeset);
 
@@ -258,6 +281,58 @@ namespace Bonsai.Areas.Admin.Logic
             _cache.Clear();
 
             return page;
+        }
+
+        /// <summary>
+        /// Returns the editor state from the current draft.
+        /// </summary>
+        public async Task<PageDraft> GetPageDraftAsync(Guid? page, ClaimsPrincipal principal)
+        {
+            var userId = _userMgr.GetUserId(principal);
+            var pageId = page == Guid.Empty ? null : page;
+            return await _db.PageDrafts.FirstOrDefaultAsync(x => x.PageId == pageId && x.UserId == userId);
+        }
+
+        /// <summary>
+        /// Updates the existing draft state.
+        /// </summary>
+        public async Task<PageDraftInfoVM> UpdatePageDraftAsync(PageEditorVM vm, ClaimsPrincipal principal)
+        {
+            var userId = _userMgr.GetUserId(principal);
+            var pageId = vm.Id == Guid.Empty ? null : (Guid?) vm.Id;
+
+            var draft = await _db.PageDrafts
+                                 .FirstOrDefaultAsync(x => x.PageId == pageId && x.UserId == userId);
+
+            if (draft == null)
+            {
+                draft = new PageDraft
+                {
+                    Id = Guid.NewGuid(),
+                    PageId = pageId,
+                    UserId = userId
+                };
+                _db.PageDrafts.Add(draft);
+            }
+
+            draft.Content = JsonConvert.SerializeObject(vm);
+            draft.LastUpdateDate = DateTimeOffset.Now;
+
+            return new PageDraftInfoVM
+            {
+                LastUpdateDate = draft.LastUpdateDate
+            };
+        }
+
+        /// <summary>
+        /// Discards the existing draft for a page.
+        /// </summary>
+        public async Task DiscardPageDraftAsync(Guid? pageId, ClaimsPrincipal principal)
+        {
+            var draft = await GetPageDraftAsync(pageId, principal);
+
+            if (draft != null)
+                _db.PageDrafts.Remove(draft);
         }
 
         #endregion

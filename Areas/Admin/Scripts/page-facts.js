@@ -32,7 +32,7 @@
         },
 
         watch: {
-            value: function(value) {
+            value: function (value) {
                 $(this.$el).val(value);
             }
         },
@@ -128,6 +128,7 @@
                 deep: true,
                 handler: function() {
                     $facts.val(JSON.stringify(globalData));
+                    $facts.change();
                 }
             }
         }

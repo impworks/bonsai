@@ -299,6 +299,30 @@ namespace Bonsai.Data.Migrations
                     b.ToTable("PageAliases");
                 });
 
+            modelBuilder.Entity("Bonsai.Data.Models.PageDraft", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTimeOffset>("LastUpdateDate");
+
+                    b.Property<Guid?>("PageId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PageDrafts");
+                });
+
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -511,6 +535,14 @@ namespace Bonsai.Data.Migrations
                     b.HasOne("Bonsai.Data.Models.Page", "Page")
                         .WithMany("Aliases")
                         .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.PageDraft", b =>
+                {
+                    b.HasOne("Bonsai.Data.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

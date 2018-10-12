@@ -136,11 +136,29 @@
     </div>
 
     <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-4">
             <button class="btn btn-primary" type="submit">Сохранить</button>
             <a class="btn btn-secondary" href="@Url.Action("Index", "Pages", new { area = "Admin" })">Назад</a>
         </div>
+        <div class="form-group col-md-5 editor-draft-info-wrapper">
+            <span id="editor-draft-info">
+                @if (data.DraftLastUpdateDate is DateTimeOffset draftDate)
+                {
+                    var today = draftDate.Date == DateTimeOffset.Now.Date;
+                    <text>Загружено из черновика от @data.DraftLastUpdateDate.Value.ToString(today ? "T" : "G").</text>
+                }
+            </span>
+            @if (data.DraftDisplayNotification)
+            {
+                <br />
+                <a href="#" class="cmd-discard-draft">Удалить черновик</a>
+            }
+        </div>
     </div>
+</form>
+
+<form id="discard-draft-form" action="@Url.Action("Remove", "Drafts", new { area = "Admin" })" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
 </form>
 
 <input type="file" id="main-photo-file" class="input-hidden" name="file" />
