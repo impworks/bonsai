@@ -5,6 +5,7 @@
     Layout = "~/Areas/Front/Views/Layout.cshtml";
     var pageVm = (PageTitleVM)Model;
     var user = (UserVM) ViewBag.User;
+    var isPreview = (bool) ViewBag.IsPreview;
     var actions = new[] {
         new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "fa-user"},
         new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "fa-image"}
@@ -13,12 +14,12 @@
 
 <div id="page" class="d-flex">
     <div class="sidebar col-3">
-        @Html.Partial("InfoBlock/InfoBlock", Model.InfoBlock)
+        @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", Model.InfoBlock)
     </div>
     <div class="content col">
         <div class="content-header">
             <h1>@pageVm.Title</h1>
-            @if (user?.IsAdministrator == true)
+            @if (user?.IsAdministrator == true && !isPreview)
             {
                 <span class="dropdown dropdown-icons">
                     <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="dropdown">
@@ -38,14 +39,17 @@
                 </span>
             }
         </div>
-        <ul class="nav nav-tabs">
-            @foreach (var action in actions)
-            {
-                <li class="nav-item">
-                    <a class="nav-link @(action.Active ? "active" : "")" href="@action.Url"><i class="fa @action.Icon"></i> @action.Title</a>
-                </li>
-            }
-        </ul>
+        @if (!isPreview)
+        {
+            <ul class="nav nav-tabs">
+                @foreach (var action in actions)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(action.Active ? "active" : "")" href="@action.Url"><i class="fa @action.Icon"></i> @action.Title</a>
+                    </li>
+                }
+            </ul>
+        }
         <div class="typography">
             @RenderBody()
         </div>

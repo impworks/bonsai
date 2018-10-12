@@ -6,16 +6,16 @@
 }
 
 <div class="page-info">
-    @if (Model.Photo != null)
+    @if(Model.Photo != null)
     {
         <div class="profile-photo">
             <img src="@Url.Content(Model.Photo.ThumbnailUrl)" alt="@pageVm.Title" />
         </div>
     }
 
-    @Html.Partial("InfoBlock/FactGroupList", Model.Facts.Where(x => x.Definition.IsMain))
-    @Html.Partial("InfoBlock/RelationCategoryList", Model.RelationGroups.Where(x => x.IsMain))
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain))
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain))
 
-    @Html.Partial("InfoBlock/FactGroupList", Model.Facts.Where(x => x.Definition.IsMain == false))
-    @Html.Partial("InfoBlock/RelationCategoryList", Model.RelationGroups.Where(x => x.IsMain == false))
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain == false))
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain == false))
 </div>

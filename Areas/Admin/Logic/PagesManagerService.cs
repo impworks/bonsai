@@ -335,6 +335,22 @@ namespace Bonsai.Areas.Admin.Logic
                 _db.PageDrafts.Remove(draft);
         }
 
+        /// <summary>
+        /// Returns the preview-friendly version of the page.
+        /// </summary>
+        public async Task<Page> GetPageDraftPreviewAsync(Guid? pageId, ClaimsPrincipal principal)
+        {
+            var draft = await GetPageDraftAsync(pageId, principal);
+            if (draft == null)
+                return null;
+
+            var editor = JsonConvert.DeserializeObject<PageEditorVM>(draft.Content);
+            var page = _mapper.Map<Page>(editor);
+            page.MainPhoto = await FindMainPhotoAsync(editor.MainPhotoKey);
+
+            return page;
+        }
+
         #endregion
 
         #region Helpers

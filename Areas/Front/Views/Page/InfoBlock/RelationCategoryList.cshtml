@@ -15,14 +15,14 @@
                             @foreach (var relPage in rel.Pages)
                             {
                                 <li>
-                                    <a href="@Url.Action("Description", "Page", new {key = relPage.Key})">@relPage.Title</a>
+                                    <a href="@Url.Action("Description", "Page", new {key = relPage.Key, area = "Front"})">@relPage.Title</a>
                                     @if (relPage.Duration != null)
                                     {
                                         <span class="relation-range" title="@relPage.Duration.Value.ReadableRange">@relPage.Duration.Value.ShortReadableRange</span>
                                     }
                                     @if (relPage.RelationEvent != null)
                                     {
-                                        <a href="@Url.Action("Description", "Page", new {key = relPage.RelationEvent.Key})"
+                                        <a href="@Url.Action("Description", "Page", new {key = relPage.RelationEvent.Key, area = "Front"})"
                                            class="relation-event-link" title="@relPage.RelationEvent.Title">
                                             <span class="fa fa-calendar-plus-o"></span>
                                         </a>

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,13 +14,15 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/drafts")]
     public class DraftsController: AdminControllerBase
     {
-        public DraftsController(PagesManagerService pages, AppDbContext db)
+        public DraftsController(PagesManagerService pages, PagePresenterService pagePresenter, AppDbContext db)
         {
             _pages = pages;
+            _pagePresenter = pagePresenter;
             _db = db;
         }
 
         private readonly PagesManagerService _pages;
+        private readonly PagePresenterService _pagePresenter;
         private readonly AppDbContext _db;
         
         /// <summary>
@@ -51,5 +54,17 @@ namespace Bonsai.Areas.Admin.Controllers
             return RedirectToAction("Update", "Pages", new {id = id});
         }
 
+        [HttpGet]
+        [Route("preview")]
+        public async Task<ActionResult> Preview(Guid? id)
+        {
+            var page = await _pages.GetPageDraftPreviewAsync(id, User);
+            if (page == null)
+                return NotFound();
+
+            var vm = await _pagePresenter.GetPageDescriptionAsync(page);
+            ViewBag.IsPreview = true;
+            return View("~/Areas/Front/Views/Page/Description.cshtml", vm);
+        }
     }
 }
