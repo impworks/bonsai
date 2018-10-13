@@ -147,6 +147,9 @@ namespace Bonsai.Areas.Front.Logic
                         continue;
 
                     var vm = (FactModelBase) JsonConvert.DeserializeObject(factInfo.ToString(), fact.Kind);
+                    if (vm == null)
+                        continue;
+
                     vm.Definition = fact;
 
                     if(!vm.IsHidden)

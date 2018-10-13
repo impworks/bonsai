@@ -5,7 +5,9 @@
     }
 
     var $draftInfo = $('#editor-draft-info'),
-        $discard = $('.cmd-discard-draft');
+        $discard = $('.cmd-discard-draft'),
+        $preview = $('.cmd-preview'),
+        $discardForm = $('#discard-draft-form');
 
     var isModified = false,
         elemSelector = 'input[name], textarea[name], select[name]';
@@ -14,24 +16,28 @@
     setInterval(saveDraft, 5000);
 
     $discard.on('click', discardDraft);
+    $preview.on('click', previewDraft);
 
-    function saveDraft() {
+    function trySaveDraft() {
         if (!isModified) {
             return;
         }
 
+        saveDraft();
+    }
+
+    function saveDraft() {
         var state = getFormState();
-        $.ajax({
+        return $.ajax({
                 url: '/admin/drafts/update',
                 method: 'POST',
                 data: state
             })
-            .done(function (data) {
+            .then(function (data) {
+                isModified = false;
                 var date = new Date(data.lastUpdateDate);
                 $draftInfo.text('Черновик сохранен в ' + date.toLocaleTimeString() + '.');
             });
-
-        isModified = false;
     }
 
     function getFormState() {
@@ -55,6 +61,15 @@
             return;
         }
 
-        $('#discard-draft-form').submit();
+        $discardForm.submit();
+    }
+
+    function previewDraft() {
+        saveDraft()
+            .then(function() {
+                var pageId = $discardForm.find('input[name="id"]').val();
+                var url = '/admin/drafts/preview?id=' + pageId;
+                window.open(url, 'bonsai_preview_' + pageId, 'menubar=no,toolbar=no,personalbar=no,resizable=yes,');
+            });
     }
 });

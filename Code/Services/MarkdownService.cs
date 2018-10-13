@@ -104,7 +104,7 @@ namespace Bonsai.Code.Services
                 if(details.Error)
                     return Wrapper("right error", $"<p class='caption'>{details.Descr}</p>");
 
-                var link = _url.Action("ViewMedia", "Media", new {key = key});
+                var link = _url.Action("ViewMedia", "Media", new { area = "Front", key = key});
                 var path = _url.Content(MediaPresenterService.GetSizedMediaPath(rawPath, MediaSize.Small));
 
                 var body = $@"
@@ -143,7 +143,7 @@ namespace Bonsai.Code.Services
 
                 // todo: encoding
                 if (existingPages.ContainsKey(key))
-                    return $@"<a href=""{_url.Action("Description", "Page", new { key = key })}"" class=""link"">{title}</a>";
+                    return $@"<a href=""{_url.Action("Description", "Page", new { area = "Front", key = key })}"" class=""link"">{title}</a>";
 
                 return $@"<span class=""link-missing"" title=""Страница не найдена: {rawKey}"">{title}</span>";
             });
