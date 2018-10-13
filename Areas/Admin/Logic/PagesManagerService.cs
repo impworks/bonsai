@@ -380,6 +380,9 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var val = new Validator();
 
+            if (vm.Description == null)
+                vm.Description = string.Empty;
+
             var key = PageHelper.EncodeTitle(vm.Title);
             var otherPage = await _db.PageAliases
                                      .AnyAsync(x => x.Key == key && x.Page.Id != vm.Id);

@@ -64,16 +64,21 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 Key = page.Key,
                 Type = page.Type,
                 Title = page.Title,
-                Gender = Parse<bool>("Bio.Gender"),
-                BirthDate = Parse<FuzzyDate>("Birth.Date"),
-                DeathDate = Parse<FuzzyDate>("Death.Date"),
+                Gender = Parse<bool>("Bio.Gender", "IsMale"),
+                BirthDate = Parse<FuzzyDate>("Birth.Date", "Value"),
+                DeathDate = Parse<FuzzyDate>("Death.Date", "Value"),
             };
 
             context.Augment(excerpt);
 
-            T? Parse<T>(string key) where T : struct
+            T? Parse<T>(params string[] parts) where T : struct
             {
-                var value = facts[key]?.ToString();
+                var curr = (JToken) facts;
+
+                foreach(var part in parts)
+                    curr = curr?[part];
+
+                var value = curr?.ToString();
 
                 if(typeof(T) == typeof(FuzzyDate))
                     return (T?)(object)FuzzyDate.TryParse(value);
