@@ -149,7 +149,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         private IEnumerable<RelationGroupVM> GetSpouseGroups(RelationContext ctx, Guid pageId)
         {
-            var page = ctx.Pages[pageId];
+            if (!ctx.Pages.TryGetValue(pageId, out var page))
+                yield break;
+
             if (page.Type != PageType.Person && page.Type != PageType.Pet)
                 yield break;
 
@@ -195,7 +197,9 @@ namespace Bonsai.Areas.Front.Logic.Relations
             // Finds pages matching the entire path from current page
             IEnumerable<RelationTarget> GetMatchingPages(RelationPath path)
             {
-                var root = ctx.Pages[guids[0]];
+                if (!ctx.Pages.TryGetValue(guids[0], out var root))
+                    return Array.Empty<RelationTarget>();
+
                 var currents = new List<RelationTarget> {new RelationTarget(root, null, new SinglyLinkedList<RelationContext.PageExcerpt>(root))};
 
                 for (var depth = 0; depth < path.Segments.Count; depth++)

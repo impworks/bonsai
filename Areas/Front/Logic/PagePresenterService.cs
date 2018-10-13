@@ -51,6 +51,14 @@ namespace Bonsai.Areas.Front.Logic
             if (page.Key != key)
                 throw new RedirectRequiredException(page.Key);
 
+            return await GetPageDescriptionAsync(page);
+        }
+
+        /// <summary>
+        /// Returns the description for a constructed page.
+        /// </summary>
+        public async Task<PageDescriptionVM> GetPageDescriptionAsync(Page page)
+        {
             var descr = await _markdown.CompileAsync(page.Description);
             return await ConfigureAsync(page, new PageDescriptionVM { Description = descr });
         }
@@ -139,6 +147,9 @@ namespace Bonsai.Areas.Front.Logic
                         continue;
 
                     var vm = (FactModelBase) JsonConvert.DeserializeObject(factInfo.ToString(), fact.Kind);
+                    if (vm == null)
+                        continue;
+
                     vm.Definition = fact;
 
                     if(!vm.IsHidden)

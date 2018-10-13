@@ -68,7 +68,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("create")]
         public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
         {
-            return await ViewEditorFormAsync(new PageEditorVM {Type = type});
+            var vm = await _pages.RequestCreateAsync(type, User);
+            return await ViewEditorFormAsync(vm, displayDraft: true);
         }
 
         /// <summary>
@@ -103,8 +104,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("update")]
         public async Task<ActionResult> Update(Guid id)
         {
-            var vm = await _pages.RequestUpdateAsync(id);
-            return await ViewEditorFormAsync(vm);
+            var vm = await _pages.RequestUpdateAsync(id, User);
+            return await ViewEditorFormAsync(vm, displayDraft: true);
         }
 
         /// <summary>
@@ -165,7 +166,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Displays the editor form.
         /// </summary>
-        private async Task<ActionResult> ViewEditorFormAsync(PageEditorVM vm, string tab = null)
+        private async Task<ActionResult> ViewEditorFormAsync(PageEditorVM vm, string tab = null, bool displayDraft = false)
         {
             var groups = FactDefinitions.Groups[vm.Type];
             var editorTpls = groups.SelectMany(x => x.Defs)
@@ -179,6 +180,7 @@ namespace Bonsai.Areas.Admin.Controllers
                                         .JoinString(", ");
 
             var photoThumbUrl = await GetMainPhotoThumbnailUrlAsync(vm.MainPhotoKey);
+            var draft = await _pages.GetPageDraftAsync(vm.Id, User);
 
             ViewBag.Data = new PageEditorDataVM
             {
@@ -188,7 +190,11 @@ namespace Bonsai.Areas.Admin.Controllers
                 EditorTemplates = editorTpls,
                 Tab = StringHelper.Coalesce(tab, "main"),
                 ErrorFields = errorFields,
-                MainPhotoThumbnailUrl = photoThumbUrl
+                MainPhotoThumbnailUrl = photoThumbUrl,
+                DraftId = draft?.Id,
+                DraftLastUpdateDate = draft?.LastUpdateDate,
+                DraftDisplayNotification = draft != null && displayDraft
+
             };
 
             return View("Editor", vm);

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20181006160726_Initial")]
+    [Migration("20181012113317_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,6 +301,30 @@ namespace Bonsai.Data.Migrations
                     b.ToTable("PageAliases");
                 });
 
+            modelBuilder.Entity("Bonsai.Data.Models.PageDraft", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTimeOffset>("LastUpdateDate");
+
+                    b.Property<Guid?>("PageId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PageDrafts");
+                });
+
             modelBuilder.Entity("Bonsai.Data.Models.Relation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -513,6 +537,14 @@ namespace Bonsai.Data.Migrations
                     b.HasOne("Bonsai.Data.Models.Page", "Page")
                         .WithMany("Aliases")
                         .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Bonsai.Data.Models.PageDraft", b =>
+                {
+                    b.HasOne("Bonsai.Data.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

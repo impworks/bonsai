@@ -6,7 +6,7 @@
 
     var aliases = JSON.parse($aliases.val() || '[]')
         .map(function(x) {
-            return { value: x }
+            return { value: x };
         });
 
     var editorApp = new Vue({
@@ -37,6 +37,7 @@
             refresh: function () {
                 var values = aliases.map(function(x) { return x.value; });
                 $aliases.val(JSON.stringify(values));
+                $aliases.change();
             }
         }
     });

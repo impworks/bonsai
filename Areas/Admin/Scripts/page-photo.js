@@ -53,6 +53,7 @@
 
         $img.prop('src', thumb);
         $key.val(key);
+        $key.change();
         $removeBtn.show();
     }
 });

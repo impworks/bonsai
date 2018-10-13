@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bonsai.Code.DomainModel.Facts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -43,5 +44,20 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// Thumbnail URL for the selected main photo.
         /// </summary>
         public string MainPhotoThumbnailUrl { get; set; }
+
+        /// <summary>
+        /// ID of the draft, if any.
+        /// </summary>
+        public Guid? DraftId { get; set; }
+
+        /// <summary>
+        /// Last update of the draft.
+        /// </summary>
+        public DateTimeOffset? DraftLastUpdateDate { get; set; }
+
+        /// <summary>
+        /// Flag indicating that a draft notification should be displayed at the top.
+        /// </summary>
+        public bool DraftDisplayNotification { get; set; }
     }
 }
