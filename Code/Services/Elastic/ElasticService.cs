@@ -115,6 +115,8 @@ namespace Bonsai.Code.Services.Elastic
         /// </summary>
         public async Task AddPageAsync(Page page)
         {
+            await RemovePageAsync(page);
+
             var doc = new PageDocument
             {
                 Id = page.Id,

@@ -7,14 +7,16 @@
 
 <tr class="fact">
     <th class="fact-title">@Model.ShortTitle</th>
-    <td>
-        @foreach (var item in Model.Values)
+    <td class="fact-value">
+        @foreach(var item in Model.Values)
         {
-            <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
-            if (item.Duration != null && !isSingle)
-            {
-                <span class="fact-item-extra" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
-            }
+            <div class="fact-item">
+                <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
+                @if (item.Duration != null && !isSingle)
+                {
+                    <span class="fact-item-extra" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
+                }
+            </div>
         }
     </td>
 </tr>
