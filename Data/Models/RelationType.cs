@@ -31,8 +31,8 @@ namespace Bonsai.Data.Models
 
         [Description("Место")]
         Location,
-        [Description("Посетитель")]
-        LocationVisitor,
+        [Description("Житель")]
+        LocationInhabitant,
 
         [Description("Событие")]
         Event,

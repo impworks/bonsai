@@ -26,8 +26,8 @@ namespace Bonsai.Code.DomainModel.Relations
             [RelationType.Friend] = RelationType.Friend,
             [RelationType.Colleague] = RelationType.Colleague,
 
-            [RelationType.Location] = RelationType.LocationVisitor,
-            [RelationType.LocationVisitor] = RelationType.Location,
+            [RelationType.Location] = RelationType.LocationInhabitant,
+            [RelationType.LocationInhabitant] = RelationType.Location,
             [RelationType.Event] = RelationType.EventVisitor,
             [RelationType.EventVisitor] = RelationType.Event,
 
@@ -52,7 +52,7 @@ namespace Bonsai.Code.DomainModel.Relations
             new RelationBinding(PageType.Person, PageType.Pet, new[] {RelationType.Pet}),
             new RelationBinding(PageType.Pet, PageType.Person, new[] {RelationType.Owner}),
             new RelationBinding(PageType.Person, PageType.Location, new[] {RelationType.Location}),
-            new RelationBinding(PageType.Location, PageType.Person, new[] {RelationType.LocationVisitor}),
+            new RelationBinding(PageType.Location, PageType.Person, new[] {RelationType.LocationInhabitant}),
             new RelationBinding(PageType.Person, PageType.Event, new[] {RelationType.Event}),
             new RelationBinding(PageType.Event, PageType.Person, new[] {RelationType.EventVisitor})
         };

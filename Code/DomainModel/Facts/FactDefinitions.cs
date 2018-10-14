@@ -101,7 +101,7 @@ namespace Bonsai.Code.DomainModel.Facts
                         true,
                         new FactDefinition<NameFactModel>("Name", "Название"),
                         new FactDefinition<StringFactModel>("Location", "Расположение"),
-                        new FactDefinition<DateFactModel>("Opening", "Открытие"),
+                        new FactDefinition<DateFactModel>("Opening", "Приобретение"),
                         new FactDefinition<DateFactModel>("Shutdown", "Закрытие")
                     )
                 },

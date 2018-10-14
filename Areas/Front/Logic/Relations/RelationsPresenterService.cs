@@ -77,7 +77,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
             new RelationDefinition("Colleague", "Коллега", "Коллеги"),
             new RelationDefinition("Owner", "Владелец", "Владельцы", RelationDurationDisplayMode.RelationRange),
             new RelationDefinition("EventVisitor", "Участник", "Участники"),
-            new RelationDefinition("LocationVisitor", "Гость", "Гости"),
+            new RelationDefinition("LocationInhabitant", "Житель", "Жители"),
         };
 
         /// <summary>
