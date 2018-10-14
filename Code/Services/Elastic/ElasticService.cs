@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
+using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
+using Microsoft.EntityFrameworkCore;
 using Nest;
 using Page = Bonsai.Data.Models.Page;
 
@@ -22,6 +25,7 @@ namespace Bonsai.Code.Services.Elastic
         private readonly ElasticClient _client;
 
         private const int PAGE_SIZE = 20;
+        private const int FRAGMENT_SIZE = 200;
 
         private const string PAGE_INDEX = "pages";
         private const string STOP_WORDS = "а,без,более,бы,был,была,были,было,быть,в,вам,вас,весь,во,вот,все,всего,всех,вы,где,да,даже,для,до,его,ее,если,есть,еще,же,за,здесь,и,из,или,им,их,к,как,ко,когда,кто,ли,либо,мне,может,мы,на,надо,наш,не,него,нее,нет,ни,них,но,ну,о,об,однако,он,она,они,оно,от,очень,по,под,при,с,со,так,также,такой,там,те,тем,то,того,тоже,той,только,том,ты,у,уже,хотя,чего,чей,чем,что,чтобы,чье,чья,эта,эти,это,я";
@@ -35,19 +39,19 @@ namespace Bonsai.Code.Services.Elastic
         {
             var result = _client.IndexExists(PAGE_INDEX);
 
-            if (!result.IsValid)
+            if(!result.IsValid)
                 throw result.OriginalException;
 
-            if (result.Exists)
+            if(result.Exists)
                 _client.DeleteIndex(PAGE_INDEX);
         }
 
         /// <summary>
         /// Creates all required indexes.
         /// </summary>
-        public void EnsureIndexesCreated()
+        public void EnsureIndexesCreated(AppDbContext db = null)
         {
-            if (_client.IndexExists(PAGE_INDEX).Exists)
+            if(_client.IndexExists(PAGE_INDEX).Exists)
                 return;
 
             var result = _client.CreateIndex(
@@ -57,13 +61,18 @@ namespace Bonsai.Code.Services.Elastic
                         mx.Properties(p =>
                             p.Text(x =>
                                 x.Name(f => f.Title)
+                                 .Analyzer("index_ru")
+                                 .SearchAnalyzer("search_ru")
+                            )
+                             .Text(x =>
+                               x.Name(f => f.Aliases)
                                 .Analyzer("index_ru")
                                 .SearchAnalyzer("search_ru")
-                            )
+                             )
                             .Text(x =>
                                 x.Name(f => f.Description)
-                                .Analyzer("index_ru")
-                                .SearchAnalyzer("search_ru")
+                                 .Analyzer("index_ru")
+                                 .SearchAnalyzer("search_ru")
                             )
                              .Scalar(x => x.PageType)
                         )
@@ -77,17 +86,17 @@ namespace Bonsai.Code.Services.Elastic
                         .TokenFilters(t =>
                             t.Stop("stopwords_ru", st =>
                                 st.StopWords(STOP_WORDS.Split(','))
-                                    .IgnoreCase()
+                                  .IgnoreCase()
                             )
                             .WordDelimiter("delim_ru", d =>
                                 d.GenerateWordParts(true)
-                                    .GenerateNumberParts(true)
-                                    .CatenateWords(true)
-                                    .CatenateNumbers(false)
-                                    .CatenateAll(true)
-                                    .SplitOnCaseChange(true)
-                                    .SplitOnNumerics(false)
-                                    .PreserveOriginal(true)
+                                 .GenerateNumberParts(true)
+                                 .CatenateWords(true)
+                                 .CatenateNumbers(false)
+                                 .CatenateAll(true)
+                                 .SplitOnCaseChange(true)
+                                 .SplitOnNumerics(false)
+                                 .PreserveOriginal(true)
                             )
                         )
                         .Analyzers(an =>
@@ -106,8 +115,11 @@ namespace Bonsai.Code.Services.Elastic
                 )
             );
 
-            if (!result.IsValid)
+            if(!result.IsValid)
                 throw result.OriginalException;
+
+            if (db != null)
+                ReindexAllPagesAsync(db).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -115,14 +127,13 @@ namespace Bonsai.Code.Services.Elastic
         /// </summary>
         public async Task AddPageAsync(Page page)
         {
-            await RemovePageAsync(page);
-
             var doc = new PageDocument
             {
                 Id = page.Id,
                 Key = page.Key,
                 Title = page.Title,
-                PageType = (int) page.Type,
+                Aliases = page.Aliases.Select(x => x.Title).JoinString(", "),
+                PageType = (int)page.Type,
                 Description = MarkdownService.Strip(page.Description),
             };
 
@@ -155,7 +166,7 @@ namespace Bonsai.Code.Services.Elastic
                         var rawHitValue = hitValue.Replace(PRE_TAG, "").Replace(POST_TAG, "");
                         var startEllipsis = !rawHitValue.StartsWithPart(fallback, 10);
                         var endEllipsis = !rawHitValue.EndsWithPart(fallback, 10);
-                        if (!startEllipsis && !endEllipsis)
+                        if(!startEllipsis && !endEllipsis)
                             return hitValue;
 
                         return string.Concat(
@@ -164,6 +175,9 @@ namespace Bonsai.Code.Services.Elastic
                             endEllipsis ? "..." : ""
                         );
                     }
+
+                    if (fallback.Length > FRAGMENT_SIZE)
+                        return fallback.Substring(0, FRAGMENT_SIZE) + "...";
 
                     return fallback;
                 }
@@ -191,12 +205,17 @@ namespace Bonsai.Code.Services.Elastic
                                     .Query(query)
                                     .Fuzziness(Fuzziness.EditDistance(1))
                           )
+                          || q.Match(
+                              f => f.Field(x => x.Aliases)
+                                    .Query(query)
+                                    .Fuzziness(Fuzziness.EditDistance(1))
+                             )
                           || q.Prefix(f => f.Field(x => x.Title).Value(query))
                       )
                       .Skip(PAGE_SIZE * page)
                       .Take(PAGE_SIZE)
                       .Highlight(
-                          h => h.FragmentSize(200)
+                          h => h.FragmentSize(FRAGMENT_SIZE)
                                 .PreTags(PRE_TAG)
                                 .PostTags(POST_TAG)
                                 .BoundaryScanner(BoundaryScanner.Sentence)
@@ -223,7 +242,7 @@ namespace Bonsai.Code.Services.Elastic
                     Id = doc.Id,
                     Key = doc.Key,
                     HighlightedTitle = doc.Title,
-                    PageType = (PageType) doc.PageType
+                    PageType = (PageType)doc.PageType
                 };
             }
 
@@ -235,14 +254,32 @@ namespace Bonsai.Code.Services.Elastic
                                  q.Terms(f => f.Field(x => x.PageType).Terms(pageTypes))
                                  &&
                                  (
-                                     q.Match(f => f.Field(x => x.Title).Query(query).Fuzziness(Fuzziness.Auto))
-                                     || q.Prefix(f => f.Field(x => x.Title).Value(query))
+                                     q.Match(f => f.Field(x => x.Aliases).Query(query).Fuzziness(Fuzziness.Auto))
+                                     || q.Prefix(f => f.Field(x => x.Aliases).Value(query))
                                  )
                       )
                       .Take(maxCount ?? 5)
             );
 
             return result.Documents.Select(Map).ToList();
+        }
+
+        #endregion
+
+        #region Reindex
+
+        /// <summary>
+        /// Updates all pages in the cache.
+        /// </summary>
+        private async Task ReindexAllPagesAsync(AppDbContext db)
+        {
+            var pages = await db.Pages
+                                .Include(x => x.Aliases)
+                                .AsNoTracking()
+                                .ToListAsync();
+
+            foreach (var page in pages)
+                await AddPageAsync(page);
         }
 
         #endregion

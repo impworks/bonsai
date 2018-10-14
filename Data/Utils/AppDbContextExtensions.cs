@@ -1,5 +1,9 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
+using Bonsai.Data.Models;
+using Impworks.Utils.Format;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -43,6 +47,33 @@ namespace Bonsai.Data.Utils
         public static IDbConnection GetConnection(this AppDbContext context)
         {
             return new NpgsqlConnection(context.Database.GetDbConnection().ConnectionString);
+        }
+
+
+        /// <summary>
+        /// Adds required records (identity, config, etc.).
+        /// </summary>
+        public static void EnsureSystemItemsCreated(this AppDbContext db)
+        {
+            void AddRole(string name) => db.Roles.Add(new IdentityRole { Name = name, NormalizedName = name.ToUpper() });
+
+            if(!db.Roles.Any())
+            {
+                foreach(var role in EnumHelper.GetEnumValues<UserRole>())
+                    AddRole(role.ToString());
+            }
+
+            if(!db.Config.Any())
+            {
+                db.Config.Add(new AppConfig
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Bonsai",
+                    AllowGuests = false
+                });
+            }
+
+            db.SaveChanges();
         }
     }
 }

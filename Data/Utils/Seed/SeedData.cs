@@ -82,8 +82,8 @@ namespace Bonsai.Data.Utils.Seed
         public static void ClearPreviousData(AppDbContext db, ElasticService elastic)
         {
             var mediaDir = @".\wwwroot\media";
-            if(Directory.Exists(mediaDir))
-                foreach(var file in Directory.EnumerateFiles(mediaDir))
+            if (Directory.Exists(mediaDir))
+                foreach (var file in Directory.EnumerateFiles(mediaDir))
                     File.Delete(file);
 
             db.Changes.RemoveRange(db.Changes.ToList());
@@ -94,34 +94,7 @@ namespace Bonsai.Data.Utils.Seed
 
             db.SaveChanges();
 
-            elastic?.ClearPreviousData();
-            elastic?.EnsureIndexesCreated();
-        }
-
-        /// <summary>
-        /// Adds required records (identity, config, etc.).
-        /// </summary>
-        public static void EnsureSystemItemsSeeded(AppDbContext db)
-        {
-            void AddRole(string name) => db.Roles.Add(new IdentityRole {Name = name, NormalizedName = name.ToUpper()});
-
-            if (!db.Roles.Any())
-            {
-                foreach (var role in EnumHelper.GetEnumValues<UserRole>())
-                    AddRole(role.ToString());
-            }
-
-            if (!db.Config.Any())
-            {
-                db.Config.Add(new AppConfig
-                {
-                    Id = Guid.NewGuid(),
-                    Title = "Bonsai",
-                    AllowGuests = false
-                });
-            }
-
-            db.SaveChanges();
+            elastic.ClearPreviousData();
         }
     }
 }

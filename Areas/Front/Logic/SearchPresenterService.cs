@@ -43,16 +43,18 @@ namespace Bonsai.Areas.Front.Logic
                                    .Select(x => new { x.Id, x.MainPhoto.FilePath, x.LastUpdateDate, PageType = x.Type })
                                    .ToDictionaryAsync(x => x.Id, x => x);
 
-            var results = matches.Select(x => new SearchResultVM
-            {
-                Id = x.Id,
-                Key = x.Key,
-                Title = x.HighlightedTitle,
-                Type = details[x.Id].PageType,
-                DescriptionExcerpt = x.HighlightedDescription,
-                MainPhotoPath = details[x.Id].FilePath,
-                LastUpdateDate = details[x.Id].LastUpdateDate,
-            });
+            var results = matches
+                          .Where(x => details.ContainsKey(x.Id))
+                          .Select(x => new SearchResultVM
+                          {
+                              Id = x.Id,
+                              Key = x.Key,
+                              Title = x.HighlightedTitle,
+                              Type = details[x.Id].PageType,
+                              DescriptionExcerpt = x.HighlightedDescription,
+                              MainPhotoPath = details[x.Id].FilePath,
+                              LastUpdateDate = details[x.Id].LastUpdateDate,
+                          });
 
             return results.ToList();
         }

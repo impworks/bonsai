@@ -50,13 +50,17 @@ namespace Bonsai.Code.Config
         {
             if (Environment.IsDevelopment())
             {
-                app.UseBrowserLink()
-                   .UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
 
             if (Environment.IsProduction())
             {
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
+            }
+
+            if (Configuration["Debug:DetailedExceptions"].TryParse<bool>())
+            {
+                app.UseDeveloperExceptionPage();
             }
 
             InitDatabase(app);

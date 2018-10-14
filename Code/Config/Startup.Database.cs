@@ -49,7 +49,8 @@ namespace Bonsai.Code.Config
                 var elastic = sp.GetService<ElasticService>();
 
                 context.EnsureDatabaseCreated();
-                SeedData.EnsureSystemItemsSeeded(context);
+                context.EnsureSystemItemsCreated();
+                elastic.EnsureIndexesCreated(context);
 
                 if(clearAll)
                     SeedData.ClearPreviousData(context, elastic);
