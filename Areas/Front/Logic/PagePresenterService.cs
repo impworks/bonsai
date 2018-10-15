@@ -40,10 +40,11 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
         {
+            var keyLower = key?.ToLowerInvariant();
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.MainPhoto)
-                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false);
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
 
             if (page == null)
                 throw new KeyNotFoundException();
@@ -68,11 +69,12 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<PageMediaVM> GetPageMediaAsync(string key)
         {
+            var keyLower = key?.ToLowerInvariant();
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
-                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == key) && x.IsDeleted == false);
+                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
 
             if (page == null)
                 throw new KeyNotFoundException();

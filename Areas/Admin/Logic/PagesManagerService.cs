@@ -132,7 +132,7 @@ namespace Bonsai.Areas.Admin.Logic
                     {
                         Id = Guid.NewGuid(),
                         Page = page,
-                        Key = PageHelper.EncodeTitle(x),
+                        Key = PageHelper.EncodeTitle(x).ToLowerInvariant(),
                         Title = x,
                         Order = idx
                     }

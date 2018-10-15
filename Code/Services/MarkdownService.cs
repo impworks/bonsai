@@ -125,25 +125,24 @@ namespace Bonsai.Code.Services
         {
             var keys = LinkRegex.Matches(html)
                                 .Select(x => x.Groups["key"].Value)
-                                .ToDictionary(x => x, PageHelper.EncodeTitle);
+                                .ToDictionary(x => x, x => PageHelper.EncodeTitle(x).ToLowerInvariant());
 
             if (!keys.Any())
                 return html;
 
-            var existingPages = await _db.Pages
+            var existingPages = await _db.PageAliases
                                          .AsNoTracking()
                                          .Where(x => keys.Values.Contains(x.Key))
-                                         .ToDictionaryAsync(x => x.Key, x => true);
+                                         .ToDictionaryAsync(x => x.Key, x => PageHelper.EncodeTitle(x.Title));
 
             return LinkRegex.Replace(html, m =>
             {
                 var rawKey = m.Groups["key"].Value;
-                var key = keys[rawKey];
+                var lowerKey = keys[rawKey];
                 var title = m.Groups["label"].Success ? m.Groups["label"].Value : rawKey;
 
-                // todo: encoding
-                if (existingPages.ContainsKey(key))
-                    return $@"<a href=""{_url.Action("Description", "Page", new { area = "Front", key = key })}"" class=""link"">{title}</a>";
+                if (existingPages.TryGetValue(lowerKey, out var canonKey))
+                    return $@"<a href=""{_url.Action("Description", "Page", new { area = "Front", key = canonKey })}"" class=""link"">{title}</a>";
 
                 return $@"<span class=""link-missing"" title=""Страница не найдена: {rawKey}"">{title}</span>";
             });
