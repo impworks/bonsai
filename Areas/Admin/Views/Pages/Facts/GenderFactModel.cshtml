@@ -2,7 +2,7 @@
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
-            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({IsMale: true})" title="Указать факт">
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({}, 'gender')" title="Указать факт">
                 <i class="fa fa-plus"></i>
             </button>
         </h6>

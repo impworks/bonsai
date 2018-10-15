@@ -4,6 +4,44 @@
         return;
     }
 
+    var $title = $('#Title');
+    var intrinsics = {
+        name: function (data, key, value) {
+            var names = data[key].Values;
+            if (names.length > 0) {
+                var latest = names[names.length - 1];
+                value.FirstName = latest.FirstName;
+                value.MiddleName = latest.MiddleName;
+                if (latest.Duration && latest.Duration.length) {
+                    var durParts = latest.Duration.split('-');
+                    value.Duration = durParts[1] + '-';
+                }
+            } else {
+                var title = $title.val();
+                if (title && title.length) {
+                    var titleParts = title.replace(/^\s+|\s+$|\s+(?=\s)/g, '').split(' ');
+                    if (titleParts.length > 0) value.LastName = titleParts[0];
+                    if (titleParts.length > 1) value.FirstName = titleParts[1];
+                    if (titleParts.length > 2) value.MiddleName = titleParts[2];
+                }
+            }
+        },
+        gender: function (data, key, value) {
+            var nameFact = data['Main.Name'];
+            if (!nameFact || !nameFact.Values || !nameFact.Values.length) {
+                return;
+            }
+            var middle = nameFact.Values[0].MiddleName;
+            value.IsMale = /ич$/i.test(middle || '');
+        },
+        language: function (data, key, value) {
+            if (data[key].Values.length === 0) {
+                value.Name = 'Русский';
+                value.Proficiency = 'Native';
+            }
+        }
+    };
+
     Vue.component('date-picker', {
         template: '#date-picker-template',
         props: ['value', 'size', 'margin'],
@@ -76,10 +114,13 @@
             props: ['data', 'def'],
             template: '#' + id,
             methods: {
-                set: function (value) {
+                set: function (value, intr) {
+                    if (intrinsics[intr]) {
+                        intrinsics[intr](this.data, this.def.key, value);
+                    }
                     Vue.set(this.data, this.def.key, value);
                 },
-                add: function (value) {
+                add: function (value, intr) {
                     var key = this.def.key;
                     var v = 'Values';
                     if (typeof this.data[key] === 'undefined') {
@@ -87,6 +128,9 @@
                     }
                     if (typeof this.data[key][v] === 'undefined') {
                         Vue.set(this.data[key], v, []);
+                    }
+                    if (intrinsics[intr]) {
+                        intrinsics[intr](this.data, key, value);
                     }
                     this.data[key][v].push(value);
                 },
