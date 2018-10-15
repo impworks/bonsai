@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic.Relations;
@@ -12,7 +13,6 @@ using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Areas.Front.Logic
@@ -143,18 +143,15 @@ namespace Bonsai.Areas.Front.Logic
                     var key = group.Id + "." + fact.Id;
                     var factInfo = pageFacts[key];
 
-                    if (factInfo == null)
-                        continue;
-
-                    var vm = (FactModelBase) JsonConvert.DeserializeObject(factInfo.ToString(), fact.Kind);
+                    var vm = Deserialize(factInfo, fact.Kind);
                     if (vm == null)
                         continue;
 
                     vm.Definition = fact;
 
-                    if(!vm.IsHidden)
+                    if (!vm.IsHidden)
                         factsVms.Add(vm);
-                }
+                } 
 
                 if (factsVms.Count > 0)
                 {
@@ -164,6 +161,25 @@ namespace Bonsai.Areas.Front.Logic
                         Facts = factsVms
                     };
                 }
+            }
+        }
+
+        /// <summary>
+        /// Attempts to deserialize the fact.
+        /// Returns null on error.
+        /// </summary>
+        private FactModelBase Deserialize(JToken json, Type kind)
+        {
+            if (json == null)
+                return null;
+
+            try
+            {
+                return (FactModelBase) json.ToObject(kind);
+            }
+            catch
+            {
+                return null;
             }
         }
 

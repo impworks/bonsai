@@ -390,8 +390,25 @@ namespace Bonsai.Areas.Admin.Logic
             if (otherPage)
                 val.Add(nameof(PageEditorVM.Title), "Страница с таким названием уже существует.");
 
-            if (!IsDeserializable<string[]>(vm.Aliases))
-                val.Add(nameof(PageEditorVM.Aliases), "Псевдонимы указаны неверно!");
+            if (!string.IsNullOrEmpty(vm.Aliases))
+            {
+                var aliases = TryDeserialize<List<string>>(vm.Aliases);
+                if (aliases == null)
+                {
+                    val.Add(nameof(PageEditorVM.Aliases), "Ссылки указаны неверно!");
+                }
+                else
+                {
+                    var otherAliases = await _db.PageAliases
+                                                .Where(x => aliases.Contains(x.Key) && x.Page.Id != vm.Id)
+                                                .Select(x => x.Title)
+                                                .ToListAsync();
+
+                    if (otherAliases.Any())
+                        val.Add(nameof(PageEditorVM.Aliases), "Ссылки уже заняты другими страницами: " + otherAliases.JoinString(", "));
+                }
+            }
+                
 
             val.ThrowIfInvalid();
         }
@@ -443,19 +460,16 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Checks if the serialized field contains valid data.
         /// </summary>
-        private bool IsDeserializable<T>(string value)
+        private T TryDeserialize<T>(string value) where T: class
         {
-            if (string.IsNullOrEmpty(value))
-                return true;
 
             try
             {
-                JsonConvert.DeserializeObject<T>(value);
-                return true;
+                return JsonConvert.DeserializeObject<T>(value);
             }
             catch
             {
-                return false;
+                return null;
             }
         }
 
