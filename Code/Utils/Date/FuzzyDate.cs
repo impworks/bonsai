@@ -237,7 +237,7 @@ namespace Bonsai.Code.Utils.Date
             if (year == null)
             {
                 // parse 199? as 1990
-                year = ParseInt(match.Groups["year"].Value.Replace('?', '0'));
+                year = ParseInt(match.Groups["year"].Value.Substring(0, 3)) * 10;
                 isDecade = year != null;
             }
 
