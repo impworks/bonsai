@@ -153,7 +153,7 @@ namespace Bonsai.Areas.Front.Logic
                     ? "День свадьбы"
                     : (start.Year == null || start.IsDecade)
                         ? "Годовщина"
-                        : (year - start.Year.Value) + "-ая годовщина";
+                        : (year - start.Year.Value) + "-ая годовщина свадьбы";
 
                 yield return new CalendarEventVM
                 {
