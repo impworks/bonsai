@@ -44,8 +44,8 @@ namespace Bonsai.Code.DomainModel.Facts
                         false,
                         new FactDefinition<GenderFactModel>("Gender", "Пол"),
                         new FactDefinition<BloodTypeFactModel>("Blood", "Группа крови", "Гр. крови"),
-                        new FactDefinition<StringFactModel>("Eyes", "Цвет глаз"),
-                        new FactDefinition<StringFactModel>("Hair", "Цвет волос")
+                        new FactDefinition<StringFactModel>("Eyes", "Цвет глаз", "Глаза"),
+                        new FactDefinition<StringFactModel>("Hair", "Цвет волос", "Волосы")
                     ),
                     new FactDefinitionGroup(
                         "Person",
@@ -99,10 +99,9 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Main",
                         "Основное",
                         true,
-                        new FactDefinition<NameFactModel>("Name", "Название"),
-                        new FactDefinition<StringFactModel>("Location", "Расположение"),
-                        new FactDefinition<DateFactModel>("Opening", "Приобретение"),
-                        new FactDefinition<DateFactModel>("Shutdown", "Закрытие")
+                        new FactDefinition<AddressFactModel>("Location", "Адрес"),
+                        new FactDefinition<DateFactModel>("Opening", "Покупка"),
+                        new FactDefinition<DateFactModel>("Shutdown", "Продажа")
                     )
                 },
 
@@ -112,7 +111,6 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Main",
                         "Основное",
                         true,
-                        new FactDefinition<NameFactModel>("Name", "Название"),
                         new FactDefinition<DateFactModel>("Date", "Дата")
                     )
                 },

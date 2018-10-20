@@ -1,0 +1,20 @@
+﻿<script type="text/x-template" data-kind="fact-template" id="AddressFactModel">
+    <div class="fact-wrapper">
+        <h6>
+            {{def.title}}
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({Value: ''})" title="Указать адрес">
+                <i class="fa fa-plus"></i>
+            </button>
+        </h6>
+        <div v-if="!empty()" class="row">
+            <div class="col-sm-8">
+                <div class="fact-long">
+                    <input type="text" v-model="data[def.key].Value" class="form-control form-control-sm mr-2" />
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-remove-fact" v-on:click="unset" title="Удалить адрес">
+                        <i class="fa fa-remove"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

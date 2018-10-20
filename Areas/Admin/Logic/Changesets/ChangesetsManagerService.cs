@@ -52,7 +52,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                            .AsNoTracking()
                            .Include(x => x.Author)
                            .Include(x => x.EditedPage)
-                            .ThenInclude(x => x.MainPhoto)
+                           .ThenInclude(x => x.MainPhoto)
                            .Include(x => x.EditedMedia)
                            .Include(x => x.EditedRelation)
                            .AsQueryable();

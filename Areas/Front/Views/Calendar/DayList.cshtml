@@ -13,9 +13,8 @@
             <div class="list-group list-group-flush">
                 @foreach (var evt in Model.Events)
                 {
-                    var pageTitles = string.Join(", ", evt.RelatedPages.Select(x => x.Title));
                     var isMultiPage = evt.RelatedPages.Count > 1;
-                    var currPage = isMultiPage ? evt.RelatedEvent : evt.RelatedPages[0];
+                    var currPage = evt.RelatedEvent ?? evt.RelatedPages[0];
 
                     <a href="@Url.Action("Description", "Page", new { key = currPage.Key })" class="calendar-events-item list-group-item">
                         <div class="media">

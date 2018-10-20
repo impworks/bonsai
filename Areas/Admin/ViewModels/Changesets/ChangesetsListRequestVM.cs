@@ -9,6 +9,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
     /// </summary>
     public class ChangesetsListRequestVM: ListRequestVM
     {
+        public ChangesetsListRequestVM()
+        {
+            OrderDescending = true;
+        }
+
         /// <summary>
         /// Filter by entity.
         /// </summary>
