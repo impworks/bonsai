@@ -196,12 +196,14 @@ namespace Bonsai.Areas.Admin.Logic
                                  .GetAsync(x => x.Id == vm.Id && (x.IsDeleted == false || revertedId != null),
                                            "Медиа-файл не найден");
 
-            var prevState = await RequestUpdateAsync(vm.Id, revertedId != null);
-            var changeset = await GetChangesetAsync(prevState, vm, vm.Id, principal, revertedId);
+            var prevVm = media.IsDeleted ? null : await RequestUpdateAsync(vm.Id, revertedId != null);
+            var changeset = await GetChangesetAsync(prevVm, vm, vm.Id, principal, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, media);
-            media.IsDeleted = media.IsDeleted && revertedId != null;
+
+            if(revertedId != null)
+                media.IsDeleted = false;
 
             _db.MediaTags.RemoveRange(media.Tags);
             media.Tags = await DeserializeTagsAsync(vm);

@@ -22,7 +22,7 @@
             <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f") (@Model.Date.ToLocalTime().Humanize())</dd>
         </dl>
 
-        @if(Model.ChangeType != ChangesetType.Removed && Model.Changes.Any())
+        @if(Model.Changes.Any())
         {
             <h1>Содержание</h1>
 

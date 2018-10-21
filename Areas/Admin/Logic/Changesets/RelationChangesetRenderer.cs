@@ -59,7 +59,11 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             Add(nameof(RelationEditorVM.DestinationId), "Основная страница", namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
             Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetEnumDescription());
 
-            if (data.SourceIds.Length == 1)
+            if (data.SourceIds.Length == 0)
+            {
+                Add(nameof(RelationEditorVM.SourceIds), "Связанная страница", null);
+            }
+            else if (data.SourceIds.Length == 1)
             {
                 var name = namesLookup.TryGetValue(data.SourceIds[0]);
                 Add(nameof(RelationEditorVM.SourceIds), "Связанная страница", name);

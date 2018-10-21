@@ -217,13 +217,15 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(page, vm.Facts);
 
-            var prevVm = _mapper.Map<PageEditorVM>(page);
+            var prevVm = page.IsDeleted ? null : _mapper.Map<PageEditorVM>(page);
             var changeset = await GetChangesetAsync(prevVm, vm, vm.Id, principal, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
             page.MainPhotoId = (await FindMainPhotoAsync(vm.MainPhotoKey))?.Id;
-            page.IsDeleted = page.IsDeleted && revertedId != null;
+
+            if (revertedId != null)
+                page.IsDeleted = false;
 
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id);
 

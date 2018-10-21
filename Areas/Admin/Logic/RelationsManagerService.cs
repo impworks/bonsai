@@ -155,12 +155,15 @@ namespace Bonsai.Areas.Admin.Logic
             var compRel = await FindComplementaryRelationAsync(rel, revertedId != null);
 
             var user = await GetUserAsync(principal);
-            var changeset = GetChangeset(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, user, revertedId);
+            var prevVm = rel.IsDeleted ? null : _mapper.Map<RelationEditorVM>(rel);
+            var changeset = GetChangeset(prevVm, vm, rel.Id, user, revertedId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, rel);
             MapComplementaryRelation(rel, compRel);
-            rel.IsDeleted = rel.IsDeleted && revertedId != null;
+
+            if(revertedId != null)
+                rel.IsDeleted = false;
 
             await _validator.ValidateAsync(new[] {rel, compRel});
 

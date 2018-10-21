@@ -121,12 +121,12 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 foreach (var fact in group.Defs)
                 {
                     var key = group.Id + "." + fact.Id;
-                    var factInfo = facts[key];
+                    var factInfo = facts[key]?.ToString();
 
-                    if (factInfo == null)
+                    if (string.IsNullOrEmpty(factInfo))
                         continue;
 
-                    var factVm = (FactModelBase) JsonConvert.DeserializeObject(factInfo.ToString(), fact.Kind);
+                    var factVm = (FactModelBase) JsonConvert.DeserializeObject(factInfo, fact.Kind);
                     factVm.Definition = fact;
 
                     groupVm.Facts.Add(factVm);
