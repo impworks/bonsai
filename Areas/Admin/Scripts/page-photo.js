@@ -4,10 +4,11 @@
         return;
     }
 
-    var $wrap = $('.main-photo-wrapper');
-    var $key = $('#MainPhotoKey');
-    var $input = $('#main-photo-file');
-    var $removeBtn = $editor.find('.cmd-remove');
+    var $wrap = $('.main-photo-wrapper'),
+        $key = $('#MainPhotoKey'),
+        $title = $('#Title'),
+        $input = $('#main-photo-file'),
+        $removeBtn = $editor.find('.cmd-remove');
 
     $editor.find('.cmd-upload').on('click', function() {
         $input.click();
@@ -23,6 +24,9 @@
         url: '/admin/media/upload',
         sequentialUploads: true,
         add: function (e, data) {
+            data.formData = {
+                title: $title.val()
+            };
             data.submit();
             $input = $('#main-photo-file'); // gets new link to a recreated input
         },

@@ -58,7 +58,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("upload")]
-        public async Task<ActionResult> Upload(IFormFile file)
+        public async Task<ActionResult> Upload(IFormFile file, string title = null)
         {
             try
             {
@@ -67,6 +67,7 @@ namespace Bonsai.Areas.Admin.Controllers
                     Name = file.FileName,
                     MimeType = file.ContentType,
                     Data = file.OpenReadStream(),
+                    Title = title
                 };
 
                 var result = await _media.UploadAsync(vm, User);

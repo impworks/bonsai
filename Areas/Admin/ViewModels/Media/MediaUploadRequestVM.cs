@@ -21,5 +21,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// File contents.
         /// </summary>
         public Stream Data { get; set; }
+
+        /// <summary>
+        /// Optional title for the page.
+        /// </summary>
+        public string Title { get; set; }
     }
 }

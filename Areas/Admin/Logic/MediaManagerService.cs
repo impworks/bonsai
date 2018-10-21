@@ -118,6 +118,7 @@ namespace Bonsai.Areas.Admin.Logic
                 Key = key,
                 Type = handler.MediaType,
                 MimeType = vm.MimeType,
+                Title = vm.Title,
                 FilePath = filePath,
                 UploadDate = DateTimeOffset.Now,
                 Uploader = user,
