@@ -152,7 +152,7 @@ namespace Bonsai.Areas.Admin.Logic
                                               && (x.IsDeleted == false || revertedId != null),
                                          "Связь не найдена");
 
-            var compRel = await FindComplementaryRelationAsync(rel);
+            var compRel = await FindComplementaryRelationAsync(rel, revertedId != null);
 
             var user = await GetUserAsync(principal);
             var changeset = GetChangeset(_mapper.Map<RelationEditorVM>(rel), vm, rel.Id, user, revertedId);
@@ -351,8 +351,15 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Removes the complementary relation (it is always recreated).
         /// </summary>
-        private async Task<Relation> FindComplementaryRelationAsync(Relation rel)
+        private async Task<Relation> FindComplementaryRelationAsync(Relation rel, bool includeDeleted = false)
         {
+            if (includeDeleted)
+            {
+                var compRel = new Relation {Id = Guid.NewGuid()};
+                _db.Relations.Add(compRel);
+                return compRel;
+            }
+
             var compRelType = RelationHelper.ComplementaryRelations[rel.Type];
             return await _db.Relations
                             .FirstOrDefaultAsync(x => x.SourceId == rel.DestinationId

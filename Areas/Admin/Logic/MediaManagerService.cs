@@ -145,12 +145,13 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the media file editor.
         /// </summary>
-        public async Task<MediaEditorVM> RequestUpdateAsync(Guid id)
+        public async Task<MediaEditorVM> RequestUpdateAsync(Guid id, bool includeDeleted = false)
         {
             var media = await _db.Media
                                  .AsNoTracking()
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
+                                 .GetAsync(x => x.Id == id && (x.IsDeleted == false || includeDeleted),
+                                           "Медиа-файл не найден");
 
             var taggedIds = media.Tags
                                  .Where(x => x.ObjectId != null)
@@ -195,7 +196,7 @@ namespace Bonsai.Areas.Admin.Logic
                                  .GetAsync(x => x.Id == vm.Id && (x.IsDeleted == false || revertedId != null),
                                            "Медиа-файл не найден");
 
-            var prevState = await RequestUpdateAsync(vm.Id);
+            var prevState = await RequestUpdateAsync(vm.Id, revertedId != null);
             var changeset = await GetChangesetAsync(prevState, vm, vm.Id, principal, revertedId);
             _db.Changes.Add(changeset);
 
