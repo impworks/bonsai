@@ -49,7 +49,7 @@
         mounted: function() {
             var self = this;
             var $el = $(self.$el);
-            var $d = setupDatepicker($el);
+            var $d = setupDatepicker($el, true);
             $d.trigger('change')
               .on('change', function() {
                     self.$emit('input', this.value);
