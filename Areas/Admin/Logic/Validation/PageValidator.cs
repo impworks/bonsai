@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.DomainModel.Facts;
@@ -92,26 +93,38 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         /// </summary>
         private JObject ParseFacts(PageType type, string rawFacts)
         {
-            try
+            if (string.IsNullOrEmpty(rawFacts))
+                return new JObject();
+
+            var pageFacts = ParseRaw(rawFacts);
+            foreach (var prop in pageFacts)
             {
-                if (string.IsNullOrEmpty(rawFacts))
-                    return new JObject();
+                var def = FactDefinitions.TryGetDefinition(type, prop.Key);
+                if (def == null)
+                    throw new ValidationException(nameof(Page.Facts), $"Тип факта {prop.Key} не существует!");
 
-                var pageFacts = JObject.Parse(rawFacts);
-                foreach (var prop in pageFacts)
+                try
                 {
-                    var def = FactDefinitions.TryGetDefinition(type, prop.Key);
-                    if (def == null)
-                        throw new ValidationException(nameof(Page.Facts), $"Тип факта {prop.Key} не существует!");
-
                     JsonConvert.DeserializeObject(prop.Value.ToString(), def.Kind);
                 }
-
-                return pageFacts;
+                catch (Exception ex) when (!(ex is ValidationException))
+                {
+                    throw new ValidationException(nameof(Page.Facts), $"Некорректно заполнен факт {prop.Key}!");
+                }
             }
-            catch (JsonException)
+
+            return pageFacts;
+
+            JObject ParseRaw(string raw)
             {
-                throw new ValidationException(nameof(Page.Facts), "Данные о фактах имеют некорректный формат!");
+                try
+                {
+                    return JObject.Parse(raw);
+                }
+                catch
+                {
+                    throw new ValidationException(nameof(Page.Facts), "Факты имеют некорректный формат!");
+                }
             }
         }
 
