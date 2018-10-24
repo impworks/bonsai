@@ -6,24 +6,39 @@
     });
 
     $d.prop('autocomplete', 'off');
+    $d.tooltip({
+        title: 'Недопустимая дата'
+    });
 
     $d.on('click', function () {
         $d.open();
     });
 
-    $d.on('blur', function() {
-        var isValid = validate($d.val());
-        $d.toggleClass('is-invalid', !isValid);
-    });
+    validate();
+    $d.on('change', validate);
 
     return $d;
 
-    function validate(value) {
-        var regex = allowFuzzy
+    function validate() {
+        var valid = isValid($d.val());
+        $d.toggleClass('is-invalid', !valid)
+          .tooltip(valid ? 'disable': 'enable');
+    }
+
+    function isValid(value) {
+        if (!value)
+            return true;
+
+        var goodRegex = allowFuzzy
             ? /(\?{4}|[\d]{3}[\d?])\.(\d\d|\?\?)\.(\d\d|\?\?)/
             : /\d{4}\.\d{2}\.\d{2}/;
 
-        if (!regex.test(value))
+        var badRegexes = [
+            /\?{4}\.(\?\?\...|\...\?\?})/,
+            /\d{4}\.\?\?\.\d{2}/
+        ];
+
+        if (!goodRegex.test(value) || badRegexes.some(function (x) { return x.test(value); }))
             return false;
 
         var parts = value.split('.');

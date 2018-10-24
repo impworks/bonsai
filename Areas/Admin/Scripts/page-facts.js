@@ -50,12 +50,13 @@
             var self = this;
             var $el = $(self.$el);
             var $d = setupDatepicker($el, true);
+
+            $d.val(this.$props.value || '');
+
             $d.trigger('change')
               .on('change', function() {
                     self.$emit('input', this.value);
                 });
-
-            $d.val(this.$props.value || '');
 
             var size = this.$props.size;
             var margin = this.$props.margin;
