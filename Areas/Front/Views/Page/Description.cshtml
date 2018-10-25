@@ -7,4 +7,11 @@
     ViewBag.Title = Model.Title;
 }
 
-@Html.Raw(Model.Description)
+@if (string.IsNullOrWhiteSpace(Model.Description))
+{
+    <div class="text-muted">Ничего не известно.</div>
+}
+else
+{
+    @Html.Raw(Model.Description)
+}

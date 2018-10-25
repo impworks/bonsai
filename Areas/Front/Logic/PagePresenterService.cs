@@ -72,6 +72,7 @@ namespace Bonsai.Areas.Front.Logic
             var keyLower = key?.ToLowerInvariant();
             var page = await _db.Pages
                                 .AsNoTracking()
+                                .Include(x => x.MainPhoto)
                                 .Include(p => p.MediaTags)
                                 .ThenInclude(t => t.Media)
                                 .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
