@@ -5,10 +5,27 @@
 
 <h1>Загрузка медиа</h1>
 
+<form>
+    <div class="form-row">
+        <div class="form-group col-sm-4">
+            <label for="Date">Дата</label>
+            <input type="text" id="Date" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="Location">Место</label>
+            <select id="Location"></select>
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="Event">Событие</label>
+            <select id="Event"></select>
+        </div>
+    </div>
+</form>
+
 <div class="card media-uploader">
     <div class="card-body">
         <span>Нажмите сюда для загрузки нового файла</span>
-        <input type="file" name="file" />
+        <input type="file" name="file" multiple="multiple" />
     </div>
 </div>
 

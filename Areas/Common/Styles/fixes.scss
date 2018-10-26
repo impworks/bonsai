@@ -1,6 +1,4 @@
-﻿/*
-    Fix for Gijgo Datepicker button
-*/
+﻿/* Fix for Gijgo Datepicker button */
 
 .gj-datepicker-bootstrap .input-group-append {
     flex-direction: column;
@@ -10,6 +8,22 @@
     }
 }
 
+/* Fix for the Bootstrap Modal dialog */
+
 .modal-lg {
     max-width: 830px;
+}
+
+/* Fix for Selectize */
+
+.selectize-input {
+    min-height: 40px;
+
+    .item {
+        line-height: 25px;
+    }
+
+    input {
+        height: 25px;
+    }
 }

@@ -58,19 +58,11 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("upload")]
-        public async Task<ActionResult> Upload(IFormFile file, string title = null)
+        public async Task<ActionResult> Upload(MediaUploadRequestVM vm, IFormFile file)
         {
             try
             {
-                var vm = new MediaUploadRequestVM
-                {
-                    Name = file.FileName,
-                    MimeType = file.ContentType,
-                    Data = file.OpenReadStream(),
-                    Title = title
-                };
-
-                var result = await _media.UploadAsync(vm, User);
+                var result = await _media.UploadAsync(vm, file, User);
                 result.ThumbnailPath = Url.Content(result.ThumbnailPath);
 
                 await _db.SaveChangesAsync();

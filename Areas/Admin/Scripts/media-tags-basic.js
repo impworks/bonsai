@@ -24,8 +24,6 @@
         $entitiesField.val(data);
     });
 
-    setupDatePicker($('#Date'));
-
     function setupSelectize($select, types, handler) {
         var multiple = $select.prop('multiple');
         $select.selectize({
@@ -64,13 +62,5 @@
             .done(function (data) {
                 callback(data);
             });
-    }
-
-    function setupDatePicker($elem) {
-        $elem.datepicker({
-            locale: 'ru-ru',
-            uiLibrary: 'bootstrap4',
-            format: 'yyyy.mm.dd'
-        });
     }
 });

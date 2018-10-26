@@ -22,6 +22,7 @@ using Impworks.Utils.Dictionary;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -98,31 +99,34 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Uploads a new media file.
         /// </summary>
-        public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, ClaimsPrincipal principal)
+        public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, IFormFile file, ClaimsPrincipal principal)
         {
             var id = Guid.NewGuid();
             var key = PageHelper.GetMediaKey(id);
 
-            var handler = _mediaHandlers.FirstOrDefault(x => x.SupportedMimeTypes.Contains(vm.MimeType));
+            var handler = _mediaHandlers.FirstOrDefault(x => x.SupportedMimeTypes.Contains(file.ContentType));
             if(handler == null)
                 throw new UploadException("Неизвестный тип файла!");
 
             var userId = _userMgr.GetUserId(principal);
             var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
 
-            var filePath = await SaveUploadAsync(vm, key, handler);
+            var filePath = await SaveUploadAsync(file, key, handler);
+            var tags = await GetTagsForUploadedMedia(vm);
 
             var media = new Media
             {
                 Id = id,
                 Key = key,
                 Type = handler.MediaType,
-                MimeType = vm.MimeType,
+                MimeType = file.ContentType,
                 Title = vm.Title,
                 FilePath = filePath,
                 UploadDate = DateTimeOffset.Now,
                 Uploader = user,
-                IsProcessed = handler.IsImmediate
+                IsProcessed = handler.IsImmediate,
+                Date = FuzzyDate.TryParse(vm.Date) == null ? null : vm.Date,
+                Tags = tags
             };
 
             _db.Media.Add(media);
@@ -332,18 +336,21 @@ namespace Bonsai.Areas.Admin.Logic
                                     .Select(x => x.Value)
                                     .ToList();
 
-            var existing = await _db.Pages
-                                    .Where(x => tagIds.Contains(x.Id) && !x.IsDeleted)
-                                    .ToDictionaryAsync(x => x.Id, x => true);
+            if (tagIds.Any())
+            {
+                var existing = await _db.Pages
+                                        .Where(x => tagIds.Contains(x.Id) && !x.IsDeleted)
+                                        .ToDictionaryAsync(x => x.Id, x => true);
 
-            if (depictedIds.Any(x => x != null && !existing.ContainsKey(x.Value)))
-                val.Add(nameof(vm.DepictedEntities), "Страница не существует!");
+                if (depictedIds.Any(x => x != null && !existing.ContainsKey(x.Value)))
+                    val.Add(nameof(vm.DepictedEntities), "Страница не существует!");
 
-            if (locId != null && !existing.ContainsKey(locId.Value))
-                val.Add(nameof(vm.Location), "Страница не существует!");
+                if (locId != null && !existing.ContainsKey(locId.Value))
+                    val.Add(nameof(vm.Location), "Страница не существует!");
 
-            if (evtId != null && !existing.ContainsKey(evtId.Value))
-                val.Add(nameof(vm.Event), "Страница не существует!");
+                if (evtId != null && !existing.ContainsKey(evtId.Value))
+                    val.Add(nameof(vm.Event), "Страница не существует!");
+            }
 
             val.ThrowIfInvalid();
         }
@@ -351,16 +358,17 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Saves an uploaded file to disk.
         /// </summary>
-        private async Task<string> SaveUploadAsync(MediaUploadRequestVM vm, string key, IMediaHandler handler)
+        private async Task<string> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler)
         {
-            var ext = Path.GetExtension(vm.Name);
+            var ext = Path.GetExtension(file.Name);
             var fileName = key + ext;
             var filePath = Path.Combine(_env.WebRootPath, "media", fileName);
 
-            using (var fs = new FileStream(filePath, FileMode.CreateNew))
-                await vm.Data.CopyToAsync(fs);
+            using (var localStream = new FileStream(filePath, FileMode.CreateNew))
+            using(var sourceStream = file.OpenReadStream())
+                await sourceStream.CopyToAsync(localStream);
 
-            using(var frame = handler.ExtractThumbnail(filePath, vm.MimeType))
+            using(var frame = handler.ExtractThumbnail(filePath, file.ContentType))
                 MediaHandlerHelper.CreateThumbnails(filePath, frame);
 
             return $"~/media/{fileName}";
@@ -432,6 +440,47 @@ namespace Bonsai.Areas.Admin.Logic
                     data.EntityTitle = title;
                 else
                     request.EntityId = null;
+            }
+        }
+
+        /// <summary>
+        /// Creates event \ location tags for the uploaded media.
+        /// </summary>
+        private async Task<List<MediaTag>> GetTagsForUploadedMedia(MediaUploadRequestVM vm)
+        {
+            var result = new List<MediaTag>();
+
+            var locId = vm.Location.TryParse<Guid>();
+            var evtId = vm.Event.TryParse<Guid>();
+
+            var tagIds = new[] {locId, evtId}
+                         .Where(x => x != Guid.Empty)
+                         .ToList();
+
+            var existing = tagIds.Any()
+                ? await _db.Pages
+                           .Where(x => tagIds.Contains(x.Id) && !x.IsDeleted)
+                           .ToDictionaryAsync(x => x.Id, x => true)
+                : null;
+
+            TryAddTag(vm.Location, locId, MediaTagType.Location);
+            TryAddTag(vm.Event, evtId, MediaTagType.Event);
+
+            return result;
+
+            void TryAddTag(string title, Guid id, MediaTagType type)
+            {
+                if (string.IsNullOrEmpty(title))
+                    return;
+
+                var tag = new MediaTag { Type = type };
+
+                if (existing?.ContainsKey(id) == true)
+                    tag.ObjectId = locId;
+                else
+                    tag.ObjectTitle = title;
+
+                result.Add(tag);
             }
         }
 
