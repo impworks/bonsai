@@ -5,6 +5,7 @@ using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
+using Bonsai.Areas.Front.Logic.Tree;
 using Bonsai.Code.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +29,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<MediaPresenterService>();
             services.AddScoped<CalendarPresenterService>();
             services.AddScoped<SearchPresenterService>();
+            services.AddScoped<TreePresenterService>();
             services.AddScoped<AuthService>();
 
             // admin

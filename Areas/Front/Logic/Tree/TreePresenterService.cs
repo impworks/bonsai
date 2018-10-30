@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Tree;
+using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
 
-namespace Bonsai.Areas.Front.Logic
+namespace Bonsai.Areas.Front.Logic.Tree
 {
     /// <summary>
     /// The presenter for tree elements.
@@ -32,7 +33,9 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<TreeVM> GetTreeAsync(Guid pageId)
         {
-            throw new NotImplementedException();
+            var relContext = await RelationContext.LoadContextAsync(_db, new RelationContextOptions { PeopleOnly = true });
+            var treeContext = new TreeContext(relContext, pageId);
+            return treeContext.GetTree();
         }
 
         #endregion
