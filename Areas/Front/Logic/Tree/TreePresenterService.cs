@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Tree;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
+using Bonsai.Data.Models;
+using Impworks.Utils.Linq;
 
 namespace Bonsai.Areas.Front.Logic.Tree
 {
@@ -31,11 +35,84 @@ namespace Bonsai.Areas.Front.Logic.Tree
         /// <summary>
         /// Returns the entire tree.
         /// </summary>
-        public async Task<TreeVM> GetTreeAsync(Guid pageId)
+        public async Task<TreeVM> GetTreeAsync()
         {
-            var relContext = await RelationContext.LoadContextAsync(_db, new RelationContextOptions { PeopleOnly = true });
-            var treeContext = new TreeContext(relContext, pageId);
-            return treeContext.GetTree();
+            var context = await RelationContext.LoadContextAsync(_db, new RelationContextOptions { PeopleOnly = true });
+
+            var parents = new HashSet<string>();
+
+            var persons = new List<TreePersonVM>();
+            var relations = new List<TreeRelationVM>();
+
+            foreach (var page in context.Pages.Values)
+            {
+                persons.Add(new TreePersonVM
+                {
+                    Id = page.Id.ToString(),
+                    Name = page.Title,
+                    Birth = page.BirthDate?.ShortReadableDate,
+                    Death = page.DeathDate?.ShortReadableDate,
+                    IsMale = page.Gender ?? true,
+                    Photo = page.MainPhotoPath,
+                    Url = page.Key,
+                    Parents = GetParentRelationshipId(page)
+                });
+            }
+
+            return new TreeVM
+            {
+                Persons = persons,
+                Relations = relations
+            };
+
+            string GetParentRelationshipId(RelationContext.PageExcerpt page)
+            {
+                if (!context.Relations.TryGetValue(page.Id, out var allRels))
+                    return null;
+
+                var rels = allRels.Where(x => x.Type == RelationType.Parent).ToList();
+                if (rels.Count == 0)
+                    return null;
+
+                var key = rels.Count == 1
+                    ? rels[0].DestinationId + ":unknown"
+                    : rels.Select(x => x.DestinationId.ToString()).OrderBy(x => x).JoinString(":");
+
+                if (!parents.Contains(key))
+                {
+                    if (rels.Count == 1)
+                    {
+                        var fakeId = Guid.NewGuid().ToString();
+                        var relPage = context.Pages[rels[0].DestinationId];
+                        persons.Add(new TreePersonVM
+                        {
+                            Id = fakeId,
+                            Name = "Неизвестно",
+                            IsMale = !(relPage.Gender ?? true)
+                        });
+
+                        relations.Add(new TreeRelationVM
+                        {
+                            Id = key,
+                            From = rels[0].DestinationId.ToString(),
+                            To = fakeId
+                        });
+                    }
+                    else
+                    {
+                        relations.Add(new TreeRelationVM
+                        {
+                            Id = key,
+                            From = rels[0].DestinationId.ToString(),
+                            To = rels[1].DestinationId.ToString()
+                        });
+                    }
+
+                    parents.Add(key);
+                }
+
+                return key;
+            }
         }
 
         #endregion

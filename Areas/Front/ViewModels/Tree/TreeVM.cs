@@ -20,6 +20,6 @@ namespace Bonsai.Areas.Front.ViewModels.Tree
         /// <summary>
         /// ID of the person to center the view.
         /// </summary>
-        public string RootId { get; set; }
+        public string Root { get; set; }
     }
 }

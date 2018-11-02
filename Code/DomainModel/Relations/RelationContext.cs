@@ -93,7 +93,7 @@ namespace Bonsai.Code.DomainModel.Relations
         private static async Task<List<PageExcerpt>> LoadPagesAsync(AppDbContext db, RelationContextOptions opts)
         {
             var filterByPeople = opts.PeopleOnly
-                ? "AND p.Type = 0"
+                ? @"AND p.""Type"" = 0"
                 : "";
 
             using (var conn = db.GetConnection())
