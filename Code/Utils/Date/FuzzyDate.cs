@@ -72,7 +72,7 @@ namespace Bonsai.Code.Utils.Date
         #region Properties
 
         /// <summary>
-        /// Short date format (day-month-year).
+        /// Short date format (day/month/year).
         /// </summary>
         public string ShortReadableDate
         {
@@ -80,10 +80,10 @@ namespace Bonsai.Code.Utils.Date
             {
                 var sb = new StringBuilder();
 
-                sb.Append(Month == null ? "??" : Month.ToString());
+                sb.Append(Day?.ToString("D2") ?? "??");
                 sb.Append("/");
 
-                sb.Append(Day == null ? "??" : Day.ToString());
+                sb.Append(Month?.ToString("D2") ?? "??");
                 sb.Append("/");
 
                 if (Year == null)
