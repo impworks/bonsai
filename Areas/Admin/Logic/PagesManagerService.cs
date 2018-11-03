@@ -10,6 +10,7 @@ using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Areas.Front.ViewModels.Tree;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -139,6 +140,8 @@ namespace Bonsai.Areas.Admin.Logic
                 )
             );
 
+            _cache.Remove<TreeVM>();
+
             await DiscardPageDraftAsync(null, principal);
 
             return page;
@@ -245,9 +248,14 @@ namespace Bonsai.Areas.Admin.Logic
             );
 
             if (prevVm.Title != vm.Title || prevVm.Facts != vm.Facts)
+            {
                 _cache.Clear();
+            }
             else
+            {
                 _cache.Remove<PageDescriptionVM>(page.Key);
+                _cache.Remove<TreeVM>();
+            }
 
             if(revertedId == null)
                 await DiscardPageDraftAsync(vm.Id, principal);

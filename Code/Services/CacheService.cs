@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Code.Utils;
@@ -64,6 +65,19 @@ namespace Bonsai.Code.Services
             {
                 _locks.Release(key);
             }
+        }
+
+        /// <summary>
+        /// Removes all entries of the specified type from the caching service.
+        /// </summary>
+        public void Remove<T>()
+        {
+            // todo: a better approach?
+            var type = typeof(T);
+            var stales = _cache.Keys.Where(x => x.type == type);
+
+            foreach (var stale in stales)
+                _cache.TryRemove(stale, out _);
         }
 
         /// <summary>
