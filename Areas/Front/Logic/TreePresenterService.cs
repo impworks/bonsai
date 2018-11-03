@@ -7,8 +7,9 @@ using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Microsoft.EntityFrameworkCore;
 
-namespace Bonsai.Areas.Front.Logic.Tree
+namespace Bonsai.Areas.Front.Logic
 {
     /// <summary>
     /// The presenter for tree elements.
@@ -35,17 +36,25 @@ namespace Bonsai.Areas.Front.Logic.Tree
         /// <summary>
         /// Returns the entire tree.
         /// </summary>
-        public async Task<TreeVM> GetTreeAsync()
+        public async Task<TreeVM> GetTreeAsync(string rootKey)
         {
+            var rootId = await GetRootId(rootKey);
             var context = await RelationContext.LoadContextAsync(_db, new RelationContextOptions { PeopleOnly = true });
 
             var parents = new HashSet<string>();
+            var visited = new HashSet<Guid>();
 
             var persons = new List<TreePersonVM>();
             var relations = new List<TreeRelationVM>();
 
-            foreach (var page in context.Pages.Values)
+            var unvisited = new Queue<Guid>();
+            unvisited.Enqueue(rootId);
+
+            while (unvisited.TryDequeue(out var currId))
             {
+                if (!context.Pages.TryGetValue(currId, out var page))
+                    continue;
+
                 persons.Add(new TreePersonVM
                 {
                     Id = page.Id.ToString(),
@@ -57,10 +66,28 @@ namespace Bonsai.Areas.Front.Logic.Tree
                     Url = page.Key,
                     Parents = GetParentRelationshipId(page)
                 });
+
+                visited.Add(currId);
+
+                if (context.Relations.TryGetValue(currId, out var rels))
+                {
+                    foreach (var rel in rels)
+                    {
+                        if (rel.Type != RelationType.Child && rel.Type != RelationType.Parent &&
+                            rel.Type != RelationType.Spouse)
+                            continue;
+
+                        if (visited.Contains(rel.DestinationId))
+                            continue;
+
+                        unvisited.Enqueue(rel.DestinationId);
+                    }
+                }
             }
 
             return new TreeVM
             {
+                Root = rootId.ToString(),
                 Persons = persons,
                 Relations = relations
             };
@@ -113,6 +140,28 @@ namespace Bonsai.Areas.Front.Logic.Tree
 
                 return key;
             }
+        }
+
+        #endregion
+
+        #region Private helpers
+
+        /// <summary>
+        /// Returns the page's ID by its key.
+        /// </summary>
+        private async Task<Guid> GetRootId(string key)
+        {
+            var keyLower = key?.ToLowerInvariant();
+            var pageId = await _db.Pages
+                                .AsNoTracking()
+                                .Where(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false)
+                                .Select(x => x.Id)
+                                .FirstOrDefaultAsync();
+
+            if(pageId == Guid.Empty)
+                throw new KeyNotFoundException();
+
+            return pageId;
         }
 
         #endregion

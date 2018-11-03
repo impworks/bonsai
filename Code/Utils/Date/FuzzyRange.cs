@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Impworks.Utils.Strings;
 
 namespace Bonsai.Code.Utils.Date
 {
@@ -117,14 +118,7 @@ namespace Bonsai.Code.Utils.Date
             if (string.IsNullOrEmpty(raw))
                 return null;
 
-            try
-            {
-                return Parse(raw);
-            }
-            catch
-            {
-                return null;
-            }
+            return raw.TryParse(Parse);
         }
 
         /// <summary>
@@ -212,10 +206,7 @@ namespace Bonsai.Code.Utils.Date
 
         #region IEquatable implementation
 
-        public bool Equals(FuzzyRange other)
-        {
-            return RangeStart.Equals(other.RangeStart) && RangeEnd.Equals(other.RangeEnd);
-        }
+        public bool Equals(FuzzyRange other) => RangeStart.Equals(other.RangeStart) && RangeEnd.Equals(other.RangeEnd);
 
         public override bool Equals(object obj)
         {
@@ -231,15 +222,8 @@ namespace Bonsai.Code.Utils.Date
             }
         }
 
-        public static bool operator ==(FuzzyRange left, FuzzyRange right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(FuzzyRange left, FuzzyRange right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator ==(FuzzyRange left, FuzzyRange right) => left.Equals(right);
+        public static bool operator !=(FuzzyRange left, FuzzyRange right) => !left.Equals(right);
 
         #endregion
 

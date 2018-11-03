@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Impworks.Utils.Strings;
 
 namespace Bonsai.Code.Utils.Date
 {
@@ -35,7 +36,9 @@ namespace Bonsai.Code.Utils.Date
             Month = month;
             Day = day;
 
-            _stringValue = RenderString(year, month, day, isDecade);
+            _stringValue = null;
+            _fullReadableDate = null;
+            _shortReadableDate = null;
         }
 
         #endregion
@@ -65,7 +68,17 @@ namespace Bonsai.Code.Utils.Date
         /// <summary>
         /// Canonically formatted date.
         /// </summary>
-        private readonly string _stringValue;
+        private string _stringValue;
+
+        /// <summary>
+        /// Cached short readable date.
+        /// </summary>
+        private string _shortReadableDate;
+
+        /// <summary>
+        /// Cached readable date.
+        /// </summary>
+        private string _fullReadableDate;
 
         #endregion
 
@@ -74,64 +87,12 @@ namespace Bonsai.Code.Utils.Date
         /// <summary>
         /// Short date format (day/month/year).
         /// </summary>
-        public string ShortReadableDate
-        {
-            get
-            {
-                var sb = new StringBuilder();
-
-                sb.Append(Day?.ToString("D2") ?? "??");
-                sb.Append("/");
-
-                sb.Append(Month?.ToString("D2") ?? "??");
-                sb.Append("/");
-
-                if (Year == null)
-                    sb.Append("????");
-                else if (IsDecade)
-                    sb.Append((Year.Value / 10) + "?");
-                else
-                    sb.Append(Year.Value);
-
-                return sb.ToString();
-            }
-        }
+        public string ShortReadableDate => _shortReadableDate ?? (_shortReadableDate = GetShortReadableDate());
 
         /// <summary>
         /// Full readable description of the date.
         /// </summary>
-        public string ReadableDate
-        {
-            get
-            {
-                var sb = new StringBuilder();
-
-                if (Day != null)
-                {
-                    sb.Append(Day);
-                    sb.Append(" ");
-                }
-
-                if (Month != null)
-                {
-                    sb.Append(
-                        Day != null
-                            ? MonthNamesGenitive[Month.Value]
-                            : MonthNamesNominative[Month.Value]
-                    );
-                }
-
-                if (Year != null)
-                {
-                    if (Month != null)
-                        sb.Append(IsDecade ? ", " : " ");
-
-                    sb.Append(ReadableYear);
-                }
-
-                return sb.ToString();
-            }
-        }
+        public string ReadableDate => _fullReadableDate ?? (_fullReadableDate = GetFullReadableDate());
 
         /// <summary>
         /// Readable year component of the date.
@@ -207,14 +168,7 @@ namespace Bonsai.Code.Utils.Date
             if (string.IsNullOrEmpty(raw))
                 return null;
 
-            try
-            {
-                return Parse(raw);
-            }
-            catch
-            {
-                return null;
-            }
+            return raw.TryParse(Parse);
         }
 
         /// <summary>
@@ -229,15 +183,15 @@ namespace Bonsai.Code.Utils.Date
             if(!match.Success)
                 throw new ArgumentException("Date string was not in correct format!", nameof(raw));
 
-            var year = ParseInt(match.Groups["year"].Value);
-            var month = ParseInt(match.Groups["month"].Value);
-            var day = ParseInt(match.Groups["day"].Value);
+            var year = match.Groups["year"].Value.TryParse<int?>();
+            var month = match.Groups["month"].Value.TryParse<int?>();
+            var day = match.Groups["day"].Value.TryParse<int?>();
             var isDecade = false;
 
             if (year == null)
             {
                 // parse 199? as 1990
-                year = ParseInt(match.Groups["year"].Value.Substring(0, 3)) * 10;
+                year = match.Groups["year"].Value.Substring(0, 3).TryParse<int?>() * 10;
                 isDecade = year != null;
             }
 
@@ -247,6 +201,91 @@ namespace Bonsai.Code.Utils.Date
         #endregion
 
         #region Formatting helpers
+
+        /// <summary>
+        /// Renders the short readable date.
+        /// </summary>
+        private string GetShortReadableDate()
+        {
+            var sb = new StringBuilder();
+
+            if (Day != null)
+            {
+                sb.Append(Day?.ToString("D2"));
+                sb.Append("/");
+            }
+
+            if (Month != null)
+            {
+                sb.Append(Month?.ToString("D2") ?? "??");
+                sb.Append("/");
+            }
+
+            if(Year == null)
+                sb.Append("????");
+            else if(IsDecade)
+                sb.Append((Year.Value / 10) + "?");
+            else
+                sb.Append(Year.Value);
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Renders the full readable date.
+        /// </summary>
+        private string GetFullReadableDate()
+        {
+            var sb = new StringBuilder();
+
+            if(Day != null)
+            {
+                sb.Append(Day);
+                sb.Append(" ");
+            }
+
+            if(Month != null)
+            {
+                sb.Append(
+                    Day != null
+                        ? MonthNamesGenitive[Month.Value]
+                        : MonthNamesNominative[Month.Value]
+                );
+            }
+
+            if(Year != null)
+            {
+                if(Month != null)
+                    sb.Append(IsDecade ? ", " : " ");
+
+                sb.Append(ReadableYear);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Creates the canonical formatting of the date.
+        /// </summary>
+        private string GetCanonicalString()
+        {
+            var sb = new StringBuilder();
+
+            if(Year == null)
+                sb.Append("????");
+            else if(IsDecade)
+                sb.Append(Year.Value / 10 + "?");
+            else
+                sb.Append(Year.Value);
+
+            sb.Append(".");
+            sb.Append(Month?.ToString("D2") ?? "??");
+
+            sb.Append(".");
+            sb.Append(Day?.ToString("D2") ?? "??");
+
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Month names in nominative case (for month + year format).
@@ -289,17 +328,6 @@ namespace Bonsai.Code.Utils.Date
         };
 
         /// <summary>
-        /// Attempts to parse an integer value from a string.
-        /// </summary>
-        private static int? ParseInt(string str)
-        {
-            if (int.TryParse(str, out var result))
-                return result;
-
-            return null;
-        }
-
-        /// <summary>
         /// Returns the word in correct declension for the number of years.
         /// </summary>
         private static string GetAgeWord(int age)
@@ -323,10 +351,7 @@ namespace Bonsai.Code.Utils.Date
 
         #region IEquatable implementation
 
-        public bool Equals(FuzzyDate other)
-        {
-            return _stringValue == other._stringValue;
-        }
+        public bool Equals(FuzzyDate other) => _stringValue == other._stringValue;
 
         public override bool Equals(object obj)
         {
@@ -334,20 +359,10 @@ namespace Bonsai.Code.Utils.Date
             return obj is FuzzyDate date && Equals(date);
         }
 
-        public override int GetHashCode()
-        {
-            return _stringValue.GetHashCode();
-        }
+        public override int GetHashCode() => _stringValue.GetHashCode();
 
-        public static bool operator ==(FuzzyDate left, FuzzyDate right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(FuzzyDate left, FuzzyDate right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator ==(FuzzyDate left, FuzzyDate right) => left.Equals(right);
+        public static bool operator !=(FuzzyDate left, FuzzyDate right) => !left.Equals(right);
 
         #endregion
 
@@ -414,35 +429,9 @@ namespace Bonsai.Code.Utils.Date
         #region ToString
 
         /// <summary>
-        /// Creates the canonical formatting of the date.
-        /// </summary>
-        private static string RenderString(int? year, int? month, int? day, bool isDecade)
-        {
-            var sb = new StringBuilder();
-
-            if (year == null)
-                sb.Append("????");
-            else if (isDecade)
-                sb.Append(year.Value / 10 + "?");
-            else
-                sb.Append(year.Value);
-
-            sb.Append(".");
-            sb.Append(month?.ToString("D2") ?? "??");
-
-            sb.Append(".");
-            sb.Append(day?.ToString("D2") ?? "??");
-
-            return sb.ToString();
-        }
-
-        /// <summary>
         /// Returns the canonically formatted date.
         /// </summary>
-        public override string ToString()
-        {
-            return _stringValue;
-        }
+        public override string ToString() => _stringValue ?? (_stringValue = GetCanonicalString());
 
         #endregion
     }

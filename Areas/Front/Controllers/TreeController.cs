@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
-using Bonsai.Areas.Front.Logic.Tree;
 using Bonsai.Areas.Front.ViewModels.Tree;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
@@ -31,12 +30,12 @@ namespace Bonsai.Areas.Front.Controllers
         /// Returns the entire family tree's JSON.
         /// </summary>
         [HttpGet]
-        [Route("")]
-        public async Task<TreeVM> Tree()
+        [Route("{key}")]
+        public async Task<TreeVM> Tree(string key)
         {
             var data = await _cache.GetOrAddAsync(nameof(TreeVM), async () =>
             {
-                var tree = await _tree.GetTreeAsync();
+                var tree = await _tree.GetTreeAsync(key);
 
                 foreach (var person in tree.Persons)
                 {
@@ -54,7 +53,7 @@ namespace Bonsai.Areas.Front.Controllers
             {
                 Relations = data.Relations,
                 Persons = data.Persons,
-                Root = data.Persons.OrderByDescending(x => x.Birth).Select(x => x.Id).FirstOrDefault() // todo
+                Root = key
             };
         }
     }
