@@ -47,14 +47,18 @@ namespace Bonsai.Areas.Front.Logic
             var persons = new List<TreePersonVM>();
             var relations = new List<TreeRelationVM>();
 
-            var unvisited = new Queue<Guid>();
-            unvisited.Enqueue(rootId);
+            var pending = new Queue<Guid>();
+            pending.Enqueue(rootId);
 
-            while (unvisited.TryDequeue(out var currId))
+            while (pending.TryDequeue(out var currId))
             {
+                if (visited.Contains(currId))
+                    continue;
+
                 if (!context.Pages.TryGetValue(currId, out var page))
                     continue;
 
+                visited.Add(currId);
                 persons.Add(new TreePersonVM
                 {
                     Id = page.Id.ToString(),
@@ -67,20 +71,14 @@ namespace Bonsai.Areas.Front.Logic
                     Parents = GetParentRelationshipId(page)
                 });
 
-                visited.Add(currId);
-
                 if (context.Relations.TryGetValue(currId, out var rels))
                 {
                     foreach (var rel in rels)
                     {
-                        if (rel.Type != RelationType.Child && rel.Type != RelationType.Parent &&
-                            rel.Type != RelationType.Spouse)
+                        if (rel.Type != RelationType.Child && rel.Type != RelationType.Parent && rel.Type != RelationType.Spouse)
                             continue;
 
-                        if (visited.Contains(rel.DestinationId))
-                            continue;
-
-                        unvisited.Enqueue(rel.DestinationId);
+                        pending.Enqueue(rel.DestinationId);
                     }
                 }
             }

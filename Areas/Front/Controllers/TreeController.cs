@@ -33,7 +33,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("{key}")]
         public async Task<TreeVM> Tree(string key)
         {
-            var data = await _cache.GetOrAddAsync(nameof(TreeVM), async () =>
+            return await _cache.GetOrAddAsync(key, async () =>
             {
                 var tree = await _tree.GetTreeAsync(key);
 
@@ -48,13 +48,6 @@ namespace Bonsai.Areas.Front.Controllers
 
                 return tree;
             });
-
-            return new TreeVM
-            {
-                Relations = data.Relations,
-                Persons = data.Persons,
-                Root = key
-            };
         }
     }
 }
