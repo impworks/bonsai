@@ -34,6 +34,9 @@ var config = {
                 './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
                 './node_modules/vue/dist/vue.js',
                 './node_modules/simplemde/dist/simplemde.min.js'
+            ],
+            elk: [
+                './node_modules/elkjs/lib/elk.bundled.js'
             ]
         },
         fonts: [
@@ -96,7 +99,6 @@ gulp.task('content.scripts.admin', function () {
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-
 gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common']);
 
 gulp.task('content.watch', function() {
@@ -141,11 +143,19 @@ gulp.task('vendor.scripts.admin', function () {
         .pipe(gulp.dest(config.assets.scripts));
 });
 
+gulp.task('vendor.scripts.elk', function () {
+    gulp.src(config.vendor.scripts.admin)
+        .pipe(concatjs('vendor-elk.js'))
+        //.pipe(minjs({  }))
+        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+        .pipe(gulp.dest(config.assets.scripts));
+});
+
 gulp.task('vendor.fonts', function() {
     gulp.src(config.vendor.fonts)
         .pipe(gulp.dest(config.assets.fonts));
 });
 
-gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.fonts']);
+gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.scripts.elk', 'vendor.fonts']);
 
 gulp.task('build', ['vendor', 'content']);
