@@ -144,7 +144,7 @@ gulp.task('vendor.scripts.admin', function () {
 });
 
 gulp.task('vendor.scripts.elk', function () {
-    gulp.src(config.vendor.scripts.admin)
+    gulp.src(config.vendor.scripts.elk)
         .pipe(concatjs('vendor-elk.js'))
         //.pipe(minjs({  }))
         .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })

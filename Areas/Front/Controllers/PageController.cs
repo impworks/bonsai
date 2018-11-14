@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
+using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils;
@@ -42,7 +43,12 @@ namespace Bonsai.Areas.Front.Controllers
             try
             {
                 ViewBag.User = await _auth.GetCurrentUserAsync(User);
-                var vm = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageDescriptionAsync(key));
+                var vm = new PageVM<PageDescriptionVM>
+                {
+                    Body = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageDescriptionAsync(key)),
+                    InfoBlock = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageInfoBlockAsync(key))
+                };
+
                 return View(vm);
             }
             catch (RedirectRequiredException ex)
@@ -50,7 +56,6 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToActionPermanent("Description", new {key = ex.Key});
             }
         }
-
 
         /// <summary>
         /// Displays the related media files.
@@ -65,12 +70,42 @@ namespace Bonsai.Areas.Front.Controllers
             try
             {
                 ViewBag.User = await _auth.GetCurrentUserAsync(User);
-                var vm = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageMediaAsync(key));
+                var vm = new PageVM<PageMediaVM>
+                {
+                    Body = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageMediaAsync(key)),
+                    InfoBlock = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageInfoBlockAsync(key))
+                };
                 return View(vm);
             }
             catch(RedirectRequiredException ex)
             {
                 return RedirectToActionPermanent("Description", new { key = ex.Key });
+            }
+        }
+
+        /// <summary>
+        /// Displays the related media files.
+        /// </summary>
+        [Route("{key}/tree")]
+        public async Task<ActionResult> Tree(string key)
+        {
+            var encKey = PageHelper.EncodeTitle(key);
+            if (encKey != key)
+                return RedirectToActionPermanent("Tree", new { key = encKey });
+
+            try
+            {
+                ViewBag.User = await _auth.GetCurrentUserAsync(User);
+                var vm = new PageVM<PageTreeVM>
+                {
+                    Body = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageTreeAsync(key)),
+                    InfoBlock = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageInfoBlockAsync(key))
+                };
+                return View(vm);
+            }
+            catch(RedirectRequiredException ex)
+            {
+                return RedirectToActionPermanent("Tree", new { key = ex.Key });
             }
         }
     }

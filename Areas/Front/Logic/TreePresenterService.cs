@@ -7,7 +7,6 @@ using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Front.Logic
 {
@@ -36,9 +35,8 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the entire tree.
         /// </summary>
-        public async Task<TreeVM> GetTreeAsync(string rootKey)
+        public async Task<TreeVM> GetTreeAsync(Guid rootId)
         {
-            var rootId = await GetRootId(rootKey);
             var context = await RelationContext.LoadContextAsync(_db, new RelationContextOptions { PeopleOnly = true });
 
             var parents = new HashSet<string>();
@@ -99,11 +97,11 @@ namespace Bonsai.Areas.Front.Logic
                 if (rels.Count == 0)
                     return null;
 
-                var key = rels.Count == 1
+                var relKey = rels.Count == 1
                     ? rels[0].DestinationId + ":unknown"
                     : rels.Select(x => x.DestinationId.ToString()).OrderBy(x => x).JoinString(":");
 
-                if (!parents.Contains(key))
+                if (!parents.Contains(relKey))
                 {
                     if (rels.Count == 1)
                     {
@@ -118,7 +116,7 @@ namespace Bonsai.Areas.Front.Logic
 
                         relations.Add(new TreeRelationVM
                         {
-                            Id = key,
+                            Id = relKey,
                             From = rels[0].DestinationId.ToString(),
                             To = fakeId
                         });
@@ -127,39 +125,17 @@ namespace Bonsai.Areas.Front.Logic
                     {
                         relations.Add(new TreeRelationVM
                         {
-                            Id = key,
+                            Id = relKey,
                             From = rels[0].DestinationId.ToString(),
                             To = rels[1].DestinationId.ToString()
                         });
                     }
 
-                    parents.Add(key);
+                    parents.Add(relKey);
                 }
 
-                return key;
+                return relKey;
             }
-        }
-
-        #endregion
-
-        #region Private helpers
-
-        /// <summary>
-        /// Returns the page's ID by its key.
-        /// </summary>
-        private async Task<Guid> GetRootId(string key)
-        {
-            var keyLower = key?.ToLowerInvariant();
-            var pageId = await _db.Pages
-                                .AsNoTracking()
-                                .Where(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false)
-                                .Select(x => x.Id)
-                                .FirstOrDefaultAsync();
-
-            if(pageId == Guid.Empty)
-                throw new KeyNotFoundException();
-
-            return pageId;
         }
 
         #endregion

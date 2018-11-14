@@ -1,16 +1,18 @@
-﻿@model Bonsai.Areas.Front.ViewModels.Page.PageMediaVM
+﻿@using Bonsai.Areas.Front.ViewModels.Page
+@model PageVM<PageMediaVM>
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
 
-    ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Title + " &mdash; Медиа";
 
-    var groups = Model.Media
+    ViewBag.PageModel = Model;
+    ViewBag.Title = Model.Body.Title + " &mdash; Медиа";
+
+    var groups = Model.Body.Media
                       .GroupBy(x => x.Date?.ReadableYear)
                       .OrderByDescending(x => x.Key);
 }
 
-@if (Model.Media.Any())
+@if (Model.Body.Media.Any())
 {
     foreach (var group in groups)
     {
@@ -23,7 +25,7 @@
                     <li class="list-inline-item">
                         <div class="media-thumb-wrapper">
                             <a href="@Url.Action("ViewMedia", "Media", new {key = elem.Key})" class="media-thumb-link" data-media="@elem.Key">
-                                <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')" title="@Model.Title (@(elem.Date?.ShortReadableDate ?? "Дата неизвестна"))"></div>
+                                <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')" title="@Model.Body.Title (@(elem.Date?.ShortReadableDate ?? "Дата неизвестна"))"></div>
                             </a>
                         </div>
                     </li>

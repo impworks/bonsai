@@ -1,17 +1,23 @@
-﻿$(function() {
-    var $treeData = $('.family-tree-json');
-    if ($treeData.length === 0) {
-        return;
-    }
-
+﻿$(function () {
     var CARD_WIDTH = 300,
         CARD_HEIGHT = 100,
         SPACING = 30;
 
-    var treeData = JSON.parse($treeData[0].innerText);
-    var elkJson = generateElkJson(treeData);
-    var elk = new ELK();
-    elk.layout(elkJson).then(renderTree).catch(console.error);
+    $('.tree-wrapper').each(function() {
+        var $wrap = $(this);
+        var $data = $($wrap.data('src'));
+        if ($data.length === 0) {
+            return;
+        }
+
+        var treeData = JSON.parse($data[0].innerText);
+        var elkJson = generateElkJson(treeData);
+        var elk = new ELK();
+
+        elk.layout(elkJson)
+            .then(function (tree) { renderTree(tree, $wrap); })
+            .catch(console.error);
+    });
 
     function generateElkJson(data) {
         var nodes = [];
@@ -62,7 +68,7 @@
                     ]
                 });
 
-                if (person.Parents != null) {
+                if (person.Parents !== null) {
                     edges.push({
                         id: person.Id + ':' + person.Parents,
                         sources: [person.Parents + ':s'],
@@ -113,7 +119,8 @@
         }
     }
 
-    function renderTree(tree) {
+    function renderTree(tree, $wrap) {
         console.log(tree);
+        $wrap.text('Rendered');
     }
 });

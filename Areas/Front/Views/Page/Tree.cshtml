@@ -1,6 +1,18 @@
-﻿@{
+﻿@using Bonsai.Areas.Front.ViewModels.Page
+@using Newtonsoft.Json
+@model PageVM<PageTreeVM>
+@{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
 
     ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Title + " &mdash; Медиа";
+    ViewBag.Title = Model.Body.Title + " &mdash; Фамильное древо";
+}
+
+<div class="tree-wrapper" data-src="#tree-contents"></div>
+<script id="tree-contents" type="application/json">
+    @Html.Raw(JsonConvert.SerializeObject(Model.Body.Tree, Formatting.Indented))
+</script>
+
+@section Scripts {
+    <script src="@Url.Content("~/assets/scripts/vendor-elk.js")"></script>
 }

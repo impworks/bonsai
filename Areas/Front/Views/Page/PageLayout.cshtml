@@ -1,25 +1,24 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Auth
 @using Bonsai.Areas.Front.ViewModels.Page
-@model PageVMBase
+@using Bonsai.Areas.Front.ViewModels.Page.InfoBlock
+@using Bonsai.Data.Models
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
-    var pageVm = (PageTitleVM)Model;
-    var user = (UserVM) ViewBag.User;
-    var isPreview = ((bool?) ViewBag.IsPreview) ?? false;
-    var actions = new[] {
-        new {Title = "Описание", Active = pageVm is PageDescriptionVM, Url = Url.Action("Description", new {key = pageVm.Key}), Icon = "fa-user"},
-        new {Title = "Медиа", Active = pageVm is PageMediaVM, Url = Url.Action("Media", new {key = pageVm.Key}), Icon = "fa-image"}
-    };
+
+    var pageVm = (PageTitleVM)Model.Body;
+    var infoBlock = (InfoBlockVM)Model.InfoBlock;
+    var user = (UserVM)ViewBag.User;
+    var isPreview = (bool?)ViewBag.IsPreview ?? false;
 }
 
 <div id="page" class="d-flex">
     <div class="sidebar col-3">
-        @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", Model.InfoBlock)
+        @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
     </div>
     <div class="content col">
         <div class="content-header">
             <h1>@pageVm.Title</h1>
-            @if (user?.IsAdministrator == true && !isPreview)
+            @if(user?.IsAdministrator == true && !isPreview)
             {
                 <span class="dropdown dropdown-icons">
                     <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="dropdown">
@@ -39,13 +38,25 @@
                 </span>
             }
         </div>
-        @if (!isPreview)
+        @if(!isPreview)
         {
             <ul class="nav nav-tabs">
-                @foreach (var action in actions)
+                <li class="nav-item">
+                    <a class="nav-link @(pageVm is PageDescriptionVM ? "active" : "")" href="@Url.Action("Description", new {key = pageVm.Key})">
+                        <i class="fa fa-user"></i> Описание
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(pageVm is PageMediaVM ? "active" : "")" href="@Url.Action("Media", new {key = pageVm.Key})">
+                        <i class="fa fa-image"></i> Медиа
+                    </a>
+                </li>
+                @if(pageVm.Type == PageType.Person)
                 {
                     <li class="nav-item">
-                        <a class="nav-link @(action.Active ? "active" : "")" href="@action.Url"><i class="fa @action.Icon"></i> @action.Title</a>
+                        <a class="nav-link @(pageVm is PageTreeVM ? "active" : "")" href="@Url.Action("Tree", new {key = pageVm.Key})">
+                            <i class="fa fa-sitemap"></i> Дерево
+                        </a>
                     </li>
                 }
             </ul>
@@ -55,3 +66,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @RenderSection("Scripts", false)
+}
