@@ -1,0 +1,38 @@
+﻿@import '../variables.scss';
+
+.tree-wrapper {
+    width: 100%;
+    height: auto;
+    overflow: scroll;
+    position: relative;
+
+    .tree-card {
+        position: absolute;
+        width: 300px;
+        height: 100px;
+        border: 1px #000 solid;
+        padding: 8px;
+
+        &.male {
+            background-color: #9ED5EA;
+        }
+
+        &.female {
+            background-color: #F5B8DA;
+        }
+
+        .tree-card-photo {
+            background-size: cover;
+            background-position: center;
+
+            width: 64px;
+            height: 64px;
+        }
+    }
+
+    .tree-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
