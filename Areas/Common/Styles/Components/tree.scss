@@ -9,10 +9,12 @@
     .tree-card {
         position: absolute;
         display: block;
-        border: 1px #000 solid;
+        border-radius: 8px;
         padding: 8px;
         text-decoration: none;
         background-image: none;
+        overflow: hidden;
+        color: #000;
 
         &.male {
             background-color: #9ED5EA;
@@ -22,12 +24,29 @@
             background-color: #F5B8DA;
         }
 
+        &.active {
+            border: 2px #000 solid;
+        }
+
+        &.deceased:before {
+            content: "";
+            position: absolute;
+            background: #000;
+            height: 8px;
+            width: 50px;
+            top: 5px;
+            left: -10px;
+            transform: rotate(-45deg);
+            transform-origin: center center;
+        }
+
         .tree-card-photo {
             float: left;
             background-size: cover;
             background-position: center;
-            width: 64px;
-            height: 64px;
+            width: 82px;
+            height: 82px;
+            border-radius: 4px;
             margin-right: 8px;
         }
 
