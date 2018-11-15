@@ -7,6 +7,7 @@ using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Logic
 {
@@ -17,9 +18,10 @@ namespace Bonsai.Areas.Front.Logic
     {
         #region Constructor
 
-        public TreePresenterService(AppDbContext db)
+        public TreePresenterService(AppDbContext db, IUrlHelper url)
         {
             _db = db;
+            _url = url;
         }
 
         #endregion
@@ -27,6 +29,7 @@ namespace Bonsai.Areas.Front.Logic
         #region Fields
 
         private readonly AppDbContext _db;
+        private readonly IUrlHelper _url;
 
         #endregion
 
@@ -64,8 +67,8 @@ namespace Bonsai.Areas.Front.Logic
                     Birth = page.BirthDate?.ShortReadableDate,
                     Death = page.DeathDate?.ShortReadableDate,
                     IsMale = page.Gender ?? true,
-                    Photo = page.MainPhotoPath,
-                    Url = page.Key,
+                    Photo = _url.Content(page.MainPhotoPath),
+                    Url = _url.Action("Description", "Page", new { area = "Front", key = page.Key }),
                     Parents = GetParentRelationshipId(page)
                 });
 

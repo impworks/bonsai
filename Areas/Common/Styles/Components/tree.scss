@@ -2,16 +2,17 @@
 
 .tree-wrapper {
     width: 100%;
-    height: auto;
+    height: 100%;
     overflow: scroll;
     position: relative;
 
     .tree-card {
         position: absolute;
-        width: 300px;
-        height: 100px;
+        display: block;
         border: 1px #000 solid;
         padding: 8px;
+        text-decoration: none;
+        background-image: none;
 
         &.male {
             background-color: #9ED5EA;
@@ -22,11 +23,24 @@
         }
 
         .tree-card-photo {
+            float: left;
             background-size: cover;
             background-position: center;
-
             width: 64px;
             height: 64px;
+            margin-right: 8px;
+        }
+
+        .tree-card-body {
+            .tree-card-title {
+                font-size: 18px;
+                display: block;
+                margin-bottom: 8px;
+            }
+
+            .tree-card-date {
+                font-size: 12px;
+            }
         }
     }
 

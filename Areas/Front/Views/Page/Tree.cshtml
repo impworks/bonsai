@@ -8,11 +8,27 @@
     ViewBag.Title = Model.Body.Title + " &mdash; Фамильное древо";
 }
 
-<div class="tree-wrapper" data-src="#tree-contents"></div>
+<div class="tree-wrapper" data-src="#tree-contents">
+    <tree-card v-for="p in persons" :key="p.id" :value="p" />
+</div>
+
 <script id="tree-contents" type="application/json">
     @Html.Raw(JsonConvert.SerializeObject(Model.Body.Tree, Formatting.Indented))
 </script>
 
+<script id="tree-card-template" type="text/x-template">
+    <a :href="value.info.Url" :class="{'tree-card': true, deceased: value.info.Death != null}"
+       :style="{left: value.x, top: value.y, width: value.width, height: value.height}" :data-id="value.id">
+        <div class="tree-card-photo" :style="{'background-image': 'url(' + value.info.Photo + ')'}"></div>
+        <div class="tree-card-body">
+            <span class="tree-card-title">{{value.info.Name}}</span>
+            <span class="tree-card-date">{{value.info.Birth}}</span>
+            <span class="tree-card-date" v-if="value.info.Death != null"> &mdash; {{value.info.Death}}</span>
+        </div>
+    </a>
+</script>
+
 @section Scripts {
     <script src="@Url.Content("~/assets/scripts/vendor-elk.js")"></script>
+    <script src="@Url.Content("~/assets/scripts/vendor-vue.js")"></script>
 }

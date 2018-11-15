@@ -3,7 +3,17 @@
         CARD_HEIGHT = 100,
         SPACING = 30;
 
-    $('.tree-wrapper').each(function() {
+    var $trees = $('.tree-wrapper');
+    if ($trees.length === 0) {
+        return;
+    }
+
+    Vue.component('tree-card', {
+        template: '#tree-card-template',
+        props: ['value']
+    });
+
+    $trees.each(function () {
         var $wrap = $(this);
         var $data = $($wrap.data('src'));
         if ($data.length === 0) {
@@ -49,6 +59,7 @@
                     label: person.Name,
                     width: CARD_WIDTH,
                     height: CARD_HEIGHT,
+                    info: person,
                     layoutOptions: {
                         'elk.portConstraints': 'FIXED_SIDE'
                     },
@@ -121,6 +132,14 @@
 
     function renderTree(tree, $wrap) {
         console.log(tree);
-        $wrap.text('Rendered');
+
+        var persons = tree.children.filter(function (x) { return x.info != null; });
+        var vue = new Vue({
+            el: $wrap[0],
+            data: {
+                persons: persons,
+                edges: tree.edges
+            }
+        });
     }
 });
