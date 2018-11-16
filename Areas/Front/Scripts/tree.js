@@ -131,15 +131,38 @@
     }
 
     function renderTree(tree, $wrap) {
-        console.log(tree);
-
-        var persons = tree.children.filter(function (x) { return x.info != null; });
+        var persons = convertPersons(tree);
+        var edges = convertEdges(tree);
         var vue = new Vue({
             el: $wrap[0],
             data: {
                 persons: persons,
-                edges: tree.edges
+                edges: edges,
+                width: tree.width,
+                height: tree.height
             }
         });
+    }
+
+    function convertPersons(tree) {
+        return tree.children.filter(function (x) { return x.info != null; });
+    }
+
+    function convertEdges(tree) {
+        var result = [];
+        for (var idx = 0; idx < tree.edges.length; idx++) {
+            var e = tree.edges[idx].sections[0];
+            var points = [e.startPoint.x, e.startPoint.y];
+            if (e.bendPoints && e.bendPoints.length) {
+                for (var idx2 = 0; idx2 < e.bendPoints.length; idx2++) {
+                    points.push(e.bendPoints[idx2].x, e.bendPoints[idx2].y);
+                }
+            }
+            points.push(e.endPoint.x, e.endPoint.y + 1);
+            result.push({
+                points: points.map(function(x) { return Math.round(x) + 0.5; }).join(' ')
+            });
+        }
+        return result;
     }
 });

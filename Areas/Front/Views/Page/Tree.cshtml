@@ -9,7 +9,10 @@
 }
 
 <div class="tree-wrapper" data-src="#tree-contents">
-    <tree-card v-for="p in persons" :key="p.id" :value="p" />
+    <svg class="tree-back" :width="width" :height="height">
+        <polyline :points="e.points" v-for="e in edges" />
+    </svg>
+    <tree-card v-for="p in persons" :key="p.id" :value="p"/>
 </div>
 
 <script id="tree-contents" type="application/json">

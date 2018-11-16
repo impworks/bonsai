@@ -7,6 +7,7 @@ using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Front.Logic
@@ -67,7 +68,7 @@ namespace Bonsai.Areas.Front.Logic
                     Birth = page.BirthDate?.ShortReadableDate,
                     Death = page.DeathDate?.ShortReadableDate,
                     IsMale = page.Gender ?? true,
-                    Photo = _url.Content(page.MainPhotoPath),
+                    Photo = GetPhoto(page.MainPhotoPath, page.Gender ?? true),
                     Url = _url.Action("Description", "Page", new { area = "Front", key = page.Key }),
                     Parents = GetParentRelationshipId(page)
                 });
@@ -138,6 +139,15 @@ namespace Bonsai.Areas.Front.Logic
                 }
 
                 return relKey;
+            }
+
+            string GetPhoto(string actual, bool gender)
+            {
+                var defaultPath = gender
+                    ? "~/assets/img/unknown-male.png"
+                    : "~/assets/img/unknown-female.png";
+
+                return _url.Content(StringHelper.Coalesce(actual, defaultPath));
             }
         }
 
