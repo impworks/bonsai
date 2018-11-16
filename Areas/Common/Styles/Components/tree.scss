@@ -1,77 +1,95 @@
 ﻿@import '../variables.scss';
 
-.tree-wrapper {
-    width: 100%;
-    max-width: 100%;
-    overflow: auto;
+.tree {
     position: relative;
+    background-color: #fff;
 
-    .tree-card {
-        position: absolute;
-        display: block;
-        border-radius: 8px;
-        padding: 8px;
-        text-decoration: none;
-        background-image: none;
-        overflow: hidden;
-        color: #000;
+    .tree-wrapper {
+        width: 100%;
+        max-width: 100%;
+        overflow: auto;
+        position: relative;
         background-color: #fff;
-        border: 1px solid #ccc;
 
-        &.male {
-            border-left: 5px solid #2974FD;
-        }
-
-        &.female {
-            border-left: 5px solid #E3276C;
-        }
-
-        &.active {
-            border: 2px #000 solid;
-        }
-
-        &.deceased:before {
-            content: "";
+        .tree-card {
             position: absolute;
-            background: #000;
-            height: 8px;
-            width: 50px;
-            top: 5px;
-            left: -10px;
-            transform: rotate(-45deg);
-            transform-origin: center center;
-        }
+            display: block;
+            border-radius: 8px;
+            padding: 8px;
+            text-decoration: none;
+            background-image: none;
+            overflow: hidden;
+            color: #000;
+            background-color: #fff;
+            border: 1px solid #ccc;
 
-        .tree-card-photo {
-            float: left;
-            background-size: cover;
-            background-position: center;
-            width: 82px;
-            height: 82px;
-            border-radius: 4px;
-            margin-right: 8px;
-        }
-
-        .tree-card-body {
-            .tree-card-title {
-                font-size: 18px;
-                display: block;
-                margin-bottom: 8px;
+            &.male {
+                border-left: 5px solid #2974FD;
             }
 
-            .tree-card-date {
-                font-size: 12px;
+            &.female {
+                border-left: 5px solid #E3276C;
+            }
+
+            &.active {
+                border: 2px #000 solid;
+            }
+
+            &.deceased:before {
+                content: "";
+                position: absolute;
+                background: #000;
+                height: 8px;
+                width: 50px;
+                top: 5px;
+                left: -10px;
+                transform: rotate(-45deg);
+                transform-origin: center center;
+            }
+
+            .tree-card-photo {
+                float: left;
+                background-size: cover;
+                background-position: center;
+                width: 82px;
+                height: 82px;
+                border-radius: 4px;
+                margin-right: 8px;
+            }
+
+            .tree-card-body {
+                .tree-card-title {
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 8px;
+                }
+
+                .tree-card-date {
+                    font-size: 12px;
+                }
+            }
+        }
+
+        .tree-back {
+            polyline {
+                fill: transparent;
+                stroke: #ccc;
+                stroke-width: 1;
+                stroke-linecap: butt;
+                stroke-linejoin: miter;
             }
         }
     }
 
-    .tree-back {
-        polyline {
-            fill: transparent;
-            stroke: #ccc;
-            stroke-width: 1;
-            stroke-linecap: butt;
-            stroke-linejoin: miter;
+    .tree-toolbar {
+        position: absolute;
+        z-index: 100;
+        opacity: 0.5;
+        top: 10px;
+        right: 10px;
+
+        &:hover {
+            opacity: 1;
         }
     }
 }

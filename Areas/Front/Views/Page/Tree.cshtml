@@ -8,11 +8,18 @@
     ViewBag.Title = Model.Body.Title + " &mdash; Фамильное древо";
 }
 
-<div class="tree-wrapper" data-src="#tree-contents">
-    <svg class="tree-back" :width="width" :height="height">
-        <polyline :points="e.points" v-for="e in edges" />
-    </svg>
-    <tree-card v-for="p in persons" :key="p.id" :value="p"/>
+<div class="tree">
+    <div class="tree-wrapper" data-src="#tree-contents">
+        <svg class="tree-back" :width="width" :height="height">
+            <polyline :points="e.points" v-for="e in edges" />
+        </svg>
+        <tree-card v-for="p in persons" :key="p.id" :value="p" />
+    </div>
+    <div class="tree-toolbar">
+        <button class="btn btn-lg cmd-fullscreen" type="button" title="Полноэкранный режим">
+            <span class="fa fa-arrows-alt"></span>
+        </button>
+    </div>
 </div>
 
 <script id="tree-contents" type="application/json">

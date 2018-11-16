@@ -23,6 +23,7 @@ var config = {
                 './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
                 './node_modules/toastr/toastr.js',
                 './node_modules/selectize/dist/js/standalone/selectize.js',
+                './node_modules/jquery-fullscreen-plugin/jquery.fullscreen.js',
                 './Areas/Common/Libs/jquery-ui.js',
                 './Areas/Common/Libs/gijgo.core.js',
                 './Areas/Common/Libs/gijgo.datepicker.js',

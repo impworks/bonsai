@@ -3,7 +3,7 @@
         CARD_HEIGHT = 100,
         SPACING = 30;
 
-    var $trees = $('.tree-wrapper');
+    var $trees = $('.tree');
     if ($trees.length === 0) {
         return;
     }
@@ -14,11 +14,19 @@
     });
 
     $trees.each(function () {
-        var $wrap = $(this);
+        var $tree = $(this);
+        var $wrap = $tree.find('.tree-wrapper');
         var $data = $($wrap.data('src'));
         if ($data.length === 0) {
             return;
         }
+
+        $tree.find('.cmd-fullscreen').click(function () {
+            var $btn = $(this);
+            var newState = !$(document).fullScreen();
+            $btn.toggleClass('active', newState);
+            $tree.find('.tree-wrapper').fullScreen(newState);
+        });
 
         var treeData = JSON.parse($data[0].innerText);
         var elkJson = generateElkJson(treeData);
