@@ -44,34 +44,35 @@ namespace Bonsai.Areas.Front.Logic
             var context = await RelationContext.LoadContextAsync(_db, new RelationContextOptions { PeopleOnly = true });
 
             var parents = new HashSet<string>();
-            var visited = new HashSet<Guid>();
 
-            var persons = new List<TreePersonVM>();
-            var relations = new List<TreeRelationVM>();
+            var persons = new Dictionary<Guid, TreePersonVM>();
+            var relations = new Dictionary<string, TreeRelationVM>();
 
             var pending = new Queue<Guid>();
             pending.Enqueue(rootId);
 
             while (pending.TryDequeue(out var currId))
             {
-                if (visited.Contains(currId))
+                if (persons.ContainsKey(currId))
                     continue;
 
                 if (!context.Pages.TryGetValue(currId, out var page))
                     continue;
 
-                visited.Add(currId);
-                persons.Add(new TreePersonVM
-                {
-                    Id = page.Id.ToString(),
-                    Name = page.Title,
-                    Birth = page.BirthDate?.ShortReadableDate,
-                    Death = page.DeathDate?.ShortReadableDate,
-                    IsMale = page.Gender ?? true,
-                    Photo = GetPhoto(page.MainPhotoPath, page.Gender ?? true),
-                    Url = _url.Action("Description", "Page", new { area = "Front", key = page.Key }),
-                    Parents = GetParentRelationshipId(page)
-                });
+                persons.Add(
+                    page.Id,
+                    new TreePersonVM
+                    {
+                        Id = page.Id.ToString(),
+                        Name = page.Title,
+                        Birth = page.BirthDate?.ShortReadableDate,
+                        Death = page.DeathDate?.ShortReadableDate,
+                        IsMale = page.Gender ?? true,
+                        Photo = GetPhoto(page.MainPhotoPath, page.Gender ?? true),
+                        Url = _url.Action("Description", "Page", new { area = "Front", key = page.Key }),
+                        Parents = GetParentRelationshipId(page)
+                    }
+                );
 
                 if (context.Relations.TryGetValue(currId, out var rels))
                 {
@@ -81,6 +82,9 @@ namespace Bonsai.Areas.Front.Logic
                             continue;
 
                         pending.Enqueue(rel.DestinationId);
+
+                        if(rel.Type == RelationType.Spouse)
+                            AddRelationship(page.Id.ToString(), rel.DestinationId.ToString());
                     }
                 }
             }
@@ -88,8 +92,8 @@ namespace Bonsai.Areas.Front.Logic
             return new TreeVM
             {
                 Root = rootId.ToString(),
-                Persons = persons,
-                Relations = relations
+                Persons = persons.Values.ToList(),
+                Relations = relations.Values.ToList()
             };
 
             string GetParentRelationshipId(RelationContext.PageExcerpt page)
@@ -109,36 +113,47 @@ namespace Bonsai.Areas.Front.Logic
                 {
                     if (rels.Count == 1)
                     {
-                        var fakeId = Guid.NewGuid().ToString();
+                        var fakeId = Guid.NewGuid();
                         var relPage = context.Pages[rels[0].DestinationId];
-                        persons.Add(new TreePersonVM
+                        persons.Add(fakeId, new TreePersonVM
                         {
-                            Id = fakeId,
+                            Id = fakeId.ToString(),
                             Name = "Неизвестно",
                             IsMale = !(relPage.Gender ?? true)
                         });
 
-                        relations.Add(new TreeRelationVM
-                        {
-                            Id = relKey,
-                            From = rels[0].DestinationId.ToString(),
-                            To = fakeId
-                        });
+                        AddRelationship(rels[0].DestinationId.ToString(), fakeId.ToString(), relKey);
                     }
                     else
                     {
-                        relations.Add(new TreeRelationVM
-                        {
-                            Id = relKey,
-                            From = rels[0].DestinationId.ToString(),
-                            To = rels[1].DestinationId.ToString()
-                        });
+                        AddRelationship(rels[0].DestinationId.ToString(), rels[1].DestinationId.ToString());
                     }
 
                     parents.Add(relKey);
                 }
 
                 return relKey;
+            }
+
+            void AddRelationship(string from, string to, string keyOverride = null)
+            {
+                var key = keyOverride;
+                if (string.IsNullOrEmpty(key))
+                {
+                    key = string.Compare(from, to) > 0
+                        ? to + ":" + from
+                        : from + ":" + to;
+                }
+
+                if (relations.ContainsKey(key))
+                    return;
+
+                relations.Add(key, new TreeRelationVM
+                {
+                    Id = key,
+                    From = from,
+                    To = to
+                });
             }
 
             string GetPhoto(string actual, bool gender)

@@ -11,11 +11,11 @@
     var isPreview = (bool?)ViewBag.IsPreview ?? false;
 }
 
-<div id="page" class="d-flex">
+<div id="page" class="row">
     <div class="sidebar col-3">
         @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
     </div>
-    <div class="content col">
+    <div class="content col-9">
         <div class="content-header">
             <h1>@pageVm.Title</h1>
             @if(user?.IsAdministrator == true && !isPreview)

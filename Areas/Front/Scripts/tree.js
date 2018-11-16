@@ -151,14 +151,17 @@
     function convertEdges(tree) {
         var result = [];
         for (var idx = 0; idx < tree.edges.length; idx++) {
-            var e = tree.edges[idx].sections[0];
-            var points = [e.startPoint.x, e.startPoint.y];
-            if (e.bendPoints && e.bendPoints.length) {
-                for (var idx2 = 0; idx2 < e.bendPoints.length; idx2++) {
-                    points.push(e.bendPoints[idx2].x, e.bendPoints[idx2].y);
+            var edge = tree.edges[idx].sections[0];
+            var s = edge.startPoint;
+            var e = edge.endPoint;
+            var points = [s.x, s.y];
+            if (edge.bendPoints && edge.bendPoints.length) {
+                for (var idx2 = 0; idx2 < edge.bendPoints.length; idx2++) {
+                    var b = edge.bendPoints[idx2];
+                    points.push(b.x, b.y);
                 }
             }
-            points.push(e.endPoint.x, e.endPoint.y + 1);
+            points.push(e.x, e.y + 1);
             result.push({
                 points: points.map(function(x) { return Math.round(x) + 0.5; }).join(' ')
             });
