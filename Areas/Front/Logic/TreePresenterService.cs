@@ -115,11 +115,13 @@ namespace Bonsai.Areas.Front.Logic
                     {
                         var fakeId = Guid.NewGuid();
                         var relPage = context.Pages[rels[0].DestinationId];
+                        var fakeGender = !(relPage.Gender ?? true);
                         persons.Add(fakeId, new TreePersonVM
                         {
                             Id = fakeId.ToString(),
                             Name = "Неизвестно",
-                            IsMale = !(relPage.Gender ?? true)
+                            IsMale = fakeGender,
+                            Photo = GetDefaultPhoto(fakeGender)
                         });
 
                         AddRelationship(rels[0].DestinationId.ToString(), fakeId.ToString(), relKey);
@@ -158,11 +160,15 @@ namespace Bonsai.Areas.Front.Logic
 
             string GetPhoto(string actual, bool gender)
             {
-                var defaultPath = gender
+                var photo = StringHelper.Coalesce(actual, GetDefaultPhoto(gender));
+                return _url.Content(photo);
+            }
+
+            string GetDefaultPhoto(bool gender)
+            {
+                return gender
                     ? "~/assets/img/unknown-male.png"
                     : "~/assets/img/unknown-female.png";
-
-                return _url.Content(StringHelper.Coalesce(actual, defaultPath));
             }
         }
 
