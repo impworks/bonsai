@@ -121,7 +121,7 @@ namespace Bonsai.Areas.Front.Logic
                             Id = fakeId.ToString(),
                             Name = "Неизвестно",
                             IsMale = fakeGender,
-                            Photo = GetDefaultPhoto(fakeGender)
+                            Photo = GetPhoto(null, fakeGender)
                         });
 
                         AddRelationship(rels[0].DestinationId.ToString(), fakeId.ToString(), relKey);
@@ -157,19 +157,23 @@ namespace Bonsai.Areas.Front.Logic
                     To = to
                 });
             }
+        }
 
-            string GetPhoto(string actual, bool gender)
-            {
-                var photo = StringHelper.Coalesce(actual, GetDefaultPhoto(gender));
-                return _url.Content(photo);
-            }
+        #endregion
 
-            string GetDefaultPhoto(bool gender)
-            {
-                return gender
-                    ? "~/assets/img/unknown-male.png"
-                    : "~/assets/img/unknown-female.png";
-            }
+        #region Private helpers
+
+        /// <summary>
+        /// Returns the photo for a card, depending on the gender, reverting to a default one if unspecified.
+        /// </summary>
+        string GetPhoto(string actual, bool gender)
+        {
+            var defaultPhoto = gender
+                ? "~/assets/img/unknown-male.png"
+                : "~/assets/img/unknown-female.png";
+
+            var photo = StringHelper.Coalesce(actual, defaultPhoto);
+            return _url.Content(photo);
         }
 
         #endregion
