@@ -13,7 +13,7 @@
         <svg class="tree-back" :width="width" :height="height">
             <polyline :points="e.points" v-for="e in edges" />
         </svg>
-        <tree-card v-for="p in persons" :key="p.id" :value="p" />
+        <tree-card v-for="p in persons" :key="p.id" :value="p" :active="p.id == root" />
     </div>
     <div class="tree-toolbar">
         <button class="btn btn-lg cmd-fullscreen" type="button" title="Полноэкранный режим">
@@ -27,15 +27,17 @@
 </script>
 
 <script id="tree-card-template" type="text/x-template">
-    <a :href="value.info.Url" :class="{'tree-card': true, male: value.info.IsMale, female: !value.info.IsMale, deceased: value.info.Death != null}"
-       :style="{left: value.x, top: value.y, width: value.width, height: value.height}" :data-id="value.id">
-        <div class="tree-card-photo" :style="{'background-image': 'url(' + value.info.Photo + ')'}"></div>
-        <div class="tree-card-body">
-            <span class="tree-card-title">{{value.info.Name}}</span>
-            <span class="tree-card-date">{{value.info.Birth}}</span>
-            <span class="tree-card-date" v-if="value.info.Death != null"> &mdash; {{value.info.Death}}</span>
-        </div>
-    </a>
+    <div :class="{'tree-card-wrapper': true, male: value.info.IsMale, female: !value.info.IsMale, deceased: value.info.Death != null, active: active}"
+         :style="{left: value.x, top: value.y, width: value.width, height: value.height}" :data-id="value.id">
+        <a :href="value.info.Url" class="tree-card">
+            <div class="tree-card-photo" :style="{'background-image': 'url(' + value.info.Photo + ')'}"></div>
+            <div class="tree-card-body">
+                <span class="tree-card-title">{{value.info.Name}}</span>
+                <span class="tree-card-date">{{value.info.Birth}}</span>
+                <span class="tree-card-date" v-if="value.info.Death != null"> &mdash; {{value.info.Death}}</span>
+            </div>
+        </a>
+    </div>
 </script>
 
 @section Scripts {

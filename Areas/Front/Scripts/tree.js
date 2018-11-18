@@ -10,7 +10,7 @@
 
     Vue.component('tree-card', {
         template: '#tree-card-template',
-        props: ['value']
+        props: ['value', 'active']
     });
 
     $trees.each(function () {
@@ -33,7 +33,7 @@
         var elk = new ELK();
 
         elk.layout(elkJson)
-            .then(function (tree) { renderTree($wrap, tree); })
+            .then(function (tree) { renderTree($wrap, tree, treeData.Root); })
             .catch(console.error);
     });
 
@@ -150,7 +150,7 @@
         }
     }
 
-    function renderTree($wrap, tree) {
+    function renderTree($wrap, tree, rootId) {
         // displays the tree
         var persons = convertPersons(tree);
         var edges = convertEdges(tree);
@@ -160,7 +160,15 @@
                 persons: persons,
                 edges: edges,
                 width: tree.width,
-                height: tree.height
+                height: tree.height,
+                root: rootId
+            },
+            mounted: function () {
+                var $view = $(this.$el);
+                setTimeout(function() {
+                        scrollIntoView($view, rootId);
+                    },
+                100);
             }
         });
     }
@@ -212,5 +220,24 @@
         }
 
         return result;
+    }
+
+    function scrollIntoView($view, id) {
+        var $card = $view.find(".tree-card-wrapper[data-id='" + id + "']");
+        if ($card.length === 0) {
+            return;
+        }
+
+        var vw = $view.width(),
+            vh = $view.height(),
+            cw = $card.width(),
+            ch = $card.height(),
+            cp = $card.position();
+
+        var dx = (vw - cw) / 2,
+            dy = (vh - ch) / 2;
+
+        $view.scrollLeft(Math.max(0, cp.left - dx))
+            .scrollTop(Math.max(0, cp.top - dy));
     }
 });
