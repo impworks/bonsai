@@ -123,6 +123,11 @@ namespace Bonsai.Code.Utils.Date
         }
 
         /// <summary>
+        /// Gets the canonical string representation.
+        /// </summary>
+        public string CanonicalString => _stringValue ?? (_stringValue = GetCanonicalString());
+
+        /// <summary>
         /// Returns the number of years since the date.
         /// Returns null for future years.
         /// </summary>
@@ -351,7 +356,7 @@ namespace Bonsai.Code.Utils.Date
 
         #region IEquatable implementation
 
-        public bool Equals(FuzzyDate other) => _stringValue == other._stringValue;
+        public bool Equals(FuzzyDate other) => CanonicalString == other.CanonicalString;
 
         public override bool Equals(object obj)
         {
@@ -359,7 +364,7 @@ namespace Bonsai.Code.Utils.Date
             return obj is FuzzyDate date && Equals(date);
         }
 
-        public override int GetHashCode() => _stringValue.GetHashCode();
+        public override int GetHashCode() => CanonicalString.GetHashCode();
 
         public static bool operator ==(FuzzyDate left, FuzzyDate right) => left.Equals(right);
         public static bool operator !=(FuzzyDate left, FuzzyDate right) => !left.Equals(right);
@@ -373,7 +378,7 @@ namespace Bonsai.Code.Utils.Date
         /// </summary>
         public int CompareTo(FuzzyDate other)
         {
-            return string.Compare(_stringValue, other._stringValue, CultureInfo.InvariantCulture, CompareOptions.None);
+            return string.Compare(CanonicalString, other.CanonicalString, CultureInfo.InvariantCulture, CompareOptions.None);
         }
 
         public static bool operator >=(FuzzyDate first, FuzzyDate second)
@@ -431,7 +436,7 @@ namespace Bonsai.Code.Utils.Date
         /// <summary>
         /// Returns the canonically formatted date.
         /// </summary>
-        public override string ToString() => _stringValue ?? (_stringValue = GetCanonicalString());
+        public override string ToString() => CanonicalString;
 
         #endregion
     }
