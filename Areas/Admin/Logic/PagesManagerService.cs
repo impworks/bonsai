@@ -240,7 +240,7 @@ namespace Bonsai.Areas.Admin.Logic
                 aliasValues.Select((x, idx) => new PageAlias
                 {
                     Id = Guid.NewGuid(),
-                    Key = PageHelper.EncodeTitle(x),
+                    Key = PageHelper.EncodeTitle(x).ToLowerInvariant(),
                     Page = page,
                     Order = idx,
                     Title = x
