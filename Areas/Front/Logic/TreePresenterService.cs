@@ -84,7 +84,7 @@ namespace Bonsai.Areas.Front.Logic
                         pending.Enqueue(rel.DestinationId);
 
                         if(rel.Type == RelationType.Spouse)
-                            AddRelationship(page.Id.ToString(), rel.DestinationId.ToString());
+                            AddRelationship(page.Id, rel.DestinationId);
                     }
                 }
             }
@@ -92,8 +92,8 @@ namespace Bonsai.Areas.Front.Logic
             return new TreeVM
             {
                 Root = rootId.ToString(),
-                Persons = persons.Values.ToList(),
-                Relations = relations.Values.ToList()
+                Persons = persons.Values.OrderBy(x => x.Name).ToList(),
+                Relations = relations.Values.OrderBy(x => x.Id).ToList()
             };
 
             string GetParentRelationshipId(RelationContext.PageExcerpt page)
@@ -124,11 +124,11 @@ namespace Bonsai.Areas.Front.Logic
                             Photo = GetPhoto(null, fakeGender)
                         });
 
-                        AddRelationship(rels[0].DestinationId.ToString(), fakeId.ToString(), relKey);
+                        AddRelationship(rels[0].DestinationId, fakeId, relKey);
                     }
                     else
                     {
-                        AddRelationship(rels[0].DestinationId.ToString(), rels[1].DestinationId.ToString());
+                        AddRelationship(rels[0].DestinationId, rels[1].DestinationId);
                     }
 
                     parents.Add(relKey);
@@ -137,15 +137,20 @@ namespace Bonsai.Areas.Front.Logic
                 return relKey;
             }
 
-            void AddRelationship(string from, string to, string keyOverride = null)
+            void AddRelationship(Guid r1, Guid r2, string keyOverride = null)
             {
+                var from = r1.ToString();
+                var to = r2.ToString();
+                if (from.CompareTo(to) >= 1)
+                {
+                    var tmp = from;
+                    from = to;
+                    to = tmp;
+                }
+
                 var key = keyOverride;
                 if (string.IsNullOrEmpty(key))
-                {
-                    key = string.Compare(from, to) > 0
-                        ? to + ":" + from
-                        : from + ":" + to;
-                }
+                    key = from + ":" + to;
 
                 if (relations.ContainsKey(key))
                     return;
