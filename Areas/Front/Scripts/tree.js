@@ -165,10 +165,8 @@
             },
             mounted: function () {
                 var $view = $(this.$el);
-                setTimeout(function() {
-                        scrollIntoView($view, rootId);
-                    },
-                100);
+                scrollIntoView($view, rootId);
+                enableDrag($view);
             }
         });
     }
@@ -223,6 +221,7 @@
     }
 
     function scrollIntoView($view, id) {
+        // adjusts the scroll so that the element is in the center of the window
         var $card = $view.find(".tree-card-wrapper[data-id='" + id + "']");
         if ($card.length === 0) {
             return;
@@ -240,4 +239,31 @@
         $view.scrollLeft(Math.max(0, cp.left - dx))
             .scrollTop(Math.max(0, cp.top - dy));
     }
+
+    function enableDrag($view) {
+        // allows scrolling by drag
+        var origin = null;
+
+        $view.on('mousedown', function(e) {
+            origin = { x: e.clientX, y: e.clientY };
+            $view.addClass('dragged');
+        });
+
+        $view.on('mouseup', function() {
+             origin = null;
+             $view.removeClass('dragged');
+        });
+
+        $view.on('mousemove', function(e) {
+             if (!origin) {
+                 return;
+             }
+             var newOrigin = { x: e.clientX, y: e.clientY };
+             var dx = newOrigin.x - origin.x;
+             var dy = newOrigin.y - origin.y;
+             $view[0].scrollLeft -= dx;
+             $view[0].scrollTop -= dy;
+             origin = newOrigin;
+        });
+    }        
 });
