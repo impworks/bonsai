@@ -31,6 +31,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         {
             CheckLifespans(context);
             CheckWeddings(context);
+            CheckParents(context);
             CheckParentLifespans(context);
 
             if(updatedPageIds != null)
@@ -125,6 +126,21 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                     foreach(var rel in context.Relations[id])
                         if(rel.Type == RelationType.Parent)
                             CheckLoopsInternal(rel.DestinationId);
+            }
+        }
+
+        /// <summary>
+        /// Checks if a person has more than two parents.
+        /// </summary>
+        private void CheckParents(RelationContext context)
+        {
+            foreach (var page in context.Pages.Values)
+            {
+                if (!context.Relations.TryGetValue(page.Id, out var rels))
+                    continue;
+
+                if(rels.Count(x => x.Type == RelationType.Parent) > 2)
+                    AddViolation("У человека не может быть более двух биологических родителей", page.Id);
             }
         }
 

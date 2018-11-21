@@ -26,6 +26,9 @@ namespace Bonsai.Areas.Front.Controllers
 
         private readonly SearchPresenterService _search;
 
+        /// <summary>
+        /// Returns the global search's autocomplete results.
+        /// </summary>
         [HttpGet]
         [Route("~/util/search/{*query}")]
         public async Task<IReadOnlyList<PageTitleVM>> Autocomplete(string query)

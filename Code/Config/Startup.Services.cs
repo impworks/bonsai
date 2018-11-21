@@ -28,6 +28,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<MediaPresenterService>();
             services.AddScoped<CalendarPresenterService>();
             services.AddScoped<SearchPresenterService>();
+            services.AddScoped<TreePresenterService>();
             services.AddScoped<AuthService>();
 
             // admin

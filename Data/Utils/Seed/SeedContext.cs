@@ -94,7 +94,7 @@ namespace Bonsai.Data.Utils.Seed
                 LastUpdateDate = DateTimeOffset.Now
             };
             _db.Pages.Add(page);
-            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Key = key, Title = title, Page = page});
+            _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Key = key.ToLower(), Title = title, Page = page});
 
             _elastic?.AddPageAsync(page).Wait();
 

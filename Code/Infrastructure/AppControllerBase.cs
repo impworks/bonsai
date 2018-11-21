@@ -1,6 +1,8 @@
-﻿using Bonsai.Code.Utils.Validation;
+﻿using System.Collections.Generic;
+using Bonsai.Code.Utils.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Bonsai.Code.Infrastructure
 {
@@ -21,6 +23,21 @@ namespace Bonsai.Code.Infrastructure
         {
             foreach(var error in ex.Errors)
                 ModelState.AddModelError(error.Key, error.Value);
+        }
+
+        /// <summary>
+        /// Handles OperationExceptions.
+        /// </summary>
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            if (context.Exception is KeyNotFoundException)
+            {
+                context.Result = NotFound();
+                context.ExceptionHandled = true;
+                return;
+            }
+
+            base.OnActionExecuted(context);
         }
     }
 }

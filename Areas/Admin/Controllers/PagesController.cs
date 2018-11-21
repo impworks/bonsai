@@ -6,7 +6,6 @@ using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Facts;
-using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;

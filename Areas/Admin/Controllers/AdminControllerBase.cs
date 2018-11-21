@@ -20,6 +20,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         protected virtual string DefaultActionUrl => Url.Action("Index");
 
+        /// <summary>
+        /// Handles OperationExceptions.
+        /// </summary>
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             if (context.Exception is OperationException oe)

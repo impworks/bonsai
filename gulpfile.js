@@ -23,6 +23,7 @@ var config = {
                 './node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js',
                 './node_modules/toastr/toastr.js',
                 './node_modules/selectize/dist/js/standalone/selectize.js',
+                './node_modules/jquery-fullscreen-plugin/jquery.fullscreen.js',
                 './Areas/Common/Libs/jquery-ui.js',
                 './Areas/Common/Libs/gijgo.core.js',
                 './Areas/Common/Libs/gijgo.datepicker.js',
@@ -32,8 +33,13 @@ var config = {
                 './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
                 './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
                 './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
-                './node_modules/vue/dist/vue.js',
                 './node_modules/simplemde/dist/simplemde.min.js'
+            ],
+            vue: [
+                './node_modules/vue/dist/vue.js'
+            ],
+            elk: [
+                './node_modules/elkjs/lib/elk.bundled.js'
             ]
         },
         fonts: [
@@ -96,7 +102,6 @@ gulp.task('content.scripts.admin', function () {
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-
 gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common']);
 
 gulp.task('content.watch', function() {
@@ -141,11 +146,27 @@ gulp.task('vendor.scripts.admin', function () {
         .pipe(gulp.dest(config.assets.scripts));
 });
 
+gulp.task('vendor.scripts.elk', function () {
+    gulp.src(config.vendor.scripts.elk)
+        .pipe(concatjs('vendor-elk.js'))
+        //.pipe(minjs({  }))
+        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+        .pipe(gulp.dest(config.assets.scripts));
+});
+
+gulp.task('vendor.scripts.vue', function () {
+    gulp.src(config.vendor.scripts.vue)
+        .pipe(concatjs('vendor-vue.js'))
+        //.pipe(minjs({  }))
+        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+        .pipe(gulp.dest(config.assets.scripts));
+});
+
 gulp.task('vendor.fonts', function() {
     gulp.src(config.vendor.fonts)
         .pipe(gulp.dest(config.assets.fonts));
 });
 
-gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.fonts']);
+gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.scripts.elk', 'vendor.scripts.vue', 'vendor.fonts']);
 
 gulp.task('build', ['vendor', 'content']);

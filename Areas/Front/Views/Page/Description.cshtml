@@ -1,17 +1,19 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
-@model PageDescriptionVM
+@model PageVM<PageDescriptionVM>
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
 
     ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Title;
+    ViewBag.Title = Model.Body.Title;
 }
 
-@if (string.IsNullOrWhiteSpace(Model.Description))
-{
-    <div class="text-muted">Ничего не известно.</div>
-}
-else
-{
-    @Html.Raw(Model.Description)
-}
+<div class="typography">
+    @if(string.IsNullOrWhiteSpace(Model.Body.Description))
+    {
+        <div class="text-muted">Ничего не известно.</div>
+    }
+    else
+    {
+        @Html.Raw(Model.Body.Description)
+    }
+</div>

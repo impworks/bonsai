@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,7 +63,11 @@ namespace Bonsai.Areas.Admin.Controllers
             if (page == null)
                 return NotFound();
 
-            var vm = await _pagePresenter.GetPageDescriptionAsync(page);
+            var vm = new PageVM<PageDescriptionVM>
+            {
+                Body = await _pagePresenter.GetPageDescriptionAsync(page),
+                InfoBlock = await _pagePresenter.GetPageInfoBlockAsync(page)
+            };
             ViewBag.IsPreview = true;
             return View("~/Areas/Front/Views/Page/Description.cshtml", vm);
         }

@@ -26,10 +26,12 @@ namespace Bonsai.Data.Utils.Seed
             // parents
             var dad = ctx.AddPage("Иванов Петр Михайлович", true, "1960.02.03", "2010.03.02");
             var mom = ctx.AddPage("Иванова Екатерина Валерьевна", false, "1965.03.04");
+            var stepdad = ctx.AddPage("Михайлов Олег Евгеньевич", true, "1962.04.03");
 
             ctx.AddRelation(root, RelationType.Parent, dad);
             ctx.AddRelation(mom, RelationType.Child, root); // sic! check inverted relations
-            ctx.AddRelation(mom, RelationType.Spouse, dad, "1987.02.02-2010.03.02");
+            ctx.AddRelation(mom, RelationType.Spouse, dad, "1987.02.02-2000.03.02");
+            ctx.AddRelation(mom, RelationType.Spouse, stepdad, "2000.04.02-2010.03.02");
 
             // wife 1
             var w1 = ctx.AddPage("Семенова Анна Николаевна", false, "1992.01.02");

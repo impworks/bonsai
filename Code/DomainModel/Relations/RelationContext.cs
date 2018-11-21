@@ -72,67 +72,97 @@ namespace Bonsai.Code.DomainModel.Relations
         /// <summary>
         /// Loads basic information about all pages.
         /// </summary>
-        public static async Task<RelationContext> LoadContextAsync(AppDbContext db)
+        public static async Task<RelationContext> LoadContextAsync(AppDbContext db, RelationContextOptions opts = null)
         {
+            if(opts == null)
+                opts = new RelationContextOptions();
+
+            var pages = await LoadPagesAsync(db, opts);
+            var rels = await LoadRelationsAsync(db, opts);
+
+            return new RelationContext
+            {
+                Pages = pages.ToDictionary(x => x.Id, x => x),
+                Relations = rels
+            };
+        }
+
+        /// <summary>
+        /// Loads the pages from the database.
+        /// </summary>
+        private static async Task<List<PageExcerpt>> LoadPagesAsync(AppDbContext db, RelationContextOptions opts)
+        {
+            var filterByPeople = opts.PeopleOnly
+                ? @"AND p.""Type"" = 0"
+                : "";
+
             using (var conn = db.GetConnection())
             {
                 var pagesSource = await conn.QueryAsync<PageExcerpt>(@"
-                                    SELECT
-                                        t.""Id"",
-                                        t.""Title"",
-                                        t.""Key"",
-                                        t.""Type"",
-                                        t.""BirthDate"",
-                                        t.""DeathDate"",
-                                        t.""Gender"",
-                                        COALESCE(t.""Nickname"", CONCAT(t.""FirstName"", ' ', t.""LastName"")) AS ""ShortName"",
-                                        t.""MainPhotoPath""
-                                    FROM (
-                                        SELECT
-                                            p.""Id"",
-                                            p.""Title"",
-                                            p.""Key"",
-                                            p.""Type"",
-                                            p.""Facts""::json#>>'{Main.Name,Values,-1,FirstName}' AS ""FirstName"",
-                                            p.""Facts""::json#>>'{Main.Name,Values,-1,LastName}' AS ""LastName"",
-                                            p.""Facts""::json#>>'{Main.Name,Value}' AS ""Nickname"",
-                                            p.""Facts""::json#>>'{Birth.Date,Value}' AS ""BirthDate"",
-                                            p.""Facts""::json#>>'{Death.Date,Value}' AS ""DeathDate"",
-                                            CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender"",
-                                            m.""FilePath"" AS ""MainPhotoPath""
-                                        FROM ""Pages"" AS p
-                                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId"" AND m.""IsDeleted"" = false
-                                        WHERE p.""IsDeleted"" = false
-                                    ) AS t
-                                  ");
+                    SELECT
+                        t.""Id"",
+                        t.""Title"",
+                        t.""Key"",
+                        t.""Type"",
+                        t.""BirthDate"",
+                        t.""DeathDate"",
+                        t.""Gender"",
+                        COALESCE(t.""Nickname"", CONCAT(t.""FirstName"", ' ', t.""LastName"")) AS ""ShortName"",
+                        t.""MainPhotoPath""
+                    FROM (
+                        SELECT
+                            p.""Id"",
+                            p.""Title"",
+                            p.""Key"",
+                            p.""Type"",
+                            p.""Facts""::json#>>'{Main.Name,Values,-1,FirstName}' AS ""FirstName"",
+                            p.""Facts""::json#>>'{Main.Name,Values,-1,LastName}' AS ""LastName"",
+                            p.""Facts""::json#>>'{Main.Name,Value}' AS ""Nickname"",
+                            p.""Facts""::json#>>'{Birth.Date,Value}' AS ""BirthDate"",
+                            p.""Facts""::json#>>'{Death.Date,Value}' AS ""DeathDate"",
+                            CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender"",
+                            m.""FilePath"" AS ""MainPhotoPath""
+                        FROM ""Pages"" AS p
+                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId"" AND m.""IsDeleted"" = false
+                        WHERE p.""IsDeleted"" = false " + filterByPeople + @"
+                    ) AS t
+                ");
 
                 var pages = pagesSource.ToList();
                 foreach (var page in pages)
                     page.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(page.MainPhotoPath, MediaSize.Small);
 
-                var relations = await db.Relations
-                                        .Where(x => x.Source.IsDeleted == false
-                                                    && x.Destination.IsDeleted == false
-                                                    && x.IsDeleted == false)
-                                        .Select(x => new RelationExcerpt
-                                        {
-                                            Id = x.Id,
-                                            SourceId = x.SourceId,
-                                            DestinationId = x.DestinationId,
-                                            EventId = x.Event != null && x.Event.IsDeleted == false ? x.EventId : null,
-                                            Duration = FuzzyRange.TryParse(x.Duration),
-                                            Type = x.Type,
-                                            IsComplementary = x.IsComplementary
-                                        })
-                                        .GroupBy(x => x.SourceId)
-                                        .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList());
-
-                return new RelationContext
-                {
-                    Pages = pages.ToDictionary(x => x.Id, x => x),
-                    Relations = relations
-                };
+                return pages;
             }
+        }
+
+        /// <summary>
+        /// Loads the relations from the database.
+        /// </summary>
+        private static async Task<IReadOnlyDictionary<Guid, IReadOnlyList<RelationExcerpt>>> LoadRelationsAsync(AppDbContext db, RelationContextOptions opts)
+        {
+            var query =  db.Relations
+                           .Where(x => x.Source.IsDeleted == false
+                                       && x.Destination.IsDeleted == false
+                                       && x.IsDeleted == false);
+            if (opts.PeopleOnly)
+            {
+                query = query.Where(x => x.Source.Type == PageType.Person
+                                         && x.Destination.Type == PageType.Person);
+            }
+
+            return await query.Select(x => new RelationExcerpt
+                              {
+                                  Id = x.Id,
+                                  SourceId = x.SourceId,
+                                  DestinationId = x.DestinationId,
+                                  EventId = x.Event != null && x.Event.IsDeleted == false ? x.EventId : null,
+                                  Duration = FuzzyRange.TryParse(x.Duration),
+                                  Type = x.Type,
+                                  IsComplementary = x.IsComplementary
+                              })
+                              .GroupBy(x => x.SourceId)
+                              .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList());
         }
 
         #endregion
