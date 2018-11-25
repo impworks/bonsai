@@ -54,7 +54,8 @@
                 'elk.layered.spacing.edgeEdgeBetweenLayers': SPACING,
                 'elk.layered.spacing.edgeNodeBetweenLayers': SPACING,
                 'elk.spacing.nodeNode': SPACING,
-                'elk.layered.nodePlacement.favorStraightEdges': false
+                'elk.layered.nodePlacement.favorStraightEdges': false,
+                'elk.layered.thoroughness': 200
             },
             children: nodes,
             edges: edges
@@ -169,6 +170,8 @@
                 enableDrag($view);
             }
         });
+
+        $wrap.closest('.tree').find('.tree-preloader').remove();
     }
 
     function convertPersons(tree) {

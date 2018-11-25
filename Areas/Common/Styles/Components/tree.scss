@@ -103,4 +103,14 @@
             opacity: 1;
         }
     }
+
+    .tree-preloader {
+        width: 100%;
+        margin-top: 100px;
+        text-align: center;
+
+        h1, h2, h3, h4, h5, h6 {
+            display: inline-block;
+        }
+    }
 }
