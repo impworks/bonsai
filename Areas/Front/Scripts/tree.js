@@ -168,10 +168,9 @@
                 var $view = $(this.$el);
                 scrollIntoView($view, rootId);
                 enableDrag($view);
+                $view.closest('.tree').find('.tree-preloader').remove();
             }
         });
-
-        $wrap.closest('.tree').find('.tree-preloader').remove();
     }
 
     function convertPersons(tree) {
