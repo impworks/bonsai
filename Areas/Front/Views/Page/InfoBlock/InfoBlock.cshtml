@@ -3,6 +3,7 @@
 @model InfoBlockVM
 @{
     var pageVm = (PageTitleVM) ViewBag.PageModel.Body;
+    var extras = new ViewDataDictionary(ViewData) { ["Facts"] = Model.Facts.SelectMany(x => x.Facts).ToList() };
 }
 
 <div class="page-info">
@@ -13,9 +14,9 @@
         </div>
     }
 
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain))
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain))
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain), extras)
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain), extras)
 
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain == false))
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain == false))
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain == false), extras)
+    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain == false), extras)
 </div>

@@ -33,7 +33,7 @@
 </script>
 
 <script id="tree-card-template" type="text/x-template">
-    <div :class="{'tree-card-wrapper': true, male: value.info.IsMale, female: !value.info.IsMale, deceased: value.info.Death != null, active: active}"
+    <div :class="{'tree-card-wrapper': true, male: value.info.IsMale, female: !value.info.IsMale, deceased: value.info.IsDead, active: active}"
          :style="{left: value.x, top: value.y, width: value.width, height: value.height}" :data-id="value.id">
         <a :href="value.info.Url" class="tree-card">
             <div class="tree-card-photo" :style="{'background-image': 'url(' + value.info.Photo + ')'}"></div>

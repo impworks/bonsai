@@ -68,6 +68,7 @@ namespace Bonsai.Areas.Front.Logic
                         Birth = page.BirthDate?.ShortReadableDate,
                         Death = page.DeathDate?.ShortReadableDate,
                         IsMale = page.Gender ?? true,
+                        IsDead = page.IsDead,
                         Photo = GetPhoto(page.MainPhotoPath, page.Gender ?? true),
                         Url = _url.Action("Description", "Page", new { area = "Front", key = page.Key }),
                         Parents = GetParentRelationshipId(page)

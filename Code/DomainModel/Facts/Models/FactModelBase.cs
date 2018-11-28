@@ -20,5 +20,10 @@
         /// Title.
         /// </summary>
         public virtual string ShortTitle => Definition.ShortTitleSingle;
+
+        /// <summary>
+        /// Flag's inner consistency validation.
+        /// </summary>
+        public virtual bool IsValid => true;
     }
 }

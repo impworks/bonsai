@@ -26,14 +26,14 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Birth",
                         "Рождение",
                         true,
-                        new FactDefinition<DateFactModel>("Date", "Дата рождения", "Дата"),
+                        new FactDefinition<BirthDateFactModel>("Date", "Дата рождения", "Дата"),
                         new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
                     ),
                     new FactDefinitionGroup(
                         "Death",
                         "Смерть",
                         true,
-                        new FactDefinition<DateFactModel>("Date", "Дата смерти", "Дата"),
+                        new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
                         new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
                         new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
                         new FactDefinition<StringFactModel>("Burial", "Место захоронения")
@@ -70,14 +70,14 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Birth",
                         "Рождение",
                         true,
-                        new FactDefinition<DateFactModel>("Date", "Дата рождения", "Дата"),
+                        new FactDefinition<BirthDateFactModel>("Date", "Дата рождения", "Дата"),
                         new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
                     ),
                     new FactDefinitionGroup(
                         "Death",
                         "Смерть",
                         true,
-                        new FactDefinition<DateFactModel>("Date", "Дата смерти", "Дата"),
+                        new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
                         new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
                         new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
                         new FactDefinition<StringFactModel>("Burial", "Место захоронения")

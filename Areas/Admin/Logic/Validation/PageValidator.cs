@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Code.DomainModel.Facts;
+using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Validation;
@@ -105,7 +106,10 @@ namespace Bonsai.Areas.Admin.Logic.Validation
 
                 try
                 {
-                    JsonConvert.DeserializeObject(prop.Value.ToString(), def.Kind);
+                    var model = JsonConvert.DeserializeObject(prop.Value.ToString(), def.Kind) as FactModelBase;
+
+                    if (!model.IsValid)
+                        throw new Exception();
                 }
                 catch (Exception ex) when (!(ex is ValidationException))
                 {
