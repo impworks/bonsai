@@ -1,0 +1,27 @@
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@model DeathDateFactModel
+@{
+    var facts = (IList<FactModelBase>)ViewBag.Facts;
+    var birth = facts.OfType<BirthDateFactModel>().FirstOrDefault();
+    var age = birth != null && Model.Value.HasValue ? birth.Value.GetAge(Model.Value) : null;
+}
+
+<tr class="fact">
+    <th class="fact-title">@Model.ShortTitle</th>
+    <td class="fact-value">
+        @if(Model.Value == null)
+        {
+            <span>Неизвестно</span>
+        }
+        else
+        {
+            <div class="fact-item">
+                <span class="fact-item-main">@Model.Value.Value.ReadableDate</span>
+                @if(!string.IsNullOrEmpty(age))
+                {
+                    <span class="fact-item-extra">(@age)</span>
+                }
+            </div>
+        }
+    </td>
+</tr>

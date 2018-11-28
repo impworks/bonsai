@@ -31,6 +31,11 @@
         public string Death { get; set; }
 
         /// <summary>
+        /// Flag indicating that the person is dead (even if the date is unknown).
+        /// </summary>
+        public bool IsDead { get; set; }
+
+        /// <summary>
         /// URL to the photo.
         /// </summary>
         public string Photo { get; set; }

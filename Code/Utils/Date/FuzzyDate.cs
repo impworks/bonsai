@@ -131,19 +131,22 @@ namespace Bonsai.Code.Utils.Date
         /// Returns the number of years since the date.
         /// Returns null for future years.
         /// </summary>
-        public string GetAge(DateTime? relative = null)
+        public string GetAge(FuzzyDate? relative = null)
         {
-            var now = relative ?? DateTime.Now;
+            var now = relative ?? new FuzzyDate(DateTime.Now);
 
             if (!(now.Year > Year))
                 return null;
 
-            var years = now.Year - Year.Value - 1;
+            var years = now.Year.Value - Year.Value - 1;
 
-            if (IsDecade)
-                return $"{years - 10}..{years + 1} {GetAgeWord(years + 1)}";
+            if (IsDecade || now.IsDecade)
+            {
+                var back = IsDecade && now.IsDecade ? 20 : 10;
+                return $"{Math.Max(years - back, 1)}..{years + 1} {GetAgeWord(years + 1)}";
+            }
 
-            if (now.Month == Month && Day == null)
+            if (now.Month == Month && (Day == null || now.Day == null))
                 return $"{years}..{years + 1} {GetAgeWord(years + 1)}";
 
             // account for after-birthday
@@ -156,6 +159,11 @@ namespace Bonsai.Code.Utils.Date
         #endregion
 
         #region Parse methods
+
+        /// <summary>
+        /// Returns the FuzzyDate representing today.
+        /// </summary>
+        public static FuzzyDate Now => new FuzzyDate(DateTime.Now);
 
         /// <summary>
         /// Formatting string.

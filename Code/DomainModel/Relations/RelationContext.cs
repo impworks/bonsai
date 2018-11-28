@@ -106,6 +106,7 @@ namespace Bonsai.Code.DomainModel.Relations
                         t.""Type"",
                         t.""BirthDate"",
                         t.""DeathDate"",
+                        t.""IsDead"",
                         t.""Gender"",
                         COALESCE(t.""Nickname"", CONCAT(t.""FirstName"", ' ', t.""LastName"")) AS ""ShortName"",
                         t.""MainPhotoPath""
@@ -120,6 +121,7 @@ namespace Bonsai.Code.DomainModel.Relations
                             p.""Facts""::json#>>'{Main.Name,Value}' AS ""Nickname"",
                             p.""Facts""::json#>>'{Birth.Date,Value}' AS ""BirthDate"",
                             p.""Facts""::json#>>'{Death.Date,Value}' AS ""DeathDate"",
+                            p.""Facts""::json->'Death.Date' IS NOT NULL AS ""IsDead"",
                             CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender"",
                             m.""FilePath"" AS ""MainPhotoPath""
                         FROM ""Pages"" AS p
@@ -183,6 +185,7 @@ namespace Bonsai.Code.DomainModel.Relations
             public bool? Gender { get; set; }
             public FuzzyDate? BirthDate { get; set; }
             public FuzzyDate? DeathDate { get; set; }
+            public bool IsDead { get; set; }
             public string ShortName { get; set; }
             public string MainPhotoPath { get; set; }
 
