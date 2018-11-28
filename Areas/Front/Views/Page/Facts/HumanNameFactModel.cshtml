@@ -3,15 +3,28 @@
 
 @{
     var isSingle = Model.Values.Length == 1;
+    var first = Model.Values[0];
+    var onlyLastNames = Model.Values.Length > 1
+                        && Model.Values.All(x => x.FirstName == first.FirstName
+                                                 && x.MiddleName == first.MiddleName);
 }
 
 <tr class="fact">
-    <th class="fact-title">@Model.ShortTitle</th>
+    <th class="fact-title">@(onlyLastNames ? "Фамилии" : Model.ShortTitle)</th>
     <td class="fact-value">
         @foreach(var item in Model.Values)
         {
             <div class="fact-item">
-                <span class="fact-item-main">@item.LastName @item.FirstName @item.MiddleName</span>
+                <span class="fact-item-main">
+                    @if (onlyLastNames)
+                    {
+                        <text>@item.LastName</text>
+                    }
+                    else
+                    {
+                        <text>@item.LastName @item.FirstName @item.MiddleName</text>
+                    }
+                </span>
                 @if (item.Duration != null && !isSingle)
                 {
                     <span class="fact-item-extra" title="@item.Duration.Value.ReadableRange">@item.Duration.Value.ShortReadableRange</span>
