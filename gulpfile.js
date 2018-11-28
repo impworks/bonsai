@@ -1,4 +1,4 @@
-/// <binding ProjectOpened='content.watch' />
+/// <binding ProjectOpened='content.watch, build' />
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     sass = require('gulp-sass'),
