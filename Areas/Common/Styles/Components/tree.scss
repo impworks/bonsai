@@ -69,9 +69,11 @@
 
                 .tree-card-body {
                     .tree-card-title {
-                        font-size: 18px;
+                        font-size: 14px;
+                        font-weight: bold;
                         display: block;
                         margin-bottom: 8px;
+                        max-height: 50px;
                     }
 
                     .tree-card-date {

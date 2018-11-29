@@ -38,7 +38,10 @@
         <a :href="value.info.Url" class="tree-card">
             <div class="tree-card-photo" :style="{'background-image': 'url(' + value.info.Photo + ')'}"></div>
             <div class="tree-card-body">
-                <span class="tree-card-title">{{value.info.Name}}</span>
+                <span class="tree-card-title">
+                    {{value.info.Name}}
+                    <span v-if="value.info.MaidenName">({{value.info.MaidenName}})</span>
+                </span>
                 <span class="tree-card-date">{{value.info.Birth}}</span>
                 <span class="tree-card-date" v-if="value.info.Death != null"> &mdash; {{value.info.Death}}</span>
             </div>

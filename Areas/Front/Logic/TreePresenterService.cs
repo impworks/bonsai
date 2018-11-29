@@ -65,6 +65,7 @@ namespace Bonsai.Areas.Front.Logic
                     {
                         Id = page.Id.ToString(),
                         Name = page.Title,
+                        MaidenName = page.MaidenName,
                         Birth = page.BirthDate?.ShortReadableDate,
                         Death = page.DeathDate?.ShortReadableDate,
                         IsMale = page.Gender ?? true,

@@ -16,6 +16,11 @@
         public string Name { get; set; }
 
         /// <summary>
+        /// Maiden name of the person (if any).
+        /// </summary>
+        public string MaidenName { get; set; }
+
+        /// <summary>
         /// Gender flag.
         /// </summary>
         public bool IsMale { get; set; }
