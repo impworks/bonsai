@@ -8,29 +8,46 @@
 <div class="calendar-events-content">
 
     <div class="card">
-        @if (Model.Events.Any())
+        @if(Model.Events.Any())
         {
             <div class="list-group list-group-flush">
-                @foreach (var evt in Model.Events)
+                @foreach(var evt in Model.Events)
                 {
-                    var isMultiPage = evt.RelatedPages.Count > 1;
-                    var currPage = evt.RelatedEvent ?? evt.RelatedPages[0];
+                    var url = evt.RelatedPage.Key != null
+                        ? Url.Action("Description", "Page", new { key = evt.RelatedPage.Key })
+                        : null;
 
-                    <a href="@Url.Action("Description", "Page", new { key = currPage.Key })" class="calendar-events-item list-group-item">
+                    var hasNested = evt.OtherPages?.Count > 0;
+
+                    <a href="@url" class="calendar-events-item list-group-item @(url != null ? "selectable" : "") @(hasNested ? "has-nested" : "")">
                         <div class="media">
                             <div class="calendar-events-item-icon mr-3">
-                                @foreach (var rp in evt.RelatedPages)
-                                {
-                                    <page-image image="@rp.MainPhotoPath" class="@(isMultiPage ? "half" : "")" />
-                                }
-                                </div>
-                                <div class="media-body">
-                                    <h6 class="m-0">@currPage.Title</h6>
-                                    <p class="calendar-events-item-name">@evt.Title</p>
-                                </div>
+                                <page-image image="@evt.RelatedPage.MainPhotoPath" />
                             </div>
-                        </a>
+                            <div class="media-body">
+                                <h6 class="m-0">@evt.RelatedPage.Title</h6>
+                                <p class="calendar-events-item-name">@evt.Title</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    if (evt.OtherPages != null)
+                    {
+                        foreach (var p in evt.OtherPages)
+                        {
+                            <a href="@Url.Action("Description", "Page", new { key = p.Key })" class="calendar-events-item nested list-group-item selectable">
+                                <div class="media">
+                                    <div class="calendar-events-item-icon mr-3">
+                                        <page-image image="@p.MainPhotoPath" />
+                                    </div>
+                                    <div class="media-body">
+                                        <h6>@p.Title</h6>
+                                    </div>
+                                </div>
+                            </a>
+                        }
                     }
+                }
             </div>
         }
         else

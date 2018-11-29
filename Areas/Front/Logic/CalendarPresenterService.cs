@@ -95,7 +95,7 @@ namespace Bonsai.Areas.Front.Logic
                             Day = birth.Day,
                             Title = title,
                             Type = CalendarEventType.Birth,
-                            RelatedPages = new[] { Map(page) }
+                            RelatedPage = Map(page)
                         };
                     }
                 }
@@ -118,7 +118,7 @@ namespace Bonsai.Areas.Front.Logic
                             Day = death.Day,
                             Title = title,
                             Type = CalendarEventType.Death,
-                            RelatedPages = new[] {Map(page)}
+                            RelatedPage = Map(page)
                         };
                     }
                 }
@@ -153,21 +153,21 @@ namespace Bonsai.Areas.Front.Logic
                     ? "День свадьбы"
                     : (start.Year == null || start.IsDecade)
                         ? "Годовщина"
-                        : (year - start.Year.Value) + "-ая годовщина свадьбы";
+                        : (year - start.Year.Value) + "-ая годовщина";
 
                 yield return new CalendarEventVM
                 {
                     Day = start.Day,
                     Title = title,
                     Type = CalendarEventType.Wedding,
-                    RelatedPages = new []
+                    RelatedPage = rel.EventId == null
+                        ? new PageTitleExtendedVM { Title = "Свадьба", MainPhotoPath = "~/assets/img/unknown-event.svg" }
+                        : Map(context.Pages[rel.EventId.Value]),
+                    OtherPages = new []
                     {
                         Map(context.Pages[rel.SourceId]),
                         Map(context.Pages[rel.DestinationId])
-                    },
-                    RelatedEvent = rel.EventId == null
-                        ? null
-                        : Map(context.Pages[rel.EventId.Value])
+                    }
                 };
             }
         }
