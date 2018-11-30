@@ -11,7 +11,7 @@
     var isPreview = (bool?)ViewBag.IsPreview ?? false;
 }
 
-<div id="page" class="row">
+<div id="page" class="row flex-grow-1">
     <div class="sidebar col-3">
         @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
     </div>

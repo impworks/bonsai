@@ -55,7 +55,7 @@
                 'elk.layered.spacing.edgeNodeBetweenLayers': SPACING,
                 'elk.spacing.nodeNode': SPACING,
                 'elk.layered.nodePlacement.favorStraightEdges': false,
-                'elk.layered.thoroughness': 200
+                'elk.layered.thoroughness': 400
             },
             children: nodes,
             edges: edges

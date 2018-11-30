@@ -108,8 +108,17 @@ namespace Bonsai.Code.DomainModel.Relations
                         t.""DeathDate"",
                         t.""IsDead"",
                         t.""Gender"",
-                        COALESCE(t.""Nickname"", CONCAT(t.""FirstName"", ' ', t.""LastName"")) AS ""ShortName"",
-                        CASE WHEN t.""MaidenName"" = t.""LastName"" THEN NULL ELSE t.""MaidenName"" END AS ""MaidenName"",
+                        COALESCE(
+                            t.""Nickname"",
+                            CASE
+                                WHEN t.""LastName"" IS NULL THEN NULL
+                                ELSE CONCAT(t.""FirstName"", ' ', t.""LastName"")
+                            END
+                        ) AS ""ShortName"",
+                        CASE
+                            WHEN t.""MaidenName"" = t.""LastName"" THEN NULL
+                            ELSE t.""MaidenName""
+                        END AS ""MaidenName"",
                         t.""MainPhotoPath""
                     FROM (
                         SELECT

@@ -9,6 +9,7 @@ using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Impworks.Utils.Strings;
 
 namespace Bonsai.Areas.Front.Logic.Relations
 {
@@ -268,7 +269,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
                 Pages = results.OrderBy(x => x.Page.BirthDate)
                                .Select(elem => new RelatedPageVM
                                {
-                                   Title = elem.Page.ShortName ?? elem.Page.Title,
+                                   Title = StringHelper.Coalesce(elem.Page.ShortName, elem.Page.Title),
                                    Key = elem.Page.Key,
                                    Duration = GetRange(elem),
                                    RelationEvent = GetEventPageTitle(elem.Relation.EventId)
