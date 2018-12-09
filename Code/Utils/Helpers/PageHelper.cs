@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Data.Models;
 using Impworks.Utils.Strings;
 
@@ -49,10 +51,14 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Returns the server-local path for the page's image.
         /// </summary>
-        public static string GetPageImageUrl(PageType? type, string image, string fallback = null)
+        public static string GetPageImageUrl(PageType? type, string image, string fallback = null, MediaSize? size = null)
         {
+            var imageSized = size != null && !string.IsNullOrEmpty(image)
+                ? MediaPresenterService.GetSizedMediaPath(image, size.Value)
+                : null;
+
             var typeStr = (type ?? PageType.Person).ToString().ToLower();
-            return StringHelper.Coalesce(image, fallback, $"~/assets/img/unknown-{typeStr}.svg");
+            return StringHelper.Coalesce(imageSized, fallback, $"~/assets/img/unknown-{typeStr}.svg");
         }
     }
 }

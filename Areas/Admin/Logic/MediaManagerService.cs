@@ -360,7 +360,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         private async Task<string> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler)
         {
-            var ext = Path.GetExtension(file.Name);
+            var ext = Path.GetExtension(file.FileName);
             var fileName = key + ext;
             var filePath = Path.Combine(_env.WebRootPath, "media", fileName);
 

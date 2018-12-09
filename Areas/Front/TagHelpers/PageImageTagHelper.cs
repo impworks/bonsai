@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Linq;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Helpers;
 
 namespace Bonsai.Areas.Front.TagHelpers
@@ -35,11 +36,16 @@ namespace Bonsai.Areas.Front.TagHelpers
         public PageType? Type { get; set; }
 
         /// <summary>
+        /// Size of the desired image.
+        /// </summary>
+        public MediaSize? Size { get; set; }
+
+        /// <summary>
         /// Renders the tag.
         /// </summary>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var path = _url.Content(PageHelper.GetPageImageUrl(Type, Image, FallbackImage));
+            var path = _url.Content(PageHelper.GetPageImageUrl(Type, Image, FallbackImage, Size ?? MediaSize.Small));
             var className = "image";
             
             output.TagName = "div";
