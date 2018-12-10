@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Tree;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -179,7 +180,7 @@ namespace Bonsai.Areas.Front.Logic
                 ? "~/assets/img/unknown-male.png"
                 : "~/assets/img/unknown-female.png";
 
-            var photo = StringHelper.Coalesce(actual, defaultPhoto);
+            var photo = StringHelper.Coalesce(MediaPresenterService.GetSizedMediaPath(actual, MediaSize.Small), defaultPhoto);
             return _url.Content(photo);
         }
 

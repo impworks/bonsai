@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.ViewModels.Calendar;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
@@ -250,7 +251,7 @@ namespace Bonsai.Areas.Front.Logic
                 Key = page.Key,
                 Title = page.Title,
                 Type = page.Type,
-                MainPhotoPath = page.MainPhotoPath
+                MainPhotoPath = MediaPresenterService.GetSizedMediaPath(page.MainPhotoPath, MediaSize.Small)
             };
         }
 

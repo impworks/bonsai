@@ -141,11 +141,7 @@ namespace Bonsai.Code.DomainModel.Relations
                     ) AS t
                 ");
 
-                var pages = pagesSource.ToList();
-                foreach (var page in pages)
-                    page.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(page.MainPhotoPath, MediaSize.Small);
-
-                return pages;
+                return pagesSource.ToList();
             }
         }
 
