@@ -40,6 +40,7 @@ namespace Bonsai.Code.Config
         {
             var seedSample = Configuration["SeedData:Enable"].TryParse<bool>();
             var clearAll = Configuration["SeedData:ClearAll"].TryParse<bool>();
+            var resetElastic = Configuration["SeedData:ResetElastic"].TryParse<bool>();
 
             using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -50,13 +51,17 @@ namespace Bonsai.Code.Config
 
                 context.EnsureDatabaseCreated();
                 context.EnsureSystemItemsCreated();
-                elastic.EnsureIndexesCreated(context);
+
+                if(clearAll || resetElastic)
+                    elastic.ClearPreviousData();
 
                 if(clearAll)
-                    SeedData.ClearPreviousData(context, elastic);
+                    SeedData.ClearPreviousData(context);
 
                 if(seedSample)
                     SeedData.EnsureSampleDataSeeded(context, elastic);
+
+                elastic.EnsureIndexesCreated(context);
             }
         }
     }

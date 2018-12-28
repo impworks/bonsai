@@ -81,7 +81,7 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Removes all previous records and files.
         /// </summary>
-        public static void ClearPreviousData(AppDbContext db, ElasticService elastic)
+        public static void ClearPreviousData(AppDbContext db)
         {
             var mediaDir = @".\wwwroot\media";
             if (Directory.Exists(mediaDir))
@@ -95,8 +95,6 @@ namespace Bonsai.Data.Utils.Seed
             db.Pages.RemoveRange(db.Pages.ToList().Except(db.Users.Select(x => x.Page).Where(x => x != null).ToList()));
 
             db.SaveChanges();
-
-            elastic.ClearPreviousData();
         }
     }
 }
