@@ -1,4 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Bonsai
 @using Bonsai.Areas.Admin.ViewModels.Pages
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 @{
@@ -104,7 +105,7 @@
                 {
                     <p>Для данного типа страницы указание фактов недоступно.</p>
                 }
-                <span asp-validation-for="Facts" class="text-danger"></span>
+                <div validation-list-for="Facts" validation-list-caption="Противоречивые факты" class="text-danger"></div>
             </div>
         </div>
 

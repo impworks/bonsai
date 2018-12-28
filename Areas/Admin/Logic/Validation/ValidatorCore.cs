@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Validation;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.Logic.Validation
@@ -14,15 +15,15 @@ namespace Bonsai.Areas.Admin.Logic.Validation
     {
         public ValidatorCore()
         {
-            _violations = new List<ConsistencyViolationInfo>();
+            _errors = new List<ConsistencyErrorInfo>();
         }
 
-        private readonly List<ConsistencyViolationInfo> _violations;
+        private readonly List<ConsistencyErrorInfo> _errors;
 
         /// <summary>
         /// The list of found consistency violations.
         /// </summary>
-        public IReadOnlyList<ConsistencyViolationInfo> Violations => _violations;
+        public IReadOnlyList<ConsistencyErrorInfo> Errors => _errors;
 
         /// <summary>
         /// Checks the context for contradictory facts.
@@ -38,6 +39,30 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 foreach(var pageId in updatedPageIds)
                     if(pageId != Guid.Empty)
                         CheckLoops(context, pageId);
+        }
+
+        /// <summary>
+        /// Throws a ValidationException if there any violations found.
+        /// </summary>
+        public void ThrowIfInvalid(RelationContext context, string propName)
+        {
+            if (!Errors.Any())
+                return;
+
+            var msgs = new List<KeyValuePair<string, string>>();
+            foreach (var err in Errors)
+            {
+                var msg = err.Message;
+                if (err.PageIds?.Length > 0)
+                {
+                    var pages = err.PageIds.Select(x => context.Pages[x].Title);
+                    msg += $" ({string.Join(", ", pages)})";
+                }
+
+                msgs.Add(new KeyValuePair<string, string>(propName, msg));
+            }
+
+            throw new ValidationException(msgs);
         }
 
         #region Checks
@@ -56,15 +81,15 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 var second = context.Pages[rel.DestinationId];
 
                 if(first.BirthDate >= second.DeathDate || second.BirthDate >= first.DeathDate)
-                    AddViolation("Дата рождения одгого супруга не может быть раньше даты смерти другого", first.Id, rel.Id);
+                    Error("Дата рождения одгого супруга не может быть раньше даты смерти другого", first.Id, second.Id);
 
                 if (rel.Duration is FuzzyRange dur)
                 {
                     if(dur.RangeStart < first.BirthDate || dur.RangeEnd > first.DeathDate)
-                        AddViolation("Брак должен быть ограничен временем жизни супруга", first.Id, rel.Id);
+                        Error("Брак должен быть ограничен временем жизни супруга", first.Id, second.Id);
 
                     if(dur.RangeStart < second.BirthDate || dur.RangeEnd > second.DeathDate)
-                        AddViolation("Брак должен быть ограничен временем жизни супруга", first.Id, rel.Id);
+                        Error("Брак должен быть ограничен временем жизни супруга", first.Id, second.Id);
                 }
             }
         }
@@ -76,8 +101,8 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         {
             foreach (var page in context.Pages.Values)
             {
-                if(page.BirthDate >= page.DeathDate)
-                    AddViolation("Дата рождения не может быть позже даты смерти", page.Id);
+                if(page.BirthDate > page.DeathDate)
+                    Error("Дата рождения не может быть позже даты смерти", page.Id);
             }
         }
 
@@ -95,7 +120,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 var child = context.Pages[rel.DestinationId];
 
                 if(parent.BirthDate >= child.BirthDate)
-                    AddViolation("Родитель не может быть старше ребенка", parent.Id, rel.Id);
+                    Error("Родитель не может быть старше ребенка", parent.Id, child.Id);
             }
         }
 
@@ -110,22 +135,28 @@ namespace Bonsai.Areas.Admin.Logic.Validation
 
             void CheckLoopsInternal(Guid id)
             {
-                if (isLoopFound)
+                if (isLoopFound || !context.Relations.ContainsKey(id))
                     return;
-
-                if (visited[id])
-                {
-                    isLoopFound = true;
-                    AddViolation("Два человека не могут быть родителями друг для друга", id);
-                    return;
-                }
 
                 visited[id] = true;
 
-                if(context.Relations.ContainsKey(id))
-                    foreach(var rel in context.Relations[id])
-                        if(rel.Type == RelationType.Parent)
-                            CheckLoopsInternal(rel.DestinationId);
+                foreach (var rel in context.Relations[id])
+                {
+                    if (rel.Type != RelationType.Parent)
+                        continue;
+
+                    if (isLoopFound)
+                        return;
+
+                    if (visited[rel.DestinationId])
+                    {
+                        isLoopFound = true;
+                        Error("Два человека не могут быть родителями друг для друга", rel.DestinationId, pageId);
+                        return;
+                    }
+
+                    CheckLoopsInternal(rel.DestinationId);
+                }
             }
         }
 
@@ -139,8 +170,20 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 if (!context.Relations.TryGetValue(page.Id, out var rels))
                     continue;
 
-                if(rels.Count(x => x.Type == RelationType.Parent) > 2)
-                    AddViolation("У человека не может быть более двух биологических родителей", page.Id);
+                var parents = rels.Where(x => x.Type == RelationType.Parent)
+                                  .ToList();
+
+                if(parents.Count > 2)
+                    Error("У человека не может быть более двух биологических родителей", page.Id);
+
+                if (parents.Count == 2)
+                {
+                    var p1 = context.Pages[parents[0].DestinationId];
+                    var p2 = context.Pages[parents[1].DestinationId];
+
+                    if(p1.Gender == p2.Gender && p1.Gender != null)
+                        Error("Биологические родители не могут быть одного пола", p1.Id, p2.Id, page.Id);
+                }
             }
         }
 
@@ -151,9 +194,9 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         /// <summary>
         /// Adds a new violation info.
         /// </summary>
-        private void AddViolation(string msg, Guid? page, Guid? relation = null)
+        private void Error(string msg, params Guid[] pages)
         {
-            _violations.Add(new ConsistencyViolationInfo(msg, page, relation));
+            _errors.Add(new ConsistencyErrorInfo(msg, pages));
         }
 
         #endregion

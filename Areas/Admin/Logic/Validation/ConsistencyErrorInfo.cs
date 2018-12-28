@@ -5,13 +5,12 @@ namespace Bonsai.Areas.Admin.Logic.Validation
     /// <summary>
     /// Information about contradictory facts.
     /// </summary>
-    public class ConsistencyViolationInfo
+    public class ConsistencyErrorInfo
     {
-        public ConsistencyViolationInfo(string msg, Guid? pageId, Guid? relationId = null)
+        public ConsistencyErrorInfo(string msg, params Guid[] pageIds)
         {
             Message = msg;
-            PageId = pageId;
-            RelationId = relationId;
+            PageIds = pageIds;
         }
 
         /// <summary>
@@ -20,13 +19,8 @@ namespace Bonsai.Areas.Admin.Logic.Validation
         public string Message { get; }
 
         /// <summary>
-        /// Page identifier.
+        /// Related pages.
         /// </summary>
-        public Guid? PageId { get; }
-
-        /// <summary>
-        /// Relation identifier.
-        /// </summary>
-        public Guid? RelationId { get; }
+        public Guid[] PageIds { get; }
     }
 }

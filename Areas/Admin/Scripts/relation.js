@@ -62,6 +62,8 @@
 
                 preload($sourceEditor, 'source');
                 preload($destEditor, 'dest');
+
+                $('.validation-result').hide();
             });
     }
 

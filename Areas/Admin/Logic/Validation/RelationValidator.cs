@@ -38,19 +38,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
 
             var core = new ValidatorCore();
             core.Validate(context, new [] { firstRel.SourceId, firstRel.DestinationId, firstRel.EventId ?? Guid.Empty });
-
-            if(core.Violations.Any())
-            {
-                throw new ValidationException(
-                    nameof(RelationEditorVM.DestinationId),
-                    string.Join(
-                        "\n",
-                        new[] { "Противоречивые факты:" }.Concat(
-                            core.Violations.Select(x => x.Message)
-                        )
-                    )
-                );
-            }
+            core.ThrowIfInvalid(context, nameof(RelationEditorVM.DestinationId));
         }
 
         /// <summary>

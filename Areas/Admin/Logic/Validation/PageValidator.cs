@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Pages;
@@ -37,19 +38,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
 
             var core = new ValidatorCore();
             core.Validate(context, new [] { page.Id });
-
-            if(core.Violations.Any())
-            {
-                throw new ValidationException(
-                    nameof(PageEditorVM.Facts),
-                    string.Join(
-                        "\n",
-                        new[] { "Противоречивые факты:" }.Concat(
-                            core.Violations.Select(x => x.Message)
-                        )
-                    )
-                );
-            }
+            core.ThrowIfInvalid(context, nameof(PageEditorVM.Facts));
         }
 
         #region Helpers

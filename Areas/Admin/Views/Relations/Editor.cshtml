@@ -1,8 +1,9 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Bonsai
 @using Bonsai.Areas.Admin.ViewModels.Relations
 @model RelationEditorVM
 @{
-    var data = (RelationEditorDataVM) ViewBag.Data;
+    var data = (RelationEditorDataVM)ViewBag.Data;
     ViewBag.Title = data.IsNew ? "Создание связи" : "Редактор связи";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
@@ -31,7 +32,6 @@
         <div class="form-group col-md-8">
             <label class="form-label-required" asp-for="DestinationId">@data.Properties.DestinationName</label>
             <select asp-for="DestinationId" asp-items="data.DestinationItem"></select>
-            <span asp-validation-for="DestinationId" class="text-danger"></span>
         </div>
     </div>
 
@@ -39,7 +39,7 @@
         <div class="form-group col-md-8">
             <label class="form-label-required" asp-for="SourceIds">@data.Properties.SourceName</label>
             <select asp-for="SourceIds" asp-items="data.SourceItems" data-multiple="@data.IsNew.ToString()"></select>
-            <span asp-validation-for="SourceIds" class="text-danger"></span>
+            <div validation-list-for="DestinationId" validation-list-caption="Противоречивые факты" class="text-danger validation-result"></div>
         </div>
     </div>
 
