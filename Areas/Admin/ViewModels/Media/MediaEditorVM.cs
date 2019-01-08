@@ -59,6 +59,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// </summary>
         public string Event { get; set; }
 
+        /// <summary>
+        /// Action to execute on save.
+        /// </summary>
+        public MediaEditorSaveAction SaveAction { get; set; }
+
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<Bonsai.Data.Models.Media, MediaEditorVM>()
@@ -71,6 +76,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
                    .Ignore(x => x.DepictedEntities)
                    .Ignore(x => x.Location)
                    .Ignore(x => x.Event)
+                   .Ignore(x => x.SaveAction)
                    .ReverseMap()
                    .Ignore(x => x.Id)
                    .Ignore(x => x.Type)

@@ -12,6 +12,8 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         public IEnumerable<SelectListItem> EventItem { get; set; }
         public IEnumerable<SelectListItem> DepictedEntityItems { get; set; }
 
+        public IEnumerable<SelectListItem> SaveActions { get; set; }
+
         public string ThumbnailUrl { get; set; }
     }
 }

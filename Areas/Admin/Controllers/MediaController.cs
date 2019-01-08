@@ -6,6 +6,7 @@ using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Impworks.Utils.Strings;
@@ -176,6 +177,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 EventItem = GetPageLookup(vm.Event),
                 LocationItem = GetPageLookup(vm.Location),
                 DepictedEntityItems = GetDepictedEntitiesList(),
+                SaveActions = ViewHelper.GetEnumSelectList(vm.SaveAction),
                 ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(vm.FilePath, MediaSize.Large)
             };
 

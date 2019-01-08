@@ -1,6 +1,7 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Media
 @using Bonsai.Data.Models
+@using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.Media.MediaEditorVM
 @{
     ViewBag.Title = "Редактор медиа";
@@ -11,7 +12,7 @@
 
 <h1>Редактор медиа</h1>
 
-<form action="@Url.Action("Update", "Media", new {area = "Admin"})" method="POST">
+<form action="@Url.Action("Update", "Media", new {area = "Admin"})" method="POST" class="media-editor-form">
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="DepictedEntities" />
     <input type="hidden" asp-for="FilePath" />
@@ -85,7 +86,17 @@
     </div>
 
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <input type="hidden" asp-for="SaveAction" />
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">@Model.SaveAction.GetEnumDescription()</button>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
+            <div class="dropdown-menu">
+                @foreach (var act in data.SaveActions)
+                {
+                    <a class="dropdown-item cmd-set-save-mode @(act.Selected ? "active" : "")" href="#" data-value="@act.Value">@act.Text</a>
+                }
+            </div>
+        </div>
         <a href="@Url.Action("Index", "Media", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
     </div>
 </form>
