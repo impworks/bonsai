@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Relations
+@using Bonsai.Code.DomainModel.Media
 @using Impworks.Utils.Format
 @addTagHelper *, Bonsai
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -58,7 +59,7 @@
             {
             <tr class="admin-row">
                 <td class="hide-overflow">
-                    <page-image image="@r.Destination.MainPhotoPath" type="@r.Destination.Type"></page-image>
+                    <page-image image="@r.Destination.MainPhotoPath" type="@r.Destination.Type" size="@MediaSize.Small"></page-image>
                     <span title="@r.Destination.Title">@r.Destination.Title</span>
                 </td>
                 <td>
@@ -67,7 +68,7 @@
                     </a>
                 </td>
                 <td class="hide-overflow">
-                    <page-image image="@r.Source.MainPhotoPath" type="@r.Source.Type"></page-image>
+                    <page-image image="@r.Source.MainPhotoPath" type="@r.Source.Type" size="@MediaSize.Small"></page-image>
                     <span title="@r.Source.Title">@r.Source.Title</span>
                 </td>
                 <td class="admin-row-actions">

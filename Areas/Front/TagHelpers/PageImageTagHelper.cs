@@ -45,7 +45,7 @@ namespace Bonsai.Areas.Front.TagHelpers
         /// </summary>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var path = _url.Content(PageHelper.GetPageImageUrl(Type, Image, FallbackImage, Size ?? MediaSize.Small));
+            var path = _url.Content(PageHelper.GetPageImageUrl(Type, Image, FallbackImage, Size));
             var className = "image";
             
             output.TagName = "div";

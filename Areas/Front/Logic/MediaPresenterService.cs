@@ -127,6 +127,9 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public static string GetSizedMediaPath(string fullPath, MediaSize size)
         {
+            if (string.IsNullOrEmpty(fullPath))
+                return fullPath;
+
             if (size == MediaSize.Original)
                 return fullPath;
 

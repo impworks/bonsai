@@ -55,7 +55,7 @@ namespace Bonsai.Code.Utils.Helpers
         {
             var imageSized = size != null && !string.IsNullOrEmpty(image)
                 ? MediaPresenterService.GetSizedMediaPath(image, size.Value)
-                : null;
+                : image;
 
             var typeStr = (type ?? PageType.Person).ToString().ToLower();
             return StringHelper.Coalesce(imageSized, fallback, $"~/assets/img/unknown-{typeStr}.svg");
