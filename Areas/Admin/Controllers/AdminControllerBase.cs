@@ -45,13 +45,20 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         protected ActionResult RedirectToSuccess(string msg)
         {
+            ShowMessage(msg);
+            return Redirect(DefaultActionUrl);
+        }
+
+        /// <summary>
+        /// Displays a one-time message on the next page.
+        /// </summary>
+        protected void ShowMessage(string msg, bool success = true)
+        {
             Session.Set(new OperationResultMessage
             {
-                IsSuccess = true,
+                IsSuccess = success,
                 Message = msg
             });
-
-            return Redirect(DefaultActionUrl);
         }
     }
 }

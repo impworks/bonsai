@@ -100,9 +100,13 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("update")]
-        public async Task<ActionResult> Update(Guid id)
+        public async Task<ActionResult> Update(Guid id, MediaEditorSaveAction? saveAction = null)
         {
             var vm = await _media.RequestUpdateAsync(id);
+
+            if (saveAction != null)
+                vm.SaveAction = saveAction.Value;
+
             return await ViewEditorFormAsync(vm);
         }
 
@@ -121,7 +125,16 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _media.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
 
-                return RedirectToSuccess("Медиа-файл обновлен");
+                ShowMessage("Медиа-файл обновлен");
+
+                if (vm.SaveAction == MediaEditorSaveAction.SaveAndShowNext)
+                {
+                    var nextId = await _media.GetNextUntaggedMediaAsync();
+                    if (nextId != null)
+                        return RedirectToAction("Update", new {id = nextId.Value, saveAction = vm.SaveAction});
+                }
+
+                return Redirect(DefaultActionUrl);
             }
             catch (ValidationException ex)
             {

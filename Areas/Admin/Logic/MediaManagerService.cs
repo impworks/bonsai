@@ -256,6 +256,19 @@ namespace Bonsai.Areas.Admin.Logic
                             .ToListAsync();
         }
 
+        /// <summary>
+        /// Returns the ID of the chronologically first media without tags in the database.
+        /// </summary>
+        public async Task<Guid?> GetNextUntaggedMediaAsync()
+        {
+            return await _db.Media
+                            .Where(x => !x.Tags.Any())
+                            .Where(x => x.IsProcessed && !x.IsDeleted)
+                            .OrderBy(x => x.UploadDate)
+                            .Select(x => (Guid?) x.Id)
+                            .FirstOrDefaultAsync();
+        }
+
         #endregion
 
         #region Helpers
