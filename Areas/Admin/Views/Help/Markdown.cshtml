@@ -1,7 +1,16 @@
 ﻿@{
     Layout = "HelpLayout.cshtml";
-    ViewBag.Title = "Markdown";
+    ViewBag.Title = "Оформление";
 }
+
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link disabled" href="#">Оформление</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Guidelines")">Стиль</a>
+    </li>
+</ul>
 
 <h3>Форматирование текста</h3>
 <p>Для форматирования используется язык разметки <b>Markdown</b>. Он позволяет добавить в обычный текст заголовки, ссылки, изображения и другие стили с помощью специальных символов.</p>

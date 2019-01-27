@@ -16,5 +16,14 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// Displays the editor guidelines.
+        /// </summary>
+        [Route("guidelines")]
+        public ActionResult Guidelines()
+        {
+            return View();
+        }
     }
 }
