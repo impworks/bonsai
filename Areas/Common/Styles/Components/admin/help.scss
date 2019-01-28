@@ -1,0 +1,32 @@
+﻿.help-text {
+    p {
+        margin-bottom: 0.75rem;
+        padding-top: 0;
+        line-height: 1.5rem;
+    }
+
+    h5 {
+        margin-bottom: 0.5rem;
+    }
+
+    pre {
+        padding: 10px 16px;
+    }
+
+    code {
+        padding: 2px 4px;
+        display: inline-block;
+        color: #212529;
+    }
+
+    code, pre {
+        border: 1px #ccc solid;
+        background: #eee;
+    }
+
+    ul, ol {
+        li {
+            margin-bottom: 1rem;
+        }
+    }
+}

@@ -1,5 +1,6 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Bonsai
+@using Bonsai.Areas.Admin.Logic
 @using Bonsai.Areas.Admin.ViewModels.Pages
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 @{
@@ -22,6 +23,10 @@
         </button>
     </div>
 }
+
+<div class="alert alert-warning" notification-id="@NotificationsService.NOTE_USER_GUIDELINES">
+    Перед написанием статьи, пожалуйста, прочтите <strong><a href="#" class="cmd-show-popup" data-popup-url="@Url.Action("Guidelines", "Help")">рекомендации</a></strong> по оформлению и стилю.
+</div>
 
 <form action="@formAction" method="post" class="page-editor">
     <input type="hidden" asp-for="Id" />

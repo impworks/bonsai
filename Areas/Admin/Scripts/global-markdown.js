@@ -60,6 +60,17 @@
             }
         });
 
+        bar.push('|');
+
+        bar.push({
+            name: 'markdown',
+            className: 'fa fa-question-circle',
+            title: 'Справка по форматированию',
+            action: function() {
+                window.open('/admin/help/markdown', 'bonsai_help', 'menubar=no,toolbar=no,personalbar=no,resizable=yes,width=800,height=600');
+            }
+        });
+
         return bar;
     }
 });

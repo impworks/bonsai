@@ -4,24 +4,21 @@
 @import 'fonts.scss';
 @import 'variables.scss';
 
-@import 'Components/main.scss';
-@import 'Components/header.scss';
-@import 'Components/typography.scss';
 @import 'Components/common.scss';
+@import 'Components/header.scss';
 @import 'Components/forms.scss';
+@import 'Components/main.scss';
+@import 'Components/typography.scss';
 
-@import 'Components/media.scss';
-@import 'Components/infoblock.scss';
-@import 'Components/homepage.scss';
-@import 'Components/calendar.scss';
-@import 'Components/page.scss';
-@import 'Components/search.scss';
-@import 'Components/tree.scss';
+@import 'Components/front/calendar.scss';
+@import 'Components/front/homepage.scss';
+@import 'Components/front/infoblock.scss';
+@import 'Components/front/media.scss';
+@import 'Components/front/page.scss';
+@import 'Components/front/search.scss';
+@import 'Components/front/tree.scss';
 
-@import 'Components/admin.scss';
-@import 'Components/admin-media.scss';
-@import 'Components/admin-pages.scss';
-
-.content {
-    padding: 1rem 3rem;
-}
+@import 'Components/admin/admin.scss';
+@import 'Components/admin/help.scss';
+@import 'Components/admin/media.scss';
+@import 'Components/admin/pages.scss';
