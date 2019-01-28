@@ -1,11 +1,11 @@
-﻿using Bonsai.Data.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Linq;
+﻿using System.Linq;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Helpers;
+using Bonsai.Data.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace Bonsai.Areas.Front.TagHelpers
+namespace Bonsai.Areas.Front.Components
 {
     /// <summary>
     /// Displays a photograph for a page.

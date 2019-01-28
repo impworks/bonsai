@@ -42,6 +42,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<MediaManagerService>();
             services.AddScoped<ChangesetsManagerService>();
             services.AddScoped<SuggestService>();
+            services.AddScoped<NotificationsService>();
 
             services.AddScoped<IChangesetRenderer, MediaChangesetRenderer>();
             services.AddScoped<IChangesetRenderer, PageChangesetRenderer>();
