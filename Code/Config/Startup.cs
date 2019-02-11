@@ -53,7 +53,7 @@ namespace Bonsai.Code.Config
                 app.UseBrowserLink();
             }
 
-            if (Environment.IsProduction())
+            if (Configuration["WebServer:RequireHttps"].TryParse<bool>())
             {
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
             }
