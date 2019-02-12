@@ -26,6 +26,7 @@ A family wiki engine (in Russian).
 
 ### Installation
 
+## Windows
 1. Install [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
 2. Install [ElasticSearch 5.6.x](https://www.elastic.co/downloads/past-releases) (6.0 is not supported yet)
 3. Install [Russian Morphology](https://github.com/imotov/elasticsearch-analysis-morphology) for ElasticSearch.
@@ -53,9 +54,37 @@ A family wiki engine (in Russian).
       } 
     }
     ```
+    
 8. Create the database:
 
     ```
     dotnet ef database update
     ```
 9. Run
+
+## Linux + Docker
+1. Modify your vm.max_map_count to at least 262,144 for ElasticSearch to start:
+
+    ```
+    sysctl -w vm.max_map_count=262144
+    ```
+
+2. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x)
+3. Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins)
+4. Download [docker-compose](docker-compose.yml) file and fill credentials in environment variable section where applicable:
+
+   ```
+   environment:
+      - Auth__Facebook__AppId=
+      - Auth__Facebook__AppSecret=
+      - Auth__Google__ClientId=
+      - Auth__Google__ClientSecret=
+      - WebServer__RequireHttps=false
+      - ASPNETCORE_ENVIRONMENT=Production
+   ```
+   
+5. Bring everything up using docker compose:
+   ```
+   docker-compose up -d
+   ```
+6. After everything is brought up - bonsai app will listen on 80 port. It may be a good idea to hide it behind some kind of reverse proxy.

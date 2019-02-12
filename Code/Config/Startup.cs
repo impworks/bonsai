@@ -1,7 +1,9 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
@@ -67,7 +69,15 @@ namespace Bonsai.Code.Config
 
             var culture = CultureInfo.GetCultureInfo("ru-RU");
 
-            app.UseStatusCodePagesWithReExecute("/error/{0}")
+            var forwardedHeadersOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All,
+            };
+            forwardedHeadersOptions.KnownProxies.Clear();
+            forwardedHeadersOptions.KnownNetworks.Clear();
+            
+            app.UseForwardedHeaders(forwardedHeadersOptions)
+               .UseStatusCodePagesWithReExecute("/error/{0}")
                .UseStaticFiles()
                .UseAuthentication()
                .UseSession()
