@@ -28,7 +28,7 @@ namespace Bonsai.Code.Config
                         opts.AppId = Configuration["Auth:Facebook:AppId"];
                         opts.AppSecret = Configuration["Auth:Facebook:AppSecret"];
 
-                        foreach(var scope in new[] { "email", "user_birthday", "user_gender" })
+                        foreach(var scope in new[] { "email" })
                             opts.Scope.Add(scope);
                     })
                     .AddGoogle(opts =>
