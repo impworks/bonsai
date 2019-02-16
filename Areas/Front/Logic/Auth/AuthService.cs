@@ -104,7 +104,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
             await _userMgr.AddLoginAsync(user, login);
 
-            await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.User));
+            await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.Unvalidated));
 
             await _signMgr.SignInAsync(user, true);
 
