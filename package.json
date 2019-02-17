@@ -1,7 +1,19 @@
 {
-  "version": "0.1.0",
-  "name": "bonsai",
+  "version": "1.0",
+  "name": "Bonsai",
+  "description": "Family wiki and photo-album engine",
+  "homepage": "https://github.com/impworks/bonsai",
+  "license": "MIT",
+  "author": {
+    "name": "Andrei Kurosh",
+    "email": "andrei@kuro.sh",
+    "url": "https://github.com/impworks"
+  },
   "private": true,
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp content.watch"
+  },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.9.2",
