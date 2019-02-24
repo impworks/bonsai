@@ -1,4 +1,6 @@
-﻿namespace Bonsai.Areas.Front.ViewModels.Auth
+﻿using System.Collections.Generic;
+
+namespace Bonsai.Areas.Front.ViewModels.Auth
 {
     /// <summary>
     /// Information about the login state.
@@ -19,5 +21,10 @@
         /// Flag indicating that unauthorized visitors can view page contents.
         /// </summary>
         public bool AllowGuests { get; set; }
+
+        /// <summary>
+        /// List of enabled authentication providers.
+        /// </summary>
+        public IEnumerable<AuthProviderVM> Providers { get; set; }
     }
 }

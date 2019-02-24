@@ -22,23 +22,10 @@ namespace Bonsai.Code.Config
             services.AddScoped<IAuthorizationHandler, AuthHandler>();
             services.AddScoped<IAuthorizationHandler, AdminAuthHandler>();
 
-            services.AddAuthentication(IdentityConstants.ApplicationScheme)
-                    .AddFacebook(opts =>
-                    {
-                        opts.AppId = Configuration["Auth:Facebook:AppId"];
-                        opts.AppSecret = Configuration["Auth:Facebook:AppSecret"];
-
-                        foreach(var scope in new[] { "email" })
-                            opts.Scope.Add(scope);
-                    })
-                    .AddGoogle(opts =>
-                    {
-                        opts.ClientId = Configuration["Auth:Google:ClientId"];
-                        opts.ClientSecret = Configuration["Auth:Google:ClientSecret"];
-
-                        foreach(var scope in new[] { "email", "profile" })
-                            opts.Scope.Add(scope);
-                    });
+            var auth = services.AddAuthentication(IdentityConstants.ApplicationScheme);
+            var authProvider = new AuthProviderService();
+            authProvider.Initialize(Configuration, auth);
+            services.AddSingleton(authProvider);
 
             services.ConfigureApplicationCookie(opts =>
             {

@@ -23,9 +23,10 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("auth")]
     public class AuthController: AppControllerBase
     {
-        public AuthController(AuthService auth, PagesManagerService pages, ElasticService elastic, AppConfigService cfgProvider, AppDbContext db)
+        public AuthController(AuthService auth, AuthProviderService provs, PagesManagerService pages, ElasticService elastic, AppConfigService cfgProvider, AppDbContext db)
         {
             _auth = auth;
+            _provs = provs;
             _pages = pages;
             _elastic = elastic;
             _cfgProvider = cfgProvider;
@@ -33,6 +34,7 @@ namespace Bonsai.Areas.Front.Controllers
         }
 
         private readonly AuthService _auth;
+        private readonly AuthProviderService _provs;
         private readonly PagesManagerService _pages;
         private readonly ElasticService _elastic;
         private readonly AppConfigService _cfgProvider;
