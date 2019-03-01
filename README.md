@@ -40,9 +40,8 @@ For development, you will need the following:
    
    If you're getting a "Syntax of the command is incorrect" error during this step, make sure you have a `JAVA_HOME` environment variable defined.
 4. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
-5. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x)
-6. Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins) or comment out the `UseGoogle` block in `Startup.cs`
-7. Create a file called `appsettings.Development.json` and save the auth secrets/connection strings/etc in it:
+5. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte)
+6. Create a file called `appsettings.Development.json`, add the connection string(s) and auth credentials for providers that you want to use (at least one is required):
 
     ```
     {
@@ -51,29 +50,38 @@ For development, you will need the following:
       },
       "Auth": {
         "Facebook": {
-          "AppId": "...",
-          "AppSecret": "..." 
+          "AppId": "",
+          "AppSecret": "" 
         },
         "Google": {
-          "ClientId": "...",
-          "ClientSecret": "..." 
-        } 
+          "ClientId": "",
+          "ClientSecret": "" 
+        },
+		"Yandex": {
+          "ClientId": "",
+          "ClientSecret": "" 
+        },
+		"Vkontakte": {
+          "ClientId": "",
+          "ClientSecret": "" 
+        }
       } 
     }
     ```
+	
     
-8. Create the database:
+7. Create the database:
 
     ```
     dotnet ef database update
     ```
-9. Build the styles and scripts:
+8. Build the styles and scripts:
 
     ```
     npm install
     npm run build
     ```
-10. Run the app (as Visual Studio project or using `dotnet run`).
+9. Run the app (as Visual Studio project or using `dotnet run`).
 
 ## Linux + Docker
 1. Modify your `vm.max_map_count` to at least 262,144 for ElasticSearch to start:
@@ -82,9 +90,8 @@ For development, you will need the following:
     sysctl -w vm.max_map_count=262144
     ```
 
-2. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x)
-3. Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins)
-4. Download the [docker-compose](docker-compose.yml) file and fill in the credentials in environment variable section where applicable:
+2. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte)
+3. Download the [docker-compose](docker-compose.yml) file and fill in the credentials in environment variable section where applicable. Remove credentials:
 
    ```
    environment:
@@ -92,12 +99,16 @@ For development, you will need the following:
       - Auth__Facebook__AppSecret=
       - Auth__Google__ClientId=
       - Auth__Google__ClientSecret=
+	  - Auth__Yandex__ClientId=
+      - Auth__Yandex__ClientSecret=
+	  - Auth__Vkontakte__ClientId=
+      - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
       - ASPNETCORE_ENVIRONMENT=Production
    ```
    
-5. Bring everything up using `docker compose`:
+4. Bring everything up using `docker compose`:
    ```
    docker-compose up -d
    ```
-6. After everything is brought up Bonsai will listen on port 80. It may be a good idea to hide it behind some kind of reverse proxy.
+5. After everything is brought up Bonsai will listen on port 80. It may be a good idea to hide it behind some kind of reverse proxy.
