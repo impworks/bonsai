@@ -93,6 +93,9 @@
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a class="btn btn-secondary" href="@Url.Action("Index")">Отмена</a>
                 </div>
+                <div class="float-right">
+                    <a class="btn btn-danger" href="@Url.Action("Remove", "Users", new { id = Model.Id })">Удалить</a>
+                </div>
             </div>
         </form>
     </div>

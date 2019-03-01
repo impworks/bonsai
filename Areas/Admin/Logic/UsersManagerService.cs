@@ -203,11 +203,7 @@ namespace Bonsai.Areas.Admin.Logic
                                  .ToListAsync();
 
             foreach (var user in users)
-            {
-                user.Role = userBindings.TryGetValue(user.Id, out var roleId)
-                    ? roles[roleId]
-                    : UserRole.Unvalidated;
-            }
+                user.Role = roles[userBindings[user.Id]];
 
             return users.AsQueryable();
         }

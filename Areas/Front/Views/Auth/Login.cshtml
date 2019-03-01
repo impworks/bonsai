@@ -37,14 +37,13 @@
         <form action="@Url.Action("Login")" method="post">
             <input type="hidden" name="returnUrl" value="@Model.ReturnUrl"/>
             <div class="social-buttons">
-                <button type="submit" class="btn btn-lg btn-outline-primary btn-social" name="provider" value="Facebook" title="Вход через Facebook">
-                    <i class="fa fa-facebook-square"></i>
-                    <span>Facebook</span>
-                </button>
-                <button type="submit" class="btn btn-lg btn-outline-primary btn-social" name="provider" value="Google" title="Вход через Google">
-                    <i class="fa fa-google-plus-square"></i>
-                    <span>Google</span>
-                </button>
+                @foreach (var prov in Model.Providers)
+                {
+                    <button type="submit" class="btn btn-lg btn-outline-primary btn-social" name="provider" value="@prov.Key" title="Вход через @prov.Caption">
+                        <i class="@prov.IconClass"></i>
+                        <span>@prov.Caption</span>
+                    </button>
+                }
             </div>
         </form>
     }
