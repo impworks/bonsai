@@ -57,11 +57,11 @@ For development, you will need the following:
           "ClientId": "",
           "ClientSecret": "" 
         },
-		"Yandex": {
+        "Yandex": {
           "ClientId": "",
           "ClientSecret": "" 
         },
-		"Vkontakte": {
+        "Vkontakte": {
           "ClientId": "",
           "ClientSecret": "" 
         }
@@ -99,9 +99,9 @@ For development, you will need the following:
       - Auth__Facebook__AppSecret=
       - Auth__Google__ClientId=
       - Auth__Google__ClientSecret=
-	  - Auth__Yandex__ClientId=
+      - Auth__Yandex__ClientId=
       - Auth__Yandex__ClientSecret=
-	  - Auth__Vkontakte__ClientId=
+      - Auth__Vkontakte__ClientId=
       - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
       - ASPNETCORE_ENVIRONMENT=Production
