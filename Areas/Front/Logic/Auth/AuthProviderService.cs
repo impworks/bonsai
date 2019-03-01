@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Authentication;
@@ -42,6 +43,55 @@ namespace Bonsai.Areas.Front.Logic.Auth
 
             new AuthProviderVM
             {
+                Key = "Vkontakte",
+                Caption = "ВКонтакте",
+                IconClass = "fa fa-vk",
+                TryActivate = (cfg, auth) =>
+                {
+                    var id = cfg["Auth:Vkontakte:ClientId"];
+                    var secret = cfg["Auth:Vkontakte:ClientSecret"];
+                    if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
+                        return false;
+
+                    auth.AddVkontakte(opts =>
+                    {
+                        opts.ClientId = id;
+                        opts.ClientSecret = secret;
+                        opts.Scope.AddRange(new [] { "email" });
+                        opts.ClaimActions.MapJsonKey(ClaimTypes.DateOfBirth, "bdate");
+                        opts.Fields.Add("bdate");
+                    });
+
+                    return true;
+                }
+            },
+
+            new AuthProviderVM
+            {
+                Key = "Yandex",
+                Caption = "Яндекс",
+                IconClass = "fa fa-yahoo", // the closest one that has an Y :)
+                TryActivate = (cfg, auth) =>
+                {
+                    var id = cfg["Auth:Yandex:ClientId"];
+                    var secret = cfg["Auth:Yandex:ClientSecret"];
+                    if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
+                        return false;
+
+                    auth.AddYandex(opts =>
+                    {
+                        opts.ClientId = id;
+                        opts.ClientSecret = secret;
+                        opts.Scope.AddRange(new [] { "login:email", "login:birthday", "login:info" });
+                        opts.ClaimActions.MapJsonKey(ClaimTypes.DateOfBirth, "birthday");
+                    });
+
+                    return true;
+                }
+            },
+
+            new AuthProviderVM
+            {
                 Key = "Google",
                 Caption = "Google",
                 IconClass = "fa fa-google-plus-square",
@@ -61,7 +111,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
 
                     return true;
                 }
-            }
+            },
         };
 
         /// <summary>
