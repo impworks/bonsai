@@ -48,13 +48,8 @@ namespace Bonsai.Areas.Front.Controllers
         public async Task<ActionResult> Login(string returnUrl = null)
         {
             var user = await _auth.GetCurrentUserAsync(User);
-            var vm = new LoginVM
-            {
-                ReturnUrl = returnUrl,
-                AllowGuests = _cfgProvider.GetConfig().AllowGuests,
-                Status = user?.IsValidated == false ? LoginStatus.Unvalidated : (LoginStatus?) null
-            };
-            return View(vm);
+            var status = user?.IsValidated == false ? LoginStatus.Unvalidated : (LoginStatus?) null;
+            return ViewLoginForm(status, returnUrl);
         }
 
         /// <summary>
@@ -108,16 +103,9 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToAction("Register");
             }
 
-            var vm = new LoginVM
-            {
-                ReturnUrl = returnUrl,
-                AllowGuests = _cfgProvider.GetConfig().AllowGuests,
-                Status = result.Status
-            };
-
             HttpContext.User = result.Principal;
 
-            return View("Login", vm);
+            return ViewLoginForm(result.Status, returnUrl);
         }
 
         /// <summary>
@@ -216,6 +204,21 @@ namespace Bonsai.Areas.Front.Controllers
             };
 
             return View("RegisterForm", vm);
+        }
+
+        /// <summary>
+        /// Displays the login page.
+        /// </summary>
+        private ActionResult ViewLoginForm(LoginStatus? status, string returnUrl = null)
+        {
+            var vm = new LoginVM
+            {
+                ReturnUrl = returnUrl,
+                AllowGuests = _cfgProvider.GetConfig().AllowGuests,
+                Providers = _provs.AvailableProviders,
+                Status = status
+            };
+            return View(vm);
         }
 
         #endregion

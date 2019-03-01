@@ -61,30 +61,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
 
                     return true;
                 }
-            },
-
-            new AuthProviderVM
-            {
-                Key = "VK",
-                Caption = "Вконтакте",
-                IconClass = "fa fa-google-plus-square",
-                TryActivate = (cfg, auth) =>
-                {
-                    var id = cfg["Auth:Google:ClientId"];
-                    var secret = cfg["Auth:Google:ClientSecret"];
-                    if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
-                        return false;
-
-                    auth.AddGoogle(opts =>
-                    {
-                        opts.ClientId = id;
-                        opts.ClientSecret = secret;
-                        opts.Scope.AddRange(new [] { "email", "profile" });
-                    });
-
-                    return true;
-                }
-            },
+            }
         };
 
         /// <summary>
