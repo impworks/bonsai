@@ -72,6 +72,9 @@ namespace Bonsai.Areas.Admin.Logic.Workers
         /// </summary>
         private async Task MainLoopAsync()
         {
+            using (var scope = _services.CreateScope())
+                await InitializeAsync(scope.ServiceProvider);
+
             while (true)
             {
                 if (_isAsleep)
@@ -81,14 +84,22 @@ namespace Bonsai.Areas.Admin.Logic.Workers
                 }
 
                 using(var scope = _services.CreateScope())
-                    _isAsleep = await ProcessAsync(scope);
+                    _isAsleep = await ProcessAsync(scope.ServiceProvider);
             }
         }
 
         /// <summary>
         /// Handles a request if the service is not asleep.
         /// </summary>
-        protected abstract Task<bool> ProcessAsync(IServiceScope scope);
+        protected abstract Task<bool> ProcessAsync(IServiceProvider scope);
+
+        /// <summary>
+        /// Performs initialization if required.
+        /// </summary>
+        protected virtual async Task InitializeAsync(IServiceProvider services)
+        {
+            // does nothing in base
+        }
 
         #endregion
     }

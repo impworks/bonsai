@@ -1,9 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Data;
 using Bonsai.Data.Utils;
 using Dapper;
+using JavaScriptEngineSwitcher.Core;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -17,10 +20,12 @@ namespace Bonsai.Areas.Admin.Logic
     {
         #region Constructor
 
-        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, ILogger logger)
+        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, IHostingEnvironment env, ILogger logger)
             : base(services)
         {
+            _env = env;
             _logger = logger;
+
             alarm.OnTreeLayoutRegenerationRequired += (s, e) =>
             {
                 _isAsleep = false;
@@ -33,29 +38,45 @@ namespace Bonsai.Areas.Admin.Logic
         #region Fields
 
         private readonly ILogger _logger;
+        private readonly IHostingEnvironment _env;
         private bool _flush;
+
+        private IPrecompiledScript _jsScript;
 
         #endregion
 
         #region Processor logic
 
+        protected override async Task InitializeAsync(IServiceProvider services)
+        {
+            using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
+            {
+                var filePath = Path.Combine(_env.ContentRootPath, "assets", "scripts", "tree.js");
+                var fileContents = File.ReadAllText(filePath);
+                _jsScript = js.Precompile(fileContents);
+            }
+        }
+
         /// <summary>
         /// Main loop.
         /// </summary>
-        protected override async Task<bool> ProcessAsync(IServiceScope scope)
+        protected override async Task<bool> ProcessAsync(IServiceProvider services)
         {
             try
             {
-                var db = scope.ServiceProvider.GetService<AppDbContext>();
+                using (var db = services.GetService<AppDbContext>())
+                using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
+                {
 
-                var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
-                if (!hasPages)
-                    return true;
+                    var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
+                    if (!hasPages)
+                        return true;
 
-                if (_flush)
-                    await FlushTreeAsync(db);
+                    if (_flush)
+                        await FlushTreeAsync(db);
 
-                // todo
+                    // todo
+                }
             }
             catch (Exception ex)
             {
@@ -80,7 +101,7 @@ namespace Bonsai.Areas.Admin.Logic
                 await conn.ExecuteAsync(@"UPDATE ""Pages"" SET TreeLayoutId = NULL");
                 await conn.ExecuteAsync(@"DELETE FROM ""TreeLayouts""");
             }
-        }
+        } 
 
         #endregion
     }

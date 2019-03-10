@@ -48,27 +48,28 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Main loop.
         /// </summary>
-        protected override async Task<bool> ProcessAsync(IServiceScope scope)
+        protected override async Task<bool> ProcessAsync(IServiceProvider services)
         {
             try
             {
-                var db = scope.ServiceProvider.GetService<AppDbContext>();
+                using (var db = services.GetService<AppDbContext>())
+                {
+                    var job = await db.MediaJobs
+                                      .Include(x => x.Media)
+                                      .OrderBy(x => x.Media.UploadDate)
+                                      .FirstOrDefaultAsync();
 
-                var job = await db.MediaJobs
-                                  .Include(x => x.Media)
-                                  .OrderBy(x => x.Media.UploadDate)
-                                  .FirstOrDefaultAsync();
+                    if (job == null)
+                        return true;
 
-                if (job == null)
-                    return true;
+                    if (job.Media.Type == MediaType.Video)
+                        await EncodeVideoAsync(job);
+                    else
+                        throw new ArgumentException("Unsupported media type: ");
 
-                if (job.Media.Type == MediaType.Video)
-                    await EncodeVideoAsync(job);
-                else
-                    throw new ArgumentException("Unsupported media type: ");
-
-                db.MediaJobs.Remove(job);
-                await db.SaveChangesAsync();
+                    db.MediaJobs.Remove(job);
+                    await db.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
