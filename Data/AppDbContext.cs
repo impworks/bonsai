@@ -24,6 +24,7 @@ namespace Bonsai.Data
         public virtual DbSet<PageAlias> PageAliases => Set<PageAlias>();
         public virtual DbSet<Relation> Relations => Set<Relation>();
         public virtual DbSet<PageDraft> PageDrafts => Set<PageDraft>();
+        public virtual DbSet<TreeLayout> TreeLayouts => Set<TreeLayout>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,6 +39,7 @@ namespace Bonsai.Data
             builder.Entity<Page>().HasIndex(x => x.IsDeleted).IsUnique(false);
             builder.Entity<Page>().HasMany(x => x.Aliases).WithOne(x => x.Page).IsRequired();
             builder.Entity<Page>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
+            builder.Entity<Page>().HasOne(x => x.TreeLayout).WithMany().IsRequired(false).HasForeignKey(x => x.TreeLayoutId);
 
             builder.Entity<PageAlias>().HasIndex(x => x.Key).IsUnique(true);
 

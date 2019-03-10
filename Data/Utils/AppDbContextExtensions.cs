@@ -49,7 +49,6 @@ namespace Bonsai.Data.Utils
             return new NpgsqlConnection(context.Database.GetDbConnection().ConnectionString);
         }
 
-
         /// <summary>
         /// Adds required records (identity, config, etc.).
         /// </summary>
