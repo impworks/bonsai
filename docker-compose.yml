@@ -14,7 +14,7 @@ services:
       - "--acme.httpChallenge.entryPoint=http"
       - "--acme.onHostRule=true"
       - "--acme.onDemand=true"
-      - "--acme.email=i@kirillorlov.pro"
+      - "--acme.email=YOUR.EMAIL@ASWESOMEMAIL.COM"
       - "--docker"
       - "--docker.watch"
     ports:
