@@ -54,22 +54,28 @@ namespace Bonsai.Areas.Admin.Logic
         private readonly IUrlHelper _url;
         private bool _flush;
 
-        private IPrecompiledScript _jsScript;
+        private IPrecompiledScript _elkScript;
+        private IPrecompiledScript _treeScript;
 
         #endregion
 
         #region Processor logic
 
         /// <summary>
-        /// Precompiles the JS script for faster execution.
+        /// Precompiles the JS scripts for faster execution.
         /// </summary>
         protected override async Task InitializeAsync(IServiceProvider services)
         {
             using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
             {
-                var filePath = Path.Combine(_env.ContentRootPath, "assets", "scripts", "tree.js");
-                var fileContents = File.ReadAllText(filePath);
-                _jsScript = js.Precompile(fileContents);
+                _elkScript = js.Precompile(GetScript("vendor-elk.js"));
+                _treeScript = js.Precompile(GetScript("tree.js"));
+            }
+
+            string GetScript(string fileName)
+            {
+                var path = Path.Combine(_env.ContentRootPath, "assets", "scripts", fileName);
+                return File.ReadAllText(path);
             }
         }
 
@@ -83,6 +89,8 @@ namespace Bonsai.Areas.Admin.Logic
                 using (var db = services.GetService<AppDbContext>())
                 using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
                 {
+                    js.Execute(_elkScript);
+                    js.Execute(_treeScript);
 
                     var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
                     if (!hasPages)
@@ -296,9 +304,7 @@ namespace Bonsai.Areas.Admin.Logic
         private async Task<string> RenderTree(IJsEngine js, TreeVM tree)
         {
             var json = JsonConvert.SerializeObject(tree);
-
-            // todo
-            throw new NotImplementedException();
+            return await Task.Run(() => (string) js.CallFunction("renderTree", json));
         }
 
         #endregion
