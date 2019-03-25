@@ -7,7 +7,7 @@ namespace Bonsai.Code.Config
     public partial class Startup
     {
         /// <summary>
-        /// Registers Automapper.
+        /// Registers JS execution engine.
         /// </summary>
         private void ConfigureJavascriptEngine(IServiceCollection services)
         {

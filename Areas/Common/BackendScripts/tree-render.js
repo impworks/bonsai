@@ -2,7 +2,10 @@
     var elkJson = generateElkJson(data);
     var elk = new ELK();
 
-    return elk.layout(elkJson);
+    elk.layout(elkJson).then(function(result) {
+        var json = JSON.stringify(result);
+        RenderResult.Append(json);
+    });
 }
 
 function generateElkJson(data) {

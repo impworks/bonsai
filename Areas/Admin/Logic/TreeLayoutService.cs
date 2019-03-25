@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Front.Logic;
@@ -304,7 +305,16 @@ namespace Bonsai.Areas.Admin.Logic
         private async Task<string> RenderTree(IJsEngine js, TreeVM tree)
         {
             var json = JsonConvert.SerializeObject(tree);
-            return await Task.Run(() => (string) js.CallFunction("renderTree", json));
+            var sb = new StringBuilder();
+            js.EmbedHostObject("RenderResult", sb);
+            await Task.Run(() => (string) js.CallFunction("renderTree", json));
+
+            var result = sb.ToString();
+
+            if (string.IsNullOrEmpty(result))
+                throw new Exception("Failed to render tree: output is empty.");
+
+            return result;
         }
 
         #endregion

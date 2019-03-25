@@ -42,6 +42,7 @@ namespace Bonsai.Code.Config
             ConfigureAuthServices(services);
             ConfigureElasticServices(services);
             ConfigureAutomapper(services);
+            ConfigureJavascriptEngine(services);
             ConfigureAppServices(services);
         }
 
