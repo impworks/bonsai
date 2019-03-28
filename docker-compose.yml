@@ -1,5 +1,29 @@
 version: "3.3"
 services:
+  traefik:
+    image: traefik:1.5.4
+    restart: always
+    command:
+      - "--api"
+      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
+      - "--entrypoints=Name:https Address::443 TLS"
+      - "--defaultentrypoints=http,https"
+      - "--acme"
+      - "--acme.storage=/etc/traefik/acme/acme.json"
+      - "--acme.entryPoint=https"
+      - "--acme.httpChallenge.entryPoint=http"
+      - "--acme.onHostRule=true"
+      - "--acme.onDemand=true"
+      - "--acme.email=YOUR.EMAIL@ASWESOMEMAIL.COM"
+      - "--docker"
+      - "--docker.watch"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/acme:/etc/traefik/acme
+
   bonsai:
     image: impworks/bonsai:latest
     restart: unless-stopped
@@ -18,8 +42,10 @@ services:
       - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
       - ASPNETCORE_ENVIRONMENT=Production
-    ports:
-      - "80"
+    labels: 
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host: YOUR.IP.ADDRESS.HERE.xip.io"
     stop_signal: SIGKILL
     links:
       - postgres
@@ -28,6 +54,8 @@ services:
   postgres:
     image: postgres
     restart: unless-stopped
+    labels: 
+      - "traefik.enable=false"
     volumes:
       - database:/var/lib/postgresql
     environment:
@@ -43,6 +71,8 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
+    labels: 
+      - "traefik.enable=true"
     ulimits:
       memlock:
         soft: -1
@@ -51,7 +81,7 @@ services:
       - elastic:/usr/share/elasticsearch/data
     entrypoint: >
       bash -c "
-      bin/elasticsearch-plugin install http://dl.bintray.com/content/imotov/elasticsearch-plugins/org/elasticsearch/elasticsearch-analysis-morphology/5.6.14/elasticsearch-analysis-morphology-5.6.14.zip
+      [ -x /usr/share/elasticsearch/plugins/analysis-morphology ] || bin/elasticsearch-plugin install http://dl.bintray.com/content/imotov/elasticsearch-plugins/org/elasticsearch/elasticsearch-analysis-morphology/5.6.14/elasticsearch-analysis-morphology-5.6.14.zip
       && bin/es-docker"
 
 volumes:

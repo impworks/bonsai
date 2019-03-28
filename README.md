@@ -92,8 +92,14 @@ For development, you will need the following:
 
 2. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte)
 3. Download the [docker-compose](docker-compose.yml) file and fill in the credentials in environment variable section where applicable. Remove credentials:
+   For https you would also need to:
+   - specify your email (for requesting let's encrypt certificate)
+   - specify your host name or public IP address for requesting certificate and using Bonsai behind traefik load-balancer.
 
    ```
+         - "--acme.email=YOUR.EMAIL@ASWESOMEMAIL.COM" 
+   ...
+
    environment:
       - Auth__Facebook__AppId=
       - Auth__Facebook__AppSecret=
@@ -105,6 +111,12 @@ For development, you will need the following:
       - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
       - ASPNETCORE_ENVIRONMENT=Production
+   ...
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host: YOUR.IP.ADDRESS.HERE.xip.io"
+
    ```
    
 4. Bring everything up using `docker compose`:
