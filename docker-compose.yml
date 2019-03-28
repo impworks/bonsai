@@ -1,3 +1,9 @@
+# !!! ATTENTION !!!
+# Before using this file you will need to replace the following placeholders with actual values:
+#
+#   @@YOUR_EMAIL@@: your email address (required for LetsEncrypt certificate issuing)
+#   @@YOUR_IP@@: the external IP of the webserver on which Bonsai runs
+
 version: "3.3"
 services:
   traefik:
@@ -14,7 +20,7 @@ services:
       - "--acme.httpChallenge.entryPoint=http"
       - "--acme.onHostRule=true"
       - "--acme.onDemand=true"
-      - "--acme.email=YOUR.EMAIL@ASWESOMEMAIL.COM"
+      - "--acme.email=@@YOUR_EMAIL@@"
       - "--docker"
       - "--docker.watch"
     ports:
@@ -45,7 +51,7 @@ services:
     labels: 
       - "traefik.enable=true"
       - "traefik.port=80"
-      - "traefik.frontend.rule=Host: YOUR.IP.ADDRESS.HERE.xip.io"
+      - "traefik.frontend.rule=Host: @@YOUR_IP@@.xip.io"
     stop_signal: SIGKILL
     links:
       - postgres
@@ -72,7 +78,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
     labels: 
-      - "traefik.enable=true"
+      - "traefik.enable=false"
     ulimits:
       memlock:
         soft: -1
