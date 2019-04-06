@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Areas.Front.Logic
 {
@@ -12,9 +14,10 @@ namespace Bonsai.Areas.Front.Logic
     {
         #region Constructor
 
-        public TreePresenterService(AppDbContext db)
+        public TreePresenterService(AppDbContext db, IUrlHelper url)
         {
             _db = db;
+            _url = url;
         }
 
         #endregion
@@ -22,6 +25,7 @@ namespace Bonsai.Areas.Front.Logic
         #region Fields
 
         private readonly AppDbContext _db;
+        private readonly IUrlHelper _url;
 
         #endregion
 
@@ -38,6 +42,21 @@ namespace Bonsai.Areas.Front.Logic
                                 .AsNoTracking()
                                 .Include(x => x.TreeLayout)
                                 .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
+
+            var json = page?.TreeLayout?.LayoutJson;
+            if (string.IsNullOrEmpty(json))
+                return null;
+
+            var data = JObject.Parse(json);
+            foreach (var child in data["children"])
+            {
+                var info = child["info"];
+                if(info == null)
+                    continue;
+
+                info["Photo"] = _url.Content(info["Photo"].Value<string>());
+                info["Url"] = _url.Action("Description", "Page", new {area = "Front", key = info["Url"].Value<string>()});
+            }
 
             return page.TreeLayout?.LayoutJson;
         }

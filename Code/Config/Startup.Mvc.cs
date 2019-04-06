@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Microsoft.AspNetCore.Hosting;
@@ -8,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Bonsai.Code.Config
 {
@@ -20,6 +18,8 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureMvcServices(IServiceCollection services)
         {
+            services.AddSingleton(p => Log.Logger);
+
             services.AddMvc()
                     .AddControllersAsServices()
                     .AddSessionStateTempDataProvider()

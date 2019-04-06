@@ -32,11 +32,10 @@ namespace Bonsai.Areas.Admin.Logic
     {
         #region Constructor
 
-        public TreeLayoutService(WorkerAlarmService alarm, IUrlHelper url, IServiceProvider services, IHostingEnvironment env, ILogger logger)
+        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, IHostingEnvironment env, ILogger logger)
             : base(services)
         {
             _env = env;
-            _url = url;
             _logger = logger;
 
             alarm.OnTreeLayoutRegenerationRequired += (s, e) =>
@@ -52,11 +51,9 @@ namespace Bonsai.Areas.Admin.Logic
 
         private readonly ILogger _logger;
         private readonly IHostingEnvironment _env;
-        private readonly IUrlHelper _url;
         private bool _flush;
 
-        private IPrecompiledScript _elkScript;
-        private IPrecompiledScript _treeScript;
+        private IPrecompiledScript _script;
 
         #endregion
 
@@ -69,14 +66,9 @@ namespace Bonsai.Areas.Admin.Logic
         {
             using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
             {
-                _elkScript = js.Precompile(GetScript("vendor-elk.js"));
-                _treeScript = js.Precompile(GetScript("tree.js"));
-            }
-
-            string GetScript(string fileName)
-            {
-                var path = Path.Combine(_env.ContentRootPath, "assets", "scripts", fileName);
-                return File.ReadAllText(path);
+                var path = Path.Combine(_env.WebRootPath, "assets", "scripts", "tree.js");
+                var src = File.ReadAllText(path);
+                _script = js.Precompile(src);
             }
         }
 
@@ -90,8 +82,7 @@ namespace Bonsai.Areas.Admin.Logic
                 using (var db = services.GetService<AppDbContext>())
                 using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
                 {
-                    js.Execute(_elkScript);
-                    js.Execute(_treeScript);
+                    js.Execute(_script);
 
                     var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
                     if (!hasPages)
@@ -185,7 +176,7 @@ namespace Bonsai.Areas.Admin.Logic
                         IsMale = page.Gender ?? true,
                         IsDead = page.IsDead,
                         Photo = GetPhoto(page.MainPhotoPath, page.Gender ?? true),
-                        Url = _url.Action("Description", "Page", new { area = "Front", key = page.Key }),
+                        Url = page.Key,
                         Parents = GetParentRelationshipId(page)
                     }
                 );
@@ -209,7 +200,6 @@ namespace Bonsai.Areas.Admin.Logic
 
             return new TreeVM
             {
-                Root = rootId.ToString(),
                 Persons = persons.Values.OrderBy(x => x.Name).ToList(),
                 Relations = relations.Values.OrderBy(x => x.Id).ToList()
             };
@@ -291,8 +281,10 @@ namespace Bonsai.Areas.Admin.Logic
                 ? "~/assets/img/unknown-male.png"
                 : "~/assets/img/unknown-female.png";
 
-            var photo = StringHelper.Coalesce(MediaPresenterService.GetSizedMediaPath(actual, MediaSize.Small), defaultPhoto);
-            return _url.Content(photo);
+            return StringHelper.Coalesce(
+                MediaPresenterService.GetSizedMediaPath(actual, MediaSize.Small),
+                defaultPhoto
+            );
         }
 
         #endregion
@@ -307,7 +299,7 @@ namespace Bonsai.Areas.Admin.Logic
             var json = JsonConvert.SerializeObject(tree);
             var sb = new StringBuilder();
             js.EmbedHostObject("RenderResult", sb);
-            await Task.Run(() => (string) js.CallFunction("renderTree", json));
+            await Task.Run(() => js.CallFunction("renderTree", json));
 
             var result = sb.ToString();
 

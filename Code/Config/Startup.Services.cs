@@ -2,6 +2,7 @@
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Logic.Validation;
+using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
@@ -21,6 +22,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<MarkdownService>();
             services.AddScoped<AppConfigService>();
             services.AddScoped<CacheService>();
+            services.AddScoped<WorkerAlarmService>();
 
             // frontend
             services.AddScoped<RelationsPresenterService>();

@@ -1,10 +1,11 @@
-﻿function renderTree(data) {
+﻿function renderTree(jsonIn) {
+    var data = JSON.parse(jsonIn);
     var elkJson = generateElkJson(data);
     var elk = new ELK();
 
     elk.layout(elkJson).then(function(result) {
-        var json = JSON.stringify(result);
-        RenderResult.Append(json);
+        var jsonOut = JSON.stringify(result);
+        RenderResult.Append(jsonOut);
     });
 }
 

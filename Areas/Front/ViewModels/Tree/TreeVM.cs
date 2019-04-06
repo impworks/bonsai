@@ -16,10 +16,5 @@ namespace Bonsai.Areas.Front.ViewModels.Tree
         /// All known persons.
         /// </summary>
         public IReadOnlyList<TreePersonVM> Persons { get; set; }
-
-        /// <summary>
-        /// ID of the person to center the view.
-        /// </summary>
-        public string Root { get; set; }
     }
 }

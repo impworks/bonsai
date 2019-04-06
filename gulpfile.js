@@ -37,9 +37,6 @@ var config = {
             ],
             vue: [
                 './node_modules/vue/dist/vue.js'
-            ],
-            elk: [
-                './node_modules/elkjs/lib/elk.bundled.js'
             ]
         },
         fonts: [
@@ -63,6 +60,10 @@ var config = {
             ],
             common: [
                 './Areas/Common/Scripts/**/*.js'
+            ],
+            tree: [
+                './node_modules/elkjs/lib/elk.bundled.js',
+                './Areas/Common/BackendScripts/tree-render.js'
             ]
         }
     },
@@ -102,7 +103,13 @@ gulp.task('content.scripts.admin', function () {
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common']);
+gulp.task('content.scripts.tree', function () {
+    gulp.src(config.content.scripts.tree)
+        .pipe(concatjs('tree.js'))
+        .pipe(gulp.dest(config.assets.scripts));
+});
+
+gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common', 'content.scripts.tree']);
 
 gulp.task('content.watch', function() {
     watch(
@@ -123,6 +130,11 @@ gulp.task('content.watch', function() {
     watch(
         config.content.scripts.admin,
         function () { gulp.start('content.scripts.admin'); }
+    );
+
+    watch(
+        config.content.scripts.tree,
+        function () { gulp.start('content.scripts.tree'); }
     );
 });
 
@@ -146,14 +158,6 @@ gulp.task('vendor.scripts.admin', function () {
         .pipe(gulp.dest(config.assets.scripts));
 });
 
-gulp.task('vendor.scripts.elk', function () {
-    gulp.src(config.vendor.scripts.elk)
-        .pipe(concatjs('vendor-elk.js'))
-        //.pipe(minjs({  }))
-        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-        .pipe(gulp.dest(config.assets.scripts));
-});
-
 gulp.task('vendor.scripts.vue', function () {
     gulp.src(config.vendor.scripts.vue)
         .pipe(concatjs('vendor-vue.js'))
@@ -167,6 +171,6 @@ gulp.task('vendor.fonts', function() {
         .pipe(gulp.dest(config.assets.fonts));
 });
 
-gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.scripts.elk', 'vendor.scripts.vue', 'vendor.fonts']);
+gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.scripts.vue', 'vendor.fonts']);
 
 gulp.task('build', ['vendor', 'content']);

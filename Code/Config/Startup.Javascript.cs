@@ -1,5 +1,5 @@
-﻿using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
-using JavaScriptEngineSwitcher.Jint;
+﻿using JavaScriptEngineSwitcher.ChakraCore;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bonsai.Code.Config
@@ -11,8 +11,8 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureJavascriptEngine(IServiceCollection services)
         {
-            services.AddJsEngineSwitcher(opts => opts.DefaultEngineName = JintJsEngine.EngineName)
-                    .AddJint(j => j.StrictMode = true);
+            services.AddJsEngineSwitcher(opts => opts.DefaultEngineName = ChakraCoreJsEngine.EngineName)
+                    .AddChakraCore();
         }
     }
 }
