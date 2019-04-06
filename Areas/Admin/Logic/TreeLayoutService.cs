@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Front.Logic;
@@ -15,9 +13,8 @@ using Bonsai.Data.Utils;
 using Dapper;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
-using JavaScriptEngineSwitcher.Core;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -32,10 +29,9 @@ namespace Bonsai.Areas.Admin.Logic
     {
         #region Constructor
 
-        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, IHostingEnvironment env, ILogger logger)
+        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, ILogger logger)
             : base(services)
         {
-            _env = env;
             _logger = logger;
 
             alarm.OnTreeLayoutRegenerationRequired += (s, e) =>
@@ -50,27 +46,11 @@ namespace Bonsai.Areas.Admin.Logic
         #region Fields
 
         private readonly ILogger _logger;
-        private readonly IHostingEnvironment _env;
         private bool _flush;
-
-        private IPrecompiledScript _script;
 
         #endregion
 
         #region Processor logic
-
-        /// <summary>
-        /// Precompiles the JS scripts for faster execution.
-        /// </summary>
-        protected override async Task InitializeAsync(IServiceProvider services)
-        {
-            using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
-            {
-                var path = Path.Combine(_env.WebRootPath, "assets", "scripts", "tree.js");
-                var src = File.ReadAllText(path);
-                _script = js.Precompile(src);
-            }
-        }
 
         /// <summary>
         /// Main loop.
@@ -80,16 +60,14 @@ namespace Bonsai.Areas.Admin.Logic
             try
             {
                 using (var db = services.GetService<AppDbContext>())
-                using (var js = services.GetService<IJsEngineSwitcher>().CreateDefaultEngine())
+                using (var js = services.GetService<INodeServices>())
                 {
-                    js.Execute(_script);
+                    if (_flush)
+                        await FlushTreeAsync(db);
 
                     var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
                     if (!hasPages)
                         return true;
-
-                    if (_flush)
-                        await FlushTreeAsync(db);
 
                     var opts = new RelationContextOptions { PeopleOnly = true };
                     var ctx = await RelationContext.LoadContextAsync(db, opts);
@@ -108,14 +86,16 @@ namespace Bonsai.Areas.Admin.Logic
                         await SaveLayoutAsync(db, tree, layout);
                     }
                 }
+
+                return true;
             }
             catch (Exception ex)
             {
                 if (!(ex is TaskCanceledException))
                     _logger.Error(ex, "Failed to generate a tree layout.");
-            }
 
-            return false;
+                return false;
+            }
         }
 
         #endregion
@@ -294,14 +274,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Renders the tree using ELK.js.
         /// </summary>
-        private async Task<string> RenderTree(IJsEngine js, TreeVM tree)
+        private async Task<string> RenderTree(INodeServices js, TreeVM tree)
         {
             var json = JsonConvert.SerializeObject(tree);
-            var sb = new StringBuilder();
-            js.EmbedHostObject("RenderResult", sb);
-            await Task.Run(() => js.CallFunction("renderTree", json));
-
-            var result = sb.ToString();
+            var result = await js.InvokeAsync<string>("./External/tree/tree-render.js", json);
 
             if (string.IsNullOrEmpty(result))
                 throw new Exception("Failed to render tree: output is empty.");
@@ -321,7 +297,7 @@ namespace Bonsai.Areas.Admin.Logic
             using (var conn = db.GetConnection())
             {
                 await conn.ExecuteAsync(@"
-                    UPDATE ""Pages"" SET TreeLayoutId = NULL;
+                    UPDATE ""Pages"" SET ""TreeLayoutId"" = NULL;
                     DELETE FROM ""TreeLayouts""
                 ");
             }
@@ -339,17 +315,11 @@ namespace Bonsai.Areas.Admin.Logic
                     layout
                 );
 
-                // work around the limit of parameters
+                // sic! dapper generates incorrect query for "GUID IN (@GUIDS)" with parameters
                 foreach (var batch in tree.Persons.Select(x => x.Id).PartitionBySize(100))
                 {
-                    await conn.ExecuteAsync(
-                        @"UPDATE ""Pages"" SET ""TreeLayoutId"" = @LayoutId WHERE ""Id"" IN (@PageIds)",
-                        new
-                        {
-                            LayoutId = layout.Id,
-                            PageIds = batch
-                        }
-                    );
+                    var ids = batch.Select(x => $"'{x}'").JoinString(", ");
+                    await conn.ExecuteAsync($@"UPDATE ""Pages"" SET ""TreeLayoutId"" = '{layout.Id}' WHERE ""Id"" IN ({ids})");
                 }
             }
         }

@@ -6,7 +6,8 @@ var gulp = require('gulp'),
     concatjs = require('gulp-concat'),
     mincss = require('gulp-clean-css'),
     minjs = require('gulp-uglify'),
-    watch = require('gulp-watch');
+    watch = require('gulp-watch'),
+    rename = require('gulp-rename');
 
 // ================
 // Configuration
@@ -60,10 +61,6 @@ var config = {
             ],
             common: [
                 './Areas/Common/Scripts/**/*.js'
-            ],
-            tree: [
-                './node_modules/elkjs/lib/elk.bundled.js',
-                './Areas/Common/BackendScripts/tree-render.js'
             ]
         }
     },
@@ -104,9 +101,15 @@ gulp.task('content.scripts.admin', function () {
 });
 
 gulp.task('content.scripts.tree', function () {
-    gulp.src(config.content.scripts.tree)
-        .pipe(concatjs('tree.js'))
-        .pipe(gulp.dest(config.assets.scripts));
+    var outputFolder = './External/tree';
+    var elkFolder = './node_modules/elkjs/lib/';
+    var elkFiles = [
+        './Areas/Admin/BackendScripts/tree-render.js',
+        elkFolder + 'elk-api.js',
+        elkFolder + 'elk-worker.min.js'
+    ];
+    gulp.src(elkFiles).pipe(gulp.dest(outputFolder));
+    gulp.src(elkFolder + 'main.js').pipe(rename('elk.js')).pipe(gulp.dest(outputFolder));
 });
 
 gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common', 'content.scripts.tree']);

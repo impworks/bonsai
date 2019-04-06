@@ -18,11 +18,13 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureAppServices(IServiceCollection services)
         {
+            services.AddNodeServices();
+
             // common
             services.AddScoped<MarkdownService>();
             services.AddScoped<AppConfigService>();
             services.AddScoped<CacheService>();
-            services.AddScoped<WorkerAlarmService>();
+            services.AddSingleton<WorkerAlarmService>();
 
             // frontend
             services.AddScoped<RelationsPresenterService>();

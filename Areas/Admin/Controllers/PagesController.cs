@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Facts;
@@ -27,16 +28,18 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/pages")]
     public class PagesController: AdminControllerBase
     {
-        public PagesController(PagesManagerService pages, ElasticService elastic, AppDbContext db)
+        public PagesController(PagesManagerService pages, ElasticService elastic, AppDbContext db, WorkerAlarmService alarm)
         {
             _pages = pages;
             _elastic = elastic;
             _db = db;
+            _alarm = alarm;
         }
 
         private readonly PagesManagerService _pages;
         private readonly ElasticService _elastic;
         private readonly AppDbContext _db;
+        private readonly WorkerAlarmService _alarm;
         
         /// <summary>
         /// Readable captions of the fields.
@@ -86,6 +89,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 var page = await _pages.CreateAsync(vm, User);
                 await _db.SaveChangesAsync();
                 await _elastic.AddPageAsync(page);
+                _alarm.FireTreeLayoutRegenerationRequired();
 
                 return RedirectToSuccess("Страница создана");
             }
@@ -121,8 +125,8 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 var page = await _pages.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
-
                 await _elastic.AddPageAsync(page);
+                _alarm.FireTreeLayoutRegenerationRequired();
 
                 return RedirectToSuccess("Страница обновлена");
             }
@@ -154,8 +158,8 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             var page = await _pages.RemoveAsync(id, User);
             await _db.SaveChangesAsync();
-
             await _elastic.RemovePageAsync(page);
+            _alarm.FireTreeLayoutRegenerationRequired();
 
             return RedirectToSuccess("Страница удалена");
         }

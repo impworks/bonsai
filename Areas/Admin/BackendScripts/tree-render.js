@@ -1,13 +1,15 @@
-﻿function renderTree(jsonIn) {
+﻿var ELK = require('./elk.js');
+
+module.exports = function(callback, jsonIn) {
     var data = JSON.parse(jsonIn);
     var elkJson = generateElkJson(data);
     var elk = new ELK();
 
     elk.layout(elkJson).then(function(result) {
         var jsonOut = JSON.stringify(result);
-        RenderResult.Append(jsonOut);
+        callback(null, jsonOut);
     });
-}
+};
 
 function generateElkJson(data) {
     var CARD_WIDTH = 300,
