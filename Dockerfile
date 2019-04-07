@@ -21,6 +21,10 @@ RUN apt-get -yqq update && \
     apt-get -yqq install ffmpeg libc6-dev libgdiplus libx11-dev && \
     rm -rf /var/lib/apt/lists/*
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=net-builder /out .
 
