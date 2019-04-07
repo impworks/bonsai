@@ -28,7 +28,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 WORKDIR /app
 COPY --from=net-builder /out .
 
-RUN mkdir /app/External && mkdir /app/External/ffmpeg
+RUN mkdir /app/External/ffmpeg
 RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg
 RUN ln -s /usr/bin/ffprobe /app/External/ffmpeg/ffprobe
 
