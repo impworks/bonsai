@@ -24,7 +24,6 @@ function generateElkJson(data) {
     processRelations();
 
     return {
-        id: "root",
         layoutOptions: {
             'elk.algorithm': 'layered',
             'elk.direction': 'DOWN',

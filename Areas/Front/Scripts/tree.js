@@ -13,9 +13,8 @@
         var $tree = $(this);
         var $wrap = $tree.find('.tree-wrapper');
         var key = $wrap.data('key');
-        var rootId = $wrap.data('root');
 
-        requestTreeInfo($wrap, key, rootId);
+        requestTreeInfo($wrap, key, 0);
 
         $tree.find('.cmd-fullscreen').click(function () {
             var $btn = $(this);
@@ -25,21 +24,35 @@
         });        
     });
 
-    function requestTreeInfo($wrap, key, rootId) {
+    function requestTreeInfo($wrap, key, count) {
+        if (count > 10) {
+            var $tree = $wrap.closest('.tree');
+            $tree.find('.tree-preloader').remove();
+            $tree.find('.tree-error').show();
+            return;
+        }
+
         var url = '/util/tree/' + encodeURIComponent(key);
         $.ajax(url)
             .then(function(data) {
-                if (data && data.length) {
-                    renderTree($wrap, JSON.parse(data), rootId);
+                if (data && data.content) {
+                    renderTree($wrap, data);
                     return;
                 }
 
-                setTimeout(function() { requestTreeInfo($wrap, key, rootId); }, 5000);
+                setTimeout(
+                    function () {
+                        requestTreeInfo($wrap, key, count + 1);
+                    },
+                    5000
+                );
             });
     }
 
-    function renderTree($wrap, tree, rootId) {
+    function renderTree($wrap, treeInfo) {
         // displays the tree
+        var tree = treeInfo.content;
+        var rootId = treeInfo.rootId;
         var persons = convertPersons(tree);
         var edges = convertEdges(tree);
         var vue = new Vue({
@@ -62,7 +75,7 @@
 
     function convertPersons(tree) {
         // returns the list of cards to render
-        return tree.children.filter(function (x) { return x.info !== null; });
+        return tree.children.filter(function (x) { return !!x.info; });
     }
 
     function convertEdges(tree) {
@@ -97,8 +110,8 @@
     function detectChildren(tree) {
         // checks which relations have children
         var relKeys = tree.children
-            .filter(function (x) { return x.info === null; })
-            .map(function (x) { return x.id });
+            .filter(function (x) { return !x.info; })
+            .map(function (x) { return x.id; });
 
         var result = {};
         for (var i = 0; i < relKeys.length; i++) {

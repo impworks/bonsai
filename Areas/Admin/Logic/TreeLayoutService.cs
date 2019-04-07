@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic.Workers;
+using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Areas.Front.Logic;
-using Bonsai.Areas.Front.ViewModels.Tree;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data;
@@ -13,7 +13,6 @@ using Bonsai.Data.Utils;
 using Dapper;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,6 +72,8 @@ namespace Bonsai.Areas.Admin.Logic
                     var ctx = await RelationContext.LoadContextAsync(db, opts);
                     var trees = GetAllSubtrees(ctx);
 
+                    _logger.Information($"Tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
+
                     foreach (var tree in trees)
                     {
                         var rendered = await RenderTree(js, tree);
@@ -85,17 +86,17 @@ namespace Bonsai.Areas.Admin.Logic
 
                         await SaveLayoutAsync(db, tree, layout);
                     }
-                }
 
-                return true;
+                    _logger.Information("Tree layout completed.");
+                }
             }
             catch (Exception ex)
             {
                 if (!(ex is TaskCanceledException))
                     _logger.Error(ex, "Failed to generate a tree layout.");
-
-                return false;
             }
+
+            return true;
         }
 
         #endregion
@@ -105,11 +106,11 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Loads all pages and groups them into subgraphs by relations.
         /// </summary>
-        private IReadOnlyList<TreeVM> GetAllSubtrees(RelationContext ctx)
+        private IReadOnlyList<TreeLayoutVM> GetAllSubtrees(RelationContext ctx)
         {
             var excluded = new HashSet<Guid>();
 
-            var result = new List<TreeVM>();
+            var result = new List<TreeLayoutVM>();
 
             while (true)
             {
@@ -126,7 +127,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the entire tree.
         /// </summary>
-        public TreeVM GetSubtree(RelationContext context, HashSet<Guid> visited, Guid rootId)
+        public TreeLayoutVM GetSubtree(RelationContext context, HashSet<Guid> visited, Guid rootId)
         {
             var parents = new HashSet<string>();
 
@@ -178,7 +179,7 @@ namespace Bonsai.Areas.Admin.Logic
                 }
             }
 
-            return new TreeVM
+            return new TreeLayoutVM
             {
                 Persons = persons.Values.OrderBy(x => x.Name).ToList(),
                 Relations = relations.Values.OrderBy(x => x.Id).ToList()
@@ -274,10 +275,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Renders the tree using ELK.js.
         /// </summary>
-        private async Task<string> RenderTree(INodeServices js, TreeVM tree)
+        private async Task<string> RenderTree(INodeServices js, TreeLayoutVM tree)
         {
             var json = JsonConvert.SerializeObject(tree);
-            var result = await js.InvokeAsync<string>("./External/tree/tree-render.js", json);
+            var result = await js.InvokeAsync<string>("./External/tree/tree-layout.js", json);
 
             if (string.IsNullOrEmpty(result))
                 throw new Exception("Failed to render tree: output is empty.");
@@ -306,7 +307,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the layout.
         /// </summary>
-        private async Task SaveLayoutAsync(AppDbContext db, TreeVM tree, TreeLayout layout)
+        private async Task SaveLayoutAsync(AppDbContext db, TreeLayoutVM tree, TreeLayout layout)
         {
             using (var conn = db.GetConnection())
             {

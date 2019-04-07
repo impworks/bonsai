@@ -2,6 +2,7 @@
 using Bonsai.Code.Config;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
+using Serilog.Events;
 
 namespace Bonsai
 {
@@ -18,7 +19,8 @@ namespace Bonsai
                            config
                                .Enrich.FromLogContext()
                                .MinimumLevel.Information()
-                               .WriteTo.File("bonsai-log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14);
+                               .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+                               .WriteTo.File("Logs/workers-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7);
                        })
                        .UseStartup<Startup>()
                        .Build();

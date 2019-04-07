@@ -61,6 +61,9 @@ var config = {
             ],
             common: [
                 './Areas/Common/Scripts/**/*.js'
+            ],
+            tree: [
+                './Areas/Admin/BackendScripts/tree-layout.js'
             ]
         }
     },
@@ -104,7 +107,7 @@ gulp.task('content.scripts.tree', function () {
     var outputFolder = './External/tree';
     var elkFolder = './node_modules/elkjs/lib/';
     var elkFiles = [
-        './Areas/Admin/BackendScripts/tree-render.js',
+        config.content.scripts.tree,
         elkFolder + 'elk-api.js',
         elkFolder + 'elk-worker.min.js'
     ];

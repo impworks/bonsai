@@ -4,11 +4,11 @@
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
 
     ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Body.Title + " &mdash; Фамильное древо";
+    ViewBag.Title = Model.Body.Title + " — Фамильное древо";
 }
 
 <div class="tree">
-    <div class="tree-wrapper" data-key="@Model.Body.Key" data-root="@Model.Body.Id">
+    <div class="tree-wrapper" data-key="@Model.Body.Key">
         <svg class="tree-back" :width="width" :height="height">
             <polyline :points="e.points" v-for="e in edges" />
         </svg>
@@ -24,6 +24,9 @@
             Загрузка...
             <img src="@Url.Content("~/assets/img/loading.gif")" alt="Loading"/>
         </h4>
+    </div>
+    <div class="tree-error">
+        <h4>Не удалось загрузить дерево.</h4>
     </div>
 </div>
 

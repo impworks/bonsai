@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Areas.Front.ViewModels.Tree;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,31 +36,33 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the entire tree.
         /// </summary>
-        public async Task<string> GetTreeAsync(string key)
+        public async Task<TreeVM> GetTreeAsync(string key)
         {
             var keyLower = key?.ToLowerInvariant();
 
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.TreeLayout)
-                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
+                                .GetAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false, "Страница не найдена");
 
+            var result = new TreeVM {RootId = page.Id};
             var json = page?.TreeLayout?.LayoutJson;
-            if (string.IsNullOrEmpty(json))
-                return null;
-
-            var data = JObject.Parse(json);
-            foreach (var child in data["children"])
+            if (!string.IsNullOrEmpty(json))
             {
-                var info = child["info"];
-                if(info == null)
-                    continue;
+                result.Content = JObject.Parse(json);
+                foreach (var child in result.Content["children"])
+                {
+                    var info = child["info"];
+                    if (info == null)
+                        continue;
 
-                info["Photo"] = _url.Content(info["Photo"].Value<string>());
-                info["Url"] = _url.Action("Description", "Page", new {area = "Front", key = info["Url"].Value<string>()});
+                    info["Photo"] = _url.Content(info["Photo"].Value<string>());
+                    info["Url"] = _url.Action("Description", "Page",
+                        new {area = "Front", key = info["Url"].Value<string>()});
+                }
             }
 
-            return page.TreeLayout?.LayoutJson;
+            return result;
         }
 
         #endregion

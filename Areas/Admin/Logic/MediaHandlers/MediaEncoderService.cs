@@ -113,6 +113,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// </summary>
         private async Task CreateVideoThumbnailAsync(string path)
         {
+            _logger.Information($"Thumbnail extraction started for video file: {path}");
+
             var durationRaw = await ProcessHelper.GetOutputAsync(GetFFPath("ffprobe"), $@"-i ""{path}"" -show_entries format=duration -v quiet -of csv=""p=0""");
             var duration = durationRaw.Parse<double>();
             var middle = (int) (duration / 2);
@@ -120,7 +122,9 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
             var screenPath = Path.ChangeExtension(path, ".jpg");
             await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{path}"" -y -vframes 1 -ss {middle} ""{screenPath}""");
 
-            using(var img = Image.FromFile(screenPath))
+            _logger.Information("Thumbnail extraction completed.");
+
+            using (var img = Image.FromFile(screenPath))
                 MediaHandlerHelper.CreateThumbnails(screenPath, img);
 
             File.Delete(screenPath);
@@ -136,8 +140,12 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
             // todo: check actual format?
 
+            _logger.Information($"Conversion started for video file: {inputPath}");
+
             await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{inputPath}"" -f mp4 -vcodec libx264 -preset fast -profile:v main -acodec aac -hide_banner -movflags +faststart -threads 0 ""{outputPath}""");
             File.Delete(inputPath);
+
+            _logger.Information("Video conversion completed.");
         }
 
         #endregion
