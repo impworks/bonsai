@@ -22,18 +22,16 @@ namespace Bonsai.Areas.Front.Logic
     /// </summary>
     public class PagePresenterService
     {
-        public PagePresenterService(AppDbContext db, MarkdownService markdown, RelationsPresenterService relations, TreePresenterService tree)
+        public PagePresenterService(AppDbContext db, MarkdownService markdown, RelationsPresenterService relations)
         {
             _db = db;
             _markdown = markdown;
             _relations = relations;
-            _tree = tree;
         }
 
         private readonly AppDbContext _db;
         private readonly MarkdownService _markdown;
         private readonly RelationsPresenterService _relations;
-        private readonly TreePresenterService _tree;
 
         #region Public methods
 
@@ -72,7 +70,7 @@ namespace Bonsai.Areas.Front.Logic
         }
 
         /// <summary>
-        /// Returns the contents of the family tree.
+        /// Returns the tree VM (empty).
         /// </summary>
         public async Task<PageTreeVM> GetPageTreeAsync(string key)
         {
@@ -81,8 +79,7 @@ namespace Bonsai.Areas.Front.Logic
             if(page.Type != PageType.Person)
                 throw new KeyNotFoundException();
 
-            var tree = await _tree.GetTreeAsync(page.Id);
-            return Configure(page, new PageTreeVM {Tree = tree});
+            return Configure(page, new PageTreeVM());
         }
 
         /// <summary>

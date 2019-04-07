@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -20,16 +21,18 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/relations")]
     public class RelationsController: AdminControllerBase
     {
-        public RelationsController(RelationsManagerService rels, PagesManagerService pages, AppDbContext db)
+        public RelationsController(RelationsManagerService rels, PagesManagerService pages, AppDbContext db, WorkerAlarmService alarm)
         {
             _rels = rels;
             _pages = pages;
             _db = db;
+            _alarm = alarm;
         }
 
         private readonly RelationsManagerService _rels;
         private readonly PagesManagerService _pages;
         private readonly AppDbContext _db;
+        private readonly WorkerAlarmService _alarm;
 
         /// <summary>
         /// Displays the list of relations.
@@ -67,6 +70,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 await _rels.CreateAsync(vm, User);
                 await _db.SaveChangesAsync();
+                _alarm.FireTreeLayoutRegenerationRequired();
 
                 return RedirectToSuccess("Связь создана");
             }
@@ -102,6 +106,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 await _rels.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
+                _alarm.FireTreeLayoutRegenerationRequired();
 
                 return RedirectToSuccess("Связь обновлена");
             }
@@ -132,6 +137,7 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             await _rels.RemoveAsync(id, User);
             await _db.SaveChangesAsync();
+            _alarm.FireTreeLayoutRegenerationRequired();
 
             return RedirectToSuccess("Связь удалена");
         }

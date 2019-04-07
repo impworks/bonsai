@@ -1,8 +1,4 @@
 ﻿$(function () {
-    var CARD_WIDTH = 300,
-        CARD_HEIGHT = 100,
-        SPACING = 30;
-
     var $trees = $('.tree');
     if ($trees.length === 0) {
         return;
@@ -16,143 +12,47 @@
     $trees.each(function () {
         var $tree = $(this);
         var $wrap = $tree.find('.tree-wrapper');
-        var $data = $($wrap.data('src'));
-        if ($data.length === 0) {
-            return;
-        }
+        var key = $wrap.data('key');
+
+        requestTreeInfo($wrap, key, 0);
 
         $tree.find('.cmd-fullscreen').click(function () {
             var $btn = $(this);
             var newState = !$(document).fullScreen();
             $btn.toggleClass('active', newState);
             $tree.find('.tree-wrapper').fullScreen(newState);
-        });
-
-        var treeData = JSON.parse($data[0].innerText);
-        var elkJson = generateElkJson(treeData);
-        var elk = new ELK();
-
-        elk.layout(elkJson)
-            .then(function (tree) { renderTree($wrap, tree, treeData.Root); })
-            .catch(console.error);
+        });        
     });
 
-    function generateElkJson(data) {
-        // converts Bonsai-style JSON to ELK-style
-        var nodes = [];
-        var edges = [];
+    function requestTreeInfo($wrap, key, count) {
+        if (count > 10) {
+            var $tree = $wrap.closest('.tree');
+            $tree.find('.tree-preloader').remove();
+            $tree.find('.tree-error').show();
+            return;
+        }
 
-        processPersons();
-        processRelations();
-
-        return {
-            id: "root",
-            layoutOptions: {
-                'elk.algorithm': 'layered',
-                'elk.direction': 'DOWN',
-                'elk.edgeRouting': 'ORTHOGONAL',
-                'elk.layered.spacing.edgeEdgeBetweenLayers': SPACING,
-                'elk.layered.spacing.edgeNodeBetweenLayers': SPACING,
-                'elk.spacing.nodeNode': SPACING,
-                'elk.layered.nodePlacement.favorStraightEdges': false,
-                'elk.layered.thoroughness': 400
-            },
-            children: nodes,
-            edges: edges
-        };
-
-        function processPersons() {
-            // registers person cards
-            for (var i = 0; i < data.Persons.length; i++) {
-                var person = data.Persons[i];
-                nodes.push({
-                    id: person.Id,
-                    label: person.Name,
-                    width: CARD_WIDTH,
-                    height: CARD_HEIGHT,
-                    info: person,
-                    layoutOptions: {
-                        'elk.portConstraints': 'FIXED_SIDE'
-                    },
-                    ports: [
-                        {
-                            id: person.Id + ":n",
-                            layoutOptions: {
-                                'elk.port.side': 'NORTH'
-                            }
-                        },
-                        {
-                            id: person.Id + ":s",
-                            layoutOptions: {
-                                'elk.port.side': 'SOUTH'
-                            }
-                        }
-                    ]
-                });
-
-                if (person.Parents !== null) {
-                    edges.push({
-                        id: person.Id + ':' + person.Parents,
-                        sources: [person.Parents + ':s'],
-                        targets: [person.Id + ':n'],
-                        info: {
-                            fakeTarget: false
-                        }
-                    });
+        var url = '/util/tree/' + encodeURIComponent(key);
+        $.ajax(url)
+            .then(function(data) {
+                if (data && data.content) {
+                    renderTree($wrap, data);
+                    return;
                 }
-            }
-        }
 
-        function processRelations() {
-            // registers marriage pseudo-nodes
-            for (var i = 0; i < data.Relations.length; i++) {
-                var rel = data.Relations[i];
-                nodes.push({
-                    id: rel.Id,
-                    width: 1,
-                    height: 1,
-                    layoutOptions: {
-                        'elk.portConstraints': 'FIXED_SIDE'
+                setTimeout(
+                    function () {
+                        requestTreeInfo($wrap, key, count + 1);
                     },
-                    ports: [
-                        {
-                            id: rel.Id + ":n",
-                            layoutOptions: {
-                                'elk.port.side': 'NORTH'
-                            }
-                        },
-                        {
-                            id: rel.Id + ":s",
-                            layoutOptions: {
-                                'elk.port.side': 'SOUTH'
-                            }
-                        }
-                    ]
-                });
-
-                edges.push({
-                    id: rel.Id + ':' + rel.From,
-                    sources: [rel.From],
-                    targets: [rel.Id + ':n'],
-                    info: {
-                        fakeTarget: true
-                    }
-                });
-
-                edges.push({
-                    id: rel.Id + ':' + rel.To,
-                    sources: [rel.To],
-                    targets: [rel.Id + ':n'],
-                    info: {
-                        fakeTarget: true
-                    }
-                });
-            }
-        }
+                    5000
+                );
+            });
     }
 
-    function renderTree($wrap, tree, rootId) {
+    function renderTree($wrap, treeInfo) {
         // displays the tree
+        var tree = treeInfo.content;
+        var rootId = treeInfo.rootId;
         var persons = convertPersons(tree);
         var edges = convertEdges(tree);
         var vue = new Vue({
@@ -175,7 +75,7 @@
 
     function convertPersons(tree) {
         // returns the list of cards to render
-        return tree.children.filter(function (x) { return x.info != null; });
+        return tree.children.filter(function (x) { return !!x.info; });
     }
 
     function convertEdges(tree) {
@@ -210,13 +110,13 @@
     function detectChildren(tree) {
         // checks which relations have children
         var relKeys = tree.children
-            .filter(function (x) { return x.info == null; })
-            .map(function (x) { return x.id });
+            .filter(function (x) { return !x.info; })
+            .map(function (x) { return x.id; });
 
         var result = {};
         for (var i = 0; i < relKeys.length; i++) {
             var key = relKeys[i];
-            result[key + ':n'] = tree.edges.some(function (x) { return x.sources[0] === key + ':s' });
+            result[key + ':n'] = tree.edges.some(function (x) { return x.sources[0] === key + ':s'; });
         }
 
         return result;

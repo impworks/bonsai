@@ -1,127 +1,88 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Strings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using Serilog;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
     /// The background service for encoding uploaded media.
     /// </summary>
-    public class MediaEncoderService: IHostedService
+    public class MediaEncoderService: WorkerServiceBase
     {
         #region Constructor
 
-        public MediaEncoderService(IServiceProvider services, IHostingEnvironment env)
+        public MediaEncoderService(WorkerAlarmService alarm, IServiceProvider services, IHostingEnvironment env, ILogger logger)
+            : base(services)
         {
-            _services = services;
             _env = env;
-            _cancellationSource = new CancellationTokenSource();
+            _logger = logger;
+
+            alarm.OnNewEncoderJob += (s, e) =>
+            {
+                _isAsleep = false;
+            };
         }
 
         #endregion
 
         #region Fields
 
-        private readonly IServiceProvider _services;
         private readonly IHostingEnvironment _env;
-        private readonly CancellationTokenSource _cancellationSource;
-
-        private Thread _thread;
-
-        private CancellationToken Token => _cancellationSource.Token;
-
-        #endregion
-
-        #region IHostedService implementation
-
-        /// <summary>
-        /// Starts the background encoder service.
-        /// </summary>
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            _thread = new Thread(MainLoop) {IsBackground = true};
-            _thread.Start();
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Stops the service.
-        /// </summary>
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            _cancellationSource.Cancel();
-
-            return Task.CompletedTask;
-        }
+        private readonly ILogger _logger;
 
         #endregion
 
         #region Encoder logic
 
         /// <summary>
-        /// Sync wrapper for the main loop.
-        /// </summary>
-        private void MainLoop()
-        {
-            MainLoopAsync().GetAwaiter().GetResult();
-        }
-
-        /// <summary>
         /// Main loop.
         /// </summary>
-        private async Task MainLoopAsync()
+        protected override async Task<bool> ProcessAsync(IServiceProvider services)
         {
-            using (var scope = _services.CreateScope())
+            try
             {
-                var db = scope.ServiceProvider.GetService<AppDbContext>();
-
-                while (true)
+                using (var db = services.GetService<AppDbContext>())
                 {
-                    try
-                    {
-                        var job = await db.MediaJobs
-                                          .Include(x => x.Media)
-                                          .OrderBy(x => x.Media.UploadDate)
-                                          .FirstOrDefaultAsync();
+                    var job = await db.MediaJobs
+                                      .Include(x => x.Media)
+                                      .OrderBy(x => x.Media.UploadDate)
+                                      .FirstOrDefaultAsync();
 
-                        if (job != null)
-                        {
-                            if (job.Media.Type == MediaType.Video)
-                                await EncodeVideoAsync(job);
-                            else
-                                throw new ArgumentException("Unsupported media type: ");
+                    if (job == null)
+                        return true;
 
-                            db.MediaJobs.Remove(job);
-                            await db.SaveChangesAsync();
-                        }
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Logger.Error(ex.Demystify(), "An error occured while encoding media.");
-                    }
+                    if (job.Media.Type == MediaType.Video)
+                        await EncodeVideoAsync(job);
+                    else
+                        throw new ArgumentException("Unsupported media type: ");
 
-                    await Task.Delay(TimeSpan.FromSeconds(30), Token);
+                    db.MediaJobs.Remove(job);
+                    await db.SaveChangesAsync();
                 }
             }
+            catch (Exception ex)
+            {
+                if(!(ex is TaskCanceledException))
+                    _logger.Error(ex, "Failed to convert media.");
+            }
+
+            return false;
         }
+
+        #endregion
+
+        #region Video encoding
 
         /// <summary>
         /// Returns the path to a FFMpeg executable.
@@ -130,10 +91,6 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         {
             return Path.Combine(_env.ContentRootPath, "External", "ffmpeg", executable);
         }
-
-        #endregion
-
-        #region Video encoding
 
         /// <summary>
         /// Encodes a video file.
@@ -156,6 +113,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// </summary>
         private async Task CreateVideoThumbnailAsync(string path)
         {
+            _logger.Information($"Thumbnail extraction started for video file: {path}");
+
             var durationRaw = await ProcessHelper.GetOutputAsync(GetFFPath("ffprobe"), $@"-i ""{path}"" -show_entries format=duration -v quiet -of csv=""p=0""");
             var duration = durationRaw.Parse<double>();
             var middle = (int) (duration / 2);
@@ -163,7 +122,9 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
             var screenPath = Path.ChangeExtension(path, ".jpg");
             await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{path}"" -y -vframes 1 -ss {middle} ""{screenPath}""");
 
-            using(var img = Image.FromFile(screenPath))
+            _logger.Information("Thumbnail extraction completed.");
+
+            using (var img = Image.FromFile(screenPath))
                 MediaHandlerHelper.CreateThumbnails(screenPath, img);
 
             File.Delete(screenPath);
@@ -179,8 +140,12 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
             // todo: check actual format?
 
+            _logger.Information($"Conversion started for video file: {inputPath}");
+
             await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{inputPath}"" -f mp4 -vcodec libx264 -preset fast -profile:v main -acodec aac -hide_banner -movflags +faststart -threads 0 ""{outputPath}""");
             File.Delete(inputPath);
+
+            _logger.Information("Video conversion completed.");
         }
 
         #endregion

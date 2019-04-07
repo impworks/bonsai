@@ -19,14 +19,16 @@ namespace Bonsai.Areas.Front.Controllers
     [Authorize(Policy = AuthRequirement.Name)]
     public class PageController: AppControllerBase
     {
-        public PageController(PagePresenterService pages, AuthService auth, CacheService cache)
+        public PageController(PagePresenterService pages, TreePresenterService tree, AuthService auth, CacheService cache)
         {
             _pages = pages;
+            _tree = tree;
             _auth = auth;
             _cache = cache;
         }
 
         private readonly PagePresenterService _pages;
+        private readonly TreePresenterService _tree;
         private readonly AuthService _auth;
         private readonly CacheService _cache;
 
@@ -107,6 +109,17 @@ namespace Bonsai.Areas.Front.Controllers
             {
                 return RedirectToActionPermanent("Tree", new { key = ex.Key });
             }
+        }
+
+        /// <summary>
+        /// Returns the rendered tree.
+        /// </summary>
+        [Route("~/util/tree/{key}")]
+        public async Task<ActionResult> GetTreeData(string key)
+        {
+            var encKey = PageHelper.EncodeTitle(key);
+            var data = await _tree.GetTreeAsync(encKey);
+            return Json(data);
         }
     }
 }

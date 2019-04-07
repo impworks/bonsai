@@ -1,25 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Areas.Front.ViewModels.Tree
 {
     /// <summary>
-    /// Entire contents of the family tree.
+    /// Information about a rendered tree.
     /// </summary>
     public class TreeVM
     {
         /// <summary>
-        /// All available spouse relations.
+        /// ID of the root element.
         /// </summary>
-        public IReadOnlyList<TreeRelationVM> Relations { get; set; }
+        public Guid RootId { get; set; }
 
         /// <summary>
-        /// All known persons.
+        /// Complete layout.
         /// </summary>
-        public IReadOnlyList<TreePersonVM> Persons { get; set; }
-
-        /// <summary>
-        /// ID of the person to center the view.
-        /// </summary>
-        public string Root { get; set; }
+        public JObject Content { get; set; }
     }
 }

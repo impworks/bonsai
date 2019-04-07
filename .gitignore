@@ -296,6 +296,7 @@ wwwroot/assets/fonts/
 wwwroot/media/
 
 External/**/*.*
+Logs/**/*.*
 
 appsettings.Development.json
 appsettings.Production.json

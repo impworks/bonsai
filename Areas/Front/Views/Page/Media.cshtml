@@ -5,7 +5,7 @@
 
 
     ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Body.Title + " &mdash; Медиа";
+    ViewBag.Title = Model.Body.Title + " — Медиа";
 
     var groups = Model.Body.Media
                       .GroupBy(x => x.Date?.ReadableYear)

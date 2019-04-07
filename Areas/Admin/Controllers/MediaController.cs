@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
@@ -23,15 +24,17 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/media")]
     public class MediaController: AdminControllerBase
     {
-        public MediaController(MediaManagerService media, PagesManagerService pages, AppDbContext db)
+        public MediaController(MediaManagerService media, PagesManagerService pages, WorkerAlarmService workerAlarm, AppDbContext db)
         {
             _media = media;
             _pages = pages;
+            _workerAlarm = workerAlarm;
             _db = db;
         }
 
         private readonly MediaManagerService _media;
         private readonly PagesManagerService _pages;
+        private readonly WorkerAlarmService _workerAlarm;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -67,6 +70,9 @@ namespace Bonsai.Areas.Admin.Controllers
                 result.ThumbnailPath = Url.Content(result.ThumbnailPath);
 
                 await _db.SaveChangesAsync();
+
+                if (!result.IsProcessed)
+                    _workerAlarm.FireNewEncoderJob();
 
                 return Json(result);
             }

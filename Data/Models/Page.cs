@@ -79,6 +79,16 @@ namespace Bonsai.Data.Models
         public DateTimeOffset LastUpdateDate { get; set; }
 
         /// <summary>
+        /// Related layout of the family tree.
+        /// </summary>
+        public TreeLayout TreeLayout { get; set; }
+
+        /// <summary>
+        /// FK of the tree layout.
+        /// </summary>
+        public Guid? TreeLayoutId { get; set; }
+
+        /// <summary>
         /// Flag indicating that this resource is removed.
         /// </summary>
         public bool IsDeleted { get; set; }

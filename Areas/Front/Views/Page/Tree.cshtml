@@ -1,15 +1,14 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
-@using Newtonsoft.Json
 @model PageVM<PageTreeVM>
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
 
     ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Body.Title + " &mdash; Фамильное древо";
+    ViewBag.Title = Model.Body.Title + " — Фамильное древо";
 }
 
 <div class="tree">
-    <div class="tree-wrapper" data-src="#tree-contents">
+    <div class="tree-wrapper" data-key="@Model.Body.Key">
         <svg class="tree-back" :width="width" :height="height">
             <polyline :points="e.points" v-for="e in edges" />
         </svg>
@@ -26,11 +25,10 @@
             <img src="@Url.Content("~/assets/img/loading.gif")" alt="Loading"/>
         </h4>
     </div>
+    <div class="tree-error">
+        <h4>Не удалось загрузить дерево.</h4>
+    </div>
 </div>
-
-<script id="tree-contents" type="application/json">
-    @Html.Raw(JsonConvert.SerializeObject(Model.Body.Tree, Formatting.Indented))
-</script>
 
 <script id="tree-card-template" type="text/x-template">
     <div :class="{'tree-card-wrapper': true, male: value.info.IsMale, female: !value.info.IsMale, deceased: value.info.IsDead, active: active}"
@@ -52,6 +50,5 @@
 </script>
 
 @section Scripts {
-    <script src="@Url.Content("~/assets/scripts/vendor-elk.js")"></script>
     <script src="@Url.Content("~/assets/scripts/vendor-vue.js")"></script>
 }

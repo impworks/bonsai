@@ -1,4 +1,4 @@
-﻿namespace Bonsai.Areas.Front.ViewModels.Tree
+﻿namespace Bonsai.Areas.Admin.ViewModels.Tree
 {
     /// <summary>
     /// Spouse relation.

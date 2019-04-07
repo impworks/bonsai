@@ -32,6 +32,7 @@
     "elkjs": "^0.4.1",
     "font-awesome": "^4.7.0",
     "gijgo": "^1.9.10",
+    "gulp-rename": "^1.4.0",
     "jquery": "^3.2.1",
     "jquery-fullscreen-plugin": "^1.0.0",
     "jquery-ui": "^1.12.1",
