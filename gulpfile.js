@@ -107,7 +107,7 @@ gulp.task('content.scripts.tree', function () {
     var outputFolder = './External/tree';
     var elkFolder = './node_modules/elkjs/lib/';
     var elkFiles = [
-        config.content.scripts.tree,
+        config.content.scripts.tree[0],
         elkFolder + 'elk-api.js',
         elkFolder + 'elk-worker.min.js'
     ];

@@ -30,18 +30,18 @@ A family wiki and photoalbum engine (in Russian).
 For development, you will need the following:
 
 * [.NET Core 2.1](https://dotnet.microsoft.com/download/dotnet-core/2.1): the main runtime for Bonsai
-* [NodeJS 10+](https://nodejs.org/en/): required for building scripts and styles
 * [Java 8+](https://java.com/en/download/windows-64bit.jsp): required for ElasticSearch
 
 ### Windows
-1. Install [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
-2. Install [ElasticSearch 5.6.x](https://www.elastic.co/downloads/past-releases) (6.0 is not supported yet)
-3. Install [Russian Morphology](https://github.com/imotov/elasticsearch-analysis-morphology) for ElasticSearch.
+1. Install [NodeJS](https://nodejs.org/en/) (10+)
+2. Install [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
+3. Install [ElasticSearch 5.6.x](https://www.elastic.co/downloads/past-releases) (6.0 is not supported yet)
+4. Install [Russian Morphology](https://github.com/imotov/elasticsearch-analysis-morphology) for ElasticSearch.
    
    If you're getting a "Syntax of the command is incorrect" error during this step, make sure you have a `JAVA_HOME` environment variable defined.
-4. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
-5. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte)
-6. Create a file called `appsettings.Development.json`, add the connection string(s) and auth credentials for providers that you want to use (at least one is required):
+5. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
+6. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte)
+7. Create a file called `appsettings.Development.json`, add the connection string(s) and auth credentials for providers that you want to use (at least one is required):
 
     ```
     {
@@ -70,18 +70,18 @@ For development, you will need the following:
     ```
 	
     
-7. Create the database:
+8. Create the database:
 
     ```
     dotnet ef database update
     ```
-8. Build the styles and scripts:
+9. Build the styles and scripts:
 
     ```
     npm install
     npm run build
     ```
-9. Run the app (as Visual Studio project or using `dotnet run`).
+10. Run the app (as Visual Studio project or using `dotnet run`).
 
 ## Linux + Docker
 1. Modify your `vm.max_map_count` to at least 262,144 for ElasticSearch to start:
