@@ -5,10 +5,14 @@ module.exports = function(callback, jsonIn) {
     var elkJson = generateElkJson(data);
     var elk = new ELK();
 
-    elk.layout(elkJson).then(function(result) {
-        var jsonOut = JSON.stringify(result);
-        callback(null, jsonOut);
-    });
+    elk.layout(elkJson)
+       .then(function (result) {
+            var jsonOut = JSON.stringify(result);
+            callback(null, jsonOut);
+        }, function(err) {
+            console.error('Tree layout failed!', err);
+            callback(null, null);
+       });
 };
 
 function generateElkJson(data) {
@@ -24,6 +28,7 @@ function generateElkJson(data) {
     processRelations();
 
     return {
+        id: 'root',
         layoutOptions: {
             'elk.algorithm': 'layered',
             'elk.direction': 'DOWN',
