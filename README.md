@@ -91,9 +91,15 @@ For development, you will need the following:
     ```
 
 2. Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte)
-3. Download the [docker-compose](docker-compose.yml) file and fill in the credentials in environment variable section where applicable. Remove credentials:
+3. Download the [docker-compose](docker-compose.yml). You will need to **enter authorization credentials** where applicable and **replace a couple of placeholders** for HTTPS certificate issuing:
 
    ```
+   traefik:
+     command:
+     - "--acme.email=@@YOUR_EMAIL@@ 
+
+   ...
+
    environment:
       - Auth__Facebook__AppId=
       - Auth__Facebook__AppSecret=
@@ -105,10 +111,17 @@ For development, you will need the following:
       - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
       - ASPNETCORE_ENVIRONMENT=Production
-   ```
+
+    ...
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host: @@YOUR_IP@@.xip.io"
+    ```
    
 4. Bring everything up using `docker compose`:
    ```
    docker-compose up -d
    ```
-5. After everything is brought up Bonsai will listen on port 80. It may be a good idea to hide it behind some kind of reverse proxy.
+5. After everything is brought up Bonsai will listen on ports 80 and 443.
