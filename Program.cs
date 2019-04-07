@@ -20,6 +20,7 @@ namespace Bonsai
                                .Enrich.FromLogContext()
                                .MinimumLevel.Information()
                                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+                               .WriteTo.Console()
                                .WriteTo.File("Logs/workers-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7);
                        })
                        .UseStartup<Startup>()
