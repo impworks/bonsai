@@ -35,11 +35,19 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Suggests pages of specified types.
         /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestPagesAsync(string query, IReadOnlyList<PageType> types = null)
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestPagesAsync(
+            string query,
+            IReadOnlyList<PageType> types = null,
+            Func<IReadOnlyList<Guid>, IReadOnlyList<Guid>> extraFilter = null
+        )
         {
             var search = await _elastic.SearchAutocompleteAsync(query, types, 100);
 
-            var ids = search.Select(x => x.Id).ToList();
+            var ids = (IReadOnlyList<Guid>) search.Select(x => x.Id).ToList();
+
+            if (extraFilter != null)
+                ids = extraFilter(ids);
+
             var idsOrder = ids.Select((val, id) => new { Value = val, Index = id })
                               .ToDictionary(x => x.Value, x => x.Index);
 
@@ -53,6 +61,26 @@ namespace Bonsai.Areas.Admin.Logic
                 page.MainPhotoPath = GetFullThumbnailPath(page);
 
             return pages.OrderBy(x => idsOrder[x.Id]).ToList();
+        }
+
+        /// <summary>
+        /// Suggests pages for the relations editor.
+        /// </summary>
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestRelationPagesAsync(string query, IReadOnlyList<PageType> types, RelationType relType, Guid destId)
+        {
+            var existingRels = await _db.Relations
+                                        .Where(x => x.IsDeleted == false
+                                                    && x.DestinationId == destId
+                                                    && x.Type == relType)
+                                        .Select(x => x.SourceId)
+                                        .Distinct()
+                                        .ToDictionaryAsync(x => x, x => true);
+
+            return await SuggestPagesAsync(
+                query,
+                types,
+                ids => ids.Where(id => !existingRels.ContainsKey(id)).ToList()
+            );
         }
 
         /// <summary>
