@@ -1,5 +1,6 @@
 FROM node:lts-alpine as node
 WORKDIR /build
+ADD package.json .
 ADD package-lock.json .
 RUN npm ci
 ADD . .
