@@ -15,15 +15,12 @@
     "watch": "gulp content.watch"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-clean-css": "^3.9.2",
+    "gulp": "^4.0.0",
+    "gulp-clean-css": "^4.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^3.0.0",
-    "gulp-less": "^3.4.0",
     "gulp-rename": "^1.4.0",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^3.0.2",
-    "gulp-watch": "^4.3.11"
+    "gulp-sass": "^4.0.2"
   },
   "dependencies": {
     "blueimp-file-upload": "^9.22.0",
