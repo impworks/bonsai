@@ -1,9 +1,18 @@
-/// <binding ProjectOpened='content.watch, build' />
+/// <binding ProjectOpened='watch, dev' />
 const gulp = require('gulp');
+
 const sass = require('gulp-sass');
 const concatcss = require('gulp-concat-css');
+const mincss = require('gulp-clean-css');
+
 const concatjs = require('gulp-concat');
+const minjs = require('gulp-uglify');
+
 const rename = require('gulp-rename');
+
+const gulpif = require('gulp-if');
+const isProd = () => process.env.NODE_ENV === 'production';
+const ifProd = act => gulpif(isProd(), act);
 
 // ================
 // Configuration
@@ -32,9 +41,10 @@ const rename = require('gulp-rename');
                 './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
                 './node_modules/simplemde/dist/simplemde.min.js'
             ],
-            vue: [
-                './node_modules/vue/dist/vue.js'
-            ]
+            vue: {
+                dev: './node_modules/vue/dist/vue.js',
+                build: './node_modules/vue/dist/vue.min.js'
+            }
         },
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
@@ -78,24 +88,28 @@ const content_styles = function() {
     return gulp.src(config.content.styles.root)
                .pipe(sass())
                .pipe(concatcss('style.css'))
+               .pipe(ifProd(mincss()))
                .pipe(gulp.dest(config.assets.styles));
 };
 
 const content_scripts_front = () => {
     return gulp.src(config.content.scripts.front)
                .pipe(concatjs('front.js'))
+               .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
 const content_scripts_common = () => {
     return gulp.src(config.content.scripts.common)
                .pipe(concatjs('common.js'))
+               .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
 const content_scripts_admin = () => {
     return gulp.src(config.content.scripts.admin)
                .pipe(concatjs('admin.js'))
+               .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
@@ -137,29 +151,39 @@ const watch = () => {
 const vendor_scripts_common = () => {
     return gulp.src(config.vendor.scripts.common)
                .pipe(concatjs('vendor-common.js'))
+               .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
 const vendor_scripts_admin = () => {
     return gulp.src(config.vendor.scripts.admin)
                .pipe(concatjs('vendor-admin.js'))
+               .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
 const vendor_scripts_vue = () => {
-    return gulp.src(config.vendor.scripts.vue)
+    const vue = config.vendor.scripts.vue;
+    return gulp.src(isProd() ? vue.build : vue.dev)
                .pipe(concatjs('vendor-vue.js'))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
-const vendor_fonts = function() {
+const vendor_fonts = () => {
     return gulp.src(config.vendor.fonts)
                .pipe(gulp.dest(config.assets.fonts));
 };
 
 const vendor = gulp.parallel(vendor_scripts_common, vendor_scripts_admin, vendor_scripts_vue, vendor_fonts);
 
-const build = gulp.parallel(content, vendor);
+const dev = gulp.parallel(content, vendor);
+
+const set_release = done => {
+    process.env.NODE_ENV = 'production';
+    return done();
+};
+
+const build = gulp.series(set_release, dev);
 
 module.exports = {
     content_styles,
@@ -174,6 +198,7 @@ module.exports = {
     vendor_scripts_vue,
     vendor_fonts,
     vendor,
+    dev,
     build
 };
 
