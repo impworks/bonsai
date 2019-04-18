@@ -90,7 +90,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             result.Items = await query.Where(x => x.IsDeleted == false)
                                    .OrderBy(request.OrderBy, request.OrderDescending)
-                                   .ProjectTo<MediaThumbnailExtendedVM>()
+                                   .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
                                    .ToListAsync();
@@ -253,7 +253,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return await _db.Media
                             .Where(x => ids.Contains(x.Id))
-                            .ProjectTo<MediaUploadResultVM>()
+                            .ProjectTo<MediaUploadResultVM>(_mapper.ConfigurationProvider)
                             .ToListAsync();
         }
 

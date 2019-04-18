@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Bonsai.Code.Infrastructure;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bonsai.Code.Config
@@ -22,11 +23,11 @@ namespace Bonsai.Code.Config
                                             && x.GetMethods().Any(y => y.Name == nameof(IMapped.Configure) && y.DeclaringType == x))
                                 .ToList();
 
-            services.AddAutoMapper(opts =>
+            void CreateProfile(IMapperConfigurationExpression opts)
             {
                 opts.CreateProfile("Default", p =>
                 {
-                    foreach(var type in types)
+                    foreach (var type in types)
                     {
                         try
                         {
@@ -39,9 +40,22 @@ namespace Bonsai.Code.Config
                         }
                     }
                 });
-            });
+            }
 
-            Mapper.AssertConfigurationIsValid();
+            services.AddSingleton<IConfigurationProvider>(sp => new MapperConfiguration(CreateProfile));
+            services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<IConfigurationProvider>(), sp.GetService));
+        }
+
+        /// <summary>
+        /// Ensures that the mapper configuration is valid.
+        /// </summary>
+        private void ValidateAutomapperConfig(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var mapper = scope.ServiceProvider.GetService<IMapper>();
+                mapper.ConfigurationProvider.AssertConfigurationIsValid();
+            }
         }
     }
 }

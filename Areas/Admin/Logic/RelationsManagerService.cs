@@ -83,10 +83,10 @@ namespace Bonsai.Areas.Admin.Logic
             else
                 query = query.OrderBy(x => x.Type, request.OrderDescending);
 
-            result.Items = await query.ProjectTo<RelationTitleVM>()
-                                   .Skip(PageSize * request.Page)
-                                   .Take(PageSize)
-                                   .ToListAsync();
+            result.Items = await query.ProjectTo<RelationTitleVM>(_mapper.ConfigurationProvider)
+                                      .Skip(PageSize * request.Page)
+                                      .Take(PageSize)
+                                      .ToListAsync();
 
             return result;
         }
@@ -177,7 +177,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return await _db.Relations
                             .Where(x => x.IsDeleted == false && x.IsComplementary == false)
-                            .ProjectTo<RelationTitleVM>()
+                            .ProjectTo<RelationTitleVM>(_mapper.ConfigurationProvider)
                             .GetAsync(x => x.Id == id, "Связь не найдена");
         }
 

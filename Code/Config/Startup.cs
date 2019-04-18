@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,43 +50,52 @@ namespace Bonsai.Code.Config
         public void Configure(IApplicationBuilder app)
         {
             if (Environment.IsDevelopment())
-            {
                 app.UseBrowserLink();
-            }
 
             if (Configuration["WebServer:RequireHttps"].TryParse<bool>())
-            {
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
-            }
 
             if (Configuration["Debug:DetailedExceptions"].TryParse<bool>())
-            {
                 app.UseDeveloperExceptionPage();
-            }
 
+            ValidateAutomapperConfig(app);
             InitDatabase(app);
-
-            var culture = CultureInfo.GetCultureInfo("ru-RU");
-
-            var forwardedHeadersOptions = new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.All,
-            };
-            forwardedHeadersOptions.KnownProxies.Clear();
-            forwardedHeadersOptions.KnownNetworks.Clear();
             
-            app.UseForwardedHeaders(forwardedHeadersOptions)
+            app.UseForwardedHeaders(GetforwardedHeadersOptions())
                .UseStatusCodePagesWithReExecute("/error/{0}")
                .UseStaticFiles()
                .UseAuthentication()
                .UseSession()
-               .UseRequestLocalization(new RequestLocalizationOptions
-               {
-                   DefaultRequestCulture = new RequestCulture(culture),
-                   SupportedCultures = new [] { culture },
-                   SupportedUICultures = new [] { culture }
-               })
+               .UseRequestLocalization(GetRequestLocalizationOptions())
                .UseMvc(routes => { routes.MapAreaRoute("admin", "Admin", "admin/{controller}/{action}/{id?}"); });
+        }
+
+        /// <summary>
+        /// Configures the options for header forwarding.
+        /// </summary>
+        private ForwardedHeadersOptions GetforwardedHeadersOptions()
+        {
+            var opts = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All,
+            };
+            opts.KnownProxies.Clear();
+            opts.KnownNetworks.Clear();
+            return opts;
+        }
+
+        /// <summary>
+        /// Configures the options for request localization.
+        /// </summary>
+        private RequestLocalizationOptions GetRequestLocalizationOptions()
+        {
+            var culture = CultureInfo.GetCultureInfo("ru-RU");
+            return new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(culture),
+                SupportedCultures = new[] {culture},
+                SupportedUICultures = new[] {culture}
+            };
         }
     }
 }
