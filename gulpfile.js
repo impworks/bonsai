@@ -1,19 +1,24 @@
-/// <binding ProjectOpened='content.watch, build' />
-var gulp = require('gulp'),
-    gutil = require('gulp-util'),
-    sass = require('gulp-sass'),
-    concatcss = require('gulp-concat-css'),
-    concatjs = require('gulp-concat'),
-    mincss = require('gulp-clean-css'),
-    minjs = require('gulp-uglify'),
-    watch = require('gulp-watch'),
-    rename = require('gulp-rename');
+/// <binding ProjectOpened='watch, dev' />
+const gulp = require('gulp');
+
+const sass = require('gulp-sass');
+const concatcss = require('gulp-concat-css');
+const mincss = require('gulp-clean-css');
+
+const concatjs = require('gulp-concat');
+const minjs = require('gulp-uglify');
+
+const rename = require('gulp-rename');
+
+const gulpif = require('gulp-if');
+const isProd = () => process.env.NODE_ENV === 'production';
+const ifProd = act => gulpif(isProd(), act);
 
 // ================
 // Configuration
 // ================
 
-var config = {
+ const config = {
     vendor: {
         scripts: {
             common: [
@@ -36,9 +41,10 @@ var config = {
                 './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
                 './node_modules/simplemde/dist/simplemde.min.js'
             ],
-            vue: [
-                './node_modules/vue/dist/vue.js'
-            ]
+            vue: {
+                dev: './node_modules/vue/dist/vue.js',
+                build: './node_modules/vue/dist/vue.min.js'
+            }
         },
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
@@ -78,105 +84,129 @@ var config = {
 // Bonsai tasks
 // ================
 
-gulp.task('content.styles', function() {
-    gulp.src(config.content.styles.root)
-        .pipe(sass())
-        .pipe(concatcss('style.css'))
-        .pipe(gulp.dest(config.assets.styles));
-});
+const content_styles = function() {
+    return gulp.src(config.content.styles.root)
+               .pipe(sass())
+               .pipe(concatcss('style.css'))
+               .pipe(ifProd(mincss()))
+               .pipe(gulp.dest(config.assets.styles));
+};
 
-gulp.task('content.scripts.front', function () {
-    gulp.src(config.content.scripts.front)
-        .pipe(concatjs('front.js'))
-        .pipe(gulp.dest(config.assets.scripts));
-});
+const content_scripts_front = () => {
+    return gulp.src(config.content.scripts.front)
+               .pipe(concatjs('front.js'))
+               .pipe(ifProd(minjs()))
+               .pipe(gulp.dest(config.assets.scripts));
+};
 
-gulp.task('content.scripts.common', function () {
-    gulp.src(config.content.scripts.common)
-        .pipe(concatjs('common.js'))
-        .pipe(gulp.dest(config.assets.scripts));
-});
+const content_scripts_common = () => {
+    return gulp.src(config.content.scripts.common)
+               .pipe(concatjs('common.js'))
+               .pipe(ifProd(minjs()))
+               .pipe(gulp.dest(config.assets.scripts));
+};
 
-gulp.task('content.scripts.admin', function () {
-    gulp.src(config.content.scripts.admin)
-        .pipe(concatjs('admin.js'))
-        .pipe(gulp.dest(config.assets.scripts));
-});
+const content_scripts_admin = () => {
+    return gulp.src(config.content.scripts.admin)
+               .pipe(concatjs('admin.js'))
+               .pipe(ifProd(minjs()))
+               .pipe(gulp.dest(config.assets.scripts));
+};
 
-gulp.task('content.scripts.tree', function () {
-    var outputFolder = './External/tree';
-    var elkFolder = './node_modules/elkjs/lib/';
-    var elkFiles = [
+const content_scripts_tree = () => {
+    const outputFolder = './External/tree';
+    const elkFolder = './node_modules/elkjs/lib/';
+    const elkFiles = [
         config.content.scripts.tree[0],
         elkFolder + 'elk-api.js',
         elkFolder + 'elk-worker.min.js'
     ];
-    gulp.src(elkFiles).pipe(gulp.dest(outputFolder));
-    gulp.src(elkFolder + 'main.js').pipe(rename('elk.js')).pipe(gulp.dest(outputFolder));
-});
 
-gulp.task('content', ['content.styles', 'content.scripts.front', 'content.scripts.admin', 'content.scripts.common', 'content.scripts.tree']);
-
-gulp.task('content.watch', function() {
-    watch(
-        config.content.styles.all,
-        function () { gulp.start('content.styles'); }
+    return promisify(
+        gulp.src(elkFiles).pipe(gulp.dest(outputFolder)),
+        gulp.src(elkFolder + 'main.js').pipe(rename('elk.js')).pipe(gulp.dest(outputFolder))
     );
+};
 
-    watch(
-        config.content.scripts.front,
-        function () { gulp.start('content.scripts.front'); }
-    );
+const content = gulp.parallel(
+    content_styles,
+    content_scripts_front,
+    content_scripts_admin,
+    content_scripts_common,
+    content_scripts_tree
+);
 
-    watch(
-        config.content.scripts.common,
-        function () { gulp.start('content.scripts.common'); }
-    );
-
-    watch(
-        config.content.scripts.admin,
-        function () { gulp.start('content.scripts.admin'); }
-    );
-
-    watch(
-        config.content.scripts.tree,
-        function () { gulp.start('content.scripts.tree'); }
-    );
-});
+const watch = () => {
+    gulp.watch(config.content.styles.all, content_styles);
+    gulp.watch(config.content.scripts.front, content_scripts_front);
+    gulp.watch(config.content.scripts.common, content_scripts_common);
+    gulp.watch(config.content.scripts.admin, content_scripts_admin);
+    gulp.watch(config.content.scripts.tree, content_scripts_tree);
+};
 
 // ================
 // Vendor tasks
 // ================
 
-gulp.task('vendor.scripts.common', function () {
-    gulp.src(config.vendor.scripts.common)
-        .pipe(concatjs('vendor-common.js'))
-        //.pipe(minjs({  }))
-        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-        .pipe(gulp.dest(config.assets.scripts));
-});
+const vendor_scripts_common = () => {
+    return gulp.src(config.vendor.scripts.common)
+               .pipe(concatjs('vendor-common.js'))
+               .pipe(ifProd(minjs()))
+               .pipe(gulp.dest(config.assets.scripts));
+};
 
-gulp.task('vendor.scripts.admin', function () {
-    gulp.src(config.vendor.scripts.admin)
-        .pipe(concatjs('vendor-admin.js'))
-        //.pipe(minjs({  }))
-        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-        .pipe(gulp.dest(config.assets.scripts));
-});
+const vendor_scripts_admin = () => {
+    return gulp.src(config.vendor.scripts.admin)
+               .pipe(concatjs('vendor-admin.js'))
+               .pipe(ifProd(minjs()))
+               .pipe(gulp.dest(config.assets.scripts));
+};
 
-gulp.task('vendor.scripts.vue', function () {
-    gulp.src(config.vendor.scripts.vue)
-        .pipe(concatjs('vendor-vue.js'))
-        //.pipe(minjs({  }))
-        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-        .pipe(gulp.dest(config.assets.scripts));
-});
+const vendor_scripts_vue = () => {
+    const vue = config.vendor.scripts.vue;
+    return gulp.src(isProd() ? vue.build : vue.dev)
+               .pipe(concatjs('vendor-vue.js'))
+               .pipe(gulp.dest(config.assets.scripts));
+};
 
-gulp.task('vendor.fonts', function() {
-    gulp.src(config.vendor.fonts)
-        .pipe(gulp.dest(config.assets.fonts));
-});
+const vendor_fonts = () => {
+    return gulp.src(config.vendor.fonts)
+               .pipe(gulp.dest(config.assets.fonts));
+};
 
-gulp.task('vendor', ['vendor.scripts.common', 'vendor.scripts.admin', 'vendor.scripts.vue', 'vendor.fonts']);
+const vendor = gulp.parallel(vendor_scripts_common, vendor_scripts_admin, vendor_scripts_vue, vendor_fonts);
 
-gulp.task('build', ['vendor', 'content']);
+const dev = gulp.parallel(content, vendor);
+
+const set_release = done => {
+    process.env.NODE_ENV = 'production';
+    return done();
+};
+
+const build = gulp.series(set_release, dev);
+
+module.exports = {
+    content_styles,
+    content_scripts_front,
+    content_scripts_admin,
+    content_scripts_common,
+    content_scripts_tree,
+    watch,
+    content,
+    vendor_scripts_common,
+    vendor_scripts_admin,
+    vendor_scripts_vue,
+    vendor_fonts,
+    vendor,
+    dev,
+    build
+};
+
+function promisify(...elems) {
+    return Promise.all(
+        elems.map(x => new Promise(
+            (ok, err) => x.on('error', err)
+                          .on('end', ok)
+        ))
+    );
+}

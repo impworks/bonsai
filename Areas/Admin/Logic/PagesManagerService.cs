@@ -66,7 +66,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var items = await query.Where(x => x.IsDeleted == false)
                                    .OrderBy(request.OrderBy, request.OrderDescending)
-                                   .ProjectTo<PageTitleExtendedVM>()
+                                   .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
                                    .ToListAsync();
@@ -87,7 +87,7 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Pages
                             .Include(x => x.MainPhoto)
                             .Where(x => pages.Any(y => x.Id == y) && x.IsDeleted == false)
-                            .ProjectTo<PageTitleExtendedVM>()
+                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                             .ToDictionaryAsync(x => x.Id, x => x);
         }
 
@@ -262,7 +262,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return await _db.Pages
                             .Where(x => x.IsDeleted == false)
-                            .ProjectTo<PageTitleExtendedVM>()
+                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                             .GetAsync(x => x.Id == id, "Страница не найдена");
         }
 
@@ -464,7 +464,6 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         private T TryDeserialize<T>(string value) where T: class
         {
-
             try
             {
                 return JsonConvert.DeserializeObject<T>(value);

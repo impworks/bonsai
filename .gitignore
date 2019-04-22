@@ -288,8 +288,6 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-package-lock.json
-
 wwwroot/assets/styles/
 wwwroot/assets/scripts/
 wwwroot/assets/fonts/

@@ -1,7 +1,8 @@
 FROM node:lts-alpine as node
 WORKDIR /build
 ADD package.json .
-RUN npm install
+ADD package-lock.json .
+RUN npm ci
 ADD . .
 RUN node_modules/.bin/gulp build
 

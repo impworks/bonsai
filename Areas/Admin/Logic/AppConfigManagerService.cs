@@ -27,7 +27,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<UpdateAppConfigVM> RequestUpdateAsync()
         {
             return await _db.Config
-                            .ProjectTo<UpdateAppConfigVM>()
+                            .ProjectTo<UpdateAppConfigVM>(_mapper.ConfigurationProvider)
                             .FirstAsync();
         }
 

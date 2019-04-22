@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.Logic;
@@ -21,16 +22,18 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class SuggestService
     {
-        public SuggestService(AppDbContext db, ElasticService elastic, IUrlHelper urlHelper)
+        public SuggestService(AppDbContext db, ElasticService elastic, IUrlHelper urlHelper, IMapper mapper)
         {
             _db = db;
             _elastic = elastic;
             _url = urlHelper;
+            _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
         private readonly ElasticService _elastic;
         private readonly IUrlHelper _url;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Suggests pages of specified types.
@@ -53,7 +56,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var pages = await _db.Pages
                                  .Where(x => ids.Contains(x.Id))
-                                 .ProjectTo<PageTitleExtendedVM>()
+                                 .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                                  .ToListAsync();
 
             // URL is global for easier usage in JSON
@@ -105,7 +108,7 @@ namespace Bonsai.Areas.Admin.Logic
             var vms = await q.OrderBy(x => x.Title)
                                .Skip(offset.Value)
                                .Take(count.Value)
-                               .ProjectTo<PageTitleExtendedVM>()
+                               .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                                .ToListAsync();
 
             foreach (var vm in vms)

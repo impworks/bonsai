@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Users;
@@ -14,12 +15,14 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class DashboardPresenterService
     {
-        public DashboardPresenterService(AppDbContext db)
+        public DashboardPresenterService(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Returns the dashboard data.
@@ -48,10 +51,9 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Pages
                             .OrderByDescending(x => x.LastUpdateDate)
                             .Take(count)
-                            .ProjectTo<PageTitleExtendedVM>()
+                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                             .ToListAsync();
         }
-
         
         /// <summary>
         /// Returns the last X uploaded media files (for front page).
@@ -61,7 +63,7 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Media
                             .OrderByDescending(x => x.UploadDate)
                             .Take(count)
-                            .ProjectTo<MediaThumbnailExtendedVM>()
+                            .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
                             .ToListAsync();
         }
 
@@ -72,7 +74,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return await _db.Users
                             .Where(x => x.IsValidated == false)
-                            .ProjectTo<UserTitleVM>()
+                            .ProjectTo<UserTitleVM>(_mapper.ConfigurationProvider)
                             .OrderBy(x => x.FullName)
                             .ToListAsync();
         }

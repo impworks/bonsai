@@ -199,7 +199,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var users = await _db.Users
                                  .Where(x => x.LockoutEnd != DateTimeOffset.MaxValue)
-                                 .ProjectTo<UserTitleVM>()
+                                 .ProjectTo<UserTitleVM>(_mapper.ConfigurationProvider)
                                  .ToListAsync();
 
             foreach (var user in users)
