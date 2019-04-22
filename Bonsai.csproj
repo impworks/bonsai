@@ -6,6 +6,7 @@
     <Description>Family wiki engine</Description>
     <UserSecretsId>4d988f1f-6a19-42a7-aa8f-62a8f3619830</UserSecretsId>
     <Company />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
