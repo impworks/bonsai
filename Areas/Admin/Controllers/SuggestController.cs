@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.ViewModels.Common;
+using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Code.Utils;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
@@ -34,13 +37,24 @@ namespace Bonsai.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// Suggests pages for relation source / media tag.
+        /// Suggests pages for relation destination / media tag.
         /// </summary>
         [HttpGet]
         [Route("suggest/pages")]
-        public async Task<ActionResult> SuggestPages(string query, int? count = null, int? offset = null, PageType[] types = null)
+        public async Task<ActionResult> SuggestPages([FromQuery] PickRequestVM<PageType> vm)
         {
-            var pages = await _suggest.SuggestPagesAsync(query, types);
+            var pages = await _suggest.SuggestPagesAsync(vm);
+            return Json(pages);
+        }
+
+        /// <summary>
+        /// Suggests pages for relation source.
+        /// </summary>
+        [HttpGet]
+        [Route("suggest/pages/rel")]
+        public async Task<ActionResult> SuggestPagesForRelationSource([FromQuery] RelationSuggestQueryVM vm)
+        {
+            var pages = await _suggest.SuggestRelationPagesAsync(vm);
             return Json(pages);
         }
 
@@ -49,9 +63,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("pick/pages")]
-        public async Task<ActionResult> PickPages(string query = null, int? count = null, int? offset = null, PageType[] types = null)
+        public async Task<ActionResult> PickPages([FromQuery] PickRequestVM<PageType> vm)
         {
-            var media = await _suggest.GetPickablePagesAsync(query, count, offset, types);
+            var media = await _suggest.GetPickablePagesAsync(vm);
             return Json(media);
         }
 
@@ -60,9 +74,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpGet]
         [Route("pick/media")]
-        public async Task<ActionResult> PickMedia(string query = null, int? count = null, int? offset = null, MediaType[] types = null)
+        public async Task<ActionResult> PickMedia([FromQuery] PickRequestVM<MediaType> vm)
         {
-            var media = await _suggest.GetPickableMediaAsync(query, count, offset, types);
+            var media = await _suggest.GetPickableMediaAsync(vm);
             return Json(media);
         }
     }

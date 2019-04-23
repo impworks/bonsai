@@ -25,13 +25,16 @@
         onChange: function (value) {
             clear($sourceEditor);
             clear($destEditor);
-            refreshProperties(value);
+            refreshProperties(value, true);
         }
     });
 
     setupPagePicker($sourceEditor, 'source');
     setupPagePicker($destEditor, 'dest');
     setupPagePicker($eventEditor, [2]);
+
+    $sourceEditor.on('change', function () { preload($destEditor, 'dest'); });
+    $destEditor.on('change', function () { preload($sourceEditor, 'source'); });
 
     setupDatePicker($durationStartEditor, null, $durationEndEditor);
     setupDatePicker($durationEndEditor, $durationStartEditor, null);
@@ -42,11 +45,11 @@
         // loads initial types
         var type = $typeEditor[0].selectize.items[0];
         if (typeof type === 'string') {
-            refreshProperties(type);
+            refreshProperties(type, false);
         }
     }
 
-    function refreshProperties(type) {
+    function refreshProperties(type, force) {
         $.ajax({
                 url: '/admin/relations/editorProps',
                 data: { relType: type }
@@ -60,8 +63,10 @@
                 $durationRow.toggle(!!data.showDuration);
                 $eventRow.toggle(!!data.showEvent);
 
-                preload($sourceEditor, 'source');
-                preload($destEditor, 'dest');
+                if (force) {
+                    preload($sourceEditor, 'source');
+                    preload($destEditor, 'dest');
+                }
 
                 $('.validation-result').hide();
             });
@@ -73,7 +78,12 @@
         var curr = s.items.length > 0 ? s.options[s.items[0]] : {};
         var query = curr.title || '';
         s.load(function(callback) {
-            loadData(query, typesDef, callback);
+            var url = getQueryUrl(query, typesDef, callback);
+            $.ajax(url).done(function (data) {
+                s.clearOptions();
+                s.renderCache = {};
+                callback(data);
+            });
         });
     }
 
@@ -85,16 +95,26 @@
         s.renderCache = {};
     }
 
-    function loadData(query, typesDef, callback) {
+    function getQueryUrl(query, typesDef) {
         // loads data according to current query
-        var currTypes = typeof typesDef === 'string' ? types[typesDef] : typesDef;
-        var url = '/admin/suggest/pages?query=' + encodeURIComponent(query);
-        currTypes.forEach(function (t) { url += '&types=' + encodeURIComponent(t); });
 
-        $.ajax(url)
-            .done(function(data) {
-                callback(data);
-            });
+        if (typeof typesDef === 'object') {
+            return getUrl('/admin/suggest/pages', { query: query, types: typesDef });
+        }
+
+        var args = {
+            query: query,
+            types: types[typesDef],
+            relationType: getSelected($typeEditor)
+        };
+
+        if (typesDef === 'source') {
+            args.destinationId = getSelected($destEditor);
+        } else {
+            args.sourceId = getSelected($sourceEditor);
+        }
+
+        return getUrl('/admin/suggest/pages/rel', args);
     }
 
     function setupPagePicker($elem, typesDef) {
@@ -109,7 +129,8 @@
             placeholder: 'Введите название страницы',
             preload: true,
             load: function (query, callback) {
-                loadData(query, typesDef, callback);
+                var url = getQueryUrl(query, typesDef, callback);
+                $.ajax(url).done(callback);
             }
         });
     }
@@ -126,5 +147,45 @@
                 return $next != null ? $next.val() : null;
             }
         });
+    }
+
+    function getUrl(root, args) {
+        var parts = [];
+
+        function addPart(key, value) {
+            if (value === null || typeof value === 'undefined' || value === '') {
+                return;
+            }
+
+            parts.push({ key: key, value: value });
+        }
+
+        for (var pty in args) {
+            if (!args.hasOwnProperty(pty)) {
+                continue;
+            }
+
+            var elem = args[pty];
+            if (Array.isArray(elem)) {
+                for (var i = 0; i < elem.length; i++) {
+                    addPart(pty, elem[i]);
+                }
+            } else {
+                addPart(pty, elem);
+            }
+        }
+
+        if (parts.length === 0) {
+            return root;
+        }
+
+        var enc = encodeURIComponent;
+        var query = parts.map(function (e) { return enc(e.key) + "=" + enc(e.value); }).join("&");
+        return root + "?" + query;
+    }
+
+    function getSelected($elem) {
+        var items = $elem[0].selectize.items;
+        return items.length > 0 ? items[0] : undefined;
     }
 });

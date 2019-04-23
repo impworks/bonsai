@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
+using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.DomainModel.Media;
@@ -38,50 +40,87 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Suggests pages of specified types.
         /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestPagesAsync(string query, IReadOnlyList<PageType> types = null)
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestPagesAsync(
+            PickRequestVM<PageType> request,
+            Func<IReadOnlyList<Guid>, IReadOnlyList<Guid>> extraFilter = null
+        )
         {
-            var search = await _elastic.SearchAutocompleteAsync(query, types, 100);
+            var search = await _elastic.SearchAutocompleteAsync(request.Query, request.Types, 100);
 
-            var ids = search.Select(x => x.Id).ToList();
-            var idsOrder = ids.Select((val, id) => new { Value = val, Index = id })
-                              .ToDictionary(x => x.Value, x => x.Index);
+            var ids = (IReadOnlyList<Guid>) search.Select(x => x.Id).ToList();
+
+            if (extraFilter != null)
+                ids = extraFilter(ids);
 
             var pages = await _db.Pages
                                  .Where(x => ids.Contains(x.Id))
                                  .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
-                                 .ToListAsync();
+                                 .ToDictionaryAsync(x => x.Id, x => x);
 
             // URL is global for easier usage in JSON
-            foreach (var page in pages)
+            foreach (var page in pages.Values)
                 page.MainPhotoPath = GetFullThumbnailPath(page);
 
-            return pages.OrderBy(x => idsOrder[x.Id]).ToList();
+            return ids.Select(x => pages[x]).ToList();
+        }
+
+        /// <summary>
+        /// Suggests pages for the relations editor.
+        /// </summary>
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> SuggestRelationPagesAsync(RelationSuggestQueryVM request)
+        {
+            if (request == null)
+                return null;
+
+            var subRequest = new PickRequestVM<PageType> {Query = request.Query, Types = request.Types};
+
+            if (request.DestinationId == null && request.SourceId == null)
+                return await SuggestPagesAsync(subRequest);
+
+            var queryRoot = _db.Relations
+                               .Where(x => x.IsDeleted == false);
+
+            var idQuery = request.DestinationId != null
+                ? queryRoot.Where(x => x.DestinationId == request.DestinationId)
+                           .Select(x => x.SourceId)
+                : queryRoot.Where(x => x.SourceId == request.SourceId)
+                           .Select(x => x.DestinationId);
+
+            var existingIds = await idQuery.ToHashSetAsync();
+
+            var selfId = request.DestinationId ?? request.SourceId ?? Guid.Empty;
+            existingIds.Add(selfId);
+
+            return await SuggestPagesAsync(
+                new PickRequestVM<PageType> { Query = request.Query, Types = request.Types },
+                ids => ids.Where(id => !existingIds.Contains(id)).ToList()
+            );
         }
 
         /// <summary>
         /// Returns the pickable pages.
         /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetPickablePagesAsync(string query, int? count, int? offset, PageType[] types = null)
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetPickablePagesAsync(PickRequestVM<PageType> request)
         {
             var q = _db.Pages.AsQueryable();
 
-            if (!string.IsNullOrEmpty(query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
-                var queryLower = query.ToLower();
+                var queryLower = request.Query.ToLower();
                 q = q.Where(x => x.Aliases.Any(y => y.Title.ToLower().Contains(queryLower)));
             }
 
-            if (types?.Length > 0)
-                q = q.Where(x => types.Contains(x.Type));
+            if (request.Types?.Length > 0)
+                q = q.Where(x => request.Types.Contains(x.Type));
 
-            count = Math.Clamp(count ?? 100, 1, 100);
-            offset = Math.Max(offset ?? 0, 0);
-            
+            var count = Math.Clamp(request.Count ?? 100, 1, 100);
+            var offset = Math.Max(request.Offset ?? 0, 0);
+
             var vms = await q.OrderBy(x => x.Title)
-                               .Skip(offset.Value)
-                               .Take(count.Value)
-                               .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
-                               .ToListAsync();
+                             .Skip(offset)
+                             .Take(count)
+                             .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                             .ToListAsync();
 
             foreach (var vm in vms)
                 vm.MainPhotoPath = GetFullThumbnailPath(vm);
@@ -92,25 +131,25 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the pickable media.
         /// </summary>
-        public async Task<IReadOnlyList<MediaThumbnailVM>> GetPickableMediaAsync(string query, int? count, int? offset, MediaType[] types = null)
+        public async Task<IReadOnlyList<MediaThumbnailVM>> GetPickableMediaAsync(PickRequestVM<MediaType> request)
         {
             var q = _db.Media.AsNoTracking();
 
-            if (!string.IsNullOrEmpty(query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
-                var queryLower = query.ToLower();
+                var queryLower = request.Query.ToLower();
                 q = q.Where(x => x.Title.ToLower().Contains(queryLower));
             }
 
-            if (types?.Length > 0)
-                q = q.Where(x => types.Contains(x.Type));
+            if (request.Types?.Length > 0)
+                q = q.Where(x => request.Types.Contains(x.Type));
 
-            count = Math.Clamp(count ?? 100, 1, 100);
-            offset = Math.Max(offset ?? 0, 0);
+            var count = Math.Clamp(request.Count ?? 100, 1, 100);
+            var offset = Math.Max(request.Offset ?? 0, 0);
 
             var media = await q.OrderByDescending(x => x.UploadDate)
-                               .Skip(offset.Value)
-                               .Take(count.Value)
+                               .Skip(offset)
+                               .Take(count)
                                .ToListAsync();
 
             var vms = media.Select(x => MediaPresenterService.GetMediaThumbnail(x, MediaSize.Small)).ToList();
