@@ -52,19 +52,16 @@ namespace Bonsai.Areas.Admin.Logic
             if (extraFilter != null)
                 ids = extraFilter(ids);
 
-            var idsOrder = ids.Select((val, id) => new { Value = val, Index = id })
-                              .ToDictionary(x => x.Value, x => x.Index);
-
             var pages = await _db.Pages
                                  .Where(x => ids.Contains(x.Id))
                                  .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
-                                 .ToListAsync();
+                                 .ToDictionaryAsync(x => x.Id, x => x);
 
             // URL is global for easier usage in JSON
-            foreach (var page in pages)
+            foreach (var page in pages.Values)
                 page.MainPhotoPath = GetFullThumbnailPath(page);
 
-            return pages.OrderBy(x => idsOrder[x.Id]).ToList();
+            return ids.Select(x => pages[x]).ToList();
         }
 
         /// <summary>
@@ -81,8 +78,7 @@ namespace Bonsai.Areas.Admin.Logic
                 return await SuggestPagesAsync(subRequest);
 
             var queryRoot = _db.Relations
-                               .Where(x => x.IsDeleted == false
-                                           && x.Type == request.RelationType);
+                               .Where(x => x.IsDeleted == false);
 
             var idQuery = request.DestinationId != null
                 ? queryRoot.Where(x => x.DestinationId == request.DestinationId)
@@ -90,15 +86,14 @@ namespace Bonsai.Areas.Admin.Logic
                 : queryRoot.Where(x => x.SourceId == request.SourceId)
                            .Select(x => x.DestinationId);
 
-            var existingIds = await idQuery.Distinct()
-                                           .ToDictionaryAsync(x => x, x => true);
+            var existingIds = await idQuery.ToHashSetAsync();
 
-            var self = request.DestinationId ?? request.SourceId ?? Guid.Empty;
-            existingIds[self] = true;
+            var selfId = request.DestinationId ?? request.SourceId ?? Guid.Empty;
+            existingIds.Add(selfId);
 
             return await SuggestPagesAsync(
                 new PickRequestVM<PageType> { Query = request.Query, Types = request.Types },
-                ids => ids.Where(id => !existingIds.ContainsKey(id)).ToList()
+                ids => ids.Where(id => !existingIds.Contains(id)).ToList()
             );
         }
 
@@ -120,12 +115,12 @@ namespace Bonsai.Areas.Admin.Logic
 
             var count = Math.Clamp(request.Count ?? 100, 1, 100);
             var offset = Math.Max(request.Offset ?? 0, 0);
-            
+
             var vms = await q.OrderBy(x => x.Title)
-                               .Skip(offset)
-                               .Take(count)
-                               .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
-                               .ToListAsync();
+                             .Skip(offset)
+                             .Take(count)
+                             .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                             .ToListAsync();
 
             foreach (var vm in vms)
                 vm.MainPhotoPath = GetFullThumbnailPath(vm);

@@ -25,7 +25,7 @@
         onChange: function (value) {
             clear($sourceEditor);
             clear($destEditor);
-            refreshProperties(value);
+            refreshProperties(value, true);
         }
     });
 
@@ -45,11 +45,11 @@
         // loads initial types
         var type = $typeEditor[0].selectize.items[0];
         if (typeof type === 'string') {
-            refreshProperties(type);
+            refreshProperties(type, false);
         }
     }
 
-    function refreshProperties(type) {
+    function refreshProperties(type, force) {
         $.ajax({
                 url: '/admin/relations/editorProps',
                 data: { relType: type }
@@ -63,8 +63,10 @@
                 $durationRow.toggle(!!data.showDuration);
                 $eventRow.toggle(!!data.showEvent);
 
-                preload($sourceEditor, 'source');
-                preload($destEditor, 'dest');
+                if (force) {
+                    preload($sourceEditor, 'source');
+                    preload($destEditor, 'dest');
+                }
 
                 $('.validation-result').hide();
             });
@@ -151,7 +153,7 @@
         var parts = [];
 
         function addPart(key, value) {
-            if (value === null || typeof value === 'undefined') {
+            if (value === null || typeof value === 'undefined' || value === '') {
                 return;
             }
 

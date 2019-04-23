@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
-using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
@@ -354,15 +353,15 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 var existing = await _db.Pages
                                         .Where(x => tagIds.Contains(x.Id) && !x.IsDeleted)
-                                        .ToDictionaryAsync(x => x.Id, x => true);
+                                        .ToHashSetAsync(x => x.Id);
 
-                if (depictedIds.Any(x => x != null && !existing.ContainsKey(x.Value)))
+                if (depictedIds.Any(x => x != null && !existing.Contains(x.Value)))
                     val.Add(nameof(vm.DepictedEntities), "Страница не существует!");
 
-                if (locId != null && !existing.ContainsKey(locId.Value))
+                if (locId != null && !existing.Contains(locId.Value))
                     val.Add(nameof(vm.Location), "Страница не существует!");
 
-                if (evtId != null && !existing.ContainsKey(evtId.Value))
+                if (evtId != null && !existing.Contains(evtId.Value))
                     val.Add(nameof(vm.Event), "Страница не существует!");
             }
 
@@ -474,7 +473,7 @@ namespace Bonsai.Areas.Admin.Logic
             var existing = tagIds.Any()
                 ? await _db.Pages
                            .Where(x => tagIds.Contains(x.Id) && !x.IsDeleted)
-                           .ToDictionaryAsync(x => x.Id, x => true)
+                           .ToHashSetAsync(x => x.Id)
                 : null;
 
             TryAddTag(vm.Location, locId, MediaTagType.Location);
@@ -489,7 +488,7 @@ namespace Bonsai.Areas.Admin.Logic
 
                 var tag = new MediaTag { Type = type };
 
-                if (existing?.ContainsKey(id) == true)
+                if (existing?.Contains(id) == true)
                     tag.ObjectId = locId;
                 else
                     tag.ObjectTitle = title;

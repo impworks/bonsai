@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Extensions.Internal;
 
 namespace Bonsai.Code.Utils.Helpers
 {
@@ -35,6 +37,38 @@ namespace Bonsai.Code.Utils.Helpers
                                        .ToListAsync();
 
             source.RemoveRange(existing);
+        }
+
+        /// <summary>
+        /// Saves the query to a hashset.
+        /// </summary>
+        public static Task<HashSet<T>> ToHashSetAsync<T>(this IQueryable<T> source)
+        {
+            return source.AsAsyncEnumerable()
+                         .Aggregate(
+                             new HashSet<T>(),
+                             (acc, x) =>
+                             {
+                                 acc.Add(x);
+                                 return acc;
+                             }
+                         );
+        }
+
+        /// <summary>
+        /// Saves the query to a hashset.
+        /// </summary>
+        public static Task<HashSet<TResult>> ToHashSetAsync<TSource, TResult>(this IQueryable<TSource> source, Func<TSource, TResult> map)
+        {
+            return source.AsAsyncEnumerable()
+                         .Aggregate(
+                             new HashSet<TResult>(),
+                             (acc, x) =>
+                             {
+                                 acc.Add(map(x));
+                                 return acc;
+                             }
+                         );
         }
     }
 }
