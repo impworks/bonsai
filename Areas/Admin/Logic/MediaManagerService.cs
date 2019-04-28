@@ -88,11 +88,11 @@ namespace Bonsai.Areas.Admin.Logic
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
             result.Items = await query.Where(x => x.IsDeleted == false)
-                                   .OrderBy(request.OrderBy, request.OrderDescending)
-                                   .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
-                                   .Skip(PageSize * request.Page)
-                                   .Take(PageSize)
-                                   .ToListAsync();
+                                      .OrderBy(request.OrderBy, request.OrderDescending)
+                                      .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
+                                      .Skip(PageSize * request.Page)
+                                      .Take(PageSize)
+                                      .ToListAsync();
             return result;
         }
 
@@ -264,7 +264,7 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Media
                             .Where(x => !x.Tags.Any())
                             .Where(x => x.IsProcessed && !x.IsDeleted)
-                            .OrderBy(x => x.UploadDate)
+                            .OrderByDescending(x => x.UploadDate)
                             .Select(x => (Guid?) x.Id)
                             .FirstOrDefaultAsync();
         }
@@ -279,7 +279,7 @@ namespace Bonsai.Areas.Admin.Logic
         private MediaListRequestVM NormalizeListRequest(MediaListRequestVM vm)
         {
             if(vm == null)
-                vm = new MediaListRequestVM();
+                vm = new MediaListRequestVM { OrderDescending = true };
 
             var orderableFields = new[] { nameof(Media.UploadDate), nameof(Media.Date) };
             if(!orderableFields.Contains(vm.OrderBy))
