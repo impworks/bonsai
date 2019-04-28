@@ -169,7 +169,7 @@ namespace Bonsai.Code.Utils.Date
         /// Formatting string.
         /// </summary>
         private static readonly Regex FormatRegex = new Regex(
-            @"(?<year>[0-9]{3}[0-9?]|\?{4})\.(?<month>[0-9]{2}|\?\?)\.(?<day>[0-9]{2}|\?\?)",
+            @"^(?<year>[0-9]{3}[0-9?]|\?{4})(\.(?<month>[0-9]{2}|\?\?)\.(?<day>[0-9]{2}|\?\?))?$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
         );
 
@@ -181,7 +181,7 @@ namespace Bonsai.Code.Utils.Date
             if (string.IsNullOrEmpty(raw))
                 return null;
 
-            return raw.TryParse(Parse);
+            return raw.TryParse<FuzzyDate?>(x => Parse(x));
         }
 
         /// <summary>
