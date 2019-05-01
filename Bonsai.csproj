@@ -37,6 +37,7 @@
     <PackageReference Include="Impworks.Utils" Version="1.0.32" />
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
     <PackageReference Include="Markdig" Version="0.15.2" />
+    <PackageReference Include="MetadataExtractor" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.1.2" />

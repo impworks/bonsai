@@ -27,5 +27,10 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// Creates thumbnail files for this media file.
         /// </summary>
         Image ExtractThumbnail(string path, string mime);
+
+        /// <summary>
+        /// Extracts additional data from the media.
+        /// </summary>
+        MediaMetadata ExtractMetadata(string path, string mime);
     }
 }

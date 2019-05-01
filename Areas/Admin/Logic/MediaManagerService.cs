@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -19,6 +20,7 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Dictionary;
+using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Hosting;
@@ -111,8 +113,9 @@ namespace Bonsai.Areas.Admin.Logic
             var userId = _userMgr.GetUserId(principal);
             var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
 
-            var filePath = await SaveUploadAsync(file, key, handler);
+            var paths = await SaveUploadAsync(file, key, handler);
             var tags = await GetTagsForUploadedMedia(vm);
+            var meta = handler.ExtractMetadata(paths.LocalPath, file.ContentType);
 
             var media = new Media
             {
@@ -121,11 +124,13 @@ namespace Bonsai.Areas.Admin.Logic
                 Type = handler.MediaType,
                 MimeType = file.ContentType,
                 Title = vm.Title,
-                FilePath = filePath,
+                FilePath = paths.UrlPath,
                 UploadDate = DateTimeOffset.Now,
                 Uploader = user,
                 IsProcessed = handler.IsImmediate,
-                Date = FuzzyDate.TryParse(vm.Date) == null ? null : vm.Date,
+                Date = FuzzyDate.TryParse(vm.Date) != null
+                    ? vm.Date
+                    : meta?.Date?.Date.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture),
                 Tags = tags
             };
 
@@ -374,7 +379,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Saves an uploaded file to disk.
         /// </summary>
-        private async Task<string> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler)
+        private async Task<(string LocalPath, string UrlPath)> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler)
         {
             var ext = Path.GetExtension(file.FileName);
             var fileName = key + ext;
@@ -387,7 +392,7 @@ namespace Bonsai.Areas.Admin.Logic
             using(var frame = handler.ExtractThumbnail(filePath, file.ContentType))
                 MediaHandlerHelper.CreateThumbnails(filePath, frame);
 
-            return $"~/media/{fileName}";
+            return (filePath, $"~/media/{fileName}");
         }
 
         /// <summary>

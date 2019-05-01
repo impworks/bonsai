@@ -88,7 +88,7 @@
     <div class="form-group">
         <input type="hidden" asp-for="SaveAction" />
         <div class="btn-group">
-            <button type="submit" class="btn btn-primary">@Model.SaveAction.GetEnumDescription()</button>
+            <button type="submit" class="btn btn-primary" title="Ctrl + Enter">@Model.SaveAction.GetEnumDescription()</button>
             <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
             <div class="dropdown-menu">
                 @foreach (var act in data.SaveActions)

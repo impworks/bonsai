@@ -47,5 +47,13 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         {
             return Image.FromFile(Path.Combine(_env.WebRootPath, "assets", "img", "video-thumb.png"));
         }
+
+        /// <summary>
+        /// Extracts additional data from the media.
+        /// </summary>
+        public MediaMetadata ExtractMetadata(string path, string mime)
+        {
+            return null;
+        }
     }
 }

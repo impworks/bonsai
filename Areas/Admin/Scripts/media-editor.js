@@ -19,4 +19,10 @@
         $dropItems.removeClass('active');
         $elem.addClass('active');
     });
+
+    $(document).on('keypress', function(e) {
+        if (e.ctrlKey && (e.which === 10 || e.which === 13)) {
+            $form.submit();
+        }
+    });
 });
