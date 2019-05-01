@@ -1,10 +1,24 @@
-﻿@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
+﻿@using Bonsai.Areas.Front.ViewModels.Page
+@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 
 @{
     var showFirstColumn = Model.Tags.Any();
     var showSecondColumn = Model.OriginalPath != null
                            || Model.Event != null
                            || Model.Location != null;
+}
+
+@{
+    Func<PageTitleVM, object> pageLink = @<span>
+                                             @if (string.IsNullOrEmpty(item.Key))
+                                             {
+                                                 <text>@item.Title</text>
+                                             }
+                                             else
+                                             {
+                                                 <a href="@Url.Action("Description", "Page", new {key = item.Key})">@item.Title</a>
+                                             }
+                                         </span>;
 }
 
 <div class="media-block">
@@ -50,14 +64,14 @@
                     {
                         <tr>
                             <th>Событие</th>
-                            <td><a href="@Url.Action("Description", "Page", new { key = Model.Event.Key })">@Model.Event.Title</a></td>
+                            <td>@pageLink(Model.Event)</td>
                         </tr>
                     }
                     @if (Model.Location != null)
                     {
                         <tr>
                             <th>Место</th>
-                            <td><a href="@Url.Action("Description", "Page", new { key = Model.Location.Key })">@Model.Location.Title</a></td>
+                            <td>@pageLink(Model.Location)</td>
                         </tr>
                     }
                     @if (Model.OriginalPath != null)

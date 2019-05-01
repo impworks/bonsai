@@ -20,7 +20,7 @@
         <div class="media-thumb-group">
             <h3 id="@key">@key</h3>
             <ul class="list-inline">
-                @foreach (var elem in group.OrderByDescending(x => x.Date))
+                @foreach (var elem in group.OrderBy(x => x.Date))
                 {
                     <li class="list-inline-item">
                         <div class="media-thumb-wrapper">
