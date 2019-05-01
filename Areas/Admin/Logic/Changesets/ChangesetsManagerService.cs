@@ -75,10 +75,11 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
+            var dir = request.OrderDescending.Value;
             if (request.OrderBy == nameof(Changeset.Author))
-                query = query.OrderBy(x => x.Author.UserName, request.OrderDescending);
+                query = query.OrderBy(x => x.Author.UserName, dir);
             else
-                query = query.OrderBy(x => x.Date, request.OrderDescending);
+                query = query.OrderBy(x => x.Date, dir);
 
             var changesets = await query.Skip(PageSize * request.Page)
                                         .Take(PageSize)
@@ -176,6 +177,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             if(vm.Page < 0)
                 vm.Page = 0;
+
+            if (vm.OrderDescending == null)
+                vm.OrderDescending = true;
 
             return vm;
         }

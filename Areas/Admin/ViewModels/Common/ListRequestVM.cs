@@ -18,7 +18,7 @@
         /// <summary>
         /// Ordering direction.
         /// </summary>
-        public bool OrderDescending { get; set; }
+        public bool? OrderDescending { get; set; }
 
         /// <summary>
         /// Current page (0-based).

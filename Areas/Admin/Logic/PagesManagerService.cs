@@ -65,7 +65,7 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
 
             var items = await query.Where(x => x.IsDeleted == false)
-                                   .OrderBy(request.OrderBy, request.OrderDescending)
+                                   .OrderBy(request.OrderBy, request.OrderDescending.Value)
                                    .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
@@ -371,6 +371,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (vm.Page < 0)
                 vm.Page = 0;
+
+            if (vm.OrderDescending == null)
+                vm.OrderDescending = false;
 
             return vm;
         }

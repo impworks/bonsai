@@ -55,7 +55,7 @@ namespace Bonsai.Areas.Admin.Logic
                 query = query.Where(x => request.Roles.Contains(x.Role));
 
             var totalCount = query.Count();
-            var items = query.OrderBy(request.OrderBy, request.OrderDescending)
+            var items = query.OrderBy(request.OrderBy, request.OrderDescending.Value)
                              .Skip(PageSize * request.Page)
                              .Take(PageSize)
                              .ToList();
@@ -182,6 +182,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (vm.Page < 0)
                 vm.Page = 0;
+
+            if (vm.OrderDescending == null)
+                vm.OrderDescending = false;
 
             return vm;
         }

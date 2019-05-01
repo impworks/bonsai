@@ -76,12 +76,13 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
+            var dir = request.OrderDescending.Value;
             if (request.OrderBy == nameof(RelationTitleVM.Destination))
-                query = query.OrderBy(x => x.Destination.Title, request.OrderDescending);
+                query = query.OrderBy(x => x.Destination.Title, dir);
             else if (request.OrderBy == nameof(RelationTitleVM.Source))
-                query = query.OrderBy(x => x.Source.Title, request.OrderDescending);
+                query = query.OrderBy(x => x.Source.Title, dir);
             else
-                query = query.OrderBy(x => x.Type, request.OrderDescending);
+                query = query.OrderBy(x => x.Type, dir);
 
             result.Items = await query.ProjectTo<RelationTitleVM>(_mapper.ConfigurationProvider)
                                       .Skip(PageSize * request.Page)
@@ -235,6 +236,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (vm.Page < 0)
                 vm.Page = 0;
+
+            if (vm.OrderDescending == null)
+                vm.OrderDescending = false;
 
             return vm;
         }
