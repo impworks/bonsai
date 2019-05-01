@@ -262,7 +262,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<Guid?> GetNextUntaggedMediaAsync()
         {
             return await _db.Media
-                            .Where(x => !x.Tags.Any())
+                            .Where(x => !x.Tags.Any(y => y.Type == MediaTagType.DepictedEntity))
                             .Where(x => x.IsProcessed && !x.IsDeleted)
                             .OrderByDescending(x => x.UploadDate)
                             .Select(x => (Guid?) x.Id)
