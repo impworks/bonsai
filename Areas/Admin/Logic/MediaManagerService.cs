@@ -489,7 +489,7 @@ namespace Bonsai.Areas.Admin.Logic
                 var tag = new MediaTag { Type = type };
 
                 if (existing?.Contains(id) == true)
-                    tag.ObjectId = locId;
+                    tag.ObjectId = id;
                 else
                     tag.ObjectTitle = title;
 
