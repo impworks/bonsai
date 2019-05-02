@@ -16,7 +16,7 @@ namespace Bonsai.Code.Utils.Date
         public FuzzyDate(DateTime date)
             : this(date.Year, date.Month, date.Day)
         {
-            
+
         }
 
         public FuzzyDate(int? year, int? month, int? day, bool isDecade = false)
@@ -111,7 +111,7 @@ namespace Bonsai.Code.Utils.Date
         /// <summary>
         /// Returns the day and month if specified (for anniversaries).
         /// </summary>
-        public DateTime? Date
+        public DateTime? AnniversaryDate
         {
             get
             {
@@ -128,32 +128,92 @@ namespace Bonsai.Code.Utils.Date
         public string CanonicalString => _stringValue ?? (_stringValue = GetCanonicalString());
 
         /// <summary>
-        /// Returns the number of years since the date.
+        /// Returns true if all components of the fuzzy date are specified precisely.
+        /// </summary>
+        public bool IsPrecise => Day != null && Month != null && Year != null && !IsDecade;
+
+        /// <summary>
+        /// Returns the readable age in years and months.
         /// Returns null for future years.
         /// </summary>
         public string GetAge(FuzzyDate? relative = null)
         {
             var now = relative ?? new FuzzyDate(DateTime.Now);
 
-            if (!(now.Year > Year))
+            if (!(this <= now) || Year == null || now.Year == null)
                 return null;
 
             var years = now.Year.Value - Year.Value - 1;
 
             if (IsDecade || now.IsDecade)
             {
-                var back = IsDecade && now.IsDecade ? 20 : 10;
-                return $"{Math.Max(years - back, 1)}..{years + 1} {GetAgeWord(years + 1)}";
+                var min = Math.Max(years - 10, 1);
+                var max = IsDecade && now.IsDecade ? years + 10 : years + 1;
+                return $"{min}..{max} {YearsWord(max)}";
             }
 
-            if (now.Month == Month && (Day == null || now.Day == null))
-                return $"{years}..{years + 1} {GetAgeWord(years + 1)}";
+            if (Month == null || now.Month == null || Day == null || now.Day == null)
+            {
+                var max = years + 1;
+                if (years < 0)
+                    return "Меньше года";
 
-            // account for after-birthday
-            if (now.Month > Month || (now.Month == Month && now.Day > Day))
+                if (now.Month > Month)
+                    return FullYears(max);
+
+                if (now.Month < Month)
+                    return FullYears(years);
+
+                return $"{years}..{max} {YearsWord(max)}";
+            }
+
+            var months = now.Month > Month
+                ? now.Month.Value - Month.Value - 1
+                : 11 - (Month.Value - now.Month.Value);
+
+            if (now.Day >= Day)
+                months++;
+
+            if (months == 12)
+            {
+                months = 0;
                 years++;
+            }
+            else if (now.Month > Month)
+            {
+                years++;
+            }
 
-            return $"{years} {GetAgeWord(years)}";
+            if (years == 0 && months == 0)
+                return "Меньше месяца";
+
+            var yearsWord = years == 0 ? null : FullYears(years);
+            var monthsWord = months == 0 || years >= 3 ? null : $"{months} {MonthsWord(months)}";
+
+            if (yearsWord != null && monthsWord != null)
+                return yearsWord + " " + monthsWord;
+
+            return yearsWord ?? monthsWord;
+
+            string YearsWord(int count) => GetNumberWord(count, "год", "года", "лет");
+            string MonthsWord(int count) => GetNumberWord(count, "месяц", "месяца", "месяцев");
+            string FullYears(int count) => count + " " + YearsWord(count);
+            string GetNumberWord(int number, string one, string twoToFour, string other)
+            {
+                var ones = number % 10;
+                var tens = (number / 10) % 10;
+
+                if (tens != 1)
+                {
+                    if (ones == 1)
+                        return one;
+
+                    if (ones >= 2 && ones <= 4)
+                        return twoToFour;
+                }
+
+                return other;
+            }
         }
 
         #endregion
@@ -174,7 +234,7 @@ namespace Bonsai.Code.Utils.Date
         );
 
         /// <summary>
-        /// Safely parses a FuzzyDate.
+        /// Safely parses a fuzzy date, returning null on error.
         /// </summary>
         public static FuzzyDate? TryParse(string raw)
         {
@@ -193,7 +253,7 @@ namespace Bonsai.Code.Utils.Date
                 throw new ArgumentNullException(nameof(raw));
 
             var match = FormatRegex.Match(raw);
-            if(!match.Success)
+            if (!match.Success)
                 throw new ArgumentException("Date string was not in correct format!", nameof(raw));
 
             var year = match.Groups["year"].Value.TryParse<int?>();
@@ -234,9 +294,9 @@ namespace Bonsai.Code.Utils.Date
                 sb.Append("/");
             }
 
-            if(Year == null)
+            if (Year == null)
                 sb.Append("????");
-            else if(IsDecade)
+            else if (IsDecade)
                 sb.Append((Year.Value / 10) + "?");
             else
                 sb.Append(Year.Value);
@@ -251,13 +311,13 @@ namespace Bonsai.Code.Utils.Date
         {
             var sb = new StringBuilder();
 
-            if(Day != null)
+            if (Day != null)
             {
                 sb.Append(Day);
                 sb.Append(" ");
             }
 
-            if(Month != null)
+            if (Month != null)
             {
                 sb.Append(
                     Day != null
@@ -266,9 +326,9 @@ namespace Bonsai.Code.Utils.Date
                 );
             }
 
-            if(Year != null)
+            if (Year != null)
             {
-                if(Month != null)
+                if (Month != null)
                     sb.Append(IsDecade ? ", " : " ");
 
                 sb.Append(ReadableYear);
@@ -284,9 +344,9 @@ namespace Bonsai.Code.Utils.Date
         {
             var sb = new StringBuilder();
 
-            if(Year == null)
+            if (Year == null)
                 sb.Append("????");
-            else if(IsDecade)
+            else if (IsDecade)
                 sb.Append(Year.Value / 10 + "?");
             else
                 sb.Append(Year.Value);
@@ -340,26 +400,6 @@ namespace Bonsai.Code.Utils.Date
             "декабря"
         };
 
-        /// <summary>
-        /// Returns the word in correct declension for the number of years.
-        /// </summary>
-        private static string GetAgeWord(int age)
-        {
-            var ones = age % 10;
-            var tens = (age / 10) % 10;
-
-            if (tens != 1)
-            {
-                if (ones == 1)
-                    return "год";
-
-                if (ones >= 2 && ones <= 4)
-                    return "года";
-            }
-
-            return "лет";
-        }
-
         #endregion
 
         #region IEquatable implementation
@@ -391,50 +431,50 @@ namespace Bonsai.Code.Utils.Date
 
         public static bool operator >=(FuzzyDate first, FuzzyDate second)
         {
-            return first.CompareTo(second) >= 1;
+            return first.CompareTo(second) >= 0;
         }
 
         public static bool operator <=(FuzzyDate first, FuzzyDate second)
         {
-            return first.CompareTo(second) <= 1;
+            return first.CompareTo(second) <= 0;
         }
 
         public static bool operator >(FuzzyDate first, FuzzyDate second)
         {
-            return first.CompareTo(second) > 1;
+            return first.CompareTo(second) > 0;
         }
 
         public static bool operator <(FuzzyDate first, FuzzyDate second)
         {
-            return first.CompareTo(second) < 1;
+            return first.CompareTo(second) < 0;
         }
 
         public static bool operator >=(FuzzyDate? first, FuzzyDate? second)
         {
             return first != null
                    && second != null
-                   && first.Value.CompareTo(second.Value) >= 1;
+                   && first.Value.CompareTo(second.Value) >= 0;
         }
 
         public static bool operator <=(FuzzyDate? first, FuzzyDate? second)
         {
             return first != null
                    && second != null
-                   && first.Value.CompareTo(second.Value) <= 1;
+                   && first.Value.CompareTo(second.Value) <= 0;
         }
 
         public static bool operator >(FuzzyDate? first, FuzzyDate? second)
         {
             return first != null
                    && second != null
-                   && first.Value.CompareTo(second.Value) > 1;
+                   && first.Value.CompareTo(second.Value) > 0;
         }
 
         public static bool operator <(FuzzyDate? first, FuzzyDate? second)
         {
             return first != null
                    && second != null
-                   && first.Value.CompareTo(second.Value) < 1;
+                   && first.Value.CompareTo(second.Value) < 0;
         }
 
         #endregion
