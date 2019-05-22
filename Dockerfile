@@ -1,8 +1,8 @@
 FROM node:lts-alpine as node
 WORKDIR /build
 
-RUN apt update -yqq && \
-    apt install -yqq build-essential && \
+RUN apt-get -yqq update && \
+    apt-get -yqq install build-essential && \
     rm -rf /var/lib/apt/lists/*
 
 ADD package.json .
