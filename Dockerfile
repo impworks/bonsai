@@ -1,5 +1,10 @@
 FROM node:lts-alpine as node
 WORKDIR /build
+
+RUN apt update -yqq && \
+    apt install -yqq build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
 ADD package.json .
 ADD package-lock.json .
 RUN npm ci
