@@ -70,6 +70,9 @@ const ifProd = act => gulpif(isProd(), act);
             ],
             tree: [
                 './Areas/Admin/BackendScripts/tree-layout.js'
+            ],
+            pdf: [
+                './Areas/Admin/BackendScripts/pdf-thumbnail.js'
             ]
         }
     },
@@ -128,12 +131,18 @@ const content_scripts_tree = () => {
     );
 };
 
+const content_scripts_pdf = () => {
+    return gulp.src(config.content.scripts.pdf)
+               .pipe(gulp.dest('./External/pdf'));
+};
+
 const content = gulp.parallel(
     content_styles,
     content_scripts_front,
     content_scripts_admin,
     content_scripts_common,
-    content_scripts_tree
+    content_scripts_tree,
+    content_scripts_pdf
 );
 
 const watch = () => {
@@ -142,6 +151,7 @@ const watch = () => {
     gulp.watch(config.content.scripts.common, content_scripts_common);
     gulp.watch(config.content.scripts.admin, content_scripts_admin);
     gulp.watch(config.content.scripts.tree, content_scripts_tree);
+    gulp.watch(config.content.scripts.pdf, content_scripts_pdf);
 };
 
 // ================
@@ -191,6 +201,7 @@ module.exports = {
     content_scripts_admin,
     content_scripts_common,
     content_scripts_tree,
+    content_scripts_pdf,
     watch,
     content,
     vendor_scripts_common,

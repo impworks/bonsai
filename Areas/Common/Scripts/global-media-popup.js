@@ -17,19 +17,24 @@
         window.location.hash = prefix + id;
     }
 
+    // little hack: return preloaded request instead of sending a new one (removes flickering)
+    var origAjax = $.magnificPopup.proto.getAjax;
+    $.magnificPopup.proto.getAjax = function(item) {
+        return item.html ? item.html : origAjax.call(this, item);
+    };
+
     // enables media popups for thumbnails
     var allLinks = $('body').magnificPopup({
         delegate: selector,
         key: 'media-popup',
         type: 'ajax',
         tClose: 'Закрыть',
-        tLoading: 'Загрузка...',
         ajax: {
             tError: 'Не удалось загрузить данные.'
         },
         gallery: {
             enabled: true,
-            preload: [0, 2],
+            preload: [2, 3],
             tPrev: 'Назад',
             tNext: 'Вперед',
             tCounter: '<span class="mfp-counter">%curr% из %total%</span>'
@@ -44,6 +49,13 @@
             change: function () {
                 $('.tooltip').remove();
                 updateHash(this.currItem.el);
+            },
+            lazyLoad: function(item) {
+                if (item.preloaded) return;
+                // little hack: preload ajax requests and save the data
+                $.ajax(item.src).done(function(data) {
+                    item.html = $(data);
+                });
             }
         }
     });

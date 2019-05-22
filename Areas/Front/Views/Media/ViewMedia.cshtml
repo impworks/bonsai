@@ -36,7 +36,10 @@
         {
             <div class="col media-meta-column">
                 <div class="meta-block">
-                    <strong>Изображены</strong>
+                    <strong>
+                        <span class="fa fa-fw fa-user-o"></span>
+                        Изображены
+                    </strong>
                     <ul class="media-tags">
                         @foreach (var tag in Model.Tags)
                         {
@@ -56,29 +59,49 @@
                     @if (Model.Date != null)
                     {
                         <tr>
-                            <th>Дата</th>
-                            <td>@Model.Date.Value.ReadableDate</td>
+                            <th>
+                                <span class="fa fa-fw fa-calendar-o"></span>
+                                Дата
+                            </th>
+                            <td>
+                                @Model.Date.Value.ReadableDate
+                            </td>
                         </tr>
                     }
                     @if (Model.Event != null)
                     {
                         <tr>
-                            <th>Событие</th>
-                            <td>@pageLink(Model.Event)</td>
+                            <th>
+                                <span class="fa fa-fw fa-star-o"></span>
+                                Событие
+                            </th>
+                            <td>
+                                @pageLink(Model.Event)
+                            </td>
                         </tr>
                     }
                     @if (Model.Location != null)
                     {
                         <tr>
-                            <th>Место</th>
-                            <td>@pageLink(Model.Location)</td>
+                            <th>
+                                <span class="fa fa-fw fa-map-marker"></span>
+                                Место
+                            </th>
+                            <td>
+                                @pageLink(Model.Location)
+                            </td>
                         </tr>
                     }
                     @if (Model.OriginalPath != null)
                     {
                         <tr>
-                            <th>Оригинал</th>
-                            <td><a href="@Url.Content(Model.OriginalPath)" download>Скачать</a></td>
+                            <th>
+                                <span class="fa fa-fw fa-arrow-circle-o-down"></span>
+                                Оригинал
+                            </th>
+                            <td>
+                                <a href="@Url.Content(Model.OriginalPath)" download>Скачать</a>
+                            </td>
                         </tr>
                     }
                 </table>
