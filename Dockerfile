@@ -1,4 +1,4 @@
-FROM node:lts-alpine as node
+FROM node:lts as node
 WORKDIR /build
 
 RUN apt-get -yqq update && \
