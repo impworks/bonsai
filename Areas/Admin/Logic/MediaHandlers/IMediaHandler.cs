@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Threading.Tasks;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
@@ -26,11 +27,11 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Creates thumbnail files for this media file.
         /// </summary>
-        Image ExtractThumbnail(string path, string mime);
+        Task<Image> ExtractThumbnailAsync(string path, string mime);
 
         /// <summary>
         /// Extracts additional data from the media.
         /// </summary>
-        MediaMetadata ExtractMetadata(string path, string mime);
+        Task<MediaMetadata> ExtractMetadataAsync(string path, string mime);
     }
 }

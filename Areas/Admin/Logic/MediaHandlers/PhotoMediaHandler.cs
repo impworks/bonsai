@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Bonsai.Data.Models;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
@@ -22,51 +23,38 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
         private readonly ILogger _logger;
 
-        private static string[] _supportedMimeTypes =
+        public bool IsImmediate => true;
+        public MediaType MediaType => MediaType.Photo;
+        public string[] SupportedMimeTypes => new []
         {
             "image/jpeg",
             "image/png"
         };
 
         /// <summary>
-        /// Flag indicating that the media does not need any encoding.
-        /// </summary>
-        public bool IsImmediate => true;
-
-        /// <summary>
-        /// Supported file types.
-        /// </summary>
-        public string[] SupportedMimeTypes => _supportedMimeTypes;
-
-        /// <summary>
-        /// Resulting media type.
-        /// </summary>
-        public MediaType MediaType => MediaType.Photo;
-
-        /// <summary>
         /// Returns the image for thumbnail creation.
         /// </summary>
-        public Image ExtractThumbnail(string path, string mime)
+        public Task<Image> ExtractThumbnailAsync(string path, string mime)
         {
-            return Image.FromFile(path);
+            return Task.FromResult(Image.FromFile(path));
         }
 
         /// <summary>
         /// Extracts additional data from the media.
         /// </summary>
-        public MediaMetadata ExtractMetadata(string path, string mime)
+        public Task<MediaMetadata> ExtractMetadataAsync(string path, string mime)
         {
             try
             {
                 var dirs = ImageMetadataReader.ReadMetadata(path);
                 var dateStr = dirs.OfType<ExifSubIfdDirectory>()
-                               .FirstOrDefault()
-                               ?.GetDescription(ExifDirectoryBase.TagDateTimeOriginal);
+                                  .FirstOrDefault()
+                                  ?.GetDescription(ExifDirectoryBase.TagDateTimeOriginal);
 
-                return new MediaMetadata
+                return Task.FromResult(new MediaMetadata
                 {
                     Date = ParseDate(dateStr)
-                };
+                });
             }
             catch (Exception ex)
             {
@@ -74,6 +62,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
                 return null;
             }
         }
+
+        #region Private helpers
 
         /// <summary>
         /// Parses the date from an EXIF raw value.
@@ -90,5 +80,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
             return null;
         }
+
+        #endregion
     }
 }

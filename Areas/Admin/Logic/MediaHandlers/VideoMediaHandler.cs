@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Hosting;
 
@@ -17,7 +18,9 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
         private readonly IHostingEnvironment _env;
 
-        private static string[] _supportedMimeTypes =
+        public bool IsImmediate => false;
+        public MediaType MediaType => MediaType.Video;
+        public string[] SupportedMimeTypes => new[]
         {
             "video/mp4",
             "video/x-flv",
@@ -26,34 +29,19 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         };
 
         /// <summary>
-        /// Flag indicating that the media does not need any encoding.
+        /// Returns the image for thumbnail creation.
         /// </summary>
-        public bool IsImmediate => false;
-
-        /// <summary>
-        /// Supported file types.
-        /// </summary>
-        public string[] SupportedMimeTypes => _supportedMimeTypes;
-
-        /// <summary>
-        /// Resulting media type.
-        /// </summary>
-        public MediaType MediaType => MediaType.Video;
-
-        /// <summary>
-        /// Returns the image for thumnail creation.
-        /// </summary>
-        public Image ExtractThumbnail(string path, string mime)
+        public Task<Image> ExtractThumbnailAsync(string path, string mime)
         {
-            return Image.FromFile(Path.Combine(_env.WebRootPath, "assets", "img", "video-thumb.png"));
+            return Task.FromResult(Image.FromFile(Path.Combine(_env.WebRootPath, "assets", "img", "video-thumb.png")));
         }
 
         /// <summary>
         /// Extracts additional data from the media.
         /// </summary>
-        public MediaMetadata ExtractMetadata(string path, string mime)
+        public Task<MediaMetadata> ExtractMetadataAsync(string path, string mime)
         {
-            return null;
+            return Task.FromResult<MediaMetadata>(null);
         }
     }
 }

@@ -115,7 +115,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var paths = await SaveUploadAsync(file, key, handler);
             var tags = await GetTagsForUploadedMedia(vm);
-            var meta = handler.ExtractMetadata(paths.LocalPath, file.ContentType);
+            var meta = await handler.ExtractMetadataAsync(paths.LocalPath, file.ContentType);
 
             var media = new Media
             {
@@ -389,7 +389,7 @@ namespace Bonsai.Areas.Admin.Logic
             using(var sourceStream = file.OpenReadStream())
                 await sourceStream.CopyToAsync(localStream);
 
-            using(var frame = handler.ExtractThumbnail(filePath, file.ContentType))
+            using(var frame = await handler.ExtractThumbnailAsync(filePath, file.ContentType))
                 MediaHandlerHelper.CreateThumbnails(filePath, frame);
 
             return (filePath, $"~/media/{fileName}");

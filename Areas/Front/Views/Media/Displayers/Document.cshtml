@@ -2,5 +2,5 @@
 @model Bonsai.Areas.Front.ViewModels.Media.MediaVM
     
 <div class="document-wrapper">
-    <img src="@Model.PreviewPath" class="media-document" alt="@(Model.Title ?? "Документ")" />
+    <iframe src="@Url.Content(Model.OriginalPath)" class="media-document"></iframe>
 </div>
