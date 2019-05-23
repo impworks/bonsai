@@ -33,7 +33,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// </summary>
         public Task<Image> ExtractThumbnailAsync(string path, string mime)
         {
-            return Task.FromResult(Image.FromFile(Path.Combine(_env.WebRootPath, "assets", "img", "video-thumb.png")));
+            var thumbPath = Path.Combine(_env.WebRootPath, "assets", "img", "video-thumb.png");
+            return Task.FromResult(Image.FromFile(thumbPath));
         }
 
         /// <summary>

@@ -26,10 +26,8 @@
     "gulp-uglify": "^3.0.2"
   },
   "dependencies": {
-    "assert": "^2.0.0",
     "blueimp-file-upload": "^9.22.0",
     "bootstrap": "^4.3.1",
-    "canvas": "^2.5.0",
     "datepicker-bootstrap": "^1.9.13",
     "devbridge-autocomplete": "^1.4.10",
     "elkjs": "^0.4.1",
@@ -39,7 +37,6 @@
     "jquery-fullscreen-plugin": "^1.0.0",
     "jquery-ui": "^1.12.1",
     "magnific-popup": "^1.1.0",
-    "pdfjs-dist": "2.1.266",
     "popper.js": "^1.15.0",
     "selectize": "^0.12.6",
     "simplemde": "^1.11.2",

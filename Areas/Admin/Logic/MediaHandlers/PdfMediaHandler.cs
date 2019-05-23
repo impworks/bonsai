@@ -1,9 +1,8 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using Bonsai.Data.Models;
-using Microsoft.AspNetCore.NodeServices;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
@@ -12,12 +11,12 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
     /// </summary>
     public class PdfMediaHandler: IMediaHandler
     {
-        public PdfMediaHandler(INodeServices js)
+        public PdfMediaHandler(IHostingEnvironment env)
         {
-            _js = js;
+            _env = env;
         }
 
-        private readonly INodeServices _js;
+        private readonly IHostingEnvironment _env;
 
         public bool IsImmediate => true;
         public string[] SupportedMimeTypes => new[] {"application/pdf"};
@@ -26,16 +25,10 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Extracts the first page as a thumbnail.
         /// </summary>
-        public async Task<Image> ExtractThumbnailAsync(string path, string mime)
+        public Task<Image> ExtractThumbnailAsync(string path, string mime)
         {
-            var result = await _js.InvokeAsync<string>("./External/pdf/pdf-thumbnail.js", path);
-
-            if(string.IsNullOrEmpty(result))
-                throw new Exception("Failed to render PDF to image: output is empty.");
-
-            var bytes = Convert.FromBase64String(result);
-            using(var ms = new MemoryStream(bytes, false))
-                return Image.FromStream(ms);
+            var thumbPath = Path.Combine(_env.WebRootPath, "assets", "img", "pdf-thumb.png");
+            return Task.FromResult(Image.FromFile(thumbPath));
         }
 
         /// <summary>

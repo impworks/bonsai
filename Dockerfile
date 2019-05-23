@@ -1,9 +1,5 @@
-FROM node:lts as node
+FROM node:lts-alpine as node
 WORKDIR /build
-
-RUN apt-get -yqq update && \
-    apt-get -yqq install build-essential && \
-    rm -rf /var/lib/apt/lists/*
 
 ADD package.json .
 ADD package-lock.json .
