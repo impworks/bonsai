@@ -66,8 +66,8 @@
                             @p.Title
                         </a>
                     </td>
-                    <td><span title="@p.CreationDate.LocalDateTime.ToLongDateString()">@p.CreationDate.Humanize()</span></td>
-                    <td><span title="@p.LastUpdateDate.LocalDateTime.ToLongDateString()">@p.LastUpdateDate.Humanize()</span></td>
+                    <td><span title="@p.CreationDate.LocalDateTime.ToString("G")">@p.CreationDate.Humanize()</span></td>
+                    <td><span title="@p.LastUpdateDate.LocalDateTime.ToString("G")">@p.LastUpdateDate.Humanize()</span></td>
                     <td class="admin-row-actions">
                         <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Id})">
                             <span class="fa fa-remove" title="Удалить"></span>

@@ -1,5 +1,6 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Areas.Admin.ViewModels.Media
+@using Bonsai.Data.Models
 @using Humanizer
 @using Impworks.Utils.Strings
 @addTagHelper *, Bonsai
@@ -10,6 +11,16 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Media", new { area = "Admin" });
+
+    string GetMediaTitleFallback(MediaThumbnailExtendedVM media)
+    {
+        var part = media.Type == MediaType.Photo ? "Фото"
+                 : media.Type == MediaType.Video ? "Видео"
+                 : media.Type == MediaType.Document ? "Документ"
+                                                    : "Прочее";
+
+        return $"{part} от {media.UploadDate:dd MMMM yyyy}";
+    }
 }
 
 <h1>Список медиа</h1>
@@ -73,11 +84,11 @@
                     </td>
                     <td>
                         <a href="@Url.Action("Update", "Media", new {area = "Admin", id = m.Id})" title="Редактировать">
-                            @(StringHelper.Coalesce(m.Title, "—"))
+                            @(StringHelper.Coalesce(m.Title, GetMediaTitleFallback(m)))
                         </a>
                     </td>
                     <td><span>@(m.Date?.ReadableDate ?? "—")</span></td>
-                    <td><span title="@m.UploadDate.LocalDateTime.ToLongDateString()">@m.UploadDate.Humanize()</span></td>
+                    <td><span title="@m.UploadDate.LocalDateTime.ToString("G")">@m.UploadDate.Humanize()</span></td>
                     <td>@(m.MediaTagsCount == 0 ? "—" : m.MediaTagsCount.ToString())</td>
                     <td class="admin-row-actions">
                         <a href="@Url.Action("Remove", "Media", new {area = "Admin", id = m.Id})">
