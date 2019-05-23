@@ -19,7 +19,7 @@
     <input type="hidden" asp-for="Type" />
 
     <div class="form-row">
-        @if(Model.Type == MediaType.Video || Model.Type == MediaType.Photo360)
+        @if(Model.Type == MediaType.Video)
         {
             <div class="form-group col-sm-8">
                 <div class="card">
@@ -35,7 +35,7 @@
                 <select id="media-editor-tags-list" asp-items="data.DepictedEntityItems" multiple="multiple"></select>
             </div>
         }
-        else
+        else if(Model.Type == MediaType.Photo)
         {
             <div class="form-group col-sm-10">
                 <div class="card">
