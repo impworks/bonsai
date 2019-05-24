@@ -8,6 +8,7 @@ using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Microsoft.EntityFrameworkCore;
 using Nest;
+using Newtonsoft.Json.Linq;
 using Page = Bonsai.Data.Models.Page;
 
 namespace Bonsai.Code.Services.Elastic
@@ -132,7 +133,7 @@ namespace Bonsai.Code.Services.Elastic
                 Id = page.Id,
                 Key = page.Key,
                 Title = page.Title,
-                Aliases = page.Aliases.Select(x => x.Title).JoinString(", "),
+                Aliases = GetPageAliases(page).JoinString(", "),
                 PageType = (int)page.Type,
                 Description = MarkdownService.Strip(page.Description),
             };
@@ -280,6 +281,43 @@ namespace Bonsai.Code.Services.Elastic
 
             foreach (var page in pages)
                 await AddPageAsync(page);
+        }
+
+        #endregion
+
+        #region Private helpers
+
+        /// <summary>
+        /// Returns all aliases known for a page (including previous names).
+        /// </summary>
+        private IEnumerable<string> GetPageAliases(Page page)
+        {
+            var aliases = page.Aliases.Select(x => x.Title).ToList();
+
+            try
+            {
+                if (page.Type == PageType.Person && !string.IsNullOrEmpty(page.Facts))
+                {
+                    var json = JObject.Parse(page.Facts);
+                    var names = json["Main.Name"]?["Values"];
+
+                    if (names != null)
+                    {
+                        foreach (var name in names)
+                        {
+                            var nameStr = name["LastName"] + " " + name["FirstName"] + " " + name["MiddleName"];
+                            if(!string.IsNullOrWhiteSpace(nameStr))
+                                aliases.Add(nameStr.Trim());
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // skip
+            }
+
+            return aliases.Distinct();
         }
 
         #endregion

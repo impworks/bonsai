@@ -142,6 +142,18 @@
 
                 updateInput();
             },
+            score: function (query) {
+                var self = this;
+                var def = this.getScoreFunction(query);
+                return function (item) {
+                    // hack for fuzzy search:
+                    // bump score for items that have been returned from server for this query
+                    var hasItem = self.lastLoaded
+                               && self.lastLoaded[query]
+                               && self.lastLoaded[query].some(function (x) { return x.id === item.id; });
+                    return def(item) + hasItem ? 1 : 0;
+                };
+            },
             render: {
                 option_create: function (data, escape) {
                     return '<div class="create">' + escape(data.input) + ' <i>(без ссылки)</i></div>';
@@ -175,12 +187,18 @@
 
     function loadData(query, callback) {
         // loads data according to current query
+        var self = this;
         var types = [0, 1, 4];
         var url = '/admin/suggest/pages?query=' + encodeURIComponent(query);
         types.forEach(function (t) { url += '&types=' + encodeURIComponent(t); });
 
         $.ajax(url)
             .done(function (data) {
+                // hack for fuzzy search:
+                // cache values returned from server
+                var cache = self.lastLoaded || (self.lastLoaded = {});
+                cache[query] = data;
+                self.lastQuery = null;
                 callback(data);
             });
     }
