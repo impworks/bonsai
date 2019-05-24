@@ -118,20 +118,11 @@
                 .appendTo($select);
         }
 
-        $select.selectize({
+        setupPagePicker($select, {
             create: true,
-            maxOptions: 10,
-            maxItems: 1,
-            openOnFocus: true,
-            valueField: 'id',
-            labelField: 'title',
-            sortField: 'title',
-            searchField: 'title',
-            placeholder: 'Страница или имя',
-            preload: true,
-            load: loadData,
+            types: [0, 1, 4],
             onChange: function () {
-                var value = $select[0].selectize.getValue();
+                var value = this.getValue();
                 if (isGuid(value)) {
                     tagData['PageId'] = value;
                     tagData['ObjectTitle'] = null;
@@ -141,23 +132,6 @@
                 }
 
                 updateInput();
-            },
-            score: function (query) {
-                var self = this;
-                var def = this.getScoreFunction(query);
-                return function (item) {
-                    // hack for fuzzy search:
-                    // bump score for items that have been returned from server for this query
-                    var hasItem = self.lastLoaded
-                               && self.lastLoaded[query]
-                               && self.lastLoaded[query].some(function (x) { return x.id === item.id; });
-                    return def(item) + hasItem ? 1 : 0;
-                };
-            },
-            render: {
-                option_create: function (data, escape) {
-                    return '<div class="create">' + escape(data.input) + ' <i>(без ссылки)</i></div>';
-                }
             }
         });
 
