@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿(function () {
     window.pickMedia = createPicker({
         dialogSelector: '.media-picker',
         contentSelector: '.modal.media-picker .modal-content',
@@ -79,7 +79,7 @@
 
         function loadItems(model, clear) {
             isLoading = true;
-            if (!!clear) {
+            if (clear) {
                 model.items.splice(0);
             }
 
@@ -104,7 +104,7 @@
         function buildUrl(model) {
             var parts = [];
 
-            if (!!model.query) {
+            if (model.query) {
                 parts.push('query=' + encodeURIComponent(model.query));
             }
 
@@ -152,4 +152,4 @@
             obs.observe($scrollEnd[0]);
         }
     }
-});
+})();

@@ -29,9 +29,9 @@
         }
     });
 
-    setupPagePicker($sourceEditor, 'source');
-    setupPagePicker($destEditor, 'dest');
-    setupPagePicker($eventEditor, [2]);
+    setupRelPagePicker($sourceEditor, 'source');
+    setupRelPagePicker($destEditor, 'dest');
+    setupRelPagePicker($eventEditor, [2]);
 
     $sourceEditor.on('change', function () { preload($destEditor, 'dest'); });
     $destEditor.on('change', function () { preload($sourceEditor, 'source'); });
@@ -78,7 +78,7 @@
         var curr = s.items.length > 0 ? s.options[s.items[0]] : {};
         var query = curr.title || '';
         s.load(function(callback) {
-            var url = getQueryUrl(query, typesDef, callback);
+            var url = getQueryUrl(query, typesDef);
             $.ajax(url).done(function (data) {
                 s.clearOptions();
                 s.renderCache = {};
@@ -117,20 +117,11 @@
         return getUrl('/admin/suggest/pages/rel', args);
     }
 
-    function setupPagePicker($elem, typesDef) {
-        $elem.selectize({
-            maxOptions: 10,
-            maxItems: $elem.data('multiple') === 'True' ? 99 : 1,
-            openOnFocus: true,
-            valueField: 'id',
-            labelField: 'title',
-            sortField: 'title',
-            searchField: 'title',
+    function setupRelPagePicker($elem, typesDef) {
+        setupPagePicker($elem, {
             placeholder: 'Введите название страницы',
-            preload: true,
-            load: function (query, callback) {
-                var url = getQueryUrl(query, typesDef, callback);
-                $.ajax(url).done(callback);
+            urlFactory: function(query) {
+                return getQueryUrl(query, typesDef);
             }
         });
     }

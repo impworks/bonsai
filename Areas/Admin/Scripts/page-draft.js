@@ -13,7 +13,7 @@
         elemSelector = 'input[name], textarea[name], select[name]';
 
     monitorChanges();
-    setInterval(saveDraft, 5000);
+    setInterval(trySaveDraft, 5000);
 
     $discard.on('click', discardDraft);
     $preview.on('click', previewDraft);
