@@ -83,7 +83,7 @@ For development, you will need the following:
     ```
 10. Run the app (as Visual Studio project or using `dotnet run`).
 
-## Linux + Docker
+### Linux + Docker
 1. Modify your `vm.max_map_count` to at least 262,144 for ElasticSearch to start:
 
     ```
@@ -125,3 +125,18 @@ For development, you will need the following:
    docker-compose up -d
    ```
 5. After everything is brought up Bonsai will listen on ports 80 and 443.
+
+## Security considerations
+
+### Data backup
+
+If you value the data that you store in Bonsai, make sure that you **SET UP BACKUPS**.
+
+You will need to back up the following:
+
+* Database (approximately tens of megabytes)
+* Uploaded media in `wwwroot/media` (may contain gigabytes of data)
+
+There are many options available, free and paid: uploading to a cloud storage, copying to external drives, etc. Please consider your usage/budget and select a combination that works best for you.
+
+When restoring the database from a backup, set the `SeedData.ResetElastic` option to `true` in the config to rebuild full text search indices in sync with your current database.
