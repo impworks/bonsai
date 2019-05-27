@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Utils\Seed\Media\" />
     <Folder Include="External\tree\" />
     <Folder Include="wwwroot\media\" />

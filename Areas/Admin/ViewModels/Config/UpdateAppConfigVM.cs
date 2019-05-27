@@ -22,6 +22,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Config
         /// </summary>
         public bool AllowGuests { get; set; }
 
+        /// <summary>
+        /// Flag indicating that new registrations are accepted.
+        /// </summary>
+        public bool AllowRegistration { get; set; }
+
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<UpdateAppConfigVM, AppConfig>()
