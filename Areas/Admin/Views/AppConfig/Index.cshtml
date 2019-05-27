@@ -37,8 +37,25 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Регистрация</label>
+                <div class="col-sm-9">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="radio" asp-for="AllowRegistration" value="True" class="form-check-input" />
+                            Разрешена
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="radio" asp-for="AllowRegistration" value="False" class="form-check-input" />
+                            Запрещена
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-            @if(!ViewData.ModelState.IsValid)
+            @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-danger" role="alert">
                     <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.

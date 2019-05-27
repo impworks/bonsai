@@ -115,6 +115,9 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("register")]
         public async Task<ActionResult> Register()
         {
+            if (!_cfgProvider.GetConfig().AllowRegistration)
+                return View("RegisterDisabled");
+
             var vm = Session.Get<RegistrationInfo>()?.FormData ?? new RegisterUserVM();
             vm.CreatePersonalPage = true;
             return await ViewRegisterFormAsync(vm);
@@ -127,6 +130,9 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("register")]
         public async Task<ActionResult> Register(RegisterUserVM vm)
         {
+            if (!_cfgProvider.GetConfig().AllowRegistration)
+                return View("RegisterDisabled");
+
             var info = Session.Get<RegistrationInfo>();
             if (info == null)
                 return RedirectToAction("Login");

@@ -24,5 +24,10 @@ namespace Bonsai.Data.Models
         /// Flag indicating that the website allows unauthorized visitors to view the contents.
         /// </summary>
         public bool AllowGuests { get; set; }
+
+        /// <summary>
+        /// Flag indicating that new registrations are accepted.
+        /// </summary>
+        public bool AllowRegistration { get; set; }
     }
 }
