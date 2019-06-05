@@ -68,7 +68,8 @@ namespace Bonsai.Data.Utils
                 {
                     Id = Guid.NewGuid(),
                     Title = "Bonsai",
-                    AllowGuests = false
+                    AllowGuests = false,
+                    AllowRegistration = true
                 });
             }
 

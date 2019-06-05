@@ -115,7 +115,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("register")]
         public async Task<ActionResult> Register()
         {
-            if (!_cfgProvider.GetConfig().AllowRegistration)
+            if (!await CanRegisterAsync())
                 return View("RegisterDisabled");
 
             var vm = Session.Get<RegistrationInfo>()?.FormData ?? new RegisterUserVM();
@@ -130,7 +130,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("register")]
         public async Task<ActionResult> Register(RegisterUserVM vm)
         {
-            if (!_cfgProvider.GetConfig().AllowRegistration)
+            if (!await CanRegisterAsync())
                 return View("RegisterDisabled");
 
             var info = Session.Get<RegistrationInfo>();
@@ -225,6 +225,21 @@ namespace Bonsai.Areas.Front.Controllers
                 Status = status
             };
             return View(vm);
+        }
+
+        /// <summary>
+        /// Checks if the registration is allowed.
+        /// </summary>
+        private async Task<bool> CanRegisterAsync()
+        {
+            if (_cfgProvider.GetConfig().AllowRegistration)
+                return true;
+
+            var isFirst = await _auth.IsFirstUserAsync();
+            if (isFirst)
+                return true;
+
+            return false;
         }
 
         #endregion
