@@ -24,9 +24,16 @@
                         </div>
                     </div>
                 </a>
-                <form class="search" method="get" action="@Url.Action("Search", "Search")">
-                    <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery"/>
-                </form>
+                @if (ViewBag.DisableSearch != null)
+                {
+                    <div class="placeholder"></div>
+                }
+                else
+                {
+                    <form class="search" method="get" action="@Url.Action("Search", "Search")">
+                        <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery"/>
+                    </form>
+                }
                 @await Component.InvokeAsync("UserHeaderComponent")
             </nav>
         </header>

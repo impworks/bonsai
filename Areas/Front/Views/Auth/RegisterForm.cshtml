@@ -3,6 +3,7 @@
 @model Bonsai.Areas.Front.ViewModels.Auth.RegisterUserVM
 @{
     ViewBag.Title = "Регистрация";
+    ViewBag.DisableSearch = true;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 
     var data = (RegisterUserDataVM) ViewBag.Data;
