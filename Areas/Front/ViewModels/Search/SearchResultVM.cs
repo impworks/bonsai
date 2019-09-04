@@ -1,4 +1,5 @@
 ﻿using Bonsai.Areas.Admin.ViewModels.Dashboard;
+using Bonsai.Areas.Front.ViewModels.Page;
 
 namespace Bonsai.Areas.Front.ViewModels.Search
 {

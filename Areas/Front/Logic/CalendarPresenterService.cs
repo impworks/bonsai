@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.ViewModels.Calendar;
+using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;

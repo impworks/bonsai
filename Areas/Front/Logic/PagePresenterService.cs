@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
@@ -22,14 +25,16 @@ namespace Bonsai.Areas.Front.Logic
     /// </summary>
     public class PagePresenterService
     {
-        public PagePresenterService(AppDbContext db, MarkdownService markdown, RelationsPresenterService relations)
+        public PagePresenterService(AppDbContext db, IMapper mapper, MarkdownService markdown, RelationsPresenterService relations)
         {
             _db = db;
+            _mapper = mapper;
             _markdown = markdown;
             _relations = relations;
         }
 
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
         private readonly MarkdownService _markdown;
         private readonly RelationsPresenterService _relations;
 
@@ -113,6 +118,18 @@ namespace Bonsai.Areas.Front.Logic
                 Facts = factGroups,
                 RelationGroups = relations,
             };
+        }
+
+        /// <summary>
+        /// Returns the list of last N updated pages.
+        /// </summary>
+        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
+        {
+            return await _db.Pages
+                            .OrderByDescending(x => x.LastUpdateDate)
+                            .Take(count)
+                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                            .ToListAsync();
         }
 
         #endregion

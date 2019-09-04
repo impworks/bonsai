@@ -1,11 +1,9 @@
 ﻿using System;
 using AutoMapper;
-using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Helpers;
-using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.ViewModels.Dashboard
+namespace Bonsai.Areas.Front.ViewModels.Page
 {
     /// <summary>
     /// Information about the page with a tiny preview image, if any.
@@ -34,7 +32,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 
         public void Configure(IProfileExpression profile)
         {
-            profile.CreateMap<Page, PageTitleExtendedVM>()
+            profile.CreateMap<Data.Models.Page, PageTitleExtendedVM>()
                    .MapMember(x => x.Id, x => x.Id)
                    .MapMember(x => x.Title, x => x.Title)
                    .MapMember(x => x.Key, x => x.Key)

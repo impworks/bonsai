@@ -31,6 +31,8 @@ namespace Bonsai.Areas.Front.Logic
         private readonly AppDbContext _db;
         private readonly MarkdownService _markdown;
 
+        #region Methods
+
         /// <summary>
         /// Returns the details for a media.
         /// </summary>
@@ -62,6 +64,26 @@ namespace Bonsai.Areas.Front.Logic
                 PreviewPath = GetSizedMediaPath(media.FilePath, MediaSize.Large)
             };
         }
+
+        /// <summary>
+        /// Returns the last N uploaded images.
+        /// </summary>
+        public async Task<IReadOnlyList<MediaThumbnailVM>> GetLastUploadedMediaAsync(int count)
+        {
+            return await _db.Media
+                            .OrderByDescending(x => x.UploadDate)
+                            .Take(count)
+                            .Select(x => new MediaThumbnailVM
+                            {
+                                Key = x.Key,
+                                Type = x.Type,
+                                ThumbnailUrl = GetSizedMediaPath(x.FilePath, MediaSize.Small),
+                                Date = FuzzyDate.TryParse(x.Date),
+                            })
+                            .ToListAsync();
+        }
+
+        #endregion
 
         #region Private helpers
 
