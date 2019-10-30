@@ -25,6 +25,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         public string Email { get; set; }
 
         /// <summary>
+        /// Flag indicating that the user is locally authorized with a login and password.
+        /// </summary>
+        public bool UsesLocalAuth { get; set; }
+
+        /// <summary>
         /// The user's role with richest access level.
         /// </summary>
         public UserRole Role { get; set; }
@@ -33,7 +38,8 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         {
             profile.CreateMap<AppUser, UserTitleVM>()
                    .ForMember(x => x.Role, opt => opt.Ignore())
-                   .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName));
+                   .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName))
+                   .ForMember(x => x.UsesLocalAuth, opt => opt.MapFrom(x => x.UsesLocalAuth));
         }
     }
 }

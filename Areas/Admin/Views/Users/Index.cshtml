@@ -54,6 +54,10 @@
                         <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})" title="Редактировать">
                             @user.FullName
                         </a>
+                        @if (user.UsesLocalAuth)
+                        {
+                            <span class="fa fa-key" title="Авторизация по паролю"></span>
+                        }
                     </td>
                     <td>@user.Email</td>
                     <td>
@@ -66,6 +70,12 @@
                         <a href="@Url.Action("Index", "Changesets", new {area = "Admin", userId = user.Id})" title="История изменений">
                             <span class="fa fa-history"></span>
                         </a>
+                        @if (user.UsesLocalAuth)
+                        {
+                            <a href="@Url.Action("ResetPassword", "Users", new {area = "Admin", userId = user.Id})" title="Смена пароля">
+                                <span class="fa fa-key"></span>
+                            </a>
+                        }
                     </td>
                 </tr>
             }

@@ -69,6 +69,18 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
+        /// Finds the user by ID.
+        /// </summary>
+        public async Task<UserTitleVM> GetAsync(string id)
+        {
+            var user = await _db.Users
+                                .AsNoTracking()
+                                .GetAsync(x => x.Id == id, "Пользователь не найден");
+
+            return _mapper.Map<UserTitleVM>(user);
+        }
+
+        /// <summary>
         /// Retrieves the default values for an update operation.
         /// </summary>
         public async Task<UserEditorVM> RequestUpdateAsync(string id)

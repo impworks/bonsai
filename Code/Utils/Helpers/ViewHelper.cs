@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Impworks.Utils.Format;
@@ -15,7 +16,7 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Returns the select list with current element selected.
         /// </summary>
-        public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T? value, bool addEmpty = true)
+        public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T? value, bool addEmpty = true, T[] except = null)
             where T : struct, IConvertible, IComparable
         {
             var list = new List<SelectListItem>();
@@ -24,6 +25,9 @@ namespace Bonsai.Code.Utils.Helpers
 
             foreach(var entry in EnumHelper.GetEnumDescriptions<T>())
             {
+                if (except?.Contains(entry.Key) == true)
+                    continue;
+
                 list.Add(new SelectListItem
                 {
                     Text = entry.Value,
@@ -38,10 +42,10 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Returns the select list with current element selected.
         /// </summary>
-        public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T value)
+        public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T value, T[] except = null)
             where T : struct, IConvertible, IComparable
         {
-            return GetEnumSelectList((T?)value, false);
+            return GetEnumSelectList(value, false, except);
         }
 
         /// <summary>
