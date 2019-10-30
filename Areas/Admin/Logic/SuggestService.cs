@@ -9,6 +9,7 @@ using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
+using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Helpers;

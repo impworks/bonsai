@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Humanizer
+@addTagHelper *, Bonsai
+@model Bonsai.Areas.Front.ViewModels.Home.HomeVM
+@{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
     ViewBag.Title = "Главная страница";
 }
@@ -7,5 +10,52 @@
     <div class="row calendar">
         <div class="col-md-7 calendar-month"></div>
         <div class="col-md-5 calendar-events"></div>
+    </div>
+</div>
+
+<div class="home-info">
+    <div class="row">
+        @if (Model.LastUpdatedPages.Any())
+        {
+            <div class="col-md-6">
+                <h5>Обновленные страницы</h5>
+                <ul class="home-pages-list">
+                    @foreach (var p in Model.LastUpdatedPages)
+                    {
+                        <li>
+                            <a href="@Url.Action("Description", "Page", new {key = p.Key})" class="home-pages-wrapper">
+                                <div class="home-pages-image">
+                                    <page-image image="@p.MainPhotoPath" type="@p.Type"></page-image>
+                                </div>
+                                <div class="home-pages-descr">
+                                    <span class="home-pages-descr-title">@p.Title</span>
+                                    <div class="home-pages-descr-date" title="@p.LastUpdateDate.DateTime.ToLongDateString()">
+                                        @p.LastUpdateDate.Humanize()
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        @if (Model.LastUploadedMedia.Any())
+        {
+            <div class="col-md-6">
+                <h5>Новые медиа-файлы</h5>
+                <ul class="list-inline">
+                    @foreach (var m in Model.LastUploadedMedia)
+                    {
+                        <li class="list-inline-item">
+                            <div class="media-thumb-wrapper">
+                                <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = m.Key})" class="media-thumb-link" data-media="@m.Key">
+                                    <div class="media-thumb-square" style="background-image: url('@Url.Content(m.ThumbnailUrl)')"></div>
+                                </a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
     </div>
 </div>

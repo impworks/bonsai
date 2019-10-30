@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Users;
+using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Data;
 using Microsoft.EntityFrameworkCore;
 
