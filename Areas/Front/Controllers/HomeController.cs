@@ -35,7 +35,7 @@ namespace Bonsai.Areas.Front.Controllers
             var vm = new HomeVM
             {
                 LastUpdatedPages = await _pages.GetLastUpdatedPagesAsync(5),
-                LastUploadedMedia = await _media.GetLastUploadedMediaAsync(5)
+                LastUploadedMedia = await _media.GetLastUploadedMediaAsync(10)
             };
 
             return View(vm);
