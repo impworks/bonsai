@@ -23,7 +23,15 @@ namespace Bonsai.Code.Config
         {
             services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.GetConnectionString("Database")));
 
-            services.AddIdentity<AppUser, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>(o =>
+                    {
+                        o.Password.RequireDigit = false;
+                        o.Password.RequireLowercase = false;
+                        o.Password.RequireUppercase = false;
+                        o.Password.RequireNonAlphanumeric = false;
+                        o.Password.RequiredLength = 6;
+                        o.Password.RequiredUniqueChars = 1;
+                    })
                     .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
 

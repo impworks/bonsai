@@ -19,7 +19,7 @@ namespace Bonsai.Areas.Admin.Controllers
     /// Controller for managing users.
     /// </summary>
     [Route("admin/users")]
-    public class UsersController: AdminControllerBase
+    public class UsersController : AdminControllerBase
     {
         public UsersController(UsersManagerService users, PagesManagerService pages, UserManager<AppUser> userMgr, AppDbContext db)
         {
@@ -91,7 +91,7 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                if(vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
+                if (vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
                 {
                     var page = await _pages.CreateDefaultUserPageAsync(vm, User);
                     vm.PersonalPageId = page.Id;
@@ -119,7 +119,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("create")]
         public async Task<ActionResult> Create()
         {
-            return await ViewCreateFormAsync(new UserCreatorVM {Role = UserRole.User});
+            return await ViewCreateFormAsync(new UserCreatorVM { Role = UserRole.User });
         }
 
         /// <summary>
@@ -129,7 +129,21 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("create")]
         public async Task<ActionResult> Create(UserCreatorVM vm)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return await ViewCreateFormAsync(vm);
+
+            try
+            {
+                await _users.CreateAsync(vm);
+                await _db.SaveChangesAsync();
+
+                return RedirectToSuccess("Пользователь создан");
+            }
+            catch (ValidationException ex)
+            {
+                SetModelState(ex);
+                return await ViewCreateFormAsync(vm);
+            }
         }
 
         /// <summary>
@@ -149,7 +163,16 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("reset-password")]
         public async Task<ActionResult> ResetPassword(UserPasswordEditorVM vm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _users.ResetPasswordAsync(vm);
+                return RedirectToSuccess("Пароль изменен");
+            }
+            catch (ValidationException ex)
+            {
+                SetModelState(ex);
+                return await ViewResetPasswordFormAsync(vm.Id);
+            }
         }
 
         #region Helpers
@@ -164,7 +187,7 @@ namespace Bonsai.Areas.Admin.Controllers
             ViewBag.Data = new UserEditorDataVM
             {
                 IsSelf = false,
-                UserRoleItems = ViewHelper.GetEnumSelectList(vm.Role, except: new[] {UserRole.Unvalidated}),
+                UserRoleItems = ViewHelper.GetEnumSelectList(vm.Role, except: new[] { UserRole.Unvalidated }),
                 PageItems = pageItems
             };
 
@@ -177,7 +200,7 @@ namespace Bonsai.Areas.Admin.Controllers
         private async Task<ActionResult> ViewResetPasswordFormAsync(string id)
         {
             ViewBag.Data = await _users.GetAsync(id);
-            return View("ResetPassword");
+            return View("ResetPassword", new UserPasswordEditorVM { Id = id });
         }
 
         /// <summary>
@@ -212,7 +235,7 @@ namespace Bonsai.Areas.Admin.Controllers
                                     .FirstOrDefaultAsync();
 
                 if (!string.IsNullOrEmpty(page))
-                    return new[] {new SelectListItem(page, pageId.Value.ToString(), true)};
+                    return new[] { new SelectListItem(page, pageId.Value.ToString(), true) };
             }
 
             return Array.Empty<SelectListItem>();

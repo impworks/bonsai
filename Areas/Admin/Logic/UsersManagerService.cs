@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -178,6 +180,46 @@ namespace Bonsai.Areas.Admin.Logic
                             .FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Resets the user's password.
+        /// </summary>
+        public async Task ResetPasswordAsync(UserPasswordEditorVM vm)
+        {
+            ValidatePasswordForm(vm);
+
+            var user = await _db.Users.GetAsync(x => x.Id == vm.Id, "Пользователь не найден");
+            var token = await _userMgr.GeneratePasswordResetTokenAsync(user);
+            var result = await _userMgr.ResetPasswordAsync(user, token, vm.Password);
+
+            if(!result.Succeeded)
+                throw new OperationException("Не удалось сменить пароль, попробуйте еще раз.");
+        }
+
+        /// <summary>
+        /// Creates a new user with login-password auth.
+        /// </summary>
+        public async Task<AppUser> CreateAsync(UserCreatorVM vm)
+        {
+            ValidatePasswordForm(vm);
+            await ValidateRegisterRequestAsync(vm);
+
+            var user = _mapper.Map<AppUser>(vm);
+            user.Id = Guid.NewGuid().ToString();
+            user.UsesLocalAuth = true;
+            user.IsValidated = true;
+
+            var createResult = await _userMgr.CreateAsync(user, vm.Password);
+            if (!createResult.Succeeded)
+            {
+                var msgs = createResult.Errors.Select(x => new KeyValuePair<string, string>("", x.Description)).ToList();
+                throw new ValidationException(msgs);
+            }
+
+            await _userMgr.AddToRoleAsync(user, vm.Role.ToString());
+
+            return user;
+        }
+
         #region Private helpers
 
         /// <summary>
@@ -246,6 +288,40 @@ namespace Bonsai.Areas.Admin.Logic
 
             val.ThrowIfInvalid();
         }
+
+        /// <summary>
+        /// Ensures that the password form has been filled correctly.
+        /// </summary>
+        private void ValidatePasswordForm(IPasswordForm form)
+        {
+            var val = new Validator();
+
+            if (form.Password == null || form.Password.Length < 6)
+                val.Add(nameof(form.Password), "Пароль должен содержать как минимум шесть символов");
+
+            if (form.Password != form.PasswordCopy)
+                val.Add(nameof(form.PasswordCopy), "Пароли не совпадают");
+
+            val.ThrowIfInvalid();
+        }
+
+        /// <summary>
+        /// Performs additional checks on the registration request.
+        /// </summary>
+        private async Task ValidateRegisterRequestAsync(UserCreatorVM vm)
+        {
+            var val = new Validator();
+
+            if (FuzzyDate.TryParse(vm.Birthday) == null)
+                val.Add(nameof(vm.Birthday), "Дата рождения указана неверно.");
+
+            var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email);
+            if (emailExists)
+                val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
+
+            val.ThrowIfInvalid();
+        }
+
 
         #endregion
     }

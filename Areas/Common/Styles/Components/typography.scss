@@ -104,3 +104,9 @@ p {
         color: #4c1712;
     }
 }
+
+.alert p {
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    padding-top: unset;
+}
