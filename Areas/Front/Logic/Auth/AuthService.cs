@@ -35,9 +35,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Attempts to authenticate the user.
+        /// Attempts to authenticate the user via OAuth.
         /// </summary>
-        public async Task<LoginResultVM> LoginAsync()
+        public async Task<LoginResultVM> ExternalLoginAsync()
         {
             var info = await _signMgr.GetExternalLoginInfoAsync();
             if (info == null)
@@ -55,6 +55,21 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return new LoginResultVM(LoginStatus.Unvalidated, info);
 
             return new LoginResultVM(LoginStatus.Succeeded, info);
+        }
+
+        /// <summary>
+        /// Attempts to authorize the user via local auth.
+        /// </summary>
+        public async Task<LoginResultVM> LocalLoginAsync(LocalLoginVM vm)
+        {
+            var info = await _signMgr.PasswordSignInAsync(vm.Login, vm.Password, isPersistent: true, lockoutOnFailure: true);
+            if (info.Succeeded)
+                return new LoginResultVM(LoginStatus.Succeeded);
+
+            if(info.IsLockedOut)
+                return new LoginResultVM(LoginStatus.LockedOut);
+
+            return new LoginResultVM(LoginStatus.Failed);
         }
 
         /// <summary>

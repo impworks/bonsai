@@ -9,6 +9,7 @@ using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,14 @@ namespace Bonsai.Areas.Front.Controllers
     [Route("auth")]
     public class AuthController: AppControllerBase
     {
-        public AuthController(AuthService auth, AuthProviderService provs, PagesManagerService pages, ElasticService elastic, AppConfigService cfgProvider, AppDbContext db)
+        public AuthController(
+            AuthService auth,
+            AuthProviderService provs,
+            PagesManagerService pages,
+            ElasticService elastic,
+            AppConfigService cfgProvider,
+            AppDbContext db
+        )
         {
             _auth = auth;
             _provs = provs;
@@ -56,8 +64,8 @@ namespace Bonsai.Areas.Front.Controllers
         /// Sends the authorization request.
         /// </summary>
         [HttpPost]
-        [Route("login")]
-        public ActionResult Login(string provider, string returnUrl)
+        [Route("externalLogin")]
+        public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("LoginCallback", new {returnUrl = returnUrl});
             var authProps = new AuthenticationProperties
@@ -68,6 +76,21 @@ namespace Bonsai.Areas.Front.Controllers
                 Items = { ["LoginProvider"] = provider }
             };
             return Challenge(authProps, provider);
+        }
+
+        /// <summary>
+        /// Attempts to authorize the user via a login-password pair.
+        /// </summary>
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult> Login(LocalLoginVM vm)
+        {
+            var result = await _auth.LocalLoginAsync(vm);
+
+            if (result.Status == LoginStatus.Succeeded)
+                return RedirectToAction("Index", "Home", new { area = "Front" });
+
+            return ViewLoginForm(result.Status);
         }
 
         /// <summary>
@@ -88,7 +111,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("loginCallback")]
         public async Task<ActionResult> LoginCallback(string returnUrl)
         {
-            var result = await _auth.LoginAsync();
+            var result = await _auth.ExternalLoginAsync();
 
             if (result.Status == LoginStatus.Succeeded)
                 return RedirectLocal(returnUrl);
@@ -217,14 +240,15 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         private ActionResult ViewLoginForm(LoginStatus? status, string returnUrl = null)
         {
-            var vm = new LoginVM
+            ViewBag.Data = new LoginDataVM
             {
                 ReturnUrl = returnUrl,
-                AllowGuests = _cfgProvider.GetConfig().AllowGuests,
+                AllowGuests = _cfgProvider.GetAppConfig().AllowGuests,
+                AllowLocalAuth = _cfgProvider.GetStaticConfig()["Auth:AllowLocalAuth"].TryParse<bool>(),
                 Providers = _provs.AvailableProviders,
                 Status = status
             };
-            return View(vm);
+            return View(new LocalLoginVM());
         }
 
         /// <summary>
@@ -232,7 +256,7 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         private async Task<bool> CanRegisterAsync()
         {
-            if (_cfgProvider.GetConfig().AllowRegistration)
+            if (_cfgProvider.GetAppConfig().AllowRegistration)
                 return true;
 
             var isFirst = await _auth.IsFirstUserAsync();

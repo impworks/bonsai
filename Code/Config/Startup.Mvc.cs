@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Serilog;
@@ -52,6 +53,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
             services.AddScoped<ViewRenderService>();
+            services.AddScoped(x => Configuration);
 
             if(Environment.IsProduction())
             {

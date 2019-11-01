@@ -1,44 +1,48 @@
-﻿@using Bonsai.Areas.Front.ViewModels.Auth
-@model LoginVM
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Front.ViewModels.Auth
+@model LocalLoginVM
 @{
     ViewBag.Title = "Авторизация";
     ViewBag.DisableSearch = true;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
+
+    var data = (LoginDataVM)ViewBag.Data;
 }
 
 <div class="content text">
     <h1>Авторизация</h1>
-    
-    @if(Model.Status == LoginStatus.Failed)
+
+    @if (data.Status == LoginStatus.Failed)
     {
         <div class="alert alert-danger">
             <b>Ошибка:</b> Не удалось авторизоваться.<br />Возможно, вы ввели некорректный пароль? Попробуйте снова.
         </div>
     }
-    else if(Model.Status == LoginStatus.LockedOut)
+    else if (data.Status == LoginStatus.LockedOut)
     {
         <div class="alert alert-danger">
-            <b>Ошибка:</b>Ваша учетная запись заблокирована администратором.
+            <b>Ошибка:</b>Ваша учетная запись заблокирована.
         </div>
     }
-    else if (Model.Status == LoginStatus.Unvalidated)
+    else if (data.Status == LoginStatus.Unvalidated)
     {
         <p>Ваша учетная запись еще не была проверена администратором.</p>
         <p>Пожалуйста, дождитесь проверки - тогда вы сможете пользоваться системой.</p>
     }
-    
-    @if (Model.Status == LoginStatus.Failed || Model.Status == null)
+
+    @if (data.Status == LoginStatus.Failed || data.Status == null)
     {
-        if (!Model.AllowGuests)
+        if (!data.AllowGuests)
         {
             <p>Страница доступна только для зарегистрированных пользователей.</p>
         }
+
         <p>Пожалуйста, авторизуйтесь с помощью одного из доступных сервисов:</p>
 
-        <form action="@Url.Action("Login")" method="post">
-            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl"/>
+        <form action="@Url.Action("ExternalLogin")" method="post">
+            <input type="hidden" name="returnUrl" value="@data.ReturnUrl" />
             <div class="social-buttons">
-                @foreach (var prov in Model.Providers)
+                @foreach (var prov in data.Providers)
                 {
                     <button type="submit" class="btn btn-lg btn-outline-primary btn-social" name="provider" value="@prov.Key" title="Вход через @prov.Caption">
                         <i class="@prov.IconClass"></i>
@@ -47,5 +51,32 @@
                 }
             </div>
         </form>
+
+        @if (data.AllowLocalAuth)
+        {
+            <p>Или введите логин и пароль, полученный от администратора.</p>
+
+            <div class="row">
+                <div class="col-sm-5">
+                    <form action="@Url.Action("Login")" method="post">
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label" for="Login">Логин</label>
+                            <div class="col-sm-9">
+                                <input type="text" asp-for="Login" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label" for="Password">Пароль</label>
+                            <div class="col-sm-9">
+                                <input type="password" asp-for="Login" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-outline-primary">Войти</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
     }
 </div>

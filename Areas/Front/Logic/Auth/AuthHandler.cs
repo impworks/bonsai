@@ -25,7 +25,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthRequirement requirement)
         {
-            var cfg = _cfgProvider.GetConfig();
+            var cfg = _cfgProvider.GetAppConfig();
             if (cfg.AllowGuests)
             {
                 context.Succeed(requirement);
