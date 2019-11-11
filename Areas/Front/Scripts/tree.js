@@ -148,7 +148,7 @@
         var isDragged = false;
         var preventClick = false;
 
-        var mouseUp = function(e) {
+        var mouseUp = function() {
             if (isDragged) {
                 preventClick = true;
             }
