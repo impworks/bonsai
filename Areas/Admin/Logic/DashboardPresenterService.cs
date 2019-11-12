@@ -50,6 +50,7 @@ namespace Bonsai.Areas.Admin.Logic
         private async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
         {
             return await _db.Pages
+                            .Where(x => !x.IsDeleted)
                             .OrderByDescending(x => x.LastUpdateDate)
                             .Take(count)
                             .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
@@ -62,6 +63,7 @@ namespace Bonsai.Areas.Admin.Logic
         private async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMediaAsync(int count)
         {
             return await _db.Media
+                            .Where(x => !x.IsDeleted)
                             .OrderByDescending(x => x.UploadDate)
                             .Take(count)
                             .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)

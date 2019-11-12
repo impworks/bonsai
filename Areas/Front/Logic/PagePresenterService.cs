@@ -126,6 +126,7 @@ namespace Bonsai.Areas.Front.Logic
         public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
         {
             return await _db.Pages
+                            .Where(x => !x.IsDeleted)
                             .OrderByDescending(x => x.LastUpdateDate)
                             .Take(count)
                             .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
