@@ -16,7 +16,7 @@ namespace Bonsai.Code.Utils.Helpers
         /// Characters that are not allowed in a title.
         /// </summary>
         private static readonly Regex InvalidChars = new Regex(
-            @"[^a-zа-я0-9,-]",
+            @"[^a-zа-яё0-9,-]",
             RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase
         );
 

@@ -82,7 +82,7 @@ namespace Bonsai.Code.Services.Elastic
                 .Settings(s =>
                     s.Analysis(a =>
                         a.CharFilters(c =>
-                            c.Mapping("filter_ru_e", z => z.Mappings("Ё => Е", "ё => е"))
+                            c.Mapping("filter_ru_e", z => z.Mappings("Ё=>Е", "ё=>е"))
                         )
                         .TokenFilters(t =>
                             t.Stop("stopwords_ru", st =>
