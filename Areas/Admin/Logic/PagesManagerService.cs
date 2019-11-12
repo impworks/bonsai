@@ -388,7 +388,7 @@ namespace Bonsai.Areas.Admin.Logic
             if (vm.Description == null)
                 vm.Description = string.Empty;
 
-            var key = PageHelper.EncodeTitle(vm.Title);
+            var key = PageHelper.EncodeTitle(vm.Title).ToLowerInvariant();
             var otherPage = await _db.PageAliases
                                      .AnyAsync(x => x.Key == key && x.Page.Id != vm.Id);
 
@@ -397,7 +397,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (!string.IsNullOrEmpty(vm.Aliases))
             {
-                var aliases = TryDeserialize<List<string>>(vm.Aliases);
+                var aliases = TryDeserialize<List<string>>(vm.Aliases)?.Select(x => x.ToLowerInvariant());
                 if (aliases == null)
                 {
                     val.Add(nameof(PageEditorVM.Aliases), "Ссылки указаны неверно!");
