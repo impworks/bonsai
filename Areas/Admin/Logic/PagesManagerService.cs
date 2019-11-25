@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
-using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Areas.Front.ViewModels.Page;
@@ -55,7 +54,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
-            var query = _db.Pages.Include(x => x.MainPhoto).AsQueryable();
+            var query = _db.Pages
+                           .Include(x => x.MainPhoto)
+                           .Where(x => x.IsDeleted == false);
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
                 query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
@@ -65,8 +66,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var totalCount = await query.CountAsync();
 
-            var items = await query.Where(x => x.IsDeleted == false)
-                                   .OrderBy(request.OrderBy, request.OrderDescending.Value)
+            var items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
                                    .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)

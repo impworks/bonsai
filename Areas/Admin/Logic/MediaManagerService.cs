@@ -76,7 +76,9 @@ namespace Bonsai.Areas.Admin.Logic
             var result = new MediaListVM { Request = request };
             await FillAdditionalDataAsync(request, result);
 
-            var query = _db.Media.Include(x => x.Tags).AsQueryable();
+            var query = _db.Media
+                           .Include(x => x.Tags)
+                           .Where(x => x.IsDeleted == false);
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
                 query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
@@ -90,8 +92,7 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
-            result.Items = await query.Where(x => x.IsDeleted == false)
-                                      .OrderBy(request.OrderBy, request.OrderDescending.Value)
+            result.Items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
                                       .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
                                       .Skip(PageSize * request.Page)
                                       .Take(PageSize)
