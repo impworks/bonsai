@@ -57,8 +57,7 @@ namespace Bonsai.Areas.Front.Logic
                         continue;
 
                     info["Photo"] = _url.Content(info["Photo"].Value<string>());
-                    info["Url"] = _url.Action("Description", "Page",
-                        new {area = "Front", key = info["Url"].Value<string>()});
+                    info["Url"] = _url.Action("Description", "Page", new {area = "Front", key = info["Url"].Value<string>()});
                 }
             }
 
