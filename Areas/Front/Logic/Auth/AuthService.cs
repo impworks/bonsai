@@ -62,12 +62,17 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<LoginResultVM> LocalLoginAsync(LocalLoginVM vm)
         {
-            var info = await _signMgr.PasswordSignInAsync(vm.Login, vm.Password, isPersistent: true, lockoutOnFailure: true);
-            if (info.Succeeded)
-                return new LoginResultVM(LoginStatus.Succeeded);
+            var email = vm.Login.ToUpper();
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.NormalizedEmail == email);
+            if (user != null)
+            {
+                var info = await _signMgr.PasswordSignInAsync(user, vm.Password, isPersistent: true, lockoutOnFailure: true);
+                if (info.Succeeded)
+                    return new LoginResultVM(LoginStatus.Succeeded);
 
-            if(info.IsLockedOut)
-                return new LoginResultVM(LoginStatus.LockedOut);
+                if (info.IsLockedOut)
+                    return new LoginResultVM(LoginStatus.LockedOut);
+            }
 
             return new LoginResultVM(LoginStatus.Failed);
         }
