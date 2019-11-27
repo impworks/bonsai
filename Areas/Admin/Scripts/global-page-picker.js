@@ -10,7 +10,7 @@
 
     $elem.selectize({
         create: opts.create || false,
-        maxOptions: 10,
+        maxOptions: 50,
         maxItems: multiple ? null : 1,
         openOnFocus: true,
         valueField: 'id',
