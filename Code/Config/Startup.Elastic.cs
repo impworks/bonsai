@@ -12,7 +12,7 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureElasticServices(IServiceCollection services)
         {
-            var host = Configuration["ElasticSearch:Host"];
+            var host = Configuration.ElasticSearch.Host;
             var settings = new ConnectionSettings(new Uri(host)).DisableAutomaticProxyDetection()
                                                                 .DisablePing();
 

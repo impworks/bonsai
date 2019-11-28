@@ -106,7 +106,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
-            await ValidateRegisterRequestAsync(vm);
+            await ValidateRegisterRequestAsync(vm, isLocalAuthUsed: extLogin == null);
 
             var isFirstUser = await IsFirstUserAsync();
 
@@ -121,8 +121,10 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 throw new ValidationException(msgs);
             }
 
-            var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
-            await _userMgr.AddLoginAsync(user, login);
+            if (extLogin != null)
+                await _userMgr.AddLoginAsync(user, new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider));
+            else
+                await _userMgr.AddPasswordAsync(user, vm.Password);
 
             await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.Unvalidated));
 
@@ -195,7 +197,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Performs additional checks on the registration request.
         /// </summary>
-        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm)
+        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm, bool isLocalAuthUsed)
         {
             var val = new Validator();
 
@@ -205,6 +207,21 @@ namespace Bonsai.Areas.Front.Logic.Auth
             var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email);
             if (emailExists)
                 val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
+
+            if (isLocalAuthUsed)
+            {
+                if (string.IsNullOrEmpty(vm.Password))
+                    val.Add(nameof(vm.Password), "Пароль не указан.");
+
+                else if (string.IsNullOrEmpty(vm.PasswordCopy))
+                    val.Add(nameof(vm.Password), "Копия пароля не указана.");
+
+                else if (vm.PasswordCopy != vm.Password)
+                    val.Add(nameof(vm.Password), "Пароли не совпадают.");
+
+                else if (vm.Password.Length < 6)
+                    val.Add(nameof(vm.Password), "Пароль слишком короткий.");
+            }
 
             val.ThrowIfInvalid();
         }

@@ -4,7 +4,7 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.Extensions.Configuration;
 
-namespace Bonsai.Code.Services
+namespace Bonsai.Code.Services.Config
 {
     /// <summary>
     /// Provides read-only configuration instance.
@@ -33,9 +33,9 @@ namespace Bonsai.Code.Services
         /// <summary>
         /// Returns the configuration options from appsettings.json or env variables. 
         /// </summary>
-        public IConfiguration GetStaticConfig()
+        public StaticConfig GetStaticConfig()
         {
-            return _cfg;
+            return _cfg.Get<StaticConfig>();
         }
 
         /// <summary>

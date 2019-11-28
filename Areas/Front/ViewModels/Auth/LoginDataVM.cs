@@ -18,6 +18,11 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         public LoginStatus? Status { get; set; }
 
         /// <summary>
+        /// Flag indicating that there are no users in the database and current user will register as first.
+        /// </summary>
+        public bool IsFirstUser { get; set; }
+
+        /// <summary>
         /// Flag indicating that unauthorized visitors can view page contents.
         /// </summary>
         public bool AllowGuests { get; set; }

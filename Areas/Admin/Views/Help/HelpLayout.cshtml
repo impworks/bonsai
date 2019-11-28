@@ -1,4 +1,5 @@
-﻿@inject Bonsai.Code.Services.AppConfigService ConfigService
+﻿@using Bonsai.Code.Services.Config
+@inject AppConfigService ConfigService
 @{
     var config = ConfigService.GetAppConfig();
 }

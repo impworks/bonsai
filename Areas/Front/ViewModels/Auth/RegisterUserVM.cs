@@ -49,6 +49,16 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         public string Birthday { get; set; }
 
         /// <summary>
+        /// Password to use when registering without external auth.
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Copy of the password.
+        /// </summary>
+        public string PasswordCopy { get; set; }
+
+        /// <summary>
         /// Flag indicating that the user must be granted a page.
         /// </summary>
         public bool CreatePersonalPage { get; set; }

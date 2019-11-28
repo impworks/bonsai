@@ -49,10 +49,17 @@
                         <span>@prov.Caption</span>
                     </button>
                 }
+                @if (data.AllowLocalAuth && data.IsFirstUser)
+                {
+                    <a href="@Url.Action("Register")" class="btn btn-lg btn-outline-primary btn-social" title="Вход по логину и паролю">
+                        <i class="fa fa-key"></i>
+                        <span>Пароль</span>
+                    </a>
+                }
             </div>
         </form>
 
-        @if (data.AllowLocalAuth)
+        @if (data.AllowLocalAuth && !data.IsFirstUser)
         {
             <p>Или введите логин и пароль, полученный от администратора.</p>
 

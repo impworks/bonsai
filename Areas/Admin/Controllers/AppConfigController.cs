@@ -2,6 +2,7 @@
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Config;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Config;
 using Bonsai.Data;
 using Microsoft.AspNetCore.Mvc;
 

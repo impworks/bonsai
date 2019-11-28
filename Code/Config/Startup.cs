@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Bonsai.Code.Services.Config;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,11 +23,11 @@ namespace Bonsai.Code.Config
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            Configuration = builder.Build();
+            Configuration = builder.Build().Get<StaticConfig>();
             Environment = env;
         }
 
-        private IConfiguration Configuration { get; }
+        private StaticConfig Configuration { get; }
         private IHostingEnvironment Environment { get; }
 
         /// <summary>
@@ -51,10 +52,10 @@ namespace Bonsai.Code.Config
             if (Environment.IsDevelopment())
                 app.UseBrowserLink();
 
-            if (Configuration["WebServer:RequireHttps"].TryParse<bool>())
+            if (Configuration.WebServer.RequireHttps)
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
 
-            if (Configuration["Debug:DetailedExceptions"].TryParse<bool>())
+            if (Configuration.Debug.DetailedExceptions)
                 app.UseDeveloperExceptionPage();
 
             ValidateAutomapperConfig(app);

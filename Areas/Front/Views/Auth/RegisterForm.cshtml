@@ -61,7 +61,26 @@
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
-                
+
+                @if (data.IsLocalAuthUsed)
+                {
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label form-label-required">Пароль</label>
+                        <div class="col-sm-9">
+                            <input asp-for="Password" class="form-control" type="password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label form-label-required">Повтор пароля</label>
+                        <div class="col-sm-9">
+                            <input asp-for="PasswordCopy" class="form-control" type="password" />
+                            <span asp-validation-for="PasswordCopy" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+
                 @if (data.IsFirstUser)
                 {
                     <div class="form-group row">
@@ -75,8 +94,8 @@
                         </div>
                     </div>
                 }
-                
-                @if(!ViewData.ModelState.IsValid)
+
+                @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="alert alert-danger" role="alert">
                         <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.
