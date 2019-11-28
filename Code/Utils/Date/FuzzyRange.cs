@@ -118,7 +118,7 @@ namespace Bonsai.Code.Utils.Date
             if (string.IsNullOrEmpty(raw))
                 return null;
 
-            return raw.TryParse(Parse);
+            return raw.TryParse<FuzzyRange?>(x => Parse(x));
         }
 
         /// <summary>

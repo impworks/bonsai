@@ -76,7 +76,7 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
-            var dir = request.OrderDescending.Value;
+            var dir = request.OrderDescending ?? false;
             if (request.OrderBy == nameof(RelationTitleVM.Destination))
                 query = query.OrderBy(x => x.Destination.Title, dir);
             else if (request.OrderBy == nameof(RelationTitleVM.Source))

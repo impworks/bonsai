@@ -72,6 +72,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                          || x.EditedMediaId == request.EntityId
                                          || x.EditedRelationId == request.EntityId);
 
+            if (!string.IsNullOrEmpty(request.UserId))
+                query = query.Where(x => x.Author.Id == request.UserId);
+
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 

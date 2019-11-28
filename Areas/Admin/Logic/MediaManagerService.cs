@@ -13,6 +13,7 @@ using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
@@ -75,7 +76,9 @@ namespace Bonsai.Areas.Admin.Logic
             var result = new MediaListVM { Request = request };
             await FillAdditionalDataAsync(request, result);
 
-            var query = _db.Media.Include(x => x.Tags).AsQueryable();
+            var query = _db.Media
+                           .Include(x => x.Tags)
+                           .Where(x => x.IsDeleted == false);
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
                 query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
@@ -89,8 +92,7 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
-            result.Items = await query.Where(x => x.IsDeleted == false)
-                                      .OrderBy(request.OrderBy, request.OrderDescending.Value)
+            result.Items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
                                       .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
                                       .Skip(PageSize * request.Page)
                                       .Take(PageSize)
@@ -205,6 +207,7 @@ namespace Bonsai.Areas.Admin.Logic
                                  .GetAsync(x => x.Id == vm.Id && (x.IsDeleted == false || revertedId != null),
                                            "Медиа-файл не найден");
 
+            var prevTags = media.Tags.ToList();
             var prevVm = media.IsDeleted ? null : await RequestUpdateAsync(vm.Id, revertedId != null);
             var changeset = await GetChangesetAsync(prevVm, vm, vm.Id, principal, revertedId);
             _db.Changes.Add(changeset);
@@ -217,7 +220,7 @@ namespace Bonsai.Areas.Admin.Logic
             _db.MediaTags.RemoveRange(media.Tags);
             media.Tags = await DeserializeTagsAsync(vm);
 
-            await ClearCacheAsync(media);
+            await ClearCacheAsync(media, prevTags);
         }
 
         /// <summary>
@@ -422,16 +425,19 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Clears the related pages from cache.
         /// </summary>
-        private async Task ClearCacheAsync(Media media)
+        private async Task ClearCacheAsync(Media media, IEnumerable<MediaTag> prevTags = null)
         {
             _cache.Remove<MediaVM>(media.Key);
 
-            foreach (var tag in media.Tags)
-            {
-                var key = tag.Object?.Key;
-                if(key != null)
-                    _cache.Remove<PageMediaVM>(key);
-            }
+            var tags = prevTags == null ? media.Tags : media.Tags.Concat(prevTags);
+            var tagIds = tags.Select(x => x.ObjectId).ToList();
+            var tagKeys = await _db.Pages
+                                   .Where(x => tagIds.Contains(x.Id))
+                                   .Select(x => x.Key)
+                                   .ToListAsync();
+
+            foreach (var key in tagKeys)
+                _cache.Remove<PageMediaVM>(key);
 
             var pagesWithMain = await _db.Pages
                                          .Where(x => x.MainPhotoId == media.Id)
@@ -442,6 +448,7 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 _cache.Remove<PageMediaVM>(key);
                 _cache.Remove<PageDescriptionVM>(key);
+                _cache.Remove<InfoBlockVM>(key);
             }
         }
         

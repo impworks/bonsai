@@ -21,7 +21,7 @@
             var newState = !$(document).fullScreen();
             $btn.toggleClass('active', newState);
             $tree.find('.tree-wrapper').fullScreen(newState);
-        });        
+        });
     });
 
     function requestTreeInfo($wrap, key, count) {
@@ -145,27 +145,44 @@
     function enableDrag($view) {
         // allows scrolling by drag
         var origin = null;
+        var isDragged = false;
+        var preventClick = false;
+
+        var mouseUp = function() {
+            if (isDragged) {
+                preventClick = true;
+            }
+            origin = null;
+            isDragged = false;
+            $view.removeClass('dragged');
+            $(document).off('mouseup', mouseUp);
+            $(document).off('mousemove', mouseMove);
+        };
+
+        var mouseMove = function(e) {
+            if (!isDragged) {
+                isDragged = true;
+                $view.addClass('dragged');
+            }
+            var newOrigin = { x: e.clientX, y: e.clientY };
+            var dx = newOrigin.x - origin.x;
+            var dy = newOrigin.y - origin.y;
+            $view[0].scrollLeft -= dx;
+            $view[0].scrollTop -= dy;
+            origin = newOrigin;
+        };
 
         $view.on('mousedown', function(e) {
             origin = { x: e.clientX, y: e.clientY };
-            $view.addClass('dragged');
+            $(document).on('mouseup', mouseUp);
+            $(document).on('mousemove', mouseMove);
         });
 
-        $view.on('mouseup', function() {
-             origin = null;
-             $view.removeClass('dragged');
+        $view.on('click', function(e) {
+            if (preventClick) {
+                e.preventDefault();
+                preventClick = false;
+            }
         });
-
-        $view.on('mousemove', function(e) {
-             if (!origin) {
-                 return;
-             }
-             var newOrigin = { x: e.clientX, y: e.clientY };
-             var dx = newOrigin.x - origin.x;
-             var dy = newOrigin.y - origin.y;
-             $view[0].scrollLeft -= dx;
-             $view[0].scrollTop -= dy;
-             origin = newOrigin;
-        });
-    }        
+    }
 });

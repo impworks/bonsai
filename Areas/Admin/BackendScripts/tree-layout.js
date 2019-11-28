@@ -37,7 +37,7 @@ function generateElkJson(data) {
             'elk.layered.spacing.edgeNodeBetweenLayers': SPACING,
             'elk.spacing.nodeNode': SPACING,
             'elk.layered.nodePlacement.favorStraightEdges': false,
-            'elk.layered.thoroughness': 400
+            'elk.layered.thoroughness': 1000
         },
         children: nodes,
         edges: edges

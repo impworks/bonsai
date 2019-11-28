@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
-using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -54,7 +54,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
-            var query = _db.Pages.Include(x => x.MainPhoto).AsQueryable();
+            var query = _db.Pages
+                           .Include(x => x.MainPhoto)
+                           .Where(x => x.IsDeleted == false);
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
                 query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
@@ -64,8 +66,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var totalCount = await query.CountAsync();
 
-            var items = await query.Where(x => x.IsDeleted == false)
-                                   .OrderBy(request.OrderBy, request.OrderDescending.Value)
+            var items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
                                    .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
@@ -245,9 +246,14 @@ namespace Bonsai.Areas.Admin.Logic
             );
 
             if (prevVm.Title != vm.Title || prevVm.Facts != vm.Facts)
+            {
                 _cache.Clear();
+            }
             else
+            {
                 _cache.Remove<PageDescriptionVM>(page.Key);
+                _cache.Remove<InfoBlockVM>(page.Key);
+            }
 
             if(revertedId == null)
                 await DiscardPageDraftAsync(vm.Id, principal);
@@ -388,7 +394,7 @@ namespace Bonsai.Areas.Admin.Logic
             if (vm.Description == null)
                 vm.Description = string.Empty;
 
-            var key = PageHelper.EncodeTitle(vm.Title);
+            var key = PageHelper.EncodeTitle(vm.Title).ToLowerInvariant();
             var otherPage = await _db.PageAliases
                                      .AnyAsync(x => x.Key == key && x.Page.Id != vm.Id);
 
@@ -397,7 +403,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (!string.IsNullOrEmpty(vm.Aliases))
             {
-                var aliases = TryDeserialize<List<string>>(vm.Aliases);
+                var aliases = TryDeserialize<List<string>>(vm.Aliases)?.Select(x => x.ToLowerInvariant());
                 if (aliases == null)
                 {
                     val.Add(nameof(PageEditorVM.Aliases), "Ссылки указаны неверно!");

@@ -82,7 +82,7 @@ namespace Bonsai.Code.Services.Elastic
                 .Settings(s =>
                     s.Analysis(a =>
                         a.CharFilters(c =>
-                            c.Mapping("filter_ru_e", z => z.Mappings("Ё => Е", "ё => е"))
+                            c.Mapping("filter_ru_e", z => z.Mappings("Ё=>Е", "ё=>е"))
                         )
                         .TokenFilters(t =>
                             t.Stop("stopwords_ru", st =>
@@ -196,22 +196,18 @@ namespace Bonsai.Code.Services.Elastic
             var result = await _client.SearchAsync<PageDocument>(
                 s => s.Index(PAGE_INDEX)
                       .Query(q =>
-                          q.MultiMatch(
-                              f => f.Fields(x =>
+                          q.MatchPhrasePrefix(f => f.Field(x => x.Title).Query(query).Boost(100))
+                          || q.MultiMatch(
+                                f => f.Fields(x =>
                                         x.Fields(
                                             y => y.Title,
-                                            y => y.Description
+                                            y => y.Description,
+                                            y => y.Aliases
                                         )
                                     )
                                     .Query(query)
                                     .Fuzziness(Fuzziness.EditDistance(1))
                           )
-                          || q.Match(
-                              f => f.Field(x => x.Aliases)
-                                    .Query(query)
-                                    .Fuzziness(Fuzziness.EditDistance(1))
-                             )
-                          || q.Prefix(f => f.Field(x => x.Title).Value(query))
                       )
                       .Skip(PAGE_SIZE * page)
                       .Take(PAGE_SIZE)
@@ -253,10 +249,9 @@ namespace Bonsai.Code.Services.Elastic
                 s => s.Index(PAGE_INDEX)
                       .Query(q =>
                                  q.Terms(f => f.Field(x => x.PageType).Terms(pageTypes))
-                                 &&
-                                 (
-                                     q.Match(f => f.Field(x => x.Aliases).Query(query).Fuzziness(Fuzziness.Auto))
-                                     || q.Prefix(f => f.Field(x => x.Aliases).Value(query))
+                                 && (
+                                     q.MatchPhrasePrefix(f => f.Field(x => x.Title).Query(query).Boost(100))
+                                     || q.Match(f => f.Field(x => x.Aliases).Query(query).Fuzziness(Fuzziness.EditDistance(1)))
                                  )
                       )
                       .Take(maxCount ?? 5)

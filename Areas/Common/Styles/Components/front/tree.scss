@@ -11,9 +11,15 @@
         position: relative;
         background-color: #fff;
         cursor: grab;
+        -ms-user-select: none;
+        user-select: none;
 
         &.dragged {
             cursor: grabbing;
+
+            .tree-card-wrapper a {
+                cursor: grabbing;
+            }
         }
 
         .tree-card-wrapper {

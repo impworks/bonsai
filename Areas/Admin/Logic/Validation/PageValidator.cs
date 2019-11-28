@@ -7,6 +7,7 @@ using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -112,7 +113,8 @@ namespace Bonsai.Areas.Admin.Logic.Validation
             {
                 try
                 {
-                    return JObject.Parse(raw);
+                    var json = JObject.Parse(raw);
+                    return JsonHelper.RemoveEmptyChildren(json);
                 }
                 catch
                 {

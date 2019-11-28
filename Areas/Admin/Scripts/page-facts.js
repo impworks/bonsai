@@ -146,7 +146,7 @@
                     }
                 },
                 unset: function () {
-                    this.set(null);
+                    Vue.delete(this.data, this.def.key);
                 },
                 empty: function () {
                     return this.data[this.def.key] == null;

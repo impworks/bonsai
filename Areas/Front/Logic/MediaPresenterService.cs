@@ -71,6 +71,7 @@ namespace Bonsai.Areas.Front.Logic
         public async Task<IReadOnlyList<MediaThumbnailVM>> GetLastUploadedMediaAsync(int count)
         {
             return await _db.Media
+                            .Where(x => !x.IsDeleted)
                             .OrderByDescending(x => x.UploadDate)
                             .Take(count)
                             .Select(x => new MediaThumbnailVM
