@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Users;
+using Bonsai.Code.Services.Config;
+using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -21,17 +23,19 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/users")]
     public class UsersController : AdminControllerBase
     {
-        public UsersController(UsersManagerService users, PagesManagerService pages, UserManager<AppUser> userMgr, AppDbContext db)
+        public UsersController(UsersManagerService users, PagesManagerService pages, UserManager<AppUser> userMgr, AppConfigService config, AppDbContext db)
         {
             _users = users;
             _pages = pages;
             _userMgr = userMgr;
+            _config = config;
             _db = db;
         }
 
         private readonly UsersManagerService _users;
         private readonly PagesManagerService _pages;
         private readonly UserManager<AppUser> _userMgr;
+        private readonly AppConfigService _config;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -42,6 +46,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Index([FromQuery] UsersListRequestVM vm)
         {
             var users = await _users.GetUsersAsync(vm);
+            ViewBag.AllowPasswordAuth = _config.GetStaticConfig().Auth.AllowPasswordAuth;
             return View(users);
         }
 
@@ -114,11 +119,12 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Displays the form for creating a new user.
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("create")]
         public async Task<ActionResult> Create()
         {
+            CheckPasswordAuth();
+
             return await ViewCreateFormAsync(new UserCreatorVM { Role = UserRole.User });
         }
 
@@ -129,6 +135,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("create")]
         public async Task<ActionResult> Create(UserCreatorVM vm)
         {
+            CheckPasswordAuth();
+
             if (!ModelState.IsValid)
                 return await ViewCreateFormAsync(vm);
 
@@ -153,6 +161,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("reset-password")]
         public async Task<ActionResult> ResetPassword(string id)
         {
+            CheckPasswordAuth();
+
             return await ViewResetPasswordFormAsync(id);
         }
 
@@ -163,6 +173,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("reset-password")]
         public async Task<ActionResult> ResetPassword(UserPasswordEditorVM vm)
         {
+            CheckPasswordAuth();
+
             try
             {
                 await _users.ResetPasswordAsync(vm);
@@ -239,6 +251,15 @@ namespace Bonsai.Areas.Admin.Controllers
             }
 
             return Array.Empty<SelectListItem>();
+        }
+
+        /// <summary>
+        /// Checks if password authorization is enabled.
+        /// </summary>
+        private void CheckPasswordAuth()
+        {
+            if (!_config.GetStaticConfig().Auth.AllowPasswordAuth)
+                throw new OperationException("Авторизация по паролю запрещена настройками.");
         }
 
         #endregion

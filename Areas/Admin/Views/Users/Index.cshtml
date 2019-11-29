@@ -20,26 +20,29 @@
 <h1>Список пользователей</h1>
 
 <div class="clearfix">
-    <div class="float-left">
-        <div class="dropdown">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="Создать новый профиль">
-                <span class="fa fa-plus-circle"></span>
-                Создать
-            </button>
-            <div class="dropdown-menu">
-                <a href="@Url.Action("Create", "Users", new {area = "Admin"})" class="dropdown-item">Учетную запись с паролем</a>
+    @if (ViewBag.AllowPasswordAuth)
+    {
+        <div class="float-left">
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="Создать новый профиль">
+                    <span class="fa fa-plus-circle"></span>
+                    Создать
+                </button>
+                <div class="dropdown-menu">
+                    <a href="@Url.Action("Create", "Users", new {area = "Admin"})" class="dropdown-item">Учетную запись с паролем</a>
+                </div>
             </div>
         </div>
-    </div>
+    }
     <div class="float-right">
         <form action="@baseUrl" method="GET" class="form-inline">
-            @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
+            @await Component.InvokeAsync("ListHiddenFilterComponent", new {request = Model.Request})
             @await Component.InvokeAsync("ListEnumFilterComponent", new
             {
                 request = Model.Request,
                 propName = nameof(UsersListRequestVM.Roles)
             })
-            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(UsersListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя / E-mail" />
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(UsersListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя / E-mail"/>
             <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
         </form>
     </div>

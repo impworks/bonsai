@@ -193,6 +193,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             if(!result.Succeeded)
                 throw new OperationException("Не удалось сменить пароль, попробуйте еще раз.");
+
+            await _userMgr.SetLockoutEndDateAsync(user, null);
         }
 
         /// <summary>
