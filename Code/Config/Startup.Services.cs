@@ -7,6 +7,7 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Config;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bonsai.Code.Config

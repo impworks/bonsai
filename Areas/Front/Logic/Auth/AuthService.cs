@@ -12,7 +12,6 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Nest;
 
 namespace Bonsai.Areas.Front.Logic.Auth
 {
@@ -35,9 +34,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Attempts to authenticate the user.
+        /// Attempts to authenticate the user via OAuth.
         /// </summary>
-        public async Task<LoginResultVM> LoginAsync()
+        public async Task<LoginResultVM> ExternalLoginAsync()
         {
             var info = await _signMgr.GetExternalLoginInfoAsync();
             if (info == null)
@@ -55,6 +54,26 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 return new LoginResultVM(LoginStatus.Unvalidated, info);
 
             return new LoginResultVM(LoginStatus.Succeeded, info);
+        }
+
+        /// <summary>
+        /// Attempts to authorize the user via local auth.
+        /// </summary>
+        public async Task<LoginResultVM> LocalLoginAsync(LocalLoginVM vm)
+        {
+            var email = vm.Login.ToUpper();
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.NormalizedEmail == email);
+            if (user != null)
+            {
+                var info = await _signMgr.PasswordSignInAsync(user, vm.Password, isPersistent: true, lockoutOnFailure: true);
+                if (info.Succeeded)
+                    return new LoginResultVM(LoginStatus.Succeeded);
+
+                if (info.IsLockedOut)
+                    return new LoginResultVM(LoginStatus.LockedOut);
+            }
+
+            return new LoginResultVM(LoginStatus.Failed);
         }
 
         /// <summary>
@@ -86,13 +105,14 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
-            await ValidateRegisterRequestAsync(vm);
+            await ValidateRegisterRequestAsync(vm, usePasswordAuth: extLogin == null);
 
             var isFirstUser = await IsFirstUserAsync();
 
             var user = _mapper.Map<AppUser>(vm);
             user.Id = Guid.NewGuid().ToString();
             user.IsValidated = isFirstUser;
+            user.AuthType = extLogin == null ? AuthType.Password : AuthType.ExternalProvider;
 
             var createResult = await _userMgr.CreateAsync(user);
             if (!createResult.Succeeded)
@@ -101,8 +121,10 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 throw new ValidationException(msgs);
             }
 
-            var login = new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider);
-            await _userMgr.AddLoginAsync(user, login);
+            if (extLogin != null)
+                await _userMgr.AddLoginAsync(user, new UserLoginInfo(extLogin.LoginProvider, extLogin.ProviderKey, extLogin.LoginProvider));
+            else
+                await _userMgr.AddPasswordAsync(user, vm.Password);
 
             await _userMgr.AddToRoleAsync(user, isFirstUser ? nameof(UserRole.Admin) : nameof(UserRole.Unvalidated));
 
@@ -175,7 +197,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Performs additional checks on the registration request.
         /// </summary>
-        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm)
+        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm, bool usePasswordAuth)
         {
             var val = new Validator();
 
@@ -185,6 +207,15 @@ namespace Bonsai.Areas.Front.Logic.Auth
             var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email);
             if (emailExists)
                 val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
+
+            if (usePasswordAuth)
+            {
+                if (vm.Password == null || vm.Password.Length < 6)
+                    val.Add(nameof(vm.Password), "Пароль должен содержать как минимум 6 символов.");
+
+                if (vm.Password != vm.PasswordCopy)
+                    val.Add(nameof(vm.PasswordCopy), "Пароли не совпадают.");
+            }
 
             val.ThrowIfInvalid();
         }

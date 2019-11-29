@@ -5,11 +5,9 @@ using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
 using Dapper;
-using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bonsai.Code.Config
@@ -21,9 +19,17 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureDatabaseServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.GetConnectionString("Database")));
+            services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.ConnectionStrings.Database));
 
-            services.AddIdentity<AppUser, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>(o =>
+                    {
+                        o.Password.RequireDigit = false;
+                        o.Password.RequireLowercase = false;
+                        o.Password.RequireUppercase = false;
+                        o.Password.RequireNonAlphanumeric = false;
+                        o.Password.RequiredLength = 6;
+                        o.Password.RequiredUniqueChars = 1;
+                    })
                     .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
 
@@ -38,9 +44,7 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void InitDatabase(IApplicationBuilder app)
         {
-            var seedSample = Configuration["SeedData:Enable"].TryParse<bool>();
-            var clearAll = Configuration["SeedData:ClearAll"].TryParse<bool>();
-            var resetElastic = Configuration["SeedData:ResetElastic"].TryParse<bool>();
+            var cfg = Configuration.SeedData;
 
             using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -52,13 +56,13 @@ namespace Bonsai.Code.Config
                 context.EnsureDatabaseCreated();
                 context.EnsureSystemItemsCreated();
 
-                if(clearAll || resetElastic)
+                if(cfg.ClearAll || cfg.ResetElastic)
                     elastic.ClearPreviousData();
 
-                if(clearAll)
+                if(cfg.ClearAll)
                     SeedData.ClearPreviousData(context);
 
-                if(seedSample)
+                if(cfg.Enable)
                     SeedData.EnsureSampleDataSeeded(context, elastic);
 
                 elastic.EnsureIndexesCreated(context);

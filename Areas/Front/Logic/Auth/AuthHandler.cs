@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Bonsai.Code.Services;
+using Bonsai.Code.Services.Config;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +25,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthRequirement requirement)
         {
-            var cfg = _cfgProvider.GetConfig();
+            var cfg = _cfgProvider.GetAppConfig();
             if (cfg.AllowGuests)
             {
                 context.Succeed(requirement);

@@ -19,7 +19,7 @@ namespace Bonsai.Areas.Admin.Controllers
     /// Controller for managing users.
     /// </summary>
     [Route("admin/users")]
-    public class UsersController: AdminControllerBase
+    public class UsersController : AdminControllerBase
     {
         public UsersController(UsersManagerService users, PagesManagerService pages, UserManager<AppUser> userMgr, AppDbContext db)
         {
@@ -91,7 +91,7 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
-                if(vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
+                if (vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
                 {
                     var page = await _pages.CreateDefaultUserPageAsync(vm, User);
                     vm.PersonalPageId = page.Id;
@@ -111,7 +111,97 @@ namespace Bonsai.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Displays the form for creating a new user.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("create")]
+        public async Task<ActionResult> Create()
+        {
+            return await ViewCreateFormAsync(new UserCreatorVM { Role = UserRole.User });
+        }
+
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        [HttpPost]
+        [Route("create")]
+        public async Task<ActionResult> Create(UserCreatorVM vm)
+        {
+            if (!ModelState.IsValid)
+                return await ViewCreateFormAsync(vm);
+
+            try
+            {
+                await _users.CreateAsync(vm);
+                await _db.SaveChangesAsync();
+
+                return RedirectToSuccess("Пользователь создан");
+            }
+            catch (ValidationException ex)
+            {
+                SetModelState(ex);
+                return await ViewCreateFormAsync(vm);
+            }
+        }
+
+        /// <summary>
+        /// Displays the form for resetting a user password.
+        /// </summary>
+        [HttpGet]
+        [Route("reset-password")]
+        public async Task<ActionResult> ResetPassword(string id)
+        {
+            return await ViewResetPasswordFormAsync(id);
+        }
+
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        [HttpPost]
+        [Route("reset-password")]
+        public async Task<ActionResult> ResetPassword(UserPasswordEditorVM vm)
+        {
+            try
+            {
+                await _users.ResetPasswordAsync(vm);
+                return RedirectToSuccess("Пароль изменен");
+            }
+            catch (ValidationException ex)
+            {
+                SetModelState(ex);
+                return await ViewResetPasswordFormAsync(vm.Id);
+            }
+        }
+
         #region Helpers
+
+        /// <summary>
+        /// Displays the form for creating a new password-authorized user.
+        /// </summary>
+        private async Task<ActionResult> ViewCreateFormAsync(UserCreatorVM vm)
+        {
+            var pageItems = await GetPageItemsAsync(vm.PersonalPageId);
+
+            ViewBag.Data = new UserEditorDataVM
+            {
+                IsSelf = false,
+                UserRoleItems = ViewHelper.GetEnumSelectList(vm.Role, except: new[] { UserRole.Unvalidated }),
+                PageItems = pageItems
+            };
+
+            return View("Create", vm);
+        }
+
+        /// <summary>
+        /// Displays the password reset form.
+        /// </summary>
+        private async Task<ActionResult> ViewResetPasswordFormAsync(string id)
+        {
+            ViewBag.Data = await _users.GetAsync(id);
+            return View("ResetPassword", new UserPasswordEditorVM { Id = id });
+        }
 
         /// <summary>
         /// Displays the UpdateUser form.
@@ -119,7 +209,7 @@ namespace Bonsai.Areas.Admin.Controllers
         private async Task<ActionResult> ViewUpdateFormAsync(UserEditorVM vm)
         {
             var canCreate = await _users.CanCreatePersonalPageAsync(vm);
-            var pageItems = await GetPageItemsAsync(vm);
+            var pageItems = await GetPageItemsAsync(vm.PersonalPageId);
 
             ViewBag.Data = new UserEditorDataVM
             {
@@ -135,17 +225,17 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Returns the select list for a page picker.
         /// </summary>
-        private async Task<IReadOnlyList<SelectListItem>> GetPageItemsAsync(UserEditorVM vm)
+        private async Task<IReadOnlyList<SelectListItem>> GetPageItemsAsync(Guid? pageId)
         {
-            if (vm.PersonalPageId != null)
+            if (pageId != null)
             {
                 var page = await _db.Pages
-                                    .Where(x => x.Id == vm.PersonalPageId)
+                                    .Where(x => x.Id == pageId)
                                     .Select(x => x.Title)
                                     .FirstOrDefaultAsync();
 
                 if (!string.IsNullOrEmpty(page))
-                    return new[] {new SelectListItem(page, vm.PersonalPageId.Value.ToString(), true)};
+                    return new[] { new SelectListItem(page, pageId.Value.ToString(), true) };
             }
 
             return Array.Empty<SelectListItem>();

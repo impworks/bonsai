@@ -1,6 +1,6 @@
 ﻿using System;
+using Bonsai.Code.Services.Config;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Configuration;
 
 namespace Bonsai.Areas.Front.ViewModels.Auth
 {
@@ -27,6 +27,6 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         /// <summary>
         /// The handler for activating current provider.
         /// </summary>
-        public Func<IConfiguration, AuthenticationBuilder, bool> TryActivate { get; set; }
+        public Func<StaticConfig, AuthenticationBuilder, bool> TryActivate { get; set; }
     }
 }

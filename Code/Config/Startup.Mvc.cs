@@ -18,6 +18,7 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureMvcServices(IServiceCollection services)
         {
+            services.AddSingleton(p => Configuration);
             services.AddSingleton(p => Log.Logger);
 
             services.AddMvc()
@@ -52,6 +53,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
             services.AddScoped<ViewRenderService>();
+            services.AddScoped(x => Configuration);
 
             if(Environment.IsProduction())
             {

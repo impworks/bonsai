@@ -28,6 +28,11 @@ namespace Bonsai.Areas.Admin.Logic
         public static readonly string NOTE_USER_GUIDELINES = "UserGuidelines";
 
         /// <summary>
+        /// Unique ID for the notification about password auth profiles.
+        /// </summary>
+        public static readonly string NOTE_PASSWORD_AUTH = "PasswordAuth";
+
+        /// <summary>
         /// Checks if the notification must be shown.
         /// </summary>
         public bool IsShown(string id)

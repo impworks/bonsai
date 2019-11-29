@@ -52,7 +52,9 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
             profile.CreateMap<AppUser, UserEditorVM>()
                    .MapMember(x => x.PersonalPageId, x => x.PageId)
                    .ForMember(x => x.Role, opt => opt.Ignore())
-                   .ForMember(x => x.CreatePersonalPage, opt => opt.Ignore());
+                   .ForMember(x => x.CreatePersonalPage, opt => opt.Ignore())
+                   .ForMember(x => x.Password, opt => opt.Ignore())
+                   .ForMember(x => x.PasswordCopy, opt => opt.Ignore());
         }
     }
 }

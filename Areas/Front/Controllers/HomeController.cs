@@ -3,7 +3,6 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Home;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

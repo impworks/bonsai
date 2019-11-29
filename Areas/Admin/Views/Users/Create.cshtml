@@ -1,21 +1,31 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Bonsai
+@using Bonsai.Areas.Admin.Logic
 @using Bonsai.Areas.Admin.ViewModels.Users
-@model Bonsai.Areas.Admin.ViewModels.Users.UserEditorVM
+@model Bonsai.Areas.Admin.ViewModels.Users.UserCreatorVM
 @{
-    ViewBag.Title = Model.IsValidated ? "Изменение пользователя" : "Валидация пользователя";
+    ViewBag.Title = "Создание профиля пользователя";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
-    var data = (UserEditorDataVM) ViewBag.Data;
+    var data = (UserEditorDataVM)ViewBag.Data;
 }
 
 <h1>@ViewBag.Title</h1>
 
+<div class="alert alert-info" notification-id="@NotificationsService.NOTE_PASSWORD_AUTH">
+    <p><strong>Вы создаете профиль с авторизацией по паролю.</strong></p>
+    <p>
+        Данный тип авторизации менее надежен и удобен, однако не требует учетной записи в соцсетях.
+        Он подходит, например, для пожилых родственников, или для быстрой проверки функционала.
+    </p>
+    <p>
+        Если пользователь забудет свой пароль, он не сможет восстановить его самостоятельно - это может сделать только администратор.
+    </p>
+</div>
+
 <div class="row">
     <div class="col-md-8 col-sm-12">
-        <form action="@Url.Action("Update")" method="post">
-            <input type="hidden" asp-for="IsValidated" />
-            <input type="hidden" asp-for="Id" />
-
+        <form action="@Url.Action("Create")" method="post">
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label" asp-for="LastName">Фамилия</label>
                 <div class="col-sm-9">
@@ -48,20 +58,33 @@
                 <label class="col-sm-3 col-form-label" asp-for="Email">E-mail</label>
                 <div class="col-sm-9">
                     <input asp-for="Email" class="form-control" />
+                    <div class="small text-muted">Будет использоваться в качестве логина</div>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
 
-            @if(!data.IsSelf)
-            {
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" asp-for="Role">Доступ</label>
-                    <div class="col-sm-9">
-                        <select asp-for="Role" asp-items="@data.UserRoleItems" class="form-control"></select>
-                        <span asp-validation-for="Role" class="text-danger"></span>
-                    </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="Password">Пароль</label>
+                <div class="col-sm-9">
+                    <input type="password" asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-            }
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="PasswordCopy">Повтор пароля</label>
+                <div class="col-sm-9">
+                    <input type="password" asp-for="PasswordCopy" class="form-control" />
+                    <span asp-validation-for="PasswordCopy" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" asp-for="Role">Доступ</label>
+                <div class="col-sm-9">
+                    <select asp-for="Role" asp-items="@data.UserRoleItems" class="form-control"></select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+            </div>
 
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Страница</label>
@@ -70,18 +93,10 @@
                         <select asp-for="PersonalPageId" asp-items="@data.PageItems"></select>
                         <span asp-validation-for="PersonalPageId"></span>
                     </div>
-                    @if (data.CanCreatePersonalPage)
-                    {
-                        <div>или</div>
-                        <div class="form-check">
-                            <input type="checkbox" asp-for="CreatePersonalPage" class="form-check-input"/>
-                            <label class="form-check-label" asp-for="CreatePersonalPage">Создать новую</label>
-                        </div>
-                    }
                 </div>
             </div>
 
-            @if(!ViewData.ModelState.IsValid)
+            @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-danger" role="alert">
                     <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.
@@ -92,9 +107,6 @@
                 <div class="offset-sm-3 col-sm-6">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a class="btn btn-secondary" href="@Url.Action("Index")">Отмена</a>
-                </div>
-                <div class="float-right">
-                    <a class="btn btn-danger" href="@Url.Action("Remove", "Users", new { id = Model.Id })">Удалить</a>
                 </div>
             </div>
         </form>

@@ -16,6 +16,11 @@ namespace Bonsai.Data.Models
         public bool IsValidated { get; set; }
 
         /// <summary>
+        /// Type of the user's authorization mode (external or password).
+        /// </summary>
+        public AuthType AuthType { get; set; }
+
+        /// <summary>
         /// First name.
         /// </summary>
         [StringLength(256)]

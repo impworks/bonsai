@@ -3,8 +3,6 @@ using System.IO;
 using System.Linq;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Data.Models;
-using Impworks.Utils.Format;
-using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Data.Utils.Seed
 {

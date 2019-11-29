@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.ViewModels.Calendar;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;

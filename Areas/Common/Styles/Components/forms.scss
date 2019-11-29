@@ -1,5 +1,6 @@
 ﻿.btn.btn-social {
-    &:not(:last-of-type) {
+    margin-bottom: 10px;
+    &:not(:last-child) {
         margin-right: 20px;
     }
 

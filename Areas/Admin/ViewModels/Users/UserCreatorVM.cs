@@ -1,15 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using Bonsai.Code.Infrastructure;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Front.ViewModels.Auth
+namespace Bonsai.Areas.Admin.ViewModels.Users
 {
     /// <summary>
-    /// Information for registering a new user.
+    /// VM for creating a new password-authorized user.
     /// </summary>
-    public class RegisterUserVM: IMapped
+    public class UserCreatorVM : IPasswordForm, IMapped
     {
         /// <summary>
         /// The email address.
@@ -23,59 +25,65 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         /// First name.
         /// </summary>
         [StringLength(256)]
-        [Required(ErrorMessage = "Введите ваше имя.")]
+        [Required(ErrorMessage = "Введите имя пользователя.")]
         public string FirstName { get; set; }
 
         /// <summary>
         /// Last name.
         /// </summary>
         [StringLength(256)]
-        [Required(ErrorMessage = "Введите вашу фамилию.")]
+        [Required(ErrorMessage = "Введите фамилию пользователя.")]
         public string LastName { get; set; }
 
         /// <summary>
         /// Middle name.
         /// </summary>
         [StringLength(256)]
-        [Required(ErrorMessage = "Введите ваше отчество.")]
+        [Required(ErrorMessage = "Введите отчество пользователя.")]
         public string MiddleName { get; set; }
 
         /// <summary>
         /// Birthday.
         /// </summary>
         [StringLength(10)]
-        [Required(ErrorMessage = "Введите дату вашего рождения.")]
+        [Required(ErrorMessage = "Введите дату рождения пользователя.")]
         [RegularExpression("[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}", ErrorMessage = "Введите дату в формате ГГГГ.ММ.ДД")]
         public string Birthday { get; set; }
 
         /// <summary>
-        /// Password to use when registering without external auth.
+        /// Password.
         /// </summary>
         public string Password { get; set; }
 
         /// <summary>
-        /// Copy of the password.
+        /// Password copy for typo checking.
         /// </summary>
         public string PasswordCopy { get; set; }
 
         /// <summary>
-        /// Flag indicating that the user must be granted a page.
+        /// Assigned role.
         /// </summary>
-        public bool CreatePersonalPage { get; set; }
+        public UserRole Role { get; set; }
 
         /// <summary>
-        /// Configures Automapper maps.
+        /// ID of the personal page.
         /// </summary>
-        public virtual void Configure(IProfileExpression profile)
+        public Guid? PersonalPageId { get; set; }
+
+        /// <summary>
+        /// Configures automatic mapping.
+        /// </summary>
+        public void Configure(IProfileExpression profile)
         {
-            profile.CreateMap<RegisterUserVM, AppUser>()
-                   .ForMember(x => x.Birthday, opt => opt.MapFrom(x => x.Birthday))
-                   .ForMember(x => x.FirstName, opt => opt.MapFrom(x => x.FirstName))
-                   .ForMember(x => x.MiddleName, opt => opt.MapFrom(x => x.MiddleName))
-                   .ForMember(x => x.LastName, opt => opt.MapFrom(x => x.LastName))
-                   .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
+            profile.CreateMap<UserCreatorVM, AppUser>()
+                   .MapMember(x => x.Birthday, x => x.Birthday)
+                   .MapMember(x => x.FirstName, x => x.FirstName)
+                   .MapMember(x => x.MiddleName, x => x.MiddleName)
+                   .MapMember(x => x.LastName, x => x.LastName)
+                   .MapMember(x => x.Email, x => x.Email)
+                   .MapMember(x => x.PageId, x => x.PersonalPageId)
                    .ForMember(x => x.UserName, opt => opt.MapFrom(x => Regex.Replace(x.Email, "[^a-z0-9]", "")))
-                   .ForAllOtherMembers(opt => opt.Ignore());
+                   .ForAllOtherMembers(x => x.Ignore());
         }
     }
 }

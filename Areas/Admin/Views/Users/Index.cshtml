@@ -20,6 +20,17 @@
 <h1>Список пользователей</h1>
 
 <div class="clearfix">
+    <div class="float-left">
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="Создать новый профиль">
+                <span class="fa fa-plus-circle"></span>
+                Создать
+            </button>
+            <div class="dropdown-menu">
+                <a href="@Url.Action("Create", "Users", new {area = "Admin"})" class="dropdown-item">Учетную запись с паролем</a>
+            </div>
+        </div>
+    </div>
     <div class="float-right">
         <form action="@baseUrl" method="GET" class="form-inline">
             @await Component.InvokeAsync("ListHiddenFilterComponent", new { request = Model.Request })
@@ -48,12 +59,17 @@
         <tbody>
             @foreach(var user in Model.Items)
             {
+                var usesPassword = user.AuthType == AuthType.Password;
                 <tr class="admin-row">
                     <td>
                         <img src="@ViewHelper.GetGravatarUrl(user.Email)" />
                         <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})" title="Редактировать">
                             @user.FullName
                         </a>
+                        @if (usesPassword)
+                        {
+                            <span class="fa fa-key" title="Авторизация по паролю"></span>
+                        }
                     </td>
                     <td>@user.Email</td>
                     <td>
@@ -66,6 +82,12 @@
                         <a href="@Url.Action("Index", "Changesets", new {area = "Admin", userId = user.Id})" title="История изменений">
                             <span class="fa fa-history"></span>
                         </a>
+                        @if (usesPassword)
+                        {
+                            <a href="@Url.Action("ResetPassword", "Users", new {area = "Admin", id = user.Id})" title="Смена пароля">
+                                <span class="fa fa-key"></span>
+                            </a>
+                        }
                     </td>
                 </tr>
             }
