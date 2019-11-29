@@ -210,17 +210,11 @@ namespace Bonsai.Areas.Front.Logic.Auth
 
             if (usePasswordAuth)
             {
-                if (string.IsNullOrEmpty(vm.Password))
-                    val.Add(nameof(vm.Password), "Пароль не указан.");
+                if (vm.Password == null || vm.Password.Length < 6)
+                    val.Add(nameof(vm.Password), "Пароль должен содержать как минимум 6 символов.");
 
-                else if (string.IsNullOrEmpty(vm.PasswordCopy))
-                    val.Add(nameof(vm.Password), "Копия пароля не указана.");
-
-                else if (vm.PasswordCopy != vm.Password)
-                    val.Add(nameof(vm.Password), "Пароли не совпадают.");
-
-                else if (vm.Password.Length < 6)
-                    val.Add(nameof(vm.Password), "Пароль слишком короткий.");
+                if (vm.Password != vm.PasswordCopy)
+                    val.Add(nameof(vm.PasswordCopy), "Пароли не совпадают.");
             }
 
             val.ThrowIfInvalid();

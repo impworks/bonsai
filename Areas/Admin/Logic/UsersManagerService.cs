@@ -297,10 +297,10 @@ namespace Bonsai.Areas.Admin.Logic
             var val = new Validator();
 
             if (form.Password == null || form.Password.Length < 6)
-                val.Add(nameof(form.Password), "Пароль должен содержать как минимум шесть символов");
+                val.Add(nameof(form.Password), "Пароль должен содержать как минимум 6 символов.");
 
             if (form.Password != form.PasswordCopy)
-                val.Add(nameof(form.PasswordCopy), "Пароли не совпадают");
+                val.Add(nameof(form.PasswordCopy), "Пароли не совпадают.");
 
             val.ThrowIfInvalid();
         }
