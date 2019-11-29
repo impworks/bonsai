@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Serilog;
@@ -19,6 +18,7 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureMvcServices(IServiceCollection services)
         {
+            services.AddSingleton(p => Configuration);
             services.AddSingleton(p => Log.Logger);
 
             services.AddMvc()

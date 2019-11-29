@@ -143,7 +143,7 @@ namespace Bonsai.Areas.Front.Controllers
             var extAuth = Session.Get<RegistrationInfo>();
             var vm = extAuth?.FormData ?? new RegisterUserVM();
             vm.CreatePersonalPage = true;
-            return await ViewRegisterFormAsync(vm, isLocalAuth: extAuth == null);
+            return await ViewRegisterFormAsync(vm, usesPasswordAuth: extAuth == null);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToAction("Login");
 
             if(!ModelState.IsValid)
-                return await ViewRegisterFormAsync(vm, isLocalAuth: info == null);
+                return await ViewRegisterFormAsync(vm, usesPasswordAuth: info == null);
 
             try
             {
@@ -184,7 +184,7 @@ namespace Bonsai.Areas.Front.Controllers
             {
                 SetModelState(ex);
 
-                return await ViewRegisterFormAsync(vm, isLocalAuth: info == null);
+                return await ViewRegisterFormAsync(vm, usesPasswordAuth: info == null);
             }
         }
 
@@ -225,12 +225,12 @@ namespace Bonsai.Areas.Front.Controllers
         /// <summary>
         /// Displays the registration form.
         /// </summary>
-        private async Task<ActionResult> ViewRegisterFormAsync(RegisterUserVM vm, bool isLocalAuth)
+        private async Task<ActionResult> ViewRegisterFormAsync(RegisterUserVM vm, bool usesPasswordAuth)
         {
             ViewBag.Data = new RegisterUserDataVM
             {
                 IsFirstUser = await _auth.IsFirstUserAsync(),
-                IsLocalAuthUsed = isLocalAuth
+                UsePasswordAuth = usesPasswordAuth
             };
 
             return View("RegisterForm", vm);
@@ -245,7 +245,7 @@ namespace Bonsai.Areas.Front.Controllers
             {
                 ReturnUrl = returnUrl,
                 AllowGuests = _cfgProvider.GetAppConfig().AllowGuests,
-                AllowLocalAuth = _cfgProvider.GetStaticConfig().Auth.AllowLocalAuth,
+                AllowPasswordAuth = _cfgProvider.GetStaticConfig().Auth.AllowPasswordAuth,
                 Providers = _provs.AvailableProviders,
                 IsFirstUser = await _auth.IsFirstUserAsync(),
                 Status = status

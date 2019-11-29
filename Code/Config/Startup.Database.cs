@@ -1,5 +1,4 @@
-﻿using Bonsai.Code.Services.Config;
-using Bonsai.Code.Services.Elastic;
+﻿using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -9,7 +8,6 @@ using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bonsai.Code.Config

@@ -27,7 +27,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         /// <summary>
         /// Flag indicating that the user is locally authorized with a login and password.
         /// </summary>
-        public bool UsesLocalAuth { get; set; }
+        public AuthType AuthType { get; set; }
 
         /// <summary>
         /// The user's role with richest access level.
@@ -39,7 +39,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
             profile.CreateMap<AppUser, UserTitleVM>()
                    .ForMember(x => x.Role, opt => opt.Ignore())
                    .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName))
-                   .ForMember(x => x.UsesLocalAuth, opt => opt.MapFrom(x => x.UsesLocalAuth));
+                   .ForMember(x => x.AuthType, opt => opt.MapFrom(x => x.AuthType));
         }
     }
 }

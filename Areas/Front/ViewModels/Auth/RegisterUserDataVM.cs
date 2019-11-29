@@ -13,6 +13,6 @@
         /// <summary>
         /// Flag indicating that local auth has been chosen and the user must provide a login and password.
         /// </summary>
-        public bool IsLocalAuthUsed { get; set; }
+        public bool UsePasswordAuth { get; set; }
     }
 }

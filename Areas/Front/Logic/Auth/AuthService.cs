@@ -12,7 +12,6 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Nest;
 
 namespace Bonsai.Areas.Front.Logic.Auth
 {
@@ -106,13 +105,14 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<RegisterUserResultVM> RegisterAsync(RegisterUserVM vm, ExternalLoginData extLogin)
         {
-            await ValidateRegisterRequestAsync(vm, isLocalAuthUsed: extLogin == null);
+            await ValidateRegisterRequestAsync(vm, usePasswordAuth: extLogin == null);
 
             var isFirstUser = await IsFirstUserAsync();
 
             var user = _mapper.Map<AppUser>(vm);
             user.Id = Guid.NewGuid().ToString();
             user.IsValidated = isFirstUser;
+            user.AuthType = extLogin == null ? AuthType.Password : AuthType.ExternalProvider;
 
             var createResult = await _userMgr.CreateAsync(user);
             if (!createResult.Succeeded)
@@ -197,7 +197,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// <summary>
         /// Performs additional checks on the registration request.
         /// </summary>
-        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm, bool isLocalAuthUsed)
+        private async Task ValidateRegisterRequestAsync(RegisterUserVM vm, bool usePasswordAuth)
         {
             var val = new Validator();
 
@@ -208,7 +208,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             if (emailExists)
                 val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
 
-            if (isLocalAuthUsed)
+            if (usePasswordAuth)
             {
                 if (string.IsNullOrEmpty(vm.Password))
                     val.Add(nameof(vm.Password), "Пароль не указан.");

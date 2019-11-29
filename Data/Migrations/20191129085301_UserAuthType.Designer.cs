@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bonsai.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191030131700_LocalAuth")]
-    partial class LocalAuth
+    [Migration("20191129085301_UserAuthType")]
+    partial class UserAuthType
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,6 +45,8 @@ namespace Bonsai.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<int>("AuthType");
 
                     b.Property<string>("Birthday")
                         .HasMaxLength(10);
@@ -92,8 +94,6 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
-
-                    b.Property<bool>("UsesLocalAuth");
 
                     b.HasKey("Id");
 

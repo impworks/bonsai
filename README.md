@@ -40,7 +40,7 @@ For development, you will need the following:
    
    If you're getting a "Syntax of the command is incorrect" error during this step, make sure you have a `JAVA_HOME` environment variable defined.
 5. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
-6. Create a file called `appsettings.Development.json`, add the connection string(s) and auth credentials for providers that you want to use (at least one is required):
+6. Create a file called `appsettings.Development.json`, add the connection string:
 
     ```
     {
@@ -48,7 +48,7 @@ For development, you will need the following:
         "Database": "Server=127.0.0.1;Port=5432;Database=bonsai;User Id=<login>;Password=<password>;Persist Security Info=true"
       },
       "Auth": {
-	    "LocalAuth": true
+	    "AllowPasswordAuth": true
       } 
     }
     ```
@@ -57,12 +57,12 @@ For development, you will need the following:
 
     Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
 
-	Add the retrieved authorization credentials to the `appsettings.Development.json` and set `LocalAuth` to `false`:
+	Add the retrieved authorization credentials to the `appsettings.Development.json` and set `AllowPasswordAuth` to `false`:
 
 	```
 	{
 	    "Auth": {
-		    "LocalAuth": false,
+		    "AllowPasswordAuth": false,
 		    "Facebook": {
 			  "AppId": "<...>",
 			  "AppSecret": "<...>" 
@@ -113,7 +113,7 @@ For development, you will need the following:
    ...
 
    environment:
-      - Auth__LocalAuth=true
+      - Auth__AllowPasswordAuth=true
       - Auth__Facebook__AppId=
       - Auth__Facebook__AppSecret=
       - Auth__Google__ClientId=
@@ -137,7 +137,7 @@ For development, you will need the following:
 
     Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
 
-	Save the retrieved authorization credentials in `docker-compose.yml` and set `Auth__LocalAuth` to `false`.
+	Save the retrieved authorization credentials in `docker-compose.yml` and set `Auth__AllowPasswordAuth` to `false`.
    
 4. Bring everything up using `docker compose`:
    ```
@@ -162,7 +162,7 @@ When restoring the database from a backup, set the `SeedData.ResetElastic` optio
 
 ### Authorization methods
 
-Bonsai features two authorization methods: OAuth and local authorization.
+Bonsai features two authorization methods: OAuth and password authorization.
 
 OAuth is the preferred method: it's easier to use, more secure and versatile. **Please use the OAuth method if you can!**
 For OAuth, you will need to create an authorization app on [Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-3.0), [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-3.0), [Vkontakte](https://vk.com/editapp?act=create) or [Yandex](https://oauth.yandex.ru/client/new) as described in the installation steps.

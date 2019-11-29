@@ -16,9 +16,9 @@ namespace Bonsai.Data.Models
         public bool IsValidated { get; set; }
 
         /// <summary>
-        /// Flag indicating that the user has a login-password pair instead of an external OAuth provider.
+        /// Type of the user's authorization mode (external or password).
         /// </summary>
-        public bool UsesLocalAuth { get; set; }
+        public AuthType AuthType { get; set; }
 
         /// <summary>
         /// First name.

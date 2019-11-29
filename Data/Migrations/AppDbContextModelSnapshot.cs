@@ -44,6 +44,8 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<int>("AuthType");
+
                     b.Property<string>("Birthday")
                         .HasMaxLength(10);
 
@@ -90,8 +92,6 @@ namespace Bonsai.Data.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
-
-                    b.Property<bool>("UsesLocalAuth");
 
                     b.HasKey("Id");
 

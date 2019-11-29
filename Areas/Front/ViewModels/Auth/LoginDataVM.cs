@@ -30,7 +30,7 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         /// <summary>
         /// Flag indicating that login-password auth is enabled.
         /// </summary>
-        public bool AllowLocalAuth { get; set; }
+        public bool AllowPasswordAuth { get; set; }
 
         /// <summary>
         /// List of enabled authentication providers.

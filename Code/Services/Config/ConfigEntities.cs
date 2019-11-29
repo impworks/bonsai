@@ -60,7 +60,7 @@
     /// </summary>
     public class AuthConfig
     {
-        public bool AllowLocalAuth { get; set; }
+        public bool AllowPasswordAuth { get; set; }
         public FacebookAuthConfig Facebook { get; set; }
         public GenericAuthConfig Google { get; set; }
         public GenericAuthConfig Vkontakte { get; set; }

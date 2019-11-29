@@ -59,13 +59,14 @@
         <tbody>
             @foreach(var user in Model.Items)
             {
+                var usesPassword = user.AuthType == AuthType.Password;
                 <tr class="admin-row">
                     <td>
                         <img src="@ViewHelper.GetGravatarUrl(user.Email)" />
                         <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})" title="Редактировать">
                             @user.FullName
                         </a>
-                        @if (user.UsesLocalAuth)
+                        @if (usesPassword)
                         {
                             <span class="fa fa-key" title="Авторизация по паролю"></span>
                         }
@@ -81,7 +82,7 @@
                         <a href="@Url.Action("Index", "Changesets", new {area = "Admin", userId = user.Id})" title="История изменений">
                             <span class="fa fa-history"></span>
                         </a>
-                        @if (user.UsesLocalAuth)
+                        @if (usesPassword)
                         {
                             <a href="@Url.Action("ResetPassword", "Users", new {area = "Admin", id = user.Id})" title="Смена пароля">
                                 <span class="fa fa-key"></span>

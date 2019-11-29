@@ -1,6 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Date;

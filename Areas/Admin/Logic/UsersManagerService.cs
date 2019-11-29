@@ -205,7 +205,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var user = _mapper.Map<AppUser>(vm);
             user.Id = Guid.NewGuid().ToString();
-            user.UsesLocalAuth = true;
+            user.AuthType = AuthType.Password;
             user.IsValidated = true;
 
             var createResult = await _userMgr.CreateAsync(user, vm.Password);

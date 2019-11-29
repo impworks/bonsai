@@ -2,7 +2,6 @@
 using System.Linq;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace Bonsai.Code.Services.Config
 {
@@ -11,7 +10,7 @@ namespace Bonsai.Code.Services.Config
     /// </summary>
     public class AppConfigService
     {
-        public AppConfigService(AppDbContext context, IConfiguration cfg)
+        public AppConfigService(AppDbContext context, StaticConfig cfg)
         {
             _context = context;
             _cfg = cfg;
@@ -19,7 +18,7 @@ namespace Bonsai.Code.Services.Config
         }
 
         private readonly AppDbContext _context;
-        private readonly IConfiguration _cfg;
+        private readonly StaticConfig _cfg;
         private static ConcurrentDictionary<string, AppConfig> _config;
 
         /// <summary>
@@ -35,7 +34,7 @@ namespace Bonsai.Code.Services.Config
         /// </summary>
         public StaticConfig GetStaticConfig()
         {
-            return _cfg.Get<StaticConfig>();
+            return _cfg;
         }
 
         /// <summary>
