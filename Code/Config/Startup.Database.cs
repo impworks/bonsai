@@ -1,4 +1,5 @@
-﻿using Bonsai.Code.Services.Elastic;
+﻿using Bonsai.Code.Services.Config;
+using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -44,7 +45,7 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void InitDatabase(IApplicationBuilder app)
         {
-            var cfg = Configuration.SeedData;
+            var cfg = Configuration.SeedData ?? new SeedDataConfig(); // all false
 
             using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
