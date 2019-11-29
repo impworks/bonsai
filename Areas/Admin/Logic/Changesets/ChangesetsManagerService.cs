@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
@@ -15,6 +16,7 @@ using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -25,13 +27,15 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
     /// </summary>
     public class ChangesetsManagerService
     {
-        public ChangesetsManagerService(IEnumerable<IChangesetRenderer> renderers, AppDbContext db)
+        public ChangesetsManagerService(IEnumerable<IChangesetRenderer> renderers, IHostingEnvironment env, AppDbContext db)
         {
             _db = db;
+            _env = env;
             _renderers = renderers.ToDictionary(x => x.EntityType, x => x);
         }
 
         private readonly AppDbContext _db;
+        private readonly IHostingEnvironment _env;
         private readonly IReadOnlyDictionary<ChangesetEntityType, IChangesetRenderer> _renderers;
 
         #region Public methods
@@ -98,8 +102,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                          EntityType = x.Type,
                                          EntityTitle = GetEntityTitle(x),
                                          EntityThumbnailUrl = GetEntityThumbnailUrl(x),
-                                         PageType = GetPageType(x)
-                                     })
+                                         PageType = GetPageType(x),
+                                         CanRevert = CanRevert(x)
+            })
                                      .ToList();
 
             return result;
@@ -130,7 +135,8 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 ThumbnailUrl = chg.EditedMedia != null
                     ? MediaPresenterService.GetSizedMediaPath(chg.EditedMedia.FilePath, MediaSize.Small)
                     : null,
-                Changes = GetDiff(prevData, nextData, renderer)
+                Changes = GetDiff(prevData, nextData, renderer),
+                CanRevert = CanRevert(chg)
             };
         }
 
@@ -320,6 +326,25 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                     ? null
                     : StringHelper.Coalesce(media.Title, "Медиа");
             }
+        }
+
+        /// <summary>
+        /// Checks if the changeset can be reverted.
+        /// </summary>
+        private bool CanRevert(Changeset chg)
+        {
+            var chgType = GetChangeType(chg);
+            if (chgType == ChangesetType.Created || chgType == ChangesetType.Restored)
+                return false;
+
+            if (chg.EditedMedia != null)
+            {
+                // if the file has been removed completely, revert is impossible
+                var file = _env.GetMediaPath(chg.EditedMedia);
+                return File.Exists(file);
+            }
+
+            return true;
         }
 
         #endregion

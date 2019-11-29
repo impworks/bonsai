@@ -43,5 +43,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         /// Changed items.
         /// </summary>
         public IReadOnlyList<ChangeVM> Changes { get; set; }
+
+        /// <summary>
+        /// Flag indicating that this changeset can be reverted.
+        /// </summary>
+        public bool CanRevert { get; set; }
     }
 }

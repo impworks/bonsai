@@ -27,9 +27,18 @@
 
 <h1>@ViewBag.Title</h1>
 
+@if(!string.IsNullOrEmpty(Model.ThumbnailUrl))
+{
+    <div class="card d-inline-block">
+        <div class="card-body">
+            <img src="@Url.Content(Model.ThumbnailUrl)" style="max-width: 200px" />
+        </div>
+    </div>
+}
+
 <div class="row">
     <div class="col-sm-9">
-        <h3>Основные данные</h3>
+        <h3>Изменение</h3>
 
         <dl class="row">
             <dt class="col-sm-2">Автор</dt>
@@ -42,7 +51,7 @@
 </div>
 
 <p>
-    Вы уверены, что хотите восстановить изначальное состояние @GetEntityType()?<br />
+    Вы уверены, что хотите восстановить изначальное состояние @GetEntityType()?<br/>
     При этом будет сброшена текущая правка и все последующие, если они существуют.
 </p>
 
@@ -50,5 +59,5 @@
     <input type="hidden" name="confirm" value="true" />
     <input type="hidden" asp-for="Id" />
     <button class="btn btn-danger" type="submit">Восстановить</button>
-    <a href="@Url.Action("Index", "Media", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+    <a href="@Url.Action("Index", "Changesets", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
 </form>

@@ -432,8 +432,7 @@ namespace Bonsai.Areas.Admin.Logic
             if(prev == null && next == null)
                 throw new ArgumentNullException();
 
-            var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
+            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
 
             return new Changeset
             {

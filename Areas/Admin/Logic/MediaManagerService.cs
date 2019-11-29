@@ -11,9 +11,11 @@ using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
@@ -111,9 +113,7 @@ namespace Bonsai.Areas.Admin.Logic
             if(handler == null)
                 throw new UploadException("Неизвестный тип файла!");
 
-            var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
-
+            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
             var paths = await SaveUploadAsync(file, key, handler);
             var tags = await GetTagsForUploadedMedia(vm);
             var meta = await handler.ExtractMetadataAsync(paths.LocalPath, file.ContentType);
@@ -225,27 +225,43 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the confirmation info for the media.
         /// </summary>
-        public async Task<MediaThumbnailExtendedVM> RequestRemoveAsync(Guid id)
+        public async Task<RemoveMediaInfoVM> RequestRemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var media = await _db.Media
                                  .AsNoTracking()
                                  .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
 
-            return _mapper.Map<MediaThumbnailExtendedVM>(media);
+            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
+
+            return new RemoveMediaInfoVM
+            {
+                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(media.FilePath, MediaSize.Small),
+                CanRemoveFile = await _userMgr.IsInRoleAsync(user, nameof(UserRole.Admin))
+            };
         }
 
         /// <summary>
         /// Removes the media file.
         /// </summary>
-        public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
+        public async Task RemoveAsync(RemoveMediaRequestVM vm, ClaimsPrincipal principal)
         {
             var media = await _db.Media
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
+                                 .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден");
 
-            var prevState = await RequestUpdateAsync(id);
-            var changeset = await GetChangesetAsync(prevState, null, id, principal, null);
+            var prevState = await RequestUpdateAsync(vm.Id);
+            var changeset = await GetChangesetAsync(prevState, null, vm.Id, principal, null);
             _db.Changes.Add(changeset);
+
+            if (vm.RemoveFile)
+            {
+                var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
+                var canRemove = await _userMgr.IsInRoleAsync(user, nameof(UserRole.Admin));
+
+                if (canRemove)
+                    foreach(var size in new [] {  MediaSize.Original, MediaSize.Large, MediaSize.Medium }) // sic! leaving the .sm thumb
+                        File.Delete(_env.GetMediaPath(media, size));
+            }
 
             media.IsDeleted = true;
 
@@ -405,8 +421,7 @@ namespace Bonsai.Areas.Admin.Logic
             if(prev == null && next == null)
                 throw new ArgumentNullException();
 
-            var userId = _userMgr.GetUserId(principal);
-            var user = await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
+            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
 
             return new Changeset
             {

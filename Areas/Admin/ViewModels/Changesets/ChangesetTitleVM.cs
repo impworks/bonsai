@@ -52,5 +52,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         /// Type of the page (if the changeset is page-related).
         /// </summary>
         public PageType? PageType { get; set; }
+
+        /// <summary>
+        /// Flag indicating that this changeset can be reverted.
+        /// </summary>
+        public bool CanRevert { get; set; }
     }
 }

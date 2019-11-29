@@ -156,8 +156,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(Guid id)
         {
-            var vm = await _media.RequestRemoveAsync(id);
-            return View(vm);
+            ViewBag.Info = await _media.RequestRemoveAsync(id, User);
+            return View(new RemoveMediaRequestVM { Id = id });
         }
 
         /// <summary>
@@ -165,9 +165,9 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("remove")]
-        public async Task<ActionResult> Remove(Guid id, bool confirm)
+        public async Task<ActionResult> Remove(RemoveMediaRequestVM vm)
         {
-            await _media.RemoveAsync(id, User);
+            await _media.RemoveAsync(vm, User);
             await _db.SaveChangesAsync();
 
             return RedirectToSuccess("Медиа-файл удален");

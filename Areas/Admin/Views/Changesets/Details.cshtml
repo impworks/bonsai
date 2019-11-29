@@ -10,6 +10,15 @@
 <div class="row">
     <div class="col-sm-9">
         <h1>Основные данные</h1>
+        
+        @if(!string.IsNullOrEmpty(Model.ThumbnailUrl))
+        {
+            <div class="card d-inline-block mb-4">
+                <div class="card-body">
+                    <img src="@Url.Content(Model.ThumbnailUrl)" style="max-width: 200px" />
+                </div>
+            </div>
+        }
 
         <dl class="row">
             <dt class="col-sm-2">Действие</dt>
@@ -35,19 +44,9 @@
             </dl>
         }
     </div>
-    @if(!string.IsNullOrEmpty(Model.ThumbnailUrl))
-    {
-        <div class="col-sm-3">
-            <div class="card d-inline-block pull-right">
-                <div class="card-body">
-                    <img src="@Url.Content(Model.ThumbnailUrl)" style="max-width: 200px" />
-                </div>
-            </div>
-        </div>
-    }
 </div>
 
-@if (Model.ChangeType == ChangesetType.Updated || Model.ChangeType == ChangesetType.Removed)
+@if (Model.CanRevert)
 {
     <a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = Model.Id})">Восстановить</a>
 }

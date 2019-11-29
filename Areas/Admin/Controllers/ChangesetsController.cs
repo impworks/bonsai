@@ -64,8 +64,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Revert(Guid id)
         {
             var vm = await _changes.GetChangesetDetailsAsync(id);
-
-            if (vm.ChangeType != ChangesetType.Removed && vm.ChangeType != ChangesetType.Updated)
+            if (!vm.CanRevert)
                 throw new OperationException("Эта правка не может быть отменена");
 
             return View(vm);
@@ -78,6 +77,10 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("revert")]
         public async Task<ActionResult> Revert(Guid id, bool confirm)
         {
+            var editVm = await _changes.GetChangesetDetailsAsync(id);
+            if (!editVm.CanRevert)
+                throw new OperationException("Эта правка не может быть отменена");
+
             var vm = await _changes.GetReverseEditorStateAsync(id);
 
             if (vm is MediaEditorVM mvm)
