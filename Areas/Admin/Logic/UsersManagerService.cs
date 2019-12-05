@@ -115,7 +115,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             if(!IsSelf(request.Id, currUser))
             {
-                var allRoles = EnumHelper.GetEnumValues<UserRole>().Select(x => x.ToString());
+                var allRoles = await _userMgr.GetRolesAsync(user);
                 await _userMgr.RemoveFromRolesAsync(user, allRoles);
 
                 var role = request.Role.ToString();
