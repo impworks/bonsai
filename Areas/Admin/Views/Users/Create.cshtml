@@ -67,6 +67,7 @@
                 <label class="col-sm-3 col-form-label form-label-required" asp-for="Password">Пароль</label>
                 <div class="col-sm-9">
                     <input type="password" asp-for="Password" class="form-control" />
+                    <div class="small text-muted">Минимум 6 символов</div>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
             </div>
