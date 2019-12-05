@@ -170,14 +170,13 @@ namespace Bonsai.Areas.Admin.Logic
         }
 
         /// <summary>
-        /// Checks if the personal page should be created for this user.
+        /// Checks if the personal page can be created for this user.
         /// </summary>
         public async Task<bool> CanCreatePersonalPageAsync(UserEditorVM vm)
         {
             return await _db.Users
-                            .Where(x => x.Id == vm.Id)
-                            .Select(x => x.Page == null)
-                            .FirstOrDefaultAsync();
+                            .Where(x => x.Id == vm.Id && x.Page == null)
+                            .AnyAsync();
         }
 
         /// <summary>

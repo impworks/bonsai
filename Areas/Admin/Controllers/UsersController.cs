@@ -142,6 +142,13 @@ namespace Bonsai.Areas.Admin.Controllers
 
             try
             {
+                if (vm.CreatePersonalPage)
+                {
+                    var page = await _pages.CreateDefaultUserPageAsync(vm, User);
+                    vm.PersonalPageId = page.Id;
+                    vm.CreatePersonalPage = false;
+                }
+
                 await _users.CreateAsync(vm);
                 await _db.SaveChangesAsync();
 

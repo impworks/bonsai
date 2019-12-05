@@ -7,7 +7,7 @@
     ViewBag.Title = "Создание профиля пользователя";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
-    var data = (UserEditorDataVM)ViewBag.Data;
+    var data = (UserEditorDataVM) ViewBag.Data;
 }
 
 <h1>@ViewBag.Title</h1>
@@ -27,35 +27,35 @@
     <div class="col-md-8 col-sm-12">
         <form action="@Url.Action("Create")" method="post">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="LastName">Фамилия</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="LastName">Фамилия</label>
                 <div class="col-sm-9">
                     <input asp-for="LastName" class="form-control" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="FirstName">Имя</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="FirstName">Имя</label>
                 <div class="col-sm-9">
                     <input asp-for="FirstName" class="form-control" />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="MiddleName">Отчество</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="MiddleName">Отчество</label>
                 <div class="col-sm-9">
                     <input asp-for="MiddleName" class="form-control" />
                     <span asp-validation-for="MiddleName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="Birthday">Дата рождения</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="Birthday">Дата рождения</label>
                 <div class="col-sm-6">
                     <input asp-for="Birthday" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
                     <span asp-validation-for="Birthday" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="Email">E-mail</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="Email">E-mail</label>
                 <div class="col-sm-9">
                     <input asp-for="Email" class="form-control" />
                     <div class="small text-muted">Будет использоваться в качестве логина</div>
@@ -64,14 +64,14 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="Password">Пароль</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="Password">Пароль</label>
                 <div class="col-sm-9">
                     <input type="password" asp-for="Password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="PasswordCopy">Повтор пароля</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="PasswordCopy">Повтор пароля</label>
                 <div class="col-sm-9">
                     <input type="password" asp-for="PasswordCopy" class="form-control" />
                     <span asp-validation-for="PasswordCopy" class="text-danger"></span>
@@ -79,7 +79,7 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" asp-for="Role">Доступ</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="Role">Доступ</label>
                 <div class="col-sm-9">
                     <select asp-for="Role" asp-items="@data.UserRoleItems" class="form-control"></select>
                     <span asp-validation-for="Role" class="text-danger"></span>
@@ -92,6 +92,11 @@
                     <div>
                         <select asp-for="PersonalPageId" asp-items="@data.PageItems"></select>
                         <span asp-validation-for="PersonalPageId"></span>
+                    </div>
+                    <div>или</div>
+                    <div class="form-check">
+                        <input type="checkbox" asp-for="CreatePersonalPage" class="form-check-input"/>
+                        <label class="form-check-label" asp-for="CreatePersonalPage">Создать новую</label>
                     </div>
                 </div>
             </div>
