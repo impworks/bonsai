@@ -35,6 +35,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         public Guid? PersonalPageId { get; set; }
 
         /// <summary>
+        /// Flag indicating that the user is in lockout mode.
+        /// </summary>
+        public bool IsLocked { get; set; }
+
+        /// <summary>
         /// Configures automatic mapping.
         /// </summary>
         public override void Configure(IProfileExpression profile)
@@ -51,6 +56,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
 
             profile.CreateMap<AppUser, UserEditorVM>()
                    .MapMember(x => x.PersonalPageId, x => x.PageId)
+                   .MapMember(x => x.IsLocked, x => x.LockoutEnabled && x.LockoutEnd > DateTimeOffset.Now)
                    .ForMember(x => x.Role, opt => opt.Ignore())
                    .ForMember(x => x.CreatePersonalPage, opt => opt.Ignore())
                    .ForMember(x => x.Password, opt => opt.Ignore())

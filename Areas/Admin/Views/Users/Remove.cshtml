@@ -6,9 +6,16 @@
 
 <h1>Удаление пользователя</h1>
 
-@if (ViewBag.IsSelf)
+@if (Model.IsSelf)
 {
     <p>Вы не можете удалить собственную учетную запись.</p>
+    <a class="btn btn-secondary" href="@Url.Action("Index")">Назад</a>
+}
+else if (!Model.IsFullyDeletable)
+{
+    <p>Вы не можете удалить учетную запись пользователя, который вносил правки.</p>
+    <p>Вместо этого вы можете заблокировать ее, чтобы пользователь не мог войти.</p>
+    <a class="btn btn-primary" href="@Url.Action("Update", "Users", new { area = "Admin", id = Model.Id })">Редактировать</a>
     <a class="btn btn-secondary" href="@Url.Action("Index")">Назад</a>
 }
 else

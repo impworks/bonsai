@@ -61,6 +61,22 @@
                         <span asp-validation-for="Role" class="text-danger"></span>
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label form-label-required" asp-for="Role">Блокировка</label>
+                    <div class="col-sm-9">
+                        <div class="form-check">
+                            <label>
+                                <input type="radio" asp-for="IsLocked" value="false" /> Активен
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label>
+                                <input type="radio" asp-for="IsLocked" value="true"/> Заблокирован
+                            </label>
+                        </div>
+                    </div>
+                </div>
             }
 
             <div class="form-group row">
@@ -93,9 +109,12 @@
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a class="btn btn-secondary" href="@Url.Action("Index")">Отмена</a>
                 </div>
-                <div class="float-right">
-                    <a class="btn btn-danger" href="@Url.Action("Remove", "Users", new { id = Model.Id })">Удалить</a>
-                </div>
+                @if (!data.IsSelf)
+                {
+                    <div class="float-right">
+                        <a class="btn btn-danger" href="@Url.Action("Remove", "Users", new {id = Model.Id})">Удалить</a>
+                    </div>
+                }
             </div>
         </form>
     </div>

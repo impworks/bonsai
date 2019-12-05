@@ -1,13 +1,9 @@
-﻿using AutoMapper;
-using Bonsai.Code.Infrastructure;
-using Bonsai.Data.Models;
-
-namespace Bonsai.Areas.Admin.ViewModels.Users
+﻿namespace Bonsai.Areas.Admin.ViewModels.Users
 {
     /// <summary>
     /// Information about a user removal request.
     /// </summary>
-    public class RemoveUserVM: IMapped
+    public class RemoveUserVM
     {
         /// <summary>
         /// Surrogate ID.
@@ -20,12 +16,14 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         public string FullName { get; set; }
 
         /// <summary>
-        /// Mapper configuration.
+        /// Flag indicating that user attempts to remove their own account.
         /// </summary>
-        public void Configure(IProfileExpression profile)
-        {
-            profile.CreateMap<AppUser, RemoveUserVM>()
-                   .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName));
-        }
+        public bool IsSelf { get; set; }
+
+        /// <summary>
+        /// Flag indicating that the user can be removed completely.
+        /// Otherwise, the account is only locked.
+        /// </summary>
+        public bool IsFullyDeletable { get; set; }
     }
 }

@@ -122,19 +122,31 @@ namespace Bonsai.Areas.Admin.Logic
                 await _userMgr.AddToRoleAsync(user, role);
             }
 
+            if(request.IsLocked && user.LockoutEnd == null)
+                user.LockoutEnd = DateTimeOffset.MaxValue;
+            else if (!request.IsLocked && user.LockoutEnd != null)
+                user.LockoutEnd = null;
+
             return user;
         }
 
         /// <summary>
         /// Retrieves the information about user removal.
         /// </summary>
-        public async Task<RemoveUserVM> RequestRemoveAsync(string id)
+        public async Task<RemoveUserVM> RequestRemoveAsync(string id, ClaimsPrincipal principal)
         {
             var user = await _db.Users
                                 .AsNoTracking()
+                                .Include(x => x.Changes)
                                 .GetAsync(x => x.Id == id, "Пользователь не найден");
 
-            return _mapper.Map<RemoveUserVM>(user);
+            return new RemoveUserVM
+            {
+                Id = id,
+                FullName = user.FirstName + " " + user.LastName,
+                IsSelf = id == _userMgr.GetUserId(principal),
+                IsFullyDeletable = !user.Changes.Any()
+            };
         }
 
         /// <summary>
@@ -150,14 +162,12 @@ namespace Bonsai.Areas.Admin.Logic
                                 .Include(x => x.Page)
                                 .GetAsync(x => x.Id == id, "Пользователь не найден");
 
-            if (user.Page == null && user.Changes.Count == 0)
-            {
-                await _userMgr.DeleteAsync(user);
-                return;
-            }
+            if (user.Changes.Any())
+                throw new OperationException("Нельзя удалить эту учетную запись");
 
-            user.LockoutEnabled = true;
-            user.LockoutEnd = DateTimeOffset.MaxValue;
+            var result = await _userMgr.DeleteAsync(user);
+            if(!result.Succeeded)
+                throw new OperationException("Не удалось удалить учетную запись!");
         }
 
         /// <summary>
@@ -256,7 +266,6 @@ namespace Bonsai.Areas.Admin.Logic
                                         .ToDictionaryAsync(x => x.UserId, x => x.RoleId);
 
             var users = await _db.Users
-                                 .Where(x => x.LockoutEnd != DateTimeOffset.MaxValue)
                                  .ProjectTo<UserTitleVM>(_mapper.ConfigurationProvider)
                                  .ToListAsync();
 

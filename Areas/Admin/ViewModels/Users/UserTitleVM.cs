@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
 
@@ -34,12 +35,18 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         /// </summary>
         public UserRole Role { get; set; }
 
+        /// <summary>
+        /// Date of the current lockout.
+        /// </summary>
+        public DateTimeOffset? LockoutEnd { get; set; }
+
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<AppUser, UserTitleVM>()
                    .ForMember(x => x.Role, opt => opt.Ignore())
                    .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName))
-                   .ForMember(x => x.AuthType, opt => opt.MapFrom(x => x.AuthType));
+                   .ForMember(x => x.AuthType, opt => opt.MapFrom(x => x.AuthType))
+                   .ForMember(x => x.LockoutEnd, opt => opt.MapFrom(x => x.LockoutEnd));
         }
     }
 }

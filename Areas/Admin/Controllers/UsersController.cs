@@ -10,7 +10,6 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,18 +22,16 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/users")]
     public class UsersController : AdminControllerBase
     {
-        public UsersController(UsersManagerService users, PagesManagerService pages, UserManager<AppUser> userMgr, AppConfigService config, AppDbContext db)
+        public UsersController(UsersManagerService users, PagesManagerService pages, AppConfigService config, AppDbContext db)
         {
             _users = users;
             _pages = pages;
-            _userMgr = userMgr;
             _config = config;
             _db = db;
         }
 
         private readonly UsersManagerService _users;
         private readonly PagesManagerService _pages;
-        private readonly UserManager<AppUser> _userMgr;
         private readonly AppConfigService _config;
         private readonly AppDbContext _db;
 
@@ -57,8 +54,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(string id)
         {
-            var vm = await _users.RequestRemoveAsync(id);
-            ViewBag.IsSelf = _userMgr.GetUserId(User) == id;
+            var vm = await _users.RequestRemoveAsync(id, User);
             return View(vm);
         }
 
