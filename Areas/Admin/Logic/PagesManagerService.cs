@@ -286,6 +286,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             page.IsDeleted = true;
 
+            await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == id);
+
             _cache.Clear();
 
             return page;
@@ -396,7 +398,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             var key = PageHelper.EncodeTitle(vm.Title).ToLowerInvariant();
             var otherPage = await _db.PageAliases
-                                     .AnyAsync(x => x.Key == key && x.Page.Id != vm.Id);
+                                     .AnyAsync(x => x.Key == key
+                                                    && x.Page.Id != vm.Id);
 
             if (otherPage)
                 val.Add(nameof(PageEditorVM.Title), "Страница с таким названием уже существует.");
