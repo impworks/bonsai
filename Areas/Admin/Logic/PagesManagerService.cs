@@ -245,7 +245,7 @@ namespace Bonsai.Areas.Admin.Logic
                 })
             );
 
-            if (prevVm.Title != vm.Title || prevVm.Facts != vm.Facts)
+            if (prevVm?.Title != vm.Title || prevVm?.Facts != vm.Facts)
             {
                 _cache.Clear();
             }
