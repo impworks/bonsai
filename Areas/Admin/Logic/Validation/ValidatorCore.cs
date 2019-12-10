@@ -80,16 +80,19 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 var first = context.Pages[rel.SourceId];
                 var second = context.Pages[rel.DestinationId];
 
-                if(first.BirthDate >= second.DeathDate || second.BirthDate >= first.DeathDate)
-                    Error("Дата рождения одгого супруга не может быть раньше даты смерти другого", first.Id, second.Id);
+                if (first.BirthDate >= second.DeathDate)
+                    Error($"Дата рождения одного супруга ({first.BirthDate.Value.ReadableDate}) не может быть позже даты смерти другого ({second.DeathDate.Value.ReadableDate})", first.Id, second.Id);
+
+                if (second.BirthDate >= first.DeathDate)
+                    Error($"Дата рождения одного супруга ({second.BirthDate.Value.ReadableDate}) не может быть позже даты смерти другого ({first.DeathDate.Value.ReadableDate})", first.Id, second.Id);
 
                 if (rel.Duration is FuzzyRange dur)
                 {
                     if(dur.RangeStart < first.BirthDate || dur.RangeEnd > first.DeathDate)
-                        Error("Брак должен быть ограничен временем жизни супруга", first.Id, second.Id);
+                        Error($"Брак должен быть ограничен временем жизни супруга: {new FuzzyRange(first.BirthDate, first.DeathDate).ReadableRange}", first.Id);
 
                     if(dur.RangeStart < second.BirthDate || dur.RangeEnd > second.DeathDate)
-                        Error("Брак должен быть ограничен временем жизни супруга", first.Id, second.Id);
+                        Error($"Брак должен быть ограничен временем жизни супруга: {new FuzzyRange(second.BirthDate, second.DeathDate).ReadableRange}", second.Id);
                 }
             }
         }

@@ -19,6 +19,9 @@
         dest: []
     };
 
+    var justLoaded = true;
+    setTimeout(function() { justLoaded = false; }, 1000);
+
     $typeEditor.selectize({
         openOnFocus: true,
         maxOptions: 100,
@@ -68,7 +71,9 @@
                     preload($destEditor, 'dest');
                 }
 
-                $('.validation-result').hide();
+                if (!justLoaded) {
+                    $('.validation-result').hide();
+                }
             });
     }
 
