@@ -61,7 +61,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         public async Task<LoginResultVM> LocalLoginAsync(LocalLoginVM vm)
         {
-            var email = vm.Login.ToUpper();
+            var email = vm.Login?.ToUpper();
             var user = await _db.Users.FirstOrDefaultAsync(x => x.NormalizedEmail == email);
             if (user != null)
             {
