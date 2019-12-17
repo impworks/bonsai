@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Bonsai.Code.Config
 {
@@ -49,7 +50,10 @@ namespace Bonsai.Code.Config
         public void Configure(IApplicationBuilder app)
         {
             if (Environment.IsDevelopment())
+            {
                 app.UseBrowserLink();
+                app.UseSerilogRequestLogging();
+            }
 
             if (Configuration.WebServer.RequireHttps)
                 app.UseRewriter(new RewriteOptions().AddRedirectToHttps());

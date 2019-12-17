@@ -74,7 +74,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 TryActivate = (cfg, auth) =>
                 {
                     var id = cfg.Auth.Yandex?.ClientId;
-                    var secret = cfg.Auth.Yandex?.ClientId;
+                    var secret = cfg.Auth.Yandex?.ClientSecret;
                     if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
                         return false;
 
@@ -98,7 +98,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 TryActivate = (cfg, auth) =>
                 {
                     var id = cfg.Auth.Google?.ClientId;
-                    var secret = cfg.Auth.Google?.ClientId;
+                    var secret = cfg.Auth.Google?.ClientSecret;
                     if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
                         return false;
 
