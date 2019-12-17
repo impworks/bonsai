@@ -299,7 +299,8 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             if (request.EntityId != null)
             {
                 var title = await GetPageTitleAsync()
-                            ?? await GetMediaTitleAsync();
+                            ?? await GetMediaTitleAsync()
+                            ?? await GetRelationTitleAsync();
 
                 if (title != null)
                     data.EntityTitle = title;
@@ -319,12 +320,22 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             {
                 var media = await _db.Media
                                      .Where(x => x.Id == request.EntityId)
-                                     .Select(x => new {Title = x.Title})
+                                     .Select(x => new { x.Title })
                                      .FirstOrDefaultAsync();
 
                 return media == null
                     ? null
                     : StringHelper.Coalesce(media.Title, "Медиа");
+            }
+
+            async Task<string> GetRelationTitleAsync()
+            {
+                var rel = await _db.Relations
+                                 .Where(x => x.Id == request.EntityId)
+                                 .Select(x => new { x.Type })
+                                 .FirstOrDefaultAsync();
+
+                return rel?.Type.GetEnumDescription();
             }
         }
 
