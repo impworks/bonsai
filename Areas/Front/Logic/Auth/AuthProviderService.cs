@@ -25,8 +25,11 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 IconClass = "fa fa-facebook-square",
                 TryActivate = (cfg, auth) =>
                 {
-                    var id = cfg.Auth.Facebook?.AppId;
-                    var secret = cfg.Auth.Facebook?.AppSecret;
+                    if (cfg?.Auth?.Facebook == null)
+                        return false;
+
+                    var id = cfg.Auth.Facebook.AppId;
+                    var secret = cfg.Auth.Facebook.AppSecret;
                     if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
                         return false;
 
@@ -48,6 +51,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 IconClass = "fa fa-vk",
                 TryActivate = (cfg, auth) =>
                 {
+                    if (cfg?.Auth?.Vkontakte == null)
+                        return false;
+
                     var id = cfg.Auth.Vkontakte?.ClientId;
                     var secret = cfg.Auth.Vkontakte?.ClientSecret;
                     if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
@@ -73,6 +79,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 IconClass = "fa fa-yahoo", // the closest one that has an Y :)
                 TryActivate = (cfg, auth) =>
                 {
+                    if (cfg?.Auth?.Yandex == null)
+                        return false;
+
                     var id = cfg.Auth.Yandex?.ClientId;
                     var secret = cfg.Auth.Yandex?.ClientSecret;
                     if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
@@ -97,6 +106,9 @@ namespace Bonsai.Areas.Front.Logic.Auth
                 IconClass = "fa fa-google-plus-square",
                 TryActivate = (cfg, auth) =>
                 {
+                    if (cfg?.Auth?.Google == null)
+                        return false;
+
                     var id = cfg.Auth.Google?.ClientId;
                     var secret = cfg.Auth.Google?.ClientSecret;
                     if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
