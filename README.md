@@ -103,35 +103,10 @@ For development, you will need the following:
     sysctl -w vm.max_map_count=262144
     ```
 
-2. Download the [docker-compose](docker-compose.yml). You will need to **enter authorization credentials** where applicable and **replace a couple of placeholders** for HTTPS certificate issuing:
+2. Download the [docker-compose](docker-compose.yml). You will need to **replace placeholders** for HTTPS certificate issuing:
 
-   ```
-   traefik:
-     command:
-     - "--acme.email=@@YOUR_EMAIL@@ 
-
-   ...
-
-   environment:
-      - Auth__AllowPasswordAuth=true
-      - Auth__Facebook__AppId=
-      - Auth__Facebook__AppSecret=
-      - Auth__Google__ClientId=
-      - Auth__Google__ClientSecret=
-      - Auth__Yandex__ClientId=
-      - Auth__Yandex__ClientSecret=
-      - Auth__Vkontakte__ClientId=
-      - Auth__Vkontakte__ClientSecret=
-      - WebServer__RequireHttps=false
-      - ASPNETCORE_ENVIRONMENT=Production
-
-    ...
-
-    labels:
-      - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host: @@YOUR_IP@@.xip.io"
-    ```
+    * `@@YOUR_EMAIL@@` - your email address (for LetsEncrypt auto-SSL)
+    * `@@YOUR_IP@@` - your external IP address (for xip.io)
 
 2. _Optional, but suggested_:
 
