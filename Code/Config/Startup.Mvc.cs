@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -24,7 +24,7 @@ namespace Bonsai.Code.Config
             services.AddMvc()
                     .AddControllersAsServices()
                     .AddSessionStateTempDataProvider()
-                    .AddJsonOptions(opts =>
+                    .AddNewtonsoftJson(opts =>
                     {
                         var convs = new List<JsonConverter>
                         {
@@ -32,7 +32,7 @@ namespace Bonsai.Code.Config
                             new FuzzyRange.FuzzyRangeJsonConverter()
                         };
 
-                        convs.ForEach(opts.SerializerSettings.Converters.Add);
+                        convs.ForEach(x => opts.SerializerSettings.Converters.Add(x));
 
                         JsonConvert.DefaultSettings = () =>
                         {

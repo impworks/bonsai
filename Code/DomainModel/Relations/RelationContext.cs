@@ -158,7 +158,7 @@ namespace Bonsai.Code.DomainModel.Relations
                                          && x.Destination.Type == PageType.Person);
             }
 
-            return await query.Select(x => new RelationExcerpt
+            var data = await query.Select(x => new RelationExcerpt
                               {
                                   Id = x.Id,
                                   SourceId = x.SourceId,
@@ -168,8 +168,9 @@ namespace Bonsai.Code.DomainModel.Relations
                                   Type = x.Type,
                                   IsComplementary = x.IsComplementary
                               })
-                              .GroupBy(x => x.SourceId)
-                              .ToDictionaryAsync(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList());
+                              .ToListAsync();
+
+            return data.GroupBy(x => x.SourceId).ToDictionary(x => x.Key, x => (IReadOnlyList<RelationExcerpt>) x.ToList());
         }
 
         #endregion
