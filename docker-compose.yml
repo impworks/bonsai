@@ -7,22 +7,20 @@
 version: "3.3"
 services:
   traefik:
-    image: traefik:1.5.4
+    image: traefik
     restart: always
     command:
-      - "--api"
-      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
-      - "--entrypoints=Name:https Address::443 TLS"
-      - "--defaultentrypoints=http,https"
-      - "--acme"
-      - "--acme.storage=/etc/traefik/acme/acme.json"
-      - "--acme.entryPoint=https"
-      - "--acme.httpChallenge.entryPoint=http"
-      - "--acme.onHostRule=true"
-      - "--acme.onDemand=true"
-      - "--acme.email=@@YOUR_EMAIL@@"
-      - "--docker"
-      - "--docker.watch"
+#      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=true"
+      - "--entrypoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme/acme.json"
+      - "--certificatesResolvers.le.acme.email=@@YOUR_EMAIL@@"
+      - "--certificatesResolvers.le.acme.httpChallenge=true"
+      - "--certificatesResolvers.le.acme.httpChallenge.entryPoint=web"
     ports:
       - 80:80
       - 443:443
@@ -49,10 +47,11 @@ services:
       - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
       - ASPNETCORE_ENVIRONMENT=Production
-    labels: 
-      - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host: @@YOUR_IP@@.xip.io"
+    labels:
+      traefik.http.routers.bonsai.rule: Host(`@@YOUR_IP@@.xip.io`)
+      traefik.http.routers.bonsai.entrypoints: websecure
+      traefik.http.services.bonsai.loadbalancer.server.port: 80
+      traefik.http.routers.bonsai.tls.certresolver: le
     stop_signal: SIGKILL
     links:
       - postgres
@@ -61,7 +60,7 @@ services:
   postgres:
     image: postgres
     restart: unless-stopped
-    labels: 
+    labels:
       - "traefik.enable=false"
     volumes:
       - database:/var/lib/postgresql
@@ -78,7 +77,7 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
-    labels: 
+    labels:
       - "traefik.enable=false"
     ulimits:
       memlock:
