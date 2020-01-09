@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -51,7 +54,13 @@ namespace Bonsai.Code.Config
             services.AddSession();
 
             services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(x => new UrlHelper(x.GetService<IActionContextAccessor>().ActionContext));
+            services.AddScoped<IUrlHelper>(x =>
+            {
+                var httpAcc = x.GetService<IHttpContextAccessor>();
+                var urlFactory = x.GetService<IUrlHelperFactory>();
+                var actionCtx = new ActionContext(httpAcc.HttpContext, httpAcc.HttpContext.GetRouteData(), new ActionDescriptor());
+                return urlFactory.GetUrlHelper(actionCtx);
+            });
             services.AddScoped<ViewRenderService>();
             services.AddScoped(x => Configuration);
 
