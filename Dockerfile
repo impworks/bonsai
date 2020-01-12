@@ -7,7 +7,7 @@ RUN npm ci
 ADD . .
 RUN node_modules/.bin/gulp build
 
-FROM microsoft/dotnet:2.1-sdk as net-builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as net-builder
 WORKDIR /build
 ADD Bonsai.sln .
 ADD Bonsai.csproj .
@@ -17,7 +17,7 @@ RUN dotnet restore
 COPY --from=node /build .
 RUN dotnet publish --output ../out/ --configuration Release --runtime linux-x64 Bonsai.csproj
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
 RUN apt-get -yqq update && \
     apt-get -yqq install ffmpeg libc6-dev libgdiplus libx11-dev && \
