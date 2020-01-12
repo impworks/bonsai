@@ -25,14 +25,44 @@ A family wiki and photoalbum engine (in Russian).
 <a href="https://user-images.githubusercontent.com/604496/46574266-3f181900-c9a9-11e8-828d-9d9a5db25acb.png"><img src="https://user-images.githubusercontent.com/604496/46574292-a209b000-c9a9-11e8-8193-cd99fc1f5f91.png" /></a>
 <a href="https://user-images.githubusercontent.com/604496/46574268-43443680-c9a9-11e8-974f-f8a60fbeaa74.png"><img src="https://user-images.githubusercontent.com/604496/46574297-a504a080-c9a9-11e8-8612-d3e5cd1592a4.png" /></a>
 
-## Installation
+## Installation via Docker
+1. Modify your `vm.max_map_count` to at least 262,144 for ElasticSearch to start:
+
+    ```
+    sysctl -w vm.max_map_count=262144
+    ```
+
+2. Download the [docker-compose](docker-compose.yml).
+
+3. _Optional_: 
+
+    Configure your Bonsai instance to use HTTPS and external auth for better security.
+    This requires a bit of work, so if you are just playing around you can skip this step.
+
+    Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
+
+    Modify `docker-compose.yml`:
+
+    * Save Facebook authorization credentials to `Auth__Facebook__AppId` and `Auth__Facebook__AppSecret` config properties
+    * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization
+    * Replace `@@YOUR_EMAIL@@` with your email address (for LetsEncrypt auto-SSL)
+    * Replace `@@DOMAIN@@` with the domain name to use (or you can use your IP with xip.io, like `192.168.1.1.xip.io`)
+    * Uncomment two lines with ``Host(`@@DOMAIN@@`)``
+    * Comment two lines with ``PathPrefix(`/`)`` 
+
+4. Bring everything up using `docker compose`:
+   ```
+   docker-compose up -d
+   ```
+5. After everything is brought up Bonsai will listen on ports 80 and 443.
+
+## Development (on Windows)
 
 For development, you will need the following:
 
 * [.NET Core 2.1](https://dotnet.microsoft.com/download/dotnet-core/2.1): the main runtime for Bonsai
 * [Java 8+](https://java.com/en/download/windows-64bit.jsp): required for ElasticSearch
 
-### Windows
 1. Install [NodeJS](https://nodejs.org/en/) (10+)
 2. Install [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
 3. Install [ElasticSearch 5.6.x](https://www.elastic.co/downloads/past-releases) (6.0 is not supported yet)
@@ -96,30 +126,6 @@ For development, you will need the following:
     ```
 10. Run the app (as Visual Studio project or using `dotnet run`).
 
-### Linux + Docker
-1. Modify your `vm.max_map_count` to at least 262,144 for ElasticSearch to start:
-
-    ```
-    sysctl -w vm.max_map_count=262144
-    ```
-
-2. Download the [docker-compose](docker-compose.yml). You will need to **replace placeholders** for HTTPS certificate issuing:
-
-    * `@@YOUR_EMAIL@@` - your email address (for LetsEncrypt auto-SSL)
-    * `@@YOUR_IP@@` - your external IP address (for xip.io)
-
-2. _Optional, but suggested_:
-
-    Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
-
-	Save the retrieved authorization credentials in `docker-compose.yml` and set `Auth__AllowPasswordAuth` to `false`.
-   
-4. Bring everything up using `docker compose`:
-   ```
-   docker-compose up -d
-   ```
-5. After everything is brought up Bonsai will listen on ports 80 and 443.
-
 ## Security considerations
 
 ### Data backup
@@ -139,7 +145,7 @@ When restoring the database from a backup, set the `SeedData.ResetElastic` optio
 
 Bonsai features two authorization methods: OAuth and password authorization.
 
-OAuth is the preferred method: it's easier to use, more secure and versatile. **Please use the OAuth method if you can!**
+OAuth is the preferred method: it's easier to use for end users, more secure and versatile. **Please use the OAuth method if you can!**
 For OAuth, you will need to create an authorization app on [Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-3.0), [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-3.0), [Vkontakte](https://vk.com/editapp?act=create) or [Yandex](https://oauth.yandex.ru/client/new) as described in the installation steps.
 You can enable multiple authorization apps at the same time: users will pick the one they prefer.
 
