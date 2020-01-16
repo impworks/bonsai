@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Extensions.Internal;
 
 namespace Bonsai.Code.Utils.Helpers
 {
@@ -42,33 +41,27 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Saves the query to a hashset.
         /// </summary>
-        public static Task<HashSet<T>> ToHashSetAsync<T>(this IQueryable<T> source)
+        public static async Task<HashSet<T>> ToHashSetAsync<T>(this IQueryable<T> source)
         {
-            return source.AsAsyncEnumerable()
-                         .Aggregate(
-                             new HashSet<T>(),
-                             (acc, x) =>
-                             {
-                                 acc.Add(x);
-                                 return acc;
-                             }
-                         );
+            var hash = new HashSet<T>();
+
+            await foreach (var elem in source.AsAsyncEnumerable())
+                hash.Add(elem);
+
+            return hash;
         }
 
         /// <summary>
         /// Saves the query to a hashset.
         /// </summary>
-        public static Task<HashSet<TResult>> ToHashSetAsync<TSource, TResult>(this IQueryable<TSource> source, Func<TSource, TResult> map)
+        public static async Task<HashSet<TResult>> ToHashSetAsync<TSource, TResult>(this IQueryable<TSource> source, Func<TSource, TResult> map)
         {
-            return source.AsAsyncEnumerable()
-                         .Aggregate(
-                             new HashSet<TResult>(),
-                             (acc, x) =>
-                             {
-                                 acc.Add(map(x));
-                                 return acc;
-                             }
-                         );
+            var hash = new HashSet<TResult>();
+
+            await foreach (var elem in source.AsAsyncEnumerable())
+                hash.Add(map(elem));
+
+            return hash;
         }
     }
 }

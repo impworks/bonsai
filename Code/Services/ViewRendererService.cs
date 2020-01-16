@@ -19,7 +19,8 @@ namespace Bonsai.Code.Services
     {
         #region Constructor
 
-        public ViewRenderService(IRazorViewEngine razorViewEngine,
+        public ViewRenderService(
+            IRazorViewEngine razorViewEngine,
             ITempDataProvider tempDataProvider,
             IServiceProvider serviceProvider)
         {

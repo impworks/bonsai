@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Bonsai.Code.Config
@@ -15,7 +16,7 @@ namespace Bonsai.Code.Config
     // ReSharper disable once ClassNeverInstantiated.Global
     public partial class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -28,7 +29,7 @@ namespace Bonsai.Code.Config
         }
 
         private StaticConfig Configuration { get; }
-        private IHostingEnvironment Environment { get; }
+        private IWebHostEnvironment Environment { get; }
 
         /// <summary>
         /// Registers all required services in the dependency injection container.
@@ -56,7 +57,7 @@ namespace Bonsai.Code.Config
             }
 
             if (Configuration.WebServer.RequireHttps)
-                app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
+                app.UseHttpsRedirection();
 
             if (Configuration.Debug.DetailedExceptions)
                 app.UseDeveloperExceptionPage();
@@ -67,10 +68,16 @@ namespace Bonsai.Code.Config
             app.UseForwardedHeaders(GetforwardedHeadersOptions())
                .UseStatusCodePagesWithReExecute("/error/{0}")
                .UseStaticFiles()
+               .UseRouting()
                .UseAuthentication()
+               .UseAuthorization()
                .UseSession()
                .UseRequestLocalization(GetRequestLocalizationOptions())
-               .UseMvc(routes => { routes.MapAreaRoute("admin", "Admin", "admin/{controller}/{action}/{id?}"); });
+               .UseEndpoints(x =>
+               {
+                   x.MapAreaControllerRoute("admin", "Admin", "admin/{controller}/{action}/{id?}");
+                   x.MapControllers();
+               });
         }
 
         /// <summary>

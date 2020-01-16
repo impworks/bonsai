@@ -14,7 +14,7 @@ namespace Bonsai
             var host = new WebHostBuilder()
                        .UseKestrel()
                        .UseContentRoot(Directory.GetCurrentDirectory())
-                       .UseIISIntegration()
+                       .UseIIS()
                        .UseSerilog((context, config) =>
                        {
                            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Logs/bonsai-.txt");
