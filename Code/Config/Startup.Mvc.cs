@@ -64,7 +64,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<ViewRenderService>();
             services.AddScoped(x => Configuration);
 
-            if(Environment.IsProduction())
+            if(Configuration.WebServer.RequireHttps)
             {
                 services.Configure<MvcOptions>(opts =>
                 {

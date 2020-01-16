@@ -1,31 +1,33 @@
-# !!! ATTENTION !!!
-# Before using this file you will need to replace the following placeholders with actual values:
+# If you want to use https with valid certificate from LetsEncrypt then you'll need to:
 #
-#   @@YOUR_EMAIL@@: your email address (required for LetsEncrypt certificate issuing)
-#   @@YOUR_IP@@: the external IP of the webserver on which Bonsai runs
+# 1) Replace the following placeholders with actual values:
+#      @@YOUR_EMAIL@@: your email address (required for LetsEncrypt certificate issuing)
+#      @@DOMAIN@@: your domain name (you could use xip.io service to generate one from your IP if you don't have one, i.e. 127.0.0.1.xip.io)
+# 2) Comment traefik rules with PathPrefix and uncomment with Host
+#    Note that after this change Bonsai will be available only by domain name you specified,
+#    and will not be available by IP.
 
 version: "3.3"
 services:
   traefik:
-    image: traefik:1.5.4
+    image: traefik
     restart: always
     command:
-      - "--api"
-      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
-      - "--entrypoints=Name:https Address::443 TLS"
-      - "--defaultentrypoints=http,https"
-      - "--acme"
-      - "--acme.storage=/etc/traefik/acme/acme.json"
-      - "--acme.entryPoint=https"
-      - "--acme.httpChallenge.entryPoint=http"
-      - "--acme.onHostRule=true"
-      - "--acme.onDemand=true"
-      - "--acme.email=@@YOUR_EMAIL@@"
-      - "--docker"
-      - "--docker.watch"
+#      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--accesslog=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme/acme.json"
+      - "--certificatesResolvers.le.acme.email=@@YOUR_EMAIL@@"
+      - "--certificatesResolvers.le.acme.httpChallenge=true"
+      - "--certificatesResolvers.le.acme.httpChallenge.entryPoint=web"
     ports:
       - 80:80
       - 443:443
+      # - 8080:8080 ## If you want to see Traefik's dashboard on custom port
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/acme:/etc/traefik/acme
@@ -49,10 +51,17 @@ services:
       - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
       - ASPNETCORE_ENVIRONMENT=Production
-    labels: 
-      - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host: @@YOUR_IP@@.xip.io"
+    labels:
+      traefik.enable: true
+#      traefik.http.routers.bonsai.rule: Host(`@@DOMAIN@@`)
+      traefik.http.routers.bonsai.rule: PathPrefix(`/`)
+      traefik.http.routers.bonsai.entrypoints: web
+#      traefik.http.routers.bonsai_secure.rule: Host(`@@DOMAIN@@`)
+      traefik.http.routers.bonsai_secure.rule: PathPrefix(`/`)
+      traefik.http.routers.bonsai_secure.entrypoints: websecure
+      traefik.http.routers.bonsai_secure.tls.certresolver: le
+
+      traefik.http.services.bonsai.loadbalancer.server.port: 80
     stop_signal: SIGKILL
     links:
       - postgres
@@ -61,8 +70,6 @@ services:
   postgres:
     image: postgres
     restart: unless-stopped
-    labels: 
-      - "traefik.enable=false"
     volumes:
       - database:/var/lib/postgresql
     environment:
@@ -78,8 +85,6 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
-    labels: 
-      - "traefik.enable=false"
     ulimits:
       memlock:
         soft: -1
