@@ -21,6 +21,5 @@ namespace Bonsai.Data.Models
         /// Encoded media.
         /// </summary>
         public Media Media { get; set; }
-
     }
 }

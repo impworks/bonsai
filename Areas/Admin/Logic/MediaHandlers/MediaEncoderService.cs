@@ -50,31 +50,31 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// </summary>
         protected override async Task<bool> ProcessAsync(IServiceProvider services)
         {
-            try
+            using (var db = services.GetService<AppDbContext>())
             {
-                using (var db = services.GetService<AppDbContext>())
+                var job = await db.MediaJobs
+                                    .Include(x => x.Media)
+                                    .OrderBy(x => x.Media.UploadDate)
+                                    .FirstOrDefaultAsync();
+
+                if (job == null)
+                    return true;
+
+                try
                 {
-                    var job = await db.MediaJobs
-                                      .Include(x => x.Media)
-                                      .OrderBy(x => x.Media.UploadDate)
-                                      .FirstOrDefaultAsync();
-
-                    if (job == null)
-                        return true;
-
                     if (job.Media.Type == MediaType.Video)
                         await EncodeVideoAsync(job);
                     else
-                        throw new ArgumentException("Unsupported media type: ");
-
-                    db.MediaJobs.Remove(job);
-                    await db.SaveChangesAsync();
+                        throw new ArgumentException($"Unsupported media type: {job.Media.Type}");
                 }
-            }
-            catch (Exception ex)
-            {
-                if(!(ex is TaskCanceledException))
-                    _logger.Error(ex, "Failed to convert media.");
+                catch (Exception ex)
+                {
+                    if (!(ex is TaskCanceledException))
+                        _logger.Error(ex, "Failed to convert media.");
+                }
+
+                db.MediaJobs.Remove(job);
+                await db.SaveChangesAsync();
             }
 
             return false;
@@ -116,11 +116,15 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
             _logger.Information($"Thumbnail extraction started for video file: {path}");
 
             var durationRaw = await ProcessHelper.GetOutputAsync(GetFFPath("ffprobe"), $@"-i ""{path}"" -show_entries format=duration -v quiet -of csv=""p=0""");
-            var duration = durationRaw.Parse<double>();
-            var middle = (int) (duration / 2);
+            var duration = durationRaw.Replace(",", ".").TryParse<double?>();
+
+            if (duration == null)
+                _logger.Error($"Failed to get media duration: '{durationRaw}' is not a valid number.");
+
+            var position = (int) ((duration ?? 0) / 2);
 
             var screenPath = Path.ChangeExtension(path, ".jpg");
-            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{path}"" -y -vframes 1 -ss {middle} ""{screenPath}""");
+            await ProcessHelper.InvokeAsync(GetFFPath("ffmpeg"), $@"-i ""{path}"" -y -vframes 1 -ss {position} ""{screenPath}""");
 
             _logger.Information("Thumbnail extraction completed.");
 
