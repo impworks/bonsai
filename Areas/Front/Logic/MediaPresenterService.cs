@@ -52,6 +52,7 @@ namespace Bonsai.Areas.Front.Logic
 
             return new MediaVM
             {
+                Id = media.Id,
                 Type = media.Type,
                 IsProcessed = media.IsProcessed,
                 Title = media.Title,

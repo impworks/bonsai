@@ -1,24 +1,23 @@
-﻿@using Bonsai.Areas.Front.ViewModels.Page
+﻿@using Bonsai.Areas.Front.ViewModels.Auth
+@using Bonsai.Areas.Front.ViewModels.Page
 @model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 
 @{
     var showFirstColumn = Model.Tags.Any();
-    var showSecondColumn = Model.OriginalPath != null
-                           || Model.Event != null
-                           || Model.Location != null;
+    var user = (UserVM)ViewBag.User;
 }
 
 @{
     Func<PageTitleVM, object> pageLink = @<span>
-                                             @if (string.IsNullOrEmpty(item.Key))
-                                             {
-                                                 <text>@item.Title</text>
-                                             }
-                                             else
-                                             {
-                                                 <a href="@Url.Action("Description", "Page", new {key = item.Key})">@item.Title</a>
-                                             }
-                                         </span>;
+        @if (string.IsNullOrEmpty(item.Key))
+        {
+            <text>@item.Title</text>
+        }
+        else
+        {
+            <a href="@Url.Action("Description", "Page", new {key = item.Key})">@item.Title</a>
+        }
+    </span>;
 }
 
 <div class="media-block">
@@ -51,62 +50,67 @@
                 </div>
             </div>
         }
-        @if (showSecondColumn)
-        {
-            <div class="col media-meta-column">
-                <table class="media-meta-table">
-
-                    @if (Model.Date != null)
-                    {
-                        <tr>
-                            <th>
-                                <span class="fa fa-fw fa-calendar-o"></span>
-                                Дата
-                            </th>
-                            <td>
-                                @Model.Date.Value.ReadableDate
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.Event != null)
-                    {
-                        <tr>
-                            <th>
-                                <span class="fa fa-fw fa-star-o"></span>
-                                Событие
-                            </th>
-                            <td>
-                                @pageLink(Model.Event)
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.Location != null)
-                    {
-                        <tr>
-                            <th>
-                                <span class="fa fa-fw fa-map-marker"></span>
-                                Место
-                            </th>
-                            <td>
-                                @pageLink(Model.Location)
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.OriginalPath != null)
-                    {
-                        <tr>
-                            <th>
-                                <span class="fa fa-fw fa-arrow-circle-o-down"></span>
-                                Оригинал
-                            </th>
-                            <td>
-                                <a href="@Url.Content(Model.OriginalPath)" download>Скачать</a>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        }
+        <div class="col media-meta-column">
+            <table class="media-meta-table">
+                @if (Model.Date != null)
+                {
+                    <tr>
+                        <th>
+                            <span class="fa fa-fw fa-calendar-o"></span>
+                            Дата
+                        </th>
+                        <td>
+                            @Model.Date.Value.ReadableDate
+                        </td>
+                    </tr>
+                }
+                @if (Model.Event != null)
+                {
+                    <tr>
+                        <th>
+                            <span class="fa fa-fw fa-star-o"></span>
+                            Событие
+                        </th>
+                        <td>
+                            @pageLink(Model.Event)
+                        </td>
+                    </tr>
+                }
+                @if (Model.Location != null)
+                {
+                    <tr>
+                        <th>
+                            <span class="fa fa-fw fa-map-marker"></span>
+                            Место
+                        </th>
+                        <td>
+                            @pageLink(Model.Location)
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <th>
+                        <span class="fa fa-fw fa-arrow-circle-o-down"></span>
+                        Оригинал
+                    </th>
+                    <td>
+                        <a href="@Url.Content(Model.OriginalPath)" download>Скачать</a>
+                    </td>
+                </tr>
+                @if (user.IsAdministrator)
+                {
+                    <tr>
+                        <th>
+                            <span class="fa fa-fw fa-cog"></span>
+                            Действия
+                        </th>
+                        <td>
+                            <a href="@Url.Action("Update", "Media", new { area = "Admin", id = Model.Id })">Редактировать</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
     </div>
 
     @if (!string.IsNullOrEmpty(Model.Description))

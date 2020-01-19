@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data.Models;
@@ -10,6 +11,11 @@ namespace Bonsai.Areas.Front.ViewModels.Media
     /// </summary>
     public class MediaVM
     {
+        /// <summary>
+        /// Surrogate ID.
+        /// </summary>
+        public Guid Id { get; set; }
+
         /// <summary>
         /// URL of the media file to display inline.
         /// </summary>
