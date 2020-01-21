@@ -62,6 +62,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("upload")]
+        [DisableRequestSizeLimit]
         public async Task<ActionResult> Upload(MediaUploadRequestVM vm, IFormFile file)
         {
             try
