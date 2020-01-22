@@ -14,9 +14,9 @@ namespace Bonsai.Code.Services
         {
             _logger = logger;
             _startupService = startupService;
-            _task = RetryUntilSuccessAsync(task);
             Name = name;
             Description = description;
+            _task = RetryUntilSuccessAsync(task);
         }
             
         public string Name { get; }
