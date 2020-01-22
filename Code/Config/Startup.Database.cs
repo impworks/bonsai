@@ -1,4 +1,5 @@
-﻿using Bonsai.Code.Services.Config;
+﻿using Bonsai.Code.Services;
+using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
@@ -45,29 +46,40 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void InitDatabase(IApplicationBuilder app)
         {
-            var cfg = Configuration.SeedData ?? new SeedDataConfig(); // all false
-
-            using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            var startupService = app.ApplicationServices.GetService<StartupService>();
+            
+            var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var sp = scope.ServiceProvider;
+            var seedConfig = Configuration.SeedData ?? new SeedDataConfig(); // all false
+            
+            var tasks = startupService.RegisterStartupTask("create database", "Подготовка базы", async () =>
             {
-                var sp = scope.ServiceProvider;
+                var db = sp.GetService<AppDbContext>();
+                db.EnsureDatabaseCreated();
+                db.EnsureSystemItemsCreated();
+            });
 
-                var context = sp.GetService<AppDbContext>();
-                var elastic = sp.GetService<ElasticService>();
-
-                context.EnsureDatabaseCreated();
-                context.EnsureSystemItemsCreated();
-
-                if(cfg.ClearAll || cfg.ResetElastic)
-                    elastic.ClearPreviousData();
-
-                if(cfg.ClearAll)
-                    SeedData.ClearPreviousData(context);
-
-                if(cfg.Enable)
-                    SeedData.EnsureSampleDataSeeded(context, elastic);
-
-                elastic.EnsureIndexesCreated(context);
+            if (seedConfig.ClearAll || seedConfig.ResetElastic)
+            {
+                tasks = tasks.ContinueWith("clear elastic", "Очистка поискового индекса", async () => sp.GetService<ElasticService>().ClearPreviousData());
             }
+
+            if (seedConfig.ClearAll)
+            {
+                tasks = tasks.ContinueWith("clear database", "Очистка базы данных", async () => SeedData.ClearPreviousData(sp.GetService<AppDbContext>()));
+            }
+
+            tasks = tasks.ContinueWith("init elastic", "Подготовка поискового индекса", async () => sp.GetService<ElasticService>().EnsureIndexesCreated());
+
+            if (seedConfig.Enable)
+            {
+                tasks = tasks.ContinueWith(
+                    "Seed data", 
+                    "Подготовка тестовых данных",
+                    async () => SeedData.EnsureSampleDataSeeded(sp.GetService<AppDbContext>(), sp.GetService<ElasticService>()));
+            }
+
+            tasks.ContinueWith("Finalize", "", async () => scope.Dispose());
         }
     }
 }

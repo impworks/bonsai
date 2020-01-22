@@ -1,27 +1,37 @@
-﻿@using Bonsai.Code.Services.Config
+﻿@using Bonsai.Code.Services
+@using Bonsai.Code.Services.Config
 @inject AppConfigService ConfigService
+@inject StartupService StartupService
 @{
-    var config = ConfigService.GetAppConfig();
+    string appTitle = "Bonsai";
+    string rootUrl = "/";
+
+    if (StartupService.IsStarted)
+    {
+        appTitle = ConfigService.GetAppConfig().Title;
+        rootUrl = Url.Action("Index", "Home", new {area = "Front"});
+    }
 }
 
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@config.Title &mdash; @ViewBag.Title</title>
+    <title>@appTitle &mdash; @ViewBag.Title</title>
     <link href="@Url.Content("~/assets/styles/style.css")" rel="stylesheet" />
+    @RenderSection("Head", false)
 </head>
 <body>
     <div id="main-container" class="d-flex flex-column">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home", new { area = "Front" })">
+                <a class="navbar-brand" href="@rootUrl">
                     <div class="row align-items-center">
                         <div class="col">
                             <img src="/assets/img/logo.svg">
                         </div>
                         <div class="col">
-                            @config.Title
+                            @appTitle
                         </div>
                     </div>
                 </a>
@@ -35,7 +45,11 @@
                         <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery"/>
                     </form>
                 }
-                @await Component.InvokeAsync("UserHeaderComponent")
+                
+                @if (StartupService.IsStarted)
+                {
+                    @await Component.InvokeAsync("UserHeaderComponent")
+                }
             </nav>
         </header>
          @RenderBody()

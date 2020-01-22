@@ -7,6 +7,7 @@ using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Services;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
@@ -58,6 +59,8 @@ namespace Bonsai.Areas.Admin.Logic
         {
             try
             {
+                await services.GetRequiredService<StartupService>().WaitForStartup();
+
                 using (var db = services.GetService<AppDbContext>())
                 using (var js = services.GetService<INodeServices>())
                 {

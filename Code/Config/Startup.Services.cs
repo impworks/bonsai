@@ -57,6 +57,8 @@ namespace Bonsai.Code.Config
             services.AddScoped<IMediaHandler, VideoMediaHandler>();
             services.AddScoped<IMediaHandler, PdfMediaHandler>();
 
+            services.AddSingleton<StartupService>();
+
             services.AddHostedService<MediaEncoderService>();
             services.AddHostedService<TreeLayoutService>();
         }

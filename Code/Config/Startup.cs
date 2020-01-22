@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,6 +51,8 @@ namespace Bonsai.Code.Config
         /// </summary>
         public void Configure(IApplicationBuilder app)
         {
+            var startupService = app.ApplicationServices.GetService<StartupService>();
+
             if (Environment.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -61,13 +64,14 @@ namespace Bonsai.Code.Config
 
             if (Configuration.Debug.DetailedExceptions)
                 app.UseDeveloperExceptionPage();
-
+            
             ValidateAutomapperConfig(app);
             InitDatabase(app);
             
             app.UseForwardedHeaders(GetforwardedHeadersOptions())
                .UseStatusCodePagesWithReExecute("/error/{0}")
                .UseStaticFiles()
+               .Use(startupService.LoadingPage)
                .UseRouting()
                .UseAuthentication()
                .UseAuthorization()

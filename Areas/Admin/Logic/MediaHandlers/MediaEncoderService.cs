@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic.Workers;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -50,6 +51,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// </summary>
         protected override async Task<bool> ProcessAsync(IServiceProvider services)
         {
+            await services.GetRequiredService<StartupService>().WaitForStartup();
+
             using (var db = services.GetService<AppDbContext>())
             {
                 var job = await db.MediaJobs
