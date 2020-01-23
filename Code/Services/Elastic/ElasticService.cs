@@ -36,26 +36,27 @@ namespace Bonsai.Code.Services.Elastic
         /// <summary>
         /// Removes all cached data.
         /// </summary>
-        public void ClearPreviousData()
+        public async Task ClearPreviousDataAsync()
         {
-            var result = _client.IndexExists(PAGE_INDEX);
+            var result = await _client.IndexExistsAsync(PAGE_INDEX);
 
             if(!result.IsValid)
                 throw result.OriginalException;
 
             if(result.Exists)
-                _client.DeleteIndex(PAGE_INDEX);
+                await _client.DeleteIndexAsync(PAGE_INDEX);
         }
 
         /// <summary>
         /// Creates all required indexes.
         /// </summary>
-        public void EnsureIndexesCreated(AppDbContext db = null)
+        public async Task EnsureIndexesCreatedAsync(AppDbContext db = null)
         {
-            if(_client.IndexExists(PAGE_INDEX).Exists)
+            var check = await _client.IndexExistsAsync(PAGE_INDEX);
+            if (check.Exists)
                 return;
 
-            var result = _client.CreateIndex(
+            var result = await _client.CreateIndexAsync(
                 PAGE_INDEX,
                 m => m.Mappings(mp =>
                     mp.Map<PageDocument>(mx =>
@@ -120,7 +121,7 @@ namespace Bonsai.Code.Services.Elastic
                 throw result.OriginalException;
 
             if (db != null)
-                ReindexAllPagesAsync(db).GetAwaiter().GetResult();
+                await ReindexAllPagesAsync(db);
         }
 
         /// <summary>

@@ -25,7 +25,9 @@ namespace Bonsai.Code.Config
             services.AddScoped<MarkdownService>();
             services.AddScoped<AppConfigService>();
             services.AddScoped<CacheService>();
+
             services.AddSingleton<WorkerAlarmService>();
+            services.AddSingleton<StartupService>();
 
             // frontend
             services.AddScoped<RelationsPresenterService>();

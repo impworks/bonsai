@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Bonsai.Code.Services.Elastic;
 using Bonsai.Data.Models;
 
@@ -14,7 +15,7 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Seeds sample data.
         /// </summary>
-        public static void EnsureSampleDataSeeded(AppDbContext db, ElasticService elastic = null)
+        public static async Task EnsureSampleDataSeededAsync(AppDbContext db, ElasticService elastic = null)
         {
             var ctx = new SeedContext(db, elastic);
 
@@ -73,13 +74,13 @@ namespace Bonsai.Data.Utils.Seed
             var vid1 = ctx.AddVideo("1.mp4", "2015.09.01", "Проверка видео");
             ctx.AddMediaTag(vid1, root);
 
-            ctx.Save();
+            await ctx.SaveAsync();
         }
 
         /// <summary>
         /// Removes all previous records and files.
         /// </summary>
-        public static void ClearPreviousData(AppDbContext db)
+        public static async Task ClearPreviousDataAsync(AppDbContext db)
         {
             var mediaDir = @".\wwwroot\media";
             if (Directory.Exists(mediaDir))
@@ -92,7 +93,7 @@ namespace Bonsai.Data.Utils.Seed
             db.Relations.RemoveRange(db.Relations.ToList());
             db.Pages.RemoveRange(db.Pages.ToList().Except(db.Users.Select(x => x.Page).Where(x => x != null).ToList()));
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
     }
 }

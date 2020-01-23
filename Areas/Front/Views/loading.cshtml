@@ -1,0 +1,31 @@
+@model IEnumerable<Bonsai.Code.Services.StartupTask>
+
+@{
+    Layout = "Layout.cshtml";
+    ViewBag.DisableSearch = true;
+    ViewBag.Title = "Загрузка";
+}
+
+@section head {
+    <meta http-equiv="refresh" content="2" />
+}
+
+<div class="content text">
+    <p>Bonsai загружается...</p>
+    @foreach (var task in Model)
+    {
+        @if (!task.IsCompleted)
+        {
+            <h6>
+                <span class="fa fa-spin fa-spinner"></span> @task.Description...
+            </h6>
+        }
+        else
+        {
+            <h6>
+                <span class="fa fa-check"></span> @task.Description
+            </h6>
+        }
+    }
+    <p>Откиньтесь на спинку кресла и отдохните - это займет не более минуты :)</p>
+</div>
