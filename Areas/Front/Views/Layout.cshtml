@@ -3,8 +3,8 @@
 @inject AppConfigService ConfigService
 @inject StartupService StartupService
 @{
-    string appTitle = "Bonsai";
-    string rootUrl = "/";
+    var appTitle = "Bonsai";
+    var rootUrl = "/";
 
     if (StartupService.IsStarted)
     {

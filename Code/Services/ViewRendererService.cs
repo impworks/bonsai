@@ -44,9 +44,11 @@ namespace Bonsai.Code.Services
         /// <summary>
         /// Renders a view to string.
         /// </summary>
-        public async Task<string> RenderToStringAsync(string viewName, object model)
+        public async Task<string> RenderToStringAsync(string viewName, object model, HttpContext httpContext = null)
         {
-            var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
+            if(httpContext == null)
+                httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
+
             var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
  
             using (var sw = new StringWriter())

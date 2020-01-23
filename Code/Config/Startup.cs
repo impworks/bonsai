@@ -71,7 +71,7 @@ namespace Bonsai.Code.Config
             app.UseForwardedHeaders(GetforwardedHeadersOptions())
                .UseStatusCodePagesWithReExecute("/error/{0}")
                .UseStaticFiles()
-               .Use(startupService.LoadingPage)
+               .Use(startupService.RenderLoadingPage)
                .UseRouting()
                .UseAuthentication()
                .UseAuthorization()

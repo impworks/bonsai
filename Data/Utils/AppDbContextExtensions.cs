@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Identity;
@@ -19,26 +20,20 @@ namespace Bonsai.Data.Utils
         /// <summary>
         /// Applies migrations and applies migrations.
         /// </summary>
-        public static void EnsureDatabaseCreated(this AppDbContext context)
+        public static async Task EnsureDatabaseCreatedAsync(this AppDbContext context)
         {
-            if(!context.IsMigrated())
-                context.Database.Migrate();
+            if(!await context.IsMigratedAsync())
+                await context.Database.MigrateAsync();
         }
 
         /// <summary>
         /// Checks if there are no pending migrations.
         /// </summary>
-        private static bool IsMigrated(this AppDbContext context)
+        private static async Task<bool> IsMigratedAsync(this AppDbContext context)
         {
-            var applied = context.GetService<IHistoryRepository>()
-                                 .GetAppliedMigrations()
-                                 .Select(m => m.MigrationId);
-
-            var total = context.GetService<IMigrationsAssembly>()
-                               .Migrations
-                               .Select(m => m.Key);
-
-            return !total.Except(applied).Any();
+            var applied = await context.GetService<IHistoryRepository>().GetAppliedMigrationsAsync();
+            var total = context.GetService<IMigrationsAssembly>().Migrations;
+            return !total.Select(x => x.Key).Except(applied.Select(x => x.MigrationId)).Any();
         }
 
         /// <summary>
@@ -52,14 +47,14 @@ namespace Bonsai.Data.Utils
         /// <summary>
         /// Adds required records (identity, config, etc.).
         /// </summary>
-        public static void EnsureSystemItemsCreated(this AppDbContext db)
+        public static async Task EnsureSystemItemsCreatedAsync(this AppDbContext db)
         {
-            void AddRole(string name) => db.Roles.Add(new IdentityRole { Name = name, NormalizedName = name.ToUpper() });
-
             if(!db.Roles.Any())
             {
-                foreach(var role in EnumHelper.GetEnumValues<UserRole>())
-                    AddRole(role.ToString());
+                db.Roles.AddRange(
+                    EnumHelper.GetEnumValues<UserRole>()
+                              .Select(name => new IdentityRole { Name = name.ToString(), NormalizedName = name.ToString().ToUpper() })
+                );
             }
 
             if(!db.Config.Any())
@@ -73,7 +68,7 @@ namespace Bonsai.Data.Utils
                 });
             }
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
     }
 }

@@ -1,42 +1,43 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Serilog;
 
 namespace Bonsai.Code.Services
 {
+    /// <summary>
+    /// Helper service for managing startup tasks and dependencies.
+    /// </summary>
     public class StartupService
     {
+        public StartupService(ViewRenderService viewRender, ILogger logger)
+        {
+            _viewRender = viewRender;
+            _logger = logger;
+        }
+
         private readonly object _lockObject = new object();
         private readonly List<StartupTask> _workingTasks = new List<StartupTask>();
-        private readonly IRazorViewEngine _razorViewEngine;
-        private readonly ITempDataProvider _tempDataProvider;
+        private readonly ViewRenderService _viewRender;
         private readonly ILogger _logger;
 
         private Task _startupCompleted = Task.CompletedTask;
 
-        public StartupService(IRazorViewEngine razorViewEngine,
-            ITempDataProvider tempDataProvider, ILogger logger)
-        {
-            _razorViewEngine = razorViewEngine;
-            _tempDataProvider = tempDataProvider;
-            _logger = logger;
-        }
-
+        /// <summary>
+        /// Flag indicating that all startup actions have been completed.
+        /// </summary>
         public bool IsStarted => _startupCompleted.IsCompleted;
 
+        /// <summary>
+        /// Completion task.
+        /// </summary>
         public Task WaitForStartup() => _startupCompleted;
 
+        /// <summary>
+        /// Adds a new task to await before startup is completed.
+        /// </summary>
         public StartupTask RegisterStartupTask(string taskName, string description, Func<Task> task)
         {
             lock (_lockObject)
@@ -49,36 +50,20 @@ namespace Bonsai.Code.Services
             }
         }
 
-        public async Task LoadingPage(HttpContext context, Func<Task> nextDelegate)
+        /// <summary>
+        /// Displays the loading page until the startup is completed.
+        /// </summary>
+        public async Task RenderLoadingPage(HttpContext context, Func<Task> nextDelegate)
         {
             if (_startupCompleted.IsCompleted)
             {
                 await nextDelegate();
+                return;
             }
-            else
-            {
-                var startupView = _razorViewEngine.GetView("~/", "~/Areas/Front/Views/loading.cshtml", false);
-                var actionContext = new ActionContext(context, new RouteData(), new ActionDescriptor());
-                var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                {
-                    Model = _workingTasks
-                };
 
-                var sb = new StringBuilder();
-                using var sw = new StringWriter(sb);
-                
-                var viewContext = new ViewContext(
-                    actionContext,
-                    startupView.View,
-                    viewDictionary,
-                    new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), 
-                    sw, 
-                    new HtmlHelperOptions()
-                );
- 
-                await startupView.View.RenderAsync(viewContext);
-                await context.Response.WriteAsync(sb.ToString());
-            }
+            var vm = _workingTasks.Where(x => !string.IsNullOrEmpty(x.Description));
+            var body = await _viewRender.RenderToStringAsync("~/Areas/Front/Views/loading.cshtml", vm, context);
+            await context.Response.WriteAsync(body);
         }
     }
 }

@@ -25,7 +25,9 @@ namespace Bonsai.Code.Config
             services.AddScoped<MarkdownService>();
             services.AddScoped<AppConfigService>();
             services.AddScoped<CacheService>();
+
             services.AddSingleton<WorkerAlarmService>();
+            services.AddSingleton<StartupService>();
 
             // frontend
             services.AddScoped<RelationsPresenterService>();
@@ -56,8 +58,6 @@ namespace Bonsai.Code.Config
             services.AddScoped<IMediaHandler, PhotoMediaHandler>();
             services.AddScoped<IMediaHandler, VideoMediaHandler>();
             services.AddScoped<IMediaHandler, PdfMediaHandler>();
-
-            services.AddSingleton<StartupService>();
 
             services.AddHostedService<MediaEncoderService>();
             services.AddHostedService<TreeLayoutService>();
