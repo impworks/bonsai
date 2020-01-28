@@ -288,14 +288,14 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-wwwroot/assets/styles/
-wwwroot/assets/scripts/
-wwwroot/assets/fonts/
-wwwroot/media/
+src/Bonsai/wwwroot/assets/styles/
+src/Bonsai/wwwroot/assets/scripts/
+src/Bonsai/wwwroot/assets/fonts/
+src/Bonsai/wwwroot/media/
 
-External/**/*.*
-Logs/**/*.*
+src/Bonsai/External/**/*.*
+src/Bonsai/Logs/**/*.*
 
-appsettings.Development.json
-appsettings.Production.json
-appsettings.Staging.json
+src/Bonsai/appsettings.Development.json
+src/Bonsai/appsettings.Production.json
+src/Bonsai/appsettings.Staging.json
