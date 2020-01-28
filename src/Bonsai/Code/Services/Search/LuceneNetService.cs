@@ -66,7 +66,7 @@ namespace Bonsai.Code.Services.Search
             var searchResults = SearchIndex(phrase);
             
             // create highlighter
-            var formatter = new SimpleHTMLFormatter("<Bold>", "</Bold>");
+            var formatter = new SimpleHTMLFormatter("<b>", "</b>");
             var scorer = new QueryScorer(searchResults.booleanQuery);
 
             var highlighter = new Highlighter(formatter, scorer) {TextFragmenter = new NullFragmenter()};
@@ -142,9 +142,9 @@ namespace Bonsai.Code.Services.Search
 
             for (int i = 0; i < words.Count; i++)
             {
-                var q1 = new FuzzyQuery(new Term("Title", words[i]), 2, 0) {Boost = words.Count * 2 + i};
-                var q2 = new FuzzyQuery(new Term("Description", words[i]), 2, 0) { Boost = i };
-                var q3 = new FuzzyQuery(new Term("Aliases", words[i]), 2, 0) { Boost = i };
+                var q1 = new FuzzyQuery(new Term("Title", words[i]), 2, 0) {Boost = words.Count * 2 + i + 1};
+                var q2 = new FuzzyQuery(new Term("Description", words[i]), 2, 0) { Boost = i + 1};
+                var q3 = new FuzzyQuery(new Term("Aliases", words[i]), 2, 0) { Boost = i + 1};
                 booleanQuery.Add(q1, Occur.SHOULD);
                 booleanQuery.Add(q2, Occur.SHOULD);
                 booleanQuery.Add(q3, Occur.SHOULD);
