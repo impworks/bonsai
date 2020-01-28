@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
-using Bonsai.Code.Services.Elastic;
+using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
+using Impworks.Utils.Strings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -20,23 +21,26 @@ namespace Bonsai.Data.Utils.Seed
     /// </summary>
     public class SeedContext
     {
-        public SeedContext(AppDbContext db, ElasticService elastic = null)
+        public SeedContext(AppDbContext db, ISearchEngine search, string rootPath = null)
         {
             _db = db;
-            _elastic = elastic;
+            _search = search;
+            _rootPath = StringHelper.Coalesce(rootPath, Path.Combine(Path.GetFullPath(Directory.GetCurrentDirectory()), "Data", "Utils", "Seed"));
+            _pages = new List<Page>();
         }
 
         private readonly AppDbContext _db;
-        private readonly ElasticService _elastic;
-        private readonly string RootPath = Path.Combine(Path.GetFullPath(Directory.GetCurrentDirectory()), "Data", "Utils", "Seed");
+        private readonly ISearchEngine _search;
+        private readonly List<Page> _pages;
+        private readonly string _rootPath;
 
         /// <summary>
         /// Creates a new page.
         /// </summary>
         public Page AddPage(string title, bool? gender = null, string birth = null, string death = null, PageType type = PageType.Person, string descrSource = null, string factsSource = null)
         {
-            var descrFile = Path.Combine(RootPath, descrSource ?? "");
-            var factsFile = Path.Combine(RootPath, factsSource ?? "");
+            var descrFile = Path.Combine(_rootPath, descrSource ?? "");
+            var factsFile = Path.Combine(_rootPath, factsSource ?? "");
 
             var factsObj = JObject.Parse(
                 File.Exists(factsFile)
@@ -97,7 +101,7 @@ namespace Bonsai.Data.Utils.Seed
             _db.Pages.Add(page);
             _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Key = key.ToLowerInvariant(), Title = title, Page = page});
 
-            _elastic?.AddPageAsync(page).Wait();
+            _pages.Add(page);
 
             return page;
         }
@@ -238,6 +242,9 @@ namespace Bonsai.Data.Utils.Seed
         public async Task SaveAsync()
         {
             await _db.SaveChangesAsync();
+
+            foreach (var page in _pages)
+                await _search.AddPageAsync(page);
         }
 
         /// <summary>
@@ -262,7 +269,7 @@ namespace Bonsai.Data.Utils.Seed
             var id = explicitId ?? Guid.NewGuid();
             var key = PageHelper.GetMediaKey(id);
             var newName = key + Path.GetExtension(source);
-            var sourcePath = Path.Combine(RootPath, "Media", source);
+            var sourcePath = Path.Combine(_rootPath, "Media", source);
             var diskPath = Path.Combine(Path.GetFullPath(Directory.GetCurrentDirectory()), "wwwroot", "media", newName);
             var webPath = "~/media/" + newName;
 
@@ -277,7 +284,7 @@ namespace Bonsai.Data.Utils.Seed
                                   .Select(x => MediaPresenterService.GetSizedMediaPath(diskPath, x));
 
             foreach(var path in paths)
-                File.Copy(Path.Combine(RootPath, "Media", preview), path);
+                File.Copy(Path.Combine(_rootPath, "Media", preview), path);
 
             var media = new Media
             {

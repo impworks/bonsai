@@ -10,7 +10,7 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.DomainModel.Media;
-using Bonsai.Code.Services.Elastic;
+using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -24,16 +24,16 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class SuggestService
     {
-        public SuggestService(AppDbContext db, ElasticService elastic, IUrlHelper urlHelper, IMapper mapper)
+        public SuggestService(AppDbContext db, ISearchEngine search, IUrlHelper urlHelper, IMapper mapper)
         {
             _db = db;
-            _elastic = elastic;
+            _search = search;
             _url = urlHelper;
             _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
-        private readonly ElasticService _elastic;
+        private readonly ISearchEngine _search;
         private readonly IUrlHelper _url;
         private readonly IMapper _mapper;
 
@@ -45,7 +45,7 @@ namespace Bonsai.Areas.Admin.Logic
             Func<IReadOnlyList<Guid>, IReadOnlyList<Guid>> extraFilter = null
         )
         {
-            var search = await _elastic.SearchAutocompleteAsync(request.Query, request.Types, 100);
+            var search = await _search.SuggestAsync(request.Query, request.Types, 100);
 
             var ids = (IReadOnlyList<Guid>) search.Select(x => x.Id).ToList();
 

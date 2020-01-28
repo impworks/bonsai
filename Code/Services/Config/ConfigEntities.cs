@@ -27,6 +27,7 @@
     public class ElasticSearchConfig
     {
         public string Host { get; set; }
+        public string IndexName { get; set; }
     }
 
     /// <summary>

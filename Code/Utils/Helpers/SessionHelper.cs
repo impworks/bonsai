@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Bonsai.Code.Utils
+namespace Bonsai.Code.Utils.Helpers
 {
     /// <summary>
     /// Utilities for working with the session.

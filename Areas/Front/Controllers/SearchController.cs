@@ -33,7 +33,7 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("~/util/search/{*query}")]
         public async Task<IReadOnlyList<PageTitleVM>> Autocomplete(string query)
         {
-            var hints = await _search.SearchAutocompleteAsync(query);
+            var hints = await _search.SuggestAsync(query);
             return hints;
         }
 

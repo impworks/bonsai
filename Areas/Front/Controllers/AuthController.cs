@@ -5,8 +5,9 @@ using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services.Config;
-using Bonsai.Code.Services.Elastic;
+using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Microsoft.AspNetCore.Authentication;
@@ -27,7 +28,7 @@ namespace Bonsai.Areas.Front.Controllers
             AuthService auth,
             AuthProviderService provs,
             PagesManagerService pages,
-            ElasticService elastic,
+            ISearchEngine search,
             AppConfigService cfgProvider,
             AppDbContext db
         )
@@ -35,7 +36,7 @@ namespace Bonsai.Areas.Front.Controllers
             _auth = auth;
             _provs = provs;
             _pages = pages;
-            _elastic = elastic;
+            _search = search;
             _cfgProvider = cfgProvider;
             _db = db;
         }
@@ -43,7 +44,7 @@ namespace Bonsai.Areas.Front.Controllers
         private readonly AuthService _auth;
         private readonly AuthProviderService _provs;
         private readonly PagesManagerService _pages;
-        private readonly ElasticService _elastic;
+        private readonly ISearchEngine _search;
         private readonly AppConfigService _cfgProvider;
         private readonly AppDbContext _db;
 
@@ -175,7 +176,7 @@ namespace Bonsai.Areas.Front.Controllers
                     result.User.Page = await _pages.CreateDefaultUserPageAsync(vm, result.Principal);
                     await _db.SaveChangesAsync();
 
-                    await _elastic.AddPageAsync(result.User.Page);
+                    await _search.AddPageAsync(result.User.Page);
                 }
 
                 return RedirectToAction("Index", "Home");

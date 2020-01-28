@@ -1,7 +1,7 @@
 ﻿using System;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Code.Services.Elastic
+namespace Bonsai.Code.Services.Search
 {
     /// <summary>
     /// Result of the search.

@@ -1,6 +1,6 @@
 ﻿using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
-using Bonsai.Code.Services.Elastic;
+using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -68,7 +68,7 @@ namespace Bonsai.Code.Config
                 tasks = tasks.ContinueWith(
                     "ElasticClear",
                     "Очистка поискового индекса",
-                    async () => await sp.GetService<ElasticService>().ClearPreviousDataAsync()
+                    async () => await sp.GetService<ISearchEngine>().ClearDataAsync()
                 );
             }
 
@@ -84,7 +84,7 @@ namespace Bonsai.Code.Config
             tasks = tasks.ContinueWith(
                 "ElasticInit",
                 "Подготовка поискового индекса",
-                async () => await sp.GetService<ElasticService>().EnsureIndexesCreatedAsync()
+                async () => await sp.GetService<ISearchEngine>().InitializeAsync()
             );
 
             if (seedConfig.Enable)
@@ -92,7 +92,7 @@ namespace Bonsai.Code.Config
                 tasks = tasks.ContinueWith(
                     "DatabaseSeed",
                     "Подготовка тестовых данных",
-                    async () => await SeedData.EnsureSampleDataSeededAsync(sp.GetService<AppDbContext>(), sp.GetService<ElasticService>())
+                    async () => await SeedData.EnsureSampleDataSeededAsync(sp.GetService<AppDbContext>(), sp.GetService<ISearchEngine>())
                 );
             }
 

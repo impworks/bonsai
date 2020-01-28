@@ -41,7 +41,7 @@ namespace Bonsai.Code.Config
             ConfigureMvcServices(services);
             ConfigureDatabaseServices(services);
             ConfigureAuthServices(services);
-            ConfigureElasticServices(services);
+            ConfigureSearchServices(services);
             ConfigureAutomapper(services);
             ConfigureAppServices(services);
         }

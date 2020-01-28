@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Search;
-using Bonsai.Code.Services.Elastic;
+using Bonsai.Code.Services.Search;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +17,14 @@ namespace Bonsai.Areas.Front.Logic
     /// </summary>
     public class SearchPresenterService
     {
-        public SearchPresenterService(AppDbContext db, ElasticService elastic)
+        public SearchPresenterService(AppDbContext db, ISearchEngine search)
         {
             _db = db;
-            _elastic = elastic;
+            _search = search;
         }
 
         private readonly AppDbContext _db;
-        private readonly ElasticService _elastic;
+        private readonly ISearchEngine _search;
 
         private const int MIN_QUERY_LENGTH = 3;
 
@@ -35,7 +37,7 @@ namespace Bonsai.Areas.Front.Logic
             if(q.Length < MIN_QUERY_LENGTH)
                 return new SearchResultVM[0];
 
-            var matches = await _elastic.SearchAsync(q, page);
+            var matches = await _search.SearchAsync(q, page);
             var ids = matches.Select(x => x.Id);
 
             var details = await _db.Pages
@@ -62,15 +64,18 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Shows autocomplete suggestions for the search box.
         /// </summary>
-        public async Task<IReadOnlyList<PageTitleVM>> SearchAutocompleteAsync(string query)
+        public async Task<IReadOnlyList<PageTitleVM>> SuggestAsync(string query)
         {
             var q = (query ?? "").Trim();
             if(q.Length < MIN_QUERY_LENGTH)
                 return new PageTitleVM[0];
 
-            var results = await _elastic.SearchAutocompleteAsync(q);
+            var results = await _search.SuggestAsync(q);
 
-            return results.Select(x => new PageTitleVM { Id = x.Id, Title = x.HighlightedTitle, Key = x.Key, Type = PageType.Other})
+            if(results.Count == 0)
+                Console.WriteLine("Foo");
+
+            return results.Select(x => new PageTitleVM { Id = x.Id, Title = x.HighlightedTitle, Key = x.Key, Type = x.PageType})
                           .ToList();
         }
     }

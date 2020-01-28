@@ -1,26 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Data;
+using Bonsai.Code.Services.Config;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
-using Microsoft.EntityFrameworkCore;
 using Nest;
 using Newtonsoft.Json.Linq;
 using Page = Bonsai.Data.Models.Page;
 
-namespace Bonsai.Code.Services.Elastic
+namespace Bonsai.Code.Services.Search
 {
     /// <summary>
     /// The low-level service for working with ElasticSearch.
     /// </summary>
-    public class ElasticService
+    public class ElasticService: ISearchEngine
     {
-        public ElasticService(ElasticClient client)
+        public ElasticService(ElasticSearchConfig config)
         {
-            _client = client;
+            var settings = new ConnectionSettings(new Uri(config.Host)).DisableAutomaticProxyDetection()
+                                                                       .DisablePing();
+            _client = new ElasticClient(settings);
+
+            PAGE_INDEX = StringHelper.Coalesce(config.IndexName, "pages");
         }
 
         private readonly ElasticClient _client;
@@ -28,7 +32,7 @@ namespace Bonsai.Code.Services.Elastic
         private const int PAGE_SIZE = 20;
         private const int FRAGMENT_SIZE = 200;
 
-        private const string PAGE_INDEX = "pages";
+        private readonly string PAGE_INDEX;
         private const string STOP_WORDS = "а,без,более,бы,был,была,были,было,быть,в,вам,вас,весь,во,вот,все,всего,всех,вы,где,да,даже,для,до,его,ее,если,есть,еще,же,за,здесь,и,из,или,им,их,к,как,ко,когда,кто,ли,либо,мне,может,мы,на,надо,наш,не,него,нее,нет,ни,них,но,ну,о,об,однако,он,она,они,оно,от,очень,по,под,при,с,со,так,также,такой,там,те,тем,то,того,тоже,той,только,том,ты,у,уже,хотя,чего,чей,чем,что,чтобы,чье,чья,эта,эти,это,я";
 
         #region Initialization
@@ -36,7 +40,7 @@ namespace Bonsai.Code.Services.Elastic
         /// <summary>
         /// Removes all cached data.
         /// </summary>
-        public async Task ClearPreviousDataAsync()
+        public async Task ClearDataAsync()
         {
             var result = await _client.IndexExistsAsync(PAGE_INDEX);
 
@@ -50,7 +54,7 @@ namespace Bonsai.Code.Services.Elastic
         /// <summary>
         /// Creates all required indexes.
         /// </summary>
-        public async Task EnsureIndexesCreatedAsync(AppDbContext db = null)
+        public async Task InitializeAsync()
         {
             var check = await _client.IndexExistsAsync(PAGE_INDEX);
             if (check.Exists)
@@ -119,9 +123,6 @@ namespace Bonsai.Code.Services.Elastic
 
             if(!result.IsValid)
                 throw result.OriginalException;
-
-            if (db != null)
-                await ReindexAllPagesAsync(db);
         }
 
         /// <summary>
@@ -231,7 +232,7 @@ namespace Bonsai.Code.Services.Elastic
         /// <summary>
         /// Returns the probable matches for the search autocomplete.
         /// </summary>
-        public async Task<IReadOnlyList<PageDocumentSearchResult>> SearchAutocompleteAsync(string query, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null)
+        public async Task<IReadOnlyList<PageDocumentSearchResult>> SuggestAsync(string query, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null)
         {
             PageDocumentSearchResult Map(PageDocument doc)
             {
@@ -259,24 +260,6 @@ namespace Bonsai.Code.Services.Elastic
             );
 
             return result.Documents.Select(Map).ToList();
-        }
-
-        #endregion
-
-        #region Reindex
-
-        /// <summary>
-        /// Updates all pages in the cache.
-        /// </summary>
-        private async Task ReindexAllPagesAsync(AppDbContext db)
-        {
-            var pages = await db.Pages
-                                .Include(x => x.Aliases)
-                                .AsNoTracking()
-                                .ToListAsync();
-
-            foreach (var page in pages)
-                await AddPageAsync(page);
         }
 
         #endregion

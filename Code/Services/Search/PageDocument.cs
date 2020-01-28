@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bonsai.Code.Services.Elastic
+namespace Bonsai.Code.Services.Search
 {
     /// <summary>
     /// The page's searchable fields.

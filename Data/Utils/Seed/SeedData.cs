@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bonsai.Code.Services.Elastic;
+using Bonsai.Code.Services.Search;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Data.Utils.Seed
@@ -15,9 +15,9 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Seeds sample data.
         /// </summary>
-        public static async Task EnsureSampleDataSeededAsync(AppDbContext db, ElasticService elastic = null)
+        public static async Task EnsureSampleDataSeededAsync(AppDbContext db, ISearchEngine search, string rootPath = null)
         {
-            var ctx = new SeedContext(db, elastic);
+            var ctx = new SeedContext(db, search, rootPath);
 
             var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleHumanFacts.json");
             root.MainPhoto = ctx.AddPhoto("1.jpg");

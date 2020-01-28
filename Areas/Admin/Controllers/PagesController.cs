@@ -8,7 +8,7 @@ using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Media;
-using Bonsai.Code.Services.Elastic;
+using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -28,16 +28,16 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/pages")]
     public class PagesController: AdminControllerBase
     {
-        public PagesController(PagesManagerService pages, ElasticService elastic, AppDbContext db, WorkerAlarmService alarm)
+        public PagesController(PagesManagerService pages, ISearchEngine search, AppDbContext db, WorkerAlarmService alarm)
         {
             _pages = pages;
-            _elastic = elastic;
+            _search = search;
             _db = db;
             _alarm = alarm;
         }
 
         private readonly PagesManagerService _pages;
-        private readonly ElasticService _elastic;
+        private readonly ISearchEngine _search;
         private readonly AppDbContext _db;
         private readonly WorkerAlarmService _alarm;
         
@@ -88,7 +88,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 var page = await _pages.CreateAsync(vm, User);
                 await _db.SaveChangesAsync();
-                await _elastic.AddPageAsync(page);
+                await _search.AddPageAsync(page);
                 _alarm.FireTreeLayoutRegenerationRequired();
 
                 return RedirectToSuccess("Страница создана");
@@ -125,7 +125,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 var page = await _pages.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
-                await _elastic.AddPageAsync(page);
+                await _search.AddPageAsync(page);
                 _alarm.FireTreeLayoutRegenerationRequired();
 
                 return RedirectToSuccess("Страница обновлена");
@@ -158,7 +158,7 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             var page = await _pages.RemoveAsync(id, User);
             await _db.SaveChangesAsync();
-            await _elastic.RemovePageAsync(page);
+            await _search.RemovePageAsync(page);
             _alarm.FireTreeLayoutRegenerationRequired();
 
             return RedirectToSuccess("Страница удалена");
