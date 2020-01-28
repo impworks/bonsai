@@ -21,7 +21,8 @@ namespace Bonsai.Tests.Search.Fixtures
                        .Options;
 
             Db = new AppDbContext(opts);
-            Search = new ElasticService(new ElasticSearchConfig { Host = "http://localhost:9200", IndexName = "test_pages" });
+            // Search = new ElasticService(new ElasticSearchConfig { Host = "http://localhost:9200", IndexName = "test_pages" });
+            Search = new LuceneNetService();
         }
 
         public readonly AppDbContext Db;

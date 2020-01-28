@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Bonsai.Data.Models;
 
 namespace Bonsai.Code.Services.Search
@@ -6,6 +7,7 @@ namespace Bonsai.Code.Services.Search
     /// <summary>
     /// Result of the search.
     /// </summary>
+    [DebuggerDisplay("{Id}/{PageType}/{Key}")]
     public class PageDocumentSearchResult
     {
         public Guid Id { get; set; }
