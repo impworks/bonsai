@@ -8,12 +8,9 @@ using Impworks.Utils.Linq;
 using Lucene.Net.Analysis.Ru;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
-using Lucene.Net.QueryParsers.Classic;
-using Lucene.Net.Sandbox.Queries;
 using Lucene.Net.Search;
 using Lucene.Net.Search.Highlight;
 using Lucene.Net.Store;
-using Lucene.Net.Tartarus.Snowball.Ext;
 using Lucene.Net.Util;
 using Newtonsoft.Json.Linq;
 using Page = Bonsai.Data.Models.Page;
@@ -77,11 +74,11 @@ namespace Bonsai.Code.Services.Search
                 var description = doc.Get("Description");
                 var title = doc.Get("Title");
 
-                var stream = _writer.Analyzer.GetTokenStream("Description", new StringReader(description));
-                var highlightedDescription = highlighter.GetBestFragments(stream, description, 50).JoinString(", ");
+                using var descriptionStream = _writer.Analyzer.GetTokenStream("Description", new StringReader(description));
+                var highlightedDescription = highlighter.GetBestFragments(descriptionStream, description, 50).JoinString(", ");
                 
-                stream =  _writer.Analyzer.GetTokenStream("Title", new StringReader(title));
-                var highlightedTitle = highlighter.GetBestFragments(stream, title, 50).JoinString(", ");
+                using var titleStream =  _writer.Analyzer.GetTokenStream("Title", new StringReader(title));
+                var highlightedTitle = highlighter.GetBestFragments(titleStream, title, 50).JoinString(", ");
 
                 results.Add(new PageDocumentSearchResult
                 {
