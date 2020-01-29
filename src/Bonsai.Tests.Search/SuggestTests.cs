@@ -29,14 +29,14 @@ namespace Bonsai.Tests.Search
             Assert.Contains(result, x => x.Key == "Иванов_Иван_Петрович");
         }
 
-        [Fact]
-        public async Task Non_prefix_search_matches()
+        [Theory]
+        [InlineData("Вадимович", "Семенов_Николай_Вадимович")]
+        [InlineData("Ирина", "Семенова_Ирина_Алексеевна")]
+        public async Task Non_prefix_search_matches(string query, string key)
         {
-            var query = "Вадимович";
-
             var result = await _ctx.Search.SuggestAsync(query);
 
-            Assert.Contains(result, x => x.Key == "Семенов_Николай_Вадимович");
+            Assert.Contains(result, x => x.Key == key);
         }
 
         [Fact]
@@ -129,14 +129,14 @@ namespace Bonsai.Tests.Search
 
         [Theory]
         [InlineData("семенова", 2)]
-        [InlineData("петрович", 1)]
+        [InlineData("семенов", 5)]
         [InlineData("иванов", 3)]
         public async Task Exact_matches_go_first(string query, int count)
         {
             var result = await _ctx.Search.SuggestAsync(query);
 
             Assert.True(result.Count >= count, "result.Count >= count");
-            Assert.All(result.Take(count), x => Assert.True(x.Key.Contains(query, StringComparison.InvariantCultureIgnoreCase)));
+            Assert.All(result.Take(count), x => Assert.StartsWith(query, x.Key, StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Theory]
