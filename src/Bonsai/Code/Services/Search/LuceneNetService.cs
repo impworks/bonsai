@@ -102,6 +102,7 @@ namespace Bonsai.Code.Services.Search
             {
                 Id = Guid.Parse(document.Get("Id")),
                 Key = document.Get("Key"),
+                HighlightedTitle = document.Get("Title"),
                 PageType = (PageType) Convert.ToInt32(document.Get("PageType"))
             }).ToList();
 

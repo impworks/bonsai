@@ -130,6 +130,7 @@ namespace Bonsai.Tests.Search
         [Theory]
         [InlineData("семенова", 2)]
         [InlineData("петрович", 1)]
+        [InlineData("иванов", 3)]
         public async Task Exact_matches_go_first(string query, int count)
         {
             var result = await _ctx.Search.SuggestAsync(query);
@@ -140,6 +141,7 @@ namespace Bonsai.Tests.Search
 
         [Theory]
         [InlineData("Семенова Анна Николаевна")]
+        [InlineData("Анна Семенова")]
         [InlineData("Михайлов Олег Евгеньевич")]
         public async Task Autocomplete_doesnt_hide_while_typing(string query)
         {

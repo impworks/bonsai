@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Tests.Search.Fixtures;
 using Xunit;
@@ -55,6 +56,17 @@ namespace Bonsai.Tests.Search
 
             Assert.NotEmpty(result);
             Assert.Contains(result, x => Regex.IsMatch(x.HighlightedDescription, "<b>" + regex + "</b>", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase));
+        }
+
+        [Fact]
+        public async Task Search_considers_pagination()
+        {
+            var query = "Иванов";
+
+            var p1 = await _ctx.Search.SearchAsync(query, 0);
+            var p2 = await _ctx.Search.SearchAsync(query, 1);
+
+            Assert.Empty(p1.Select(x => x.Key).Intersect(p2.Select(x => x.Key)));
         }
     }
 }
