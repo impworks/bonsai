@@ -60,6 +60,8 @@ namespace Bonsai.Code.Services.Search
 
         public Task<IReadOnlyList<PageDocumentSearchResult>> SearchAsync(string phrase, int page = 0)
         {
+            const int PAGE_SIZE = 24;
+            
             var searchResults = SearchIndex(phrase);
             
             // create highlighter
@@ -69,7 +71,10 @@ namespace Bonsai.Code.Services.Search
             var highlighter = new Highlighter(formatter, scorer) {TextFragmenter = new NullFragmenter()};
 
             var results = new List<PageDocumentSearchResult>();
-            foreach (var doc in searchResults.documents)
+
+            var searchResultsDocuments = searchResults.documents.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList();
+            
+            foreach (var doc in searchResultsDocuments)
             {
                 var description = doc.Get("Description");
                 var title = doc.Get("Title");
@@ -90,7 +95,7 @@ namespace Bonsai.Code.Services.Search
 
                 });
             }
-
+            
             return Task.FromResult((IReadOnlyList<PageDocumentSearchResult>) results);
         }
 
