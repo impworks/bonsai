@@ -11,6 +11,8 @@ using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Search.Highlight;
+using Lucene.Net.Search.Similarities;
+using Lucene.Net.Search.Spans;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 using Newtonsoft.Json.Linq;
@@ -138,20 +140,27 @@ namespace Bonsai.Code.Services.Search
             
             using var directoryReader = _writer.GetReader(true);
             var searcher = new IndexSearcher(directoryReader);
+            searcher.Similarity = new LMJelinekMercerSimilarity(0.2f);
 
             var words = SplitTerms(phrase).ToList();
 
             var booleanQuery = new BooleanQuery();
 
+            var fields = new [] {"Title", "Description", "Aliases"};
+
             for (int i = 0; i < words.Count; i++)
             {
-                var boostBase = words.Count - i + 1.0f;
-                booleanQuery.Add(new FuzzyQuery(new Term("Title", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
-                booleanQuery.Add(new FuzzyQuery(new Term("Description", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
-                booleanQuery.Add(new FuzzyQuery(new Term("Aliases", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
-                booleanQuery.Add(new TermQuery(new Term("Title", words[i])) { Boost = boostBase * 2 }, Occur.SHOULD);
-                booleanQuery.Add(new TermQuery(new Term("Description", words[i])) { Boost = boostBase * 2 }, Occur.SHOULD);
-                booleanQuery.Add(new TermQuery(new Term("Aliases", words[i])) { Boost = boostBase * 2 }, Occur.SHOULD);
+                var boostBase = (words.Count - i + 1.0f) * 3;
+                foreach (var f in fields)
+                {
+                    var term = new Term(f, words[i]);
+                    booleanQuery.Add(new FuzzyQuery(term, 2, 0) {Boost = boostBase}, Occur.SHOULD);
+                    var phraseQuery = new PhraseQuery();
+                    phraseQuery.Add(term);
+                    phraseQuery.Boost = boostBase * 3;
+                    phraseQuery.Slop = 2;
+                    booleanQuery.Add(phraseQuery, Occur.SHOULD);
+                }
             }
 
             if (pageTypes != null)
@@ -184,15 +193,15 @@ namespace Bonsai.Code.Services.Search
 
             static LuceneDocument()
             {
-                var indexedField = new FieldType() {IsIndexed = true, IsStored = true, IsTokenized = true };
+                var indexedField = new FieldType() {IsIndexed = true, IsStored = true, IsTokenized = true};
                 var storedField = new FieldType() {IsStored = true};
 
                 KnownFields = new Dictionary<string, Func<PageDocument, Field>>
                 {
                     { "Id", p => new Field("Id", p.Id.ToString(), storedField) },
                     { "Key", p => new Field("Key", p.Key, indexedField) },
-                    { "Title", p => new Field("Title", p.Title, indexedField) { Boost = 2 } },
-                    { "Aliases", p => new Field("Aliases", p.Aliases, indexedField) },
+                    { "Title", p => new Field("Title", p.Title, indexedField) { Boost = 500 } },
+                    { "Aliases", p => new Field("Aliases", p.Aliases, indexedField) { Boost = 250 } },
                     { "PageType", p => new Field("PageType", p.PageType.ToString(), storedField) },
                     { "Description", p => new Field("Description", p.Description, indexedField) },
                 };
