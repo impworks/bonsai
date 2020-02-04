@@ -145,10 +145,13 @@ namespace Bonsai.Code.Services.Search
 
             for (int i = 0; i < words.Count; i++)
             {
-                var boostBase = words.Count - i + 1;
+                var boostBase = words.Count - i + 1.0f;
                 booleanQuery.Add(new FuzzyQuery(new Term("Title", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
                 booleanQuery.Add(new FuzzyQuery(new Term("Description", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
                 booleanQuery.Add(new FuzzyQuery(new Term("Aliases", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
+                booleanQuery.Add(new TermQuery(new Term("Title", words[i])) { Boost = boostBase * 2 }, Occur.SHOULD);
+                booleanQuery.Add(new TermQuery(new Term("Description", words[i])) { Boost = boostBase * 2 }, Occur.SHOULD);
+                booleanQuery.Add(new TermQuery(new Term("Aliases", words[i])) { Boost = boostBase * 2 }, Occur.SHOULD);
             }
 
             if (pageTypes != null)
