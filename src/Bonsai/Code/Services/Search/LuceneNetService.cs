@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
 using Lucene.Net.Analysis.Ru;
+using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
@@ -24,8 +25,7 @@ namespace Bonsai.Code.Services.Search
         public LuceneNetService()
         {
             var luceneVersion = LuceneVersion.LUCENE_48;
-            var russianAnalyzer = new RussianAnalyzer(luceneVersion);
-            var indexConfig = new IndexWriterConfig(luceneVersion, russianAnalyzer);
+            var indexConfig = new IndexWriterConfig(luceneVersion, new ClassicAnalyzer(luceneVersion));
             
             _writer = new IndexWriter(new RAMDirectory(), indexConfig);
         }
@@ -145,12 +145,10 @@ namespace Bonsai.Code.Services.Search
 
             for (int i = 0; i < words.Count; i++)
             {
-                var q1 = new FuzzyQuery(new Term("Title", words[i]), 2, 0) {Boost = words.Count * 2 + i + 1};
-                var q2 = new FuzzyQuery(new Term("Description", words[i]), 2, 0) { Boost = i + 1};
-                var q3 = new FuzzyQuery(new Term("Aliases", words[i]), 2, 0) { Boost = i + 1};
-                booleanQuery.Add(q1, Occur.SHOULD);
-                booleanQuery.Add(q2, Occur.SHOULD);
-                booleanQuery.Add(q3, Occur.SHOULD);
+                var boostBase = words.Count - i + 1;
+                booleanQuery.Add(new FuzzyQuery(new Term("Title", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
+                booleanQuery.Add(new FuzzyQuery(new Term("Description", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
+                booleanQuery.Add(new FuzzyQuery(new Term("Aliases", words[i]), 2, 0) {Boost = boostBase}, Occur.SHOULD);
             }
 
             if (pageTypes != null)
@@ -190,7 +188,7 @@ namespace Bonsai.Code.Services.Search
                 {
                     { "Id", p => new Field("Id", p.Id.ToString(), storedField) },
                     { "Key", p => new Field("Key", p.Key, indexedField) },
-                    { "Title", p => new Field("Title", p.Title, indexedField) },
+                    { "Title", p => new Field("Title", p.Title, indexedField) { Boost = 2 } },
                     { "Aliases", p => new Field("Aliases", p.Aliases, indexedField) },
                     { "PageType", p => new Field("PageType", p.PageType.ToString(), storedField) },
                     { "Description", p => new Field("Description", p.Description, indexedField) },
