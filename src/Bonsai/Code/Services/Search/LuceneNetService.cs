@@ -103,7 +103,7 @@ namespace Bonsai.Code.Services.Search
 
         public Task<IReadOnlyList<PageDocumentSearchResult>> SuggestAsync(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null)
         {
-            var searchResults = SearchIndex(phrase, pageTypes, maxCount);
+            var searchResults = SearchIndex(phrase, pageTypes, maxCount, true);
 
             var results = searchResults.documents.Select(document => new PageDocumentSearchResult
             {
@@ -134,7 +134,7 @@ namespace Bonsai.Code.Services.Search
             yield return phrase.Substring(lastI);
         }
         
-        private (TopDocs searchResults, List<Document> documents, Query booleanQuery) SearchIndex(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null)
+        private (TopDocs searchResults, List<Document> documents, Query booleanQuery) SearchIndex(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null, bool suggest = false)
         {
             phrase = phrase.ToLower();
             
@@ -155,11 +155,18 @@ namespace Bonsai.Code.Services.Search
                 {
                     var term = new Term(f, words[i]);
                     booleanQuery.Add(new FuzzyQuery(term, 2, 0) {Boost = boostBase}, Occur.SHOULD);
-                    var phraseQuery = new PhraseQuery();
-                    phraseQuery.Add(term);
-                    phraseQuery.Boost = boostBase * 3;
-                    phraseQuery.Slop = 2;
-                    booleanQuery.Add(phraseQuery, Occur.SHOULD);
+                    if (!suggest)
+                    {
+                        var phraseQuery = new PhraseQuery();
+                        phraseQuery.Add(term);
+                        phraseQuery.Boost = boostBase * 3;
+                        phraseQuery.Slop = 2;
+                        booleanQuery.Add(phraseQuery, Occur.SHOULD);
+                    }
+                    else
+                    {
+                        booleanQuery.Add(new PrefixQuery(term) { Boost = boostBase * 3 }, Occur.SHOULD);
+                    }
                 }
             }
 
