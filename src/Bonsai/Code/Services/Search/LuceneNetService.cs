@@ -5,14 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
-using Lucene.Net.Analysis.Ru;
+using Impworks.Utils.Strings;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Search.Highlight;
 using Lucene.Net.Search.Similarities;
-using Lucene.Net.Search.Spans;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 using Newtonsoft.Json.Linq;
@@ -20,6 +19,9 @@ using Page = Bonsai.Data.Models.Page;
 
 namespace Bonsai.Code.Services.Search
 {
+    /// <summary>
+    /// Fulltext search service.
+    /// </summary>
     public class LuceneNetService : ISearchEngine, IAsyncDisposable
     {
         private readonly IndexWriter _writer;
@@ -31,12 +33,21 @@ namespace Bonsai.Code.Services.Search
             
             _writer = new IndexWriter(new RAMDirectory(), indexConfig);
         }
-        
+
+        #region ISearchEngine implementation
+
+        /// <summary>
+        /// Sets up the service (not needed in this implementation).
+        /// </summary>
+        /// <returns></returns>
         public Task InitializeAsync()
         {
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Adds a new page to the index.
+        /// </summary>
         public Task AddPageAsync(Page page)
         {
             var luceneDoc = new LuceneDocument(page);
@@ -45,6 +56,9 @@ namespace Bonsai.Code.Services.Search
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Removes a page from the index.
+        /// </summary>
         public Task RemovePageAsync(Page page)
         {
             var query = new TermQuery(new Term("Id", page.Id.ToString()));
@@ -53,6 +67,9 @@ namespace Bonsai.Code.Services.Search
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Removes all data from the index.
+        /// </summary>
         public Task ClearDataAsync()
         {
             _writer.DeleteAll();
@@ -60,32 +77,33 @@ namespace Bonsai.Code.Services.Search
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Returns the search results when the search is actually executed.
+        /// </summary>
         public Task<IReadOnlyList<PageDocumentSearchResult>> SearchAsync(string phrase, int page = 0)
         {
             const int PAGE_SIZE = 24;
             
-            var searchResults = SearchIndex(phrase);
+            var (documents, query) = SearchIndex(phrase);
             
-            // create highlighter
             var formatter = new SimpleHTMLFormatter("<b>", "</b>");
-            var scorer = new QueryScorer(searchResults.booleanQuery);
-
-            var highlighter = new Highlighter(formatter, scorer) {TextFragmenter = new NullFragmenter()};
+            var scorer = new QueryScorer(query);
+            var highlighter = new Highlighter(formatter, scorer) { TextFragmenter = new SimpleSpanFragmenter(scorer, 150) };
 
             var results = new List<PageDocumentSearchResult>();
 
-            var searchResultsDocuments = searchResults.documents.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList();
+            var searchResultsDocuments = documents.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList();
             
             foreach (var doc in searchResultsDocuments)
             {
                 var description = doc.Get("Description");
                 var title = doc.Get("Title");
 
-                using var descriptionStream = _writer.Analyzer.GetTokenStream("Description", new StringReader(description));
-                var highlightedDescription = highlighter.GetBestFragments(descriptionStream, description, 50).JoinString(", ");
-                
-                using var titleStream =  _writer.Analyzer.GetTokenStream("Title", new StringReader(title));
-                var highlightedTitle = highlighter.GetBestFragments(titleStream, title, 50).JoinString(", ");
+                using var descriptionStream = _writer.Analyzer.GetTokenStream("Description", description);
+                var highlightedDescription = highlighter.GetBestFragments(descriptionStream, description, 1).FirstOrDefault() ?? "";
+
+                using var titleStream =  _writer.Analyzer.GetTokenStream("Title", title);
+                var highlightedTitle = highlighter.GetBestFragments(titleStream, title, 1).FirstOrDefault() ?? "";
 
                 results.Add(new PageDocumentSearchResult
                 {
@@ -93,48 +111,62 @@ namespace Bonsai.Code.Services.Search
                     Key = doc.Get("Key"),
                     PageType = (PageType) Convert.ToInt32(doc.Get("PageType")),
                     HighlightedTitle = highlightedTitle,
-                    HighlightedDescription = highlightedDescription
-
+                    HighlightedDescription = WrapHighlight(highlightedDescription, description)
                 });
             }
             
             return Task.FromResult((IReadOnlyList<PageDocumentSearchResult>) results);
         }
 
+        /// <summary>
+        /// Returns the suggestion list for the search field.
+        /// </summary>
         public Task<IReadOnlyList<PageDocumentSearchResult>> SuggestAsync(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null)
         {
-            var searchResults = SearchIndex(phrase, pageTypes, maxCount, true);
+            var (documents, _) = SearchIndex(phrase, pageTypes, maxCount, true);
 
-            var results = searchResults.documents.Select(document => new PageDocumentSearchResult
+            var results = documents.Select(document => new PageDocumentSearchResult
             {
                 Id = Guid.Parse(document.Get("Id")),
                 Key = document.Get("Key"),
-                HighlightedTitle = document.Get("Title"),
+                HighlightedTitle = document.Get("Title"), // todo: highlight here and use on the client
                 PageType = (PageType) Convert.ToInt32(document.Get("PageType"))
             }).ToList();
 
             return Task.FromResult((IReadOnlyList<PageDocumentSearchResult>) results);        
         }
 
+        #endregion
+
+        #region Private helpers
+
+        /// <summary>
+        /// Partitions the search phrase to separate terms.
+        /// </summary>
+        /// <param name="phrase"></param>
+        /// <returns></returns>
         private IEnumerable<string> SplitTerms(string phrase)
         {
-            int i = 0;
             var lastI = 0;
-            for (i = 0; i < phrase.Length; i++)
+            for (var i = 0; i < phrase.Length; i++)
             {
-                if (!char.IsLetter(phrase[i]))
-                {
-                    var substring = phrase.Substring(lastI, i - lastI);
-                    if (!string.IsNullOrWhiteSpace(substring))
-                        yield return substring;
-                    lastI = i + 1;
-                }
+                if (char.IsLetter(phrase[i]))
+                    continue;
+
+                var substring = phrase.Substring(lastI, i - lastI);
+                if (!string.IsNullOrWhiteSpace(substring))
+                    yield return substring;
+
+                lastI = i + 1;
             }
 
             yield return phrase.Substring(lastI);
         }
         
-        private (TopDocs searchResults, List<Document> documents, Query booleanQuery) SearchIndex(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null, bool suggest = false)
+        /// <summary>
+        /// Executes the search query.
+        /// </summary>
+        private (List<Document> documents, Query booleanQuery) SearchIndex(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null, bool suggest = false)
         {
             phrase = phrase.ToLower();
             
@@ -175,33 +207,46 @@ namespace Bonsai.Code.Services.Search
                 var pageTypesQueries = pageTypes.Select(v => new TermQuery(new Term("PageType", ((int) v).ToString())));
 
                 foreach (var pageTypesQuery in pageTypesQueries)
-                {
                     booleanQuery.Add(pageTypesQuery, Occur.MUST);
-                }
             }
 
-            var searchResults = searcher.Search(booleanQuery, maxCount ?? Int32.MaxValue);
+            var searchResults = searcher.Search(booleanQuery, maxCount ?? int.MaxValue);
             var documents = searchResults.ScoreDocs.Select(v => directoryReader.Document(v.Doc)).ToList();
             
-            return (searchResults, documents, booleanQuery);
+            return (documents, booleanQuery);
         }
-        
-        
 
+        private string WrapHighlight(string highlighted, string actual)
+        {
+            var bare = highlighted.Replace("<b>", "").Replace("</b>", "");
+            var startEllipsis = !actual.StartsWithPart(bare, 10);
+            var endEllipsis = !actual.EndsWithPart(bare, 10);
+
+            return (startEllipsis ? "..." : "") + highlighted + (endEllipsis ? "..." : "");
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Releases the associated resources.
+        /// </summary>
         public ValueTask DisposeAsync()
         {
             _writer.Dispose();
             return new ValueTask(Task.CompletedTask);
         }
 
+        #region LuceneDocument helper class
+
+        /// <summary>
+        /// Map between PageDocument and Lucene's internal representation.
+        /// </summary>
         private class LuceneDocument
         {
-            public static readonly Dictionary<string, Func<PageDocument, Field>> KnownFields;
-
             static LuceneDocument()
             {
-                var indexedField = new FieldType() {IsIndexed = true, IsStored = true, IsTokenized = true};
-                var storedField = new FieldType() {IsStored = true};
+                var indexedField = new FieldType {IsIndexed = true, IsStored = true, IsTokenized = true};
+                var storedField = new FieldType {IsStored = true};
 
                 KnownFields = new Dictionary<string, Func<PageDocument, Field>>
                 {
@@ -213,7 +258,6 @@ namespace Bonsai.Code.Services.Search
                     { "Description", p => new Field("Description", p.Description, indexedField) },
                 };
             }
-
 
             public LuceneDocument(Page page)
             {
@@ -230,6 +274,14 @@ namespace Bonsai.Code.Services.Search
                 Fields = KnownFields.Values.Select(v => v(doc)).ToList();
             }
 
+            /// <summary>
+            /// Field names and descriptions.
+            /// </summary>
+            public static readonly Dictionary<string, Func<PageDocument, Field>> KnownFields;
+
+            /// <summary>
+            /// Values of a particular page's fields.
+            /// </summary>
             public IEnumerable<IIndexableField> Fields { get; }
          
             /// <summary>
@@ -265,5 +317,7 @@ namespace Bonsai.Code.Services.Search
                 return aliases.Distinct();
             }
         }
+
+        #endregion
     }
 }
