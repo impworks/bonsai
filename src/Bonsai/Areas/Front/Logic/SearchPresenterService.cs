@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Search;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data;
-using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Front.Logic
@@ -51,7 +48,8 @@ namespace Bonsai.Areas.Front.Logic
                           {
                               Id = x.Id,
                               Key = x.Key,
-                              Title = x.HighlightedTitle,
+                              Title = x.Title,
+                              HighlightedTitle = x.HighlightedTitle,
                               Type = details[x.Id].PageType,
                               DescriptionExcerpt = x.HighlightedDescription,
                               MainPhotoPath = details[x.Id].FilePath,
@@ -72,10 +70,14 @@ namespace Bonsai.Areas.Front.Logic
 
             var results = await _search.SuggestAsync(q);
 
-            if(results.Count == 0)
-                Console.WriteLine("Foo");
-
-            return results.Select(x => new PageTitleVM { Id = x.Id, Title = x.HighlightedTitle, Key = x.Key, Type = x.PageType})
+            return results.Select(x => new SearchResultVM
+                          {
+                              Id = x.Id,
+                              Title = x.Title,
+                              HighlightedTitle = x.HighlightedTitle,
+                              Key = x.Key,
+                              Type = x.PageType
+                          })
                           .ToList();
         }
     }

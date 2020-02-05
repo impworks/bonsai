@@ -30,8 +30,8 @@ namespace Bonsai.Areas.Front.Controllers
         /// Returns the global search's autocomplete results.
         /// </summary>
         [HttpGet]
-        [Route("~/util/search/{*query}")]
-        public async Task<IReadOnlyList<PageTitleVM>> Autocomplete(string query)
+        [Route("~/util/suggest/{*query}")]
+        public async Task<IReadOnlyList<PageTitleVM>> Suggest(string query)
         {
             var hints = await _search.SuggestAsync(query);
             return hints;

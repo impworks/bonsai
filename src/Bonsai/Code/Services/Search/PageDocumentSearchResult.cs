@@ -14,6 +14,7 @@ namespace Bonsai.Code.Services.Search
         public string Key { get; set; }
         public PageType PageType { get; set; }
 
+        public string Title { get; set; }
         public string HighlightedTitle { get; set; }
         public string HighlightedDescription { get; set; }
     }

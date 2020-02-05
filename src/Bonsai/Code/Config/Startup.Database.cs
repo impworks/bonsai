@@ -91,7 +91,7 @@ namespace Bonsai.Code.Config
 
                     await search.InitializeAsync();
 
-                    var pages = await db.Pages.ToListAsync();
+                    var pages = await db.Pages.Include(x => x.Aliases).ToListAsync();
                     foreach (var page in pages)
                         await search.AddPageAsync(page);
                 });

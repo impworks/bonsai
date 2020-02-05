@@ -8,6 +8,11 @@ namespace Bonsai.Areas.Front.ViewModels.Search
     public class SearchResultVM: PageTitleExtendedVM
     {
         /// <summary>
+        /// Page title with matched elements highlighted.
+        /// </summary>
+        public string HighlightedTitle { get; set; }
+
+        /// <summary>
         /// A portion of the page's description that matches the query.
         /// </summary>
         public string DescriptionExcerpt { get; set; }

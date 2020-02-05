@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
@@ -15,6 +16,7 @@ using Lucene.Net.Store;
 using Lucene.Net.Util;
 using Newtonsoft.Json.Linq;
 using Page = Bonsai.Data.Models.Page;
+using StringHelper = Impworks.Utils.Strings.StringHelper;
 
 namespace Bonsai.Code.Services.Search
 {
@@ -84,37 +86,21 @@ namespace Bonsai.Code.Services.Search
             const int PAGE_SIZE = 24;
             
             var (documents, query) = SearchIndex(phrase);
-            
-            var formatter = new SimpleHTMLFormatter("<b>", "</b>");
-            var scorer = new QueryScorer(query);
-            var highlighter = new Highlighter(formatter, scorer) { TextFragmenter = new SimpleSpanFragmenter(scorer, 150) };
-
-            var results = new List<PageDocumentSearchResult>();
+            var highlighter = CreateHighlighter(query);
 
             var searchResultsDocuments = documents.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList();
             
-            foreach (var doc in searchResultsDocuments)
+            var results = searchResultsDocuments.Select(doc => new PageDocumentSearchResult
             {
-                var description = doc.Get("Description");
-                var title = doc.Get("Title");
+                Id = Guid.Parse(doc.Get("Id")),
+                Key = doc.Get("Key"),
+                PageType = (PageType) Convert.ToInt32(doc.Get("PageType")),
+                Title = doc.Get("Title"),
+                HighlightedTitle = Highlight(doc, "Title", highlighter),
+                HighlightedDescription = Highlight(doc, "Description", highlighter, true)
+            });
 
-                using var descriptionStream = _writer.Analyzer.GetTokenStream("Description", description);
-                var highlightedDescription = highlighter.GetBestFragments(descriptionStream, description, 1).FirstOrDefault() ?? "";
-
-                using var titleStream =  _writer.Analyzer.GetTokenStream("Title", title);
-                var highlightedTitle = highlighter.GetBestFragments(titleStream, title, 1).FirstOrDefault() ?? "";
-
-                results.Add(new PageDocumentSearchResult
-                {
-                    Id = Guid.Parse(doc.Get("Id")),
-                    Key = doc.Get("Key"),
-                    PageType = (PageType) Convert.ToInt32(doc.Get("PageType")),
-                    HighlightedTitle = highlightedTitle,
-                    HighlightedDescription = WrapHighlight(highlightedDescription, description)
-                });
-            }
-            
-            return Task.FromResult((IReadOnlyList<PageDocumentSearchResult>) results);
+            return Task.FromResult(results.ToReadOnlyList());
         }
 
         /// <summary>
@@ -122,17 +108,19 @@ namespace Bonsai.Code.Services.Search
         /// </summary>
         public Task<IReadOnlyList<PageDocumentSearchResult>> SuggestAsync(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null)
         {
-            var (documents, _) = SearchIndex(phrase, pageTypes, maxCount, true);
+            var (documents, query) = SearchIndex(phrase, pageTypes, maxCount, true);
+            var highlighter = CreateHighlighter(query);
 
-            var results = documents.Select(document => new PageDocumentSearchResult
+            var results = documents.Select(doc => new PageDocumentSearchResult
             {
-                Id = Guid.Parse(document.Get("Id")),
-                Key = document.Get("Key"),
-                HighlightedTitle = document.Get("Title"), // todo: highlight here and use on the client
-                PageType = (PageType) Convert.ToInt32(document.Get("PageType"))
-            }).ToList();
+                Id = Guid.Parse(doc.Get("Id")),
+                Key = doc.Get("Key"),
+                Title = doc.Get("Title"),
+                HighlightedTitle = Highlight(doc, "Title", highlighter),
+                PageType = (PageType) Convert.ToInt32(doc.Get("PageType"))
+            });
 
-            return Task.FromResult((IReadOnlyList<PageDocumentSearchResult>) results);        
+            return Task.FromResult(results.ToReadOnlyList());
         }
 
         #endregion
@@ -142,8 +130,6 @@ namespace Bonsai.Code.Services.Search
         /// <summary>
         /// Partitions the search phrase to separate terms.
         /// </summary>
-        /// <param name="phrase"></param>
-        /// <returns></returns>
         private IEnumerable<string> SplitTerms(string phrase)
         {
             var lastI = 0;
@@ -179,7 +165,7 @@ namespace Bonsai.Code.Services.Search
 
             var fields = new [] {"Title", "Description", "Aliases"};
 
-            for (int i = 0; i < words.Count; i++)
+            for (var i = 0; i < words.Count; i++)
             {
                 var boostBase = (words.Count - i + 1.0f) * 3;
                 foreach (var f in fields)
@@ -215,13 +201,37 @@ namespace Bonsai.Code.Services.Search
             return (documents, booleanQuery);
         }
 
-        private string WrapHighlight(string highlighted, string actual)
+        /// <summary>
+        /// Highlights the found value in source text.
+        /// </summary>
+        private string Highlight(Document doc, string field, Highlighter highlighter, bool wrap = false)
         {
-            var bare = highlighted.Replace("<b>", "").Replace("</b>", "");
-            var startEllipsis = !actual.StartsWithPart(bare, 10);
-            var endEllipsis = !actual.EndsWithPart(bare, 10);
+            var value = doc.Get(field);
+            if (string.IsNullOrEmpty(value))
+                return "";
 
-            return (startEllipsis ? "..." : "") + highlighted + (endEllipsis ? "..." : "");
+            using var stream = _writer.Analyzer.GetTokenStream(field, value);
+            var highlightedValue = StringHelper.Coalesce(highlighter.GetBestFragment(stream, value), value);
+            return wrap ? WrapHighlight(highlightedValue, value) : highlightedValue;
+
+            string WrapHighlight(string highlighted, string actual)
+            {
+                var bare = highlighted.Replace("<b>", "").Replace("</b>", "");
+                var startEllipsis = !actual.StartsWithPart(bare, 10);
+                var endEllipsis = !actual.EndsWithPart(bare, 10);
+
+                return (startEllipsis ? "..." : "") + highlighted + (endEllipsis ? "..." : "");
+            }
+        }
+
+        /// <summary>
+        /// Creates a highlighter for current query.
+        /// </summary>
+        private Highlighter CreateHighlighter(Query query)
+        {
+            var formatter = new SimpleHTMLFormatter("<b>", "</b>");
+            var scorer = new QueryScorer(query);
+            return new Highlighter(formatter, scorer) { TextFragmenter = new SimpleSpanFragmenter(scorer, 150) };
         }
 
         #endregion
