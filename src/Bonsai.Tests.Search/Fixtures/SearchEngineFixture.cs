@@ -40,7 +40,10 @@ namespace Bonsai.Tests.Search.Fixtures
             await Search.ClearDataAsync();
 
             var seedPath = Path.Combine(rootPath, "..", "..", "..", "..", "Bonsai", "Data", "Utils", "Seed");
-            await SeedData.EnsureSampleDataSeededAsync(Db, Search, seedPath);
+            await SeedData.EnsureSampleDataSeededAsync(Db, seedPath);
+
+            await foreach (var page in Db.Pages)
+                await Search.AddPageAsync(page);
         }
 
         /// <summary>

@@ -6,7 +6,6 @@
     public class StaticConfig
     {
         public ConnectionStringsConfig ConnectionStrings { get; set; }
-        public ElasticSearchConfig ElasticSearch { get; set; }
         public SeedDataConfig SeedData { get; set; }
         public DebugConfig Debug { get; set; }
         public WebServerConfig WebServer { get; set; }
@@ -20,16 +19,7 @@
     {
         public string Database { get; set; }
     }
-
-    /// <summary>
-    /// ElasticSearch backend properties.
-    /// </summary>
-    public class ElasticSearchConfig
-    {
-        public string Host { get; set; }
-        public string IndexName { get; set; }
-    }
-
+    
     /// <summary>
     /// Test data seeding properties.
     /// </summary>
@@ -37,7 +27,6 @@
     {
         public bool Enable { get; set; }
         public bool ClearAll { get; set; }
-        public bool ResetElastic { get; set; }
     }
 
     /// <summary>

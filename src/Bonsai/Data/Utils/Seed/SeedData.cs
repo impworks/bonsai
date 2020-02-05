@@ -15,9 +15,9 @@ namespace Bonsai.Data.Utils.Seed
         /// <summary>
         /// Seeds sample data.
         /// </summary>
-        public static async Task EnsureSampleDataSeededAsync(AppDbContext db, ISearchEngine search, string rootPath = null)
+        public static async Task EnsureSampleDataSeededAsync(AppDbContext db, string rootPath = null)
         {
-            var ctx = new SeedContext(db, search, rootPath);
+            var ctx = new SeedContext(db, rootPath);
 
             var root = ctx.AddPage("Иванов Иван Петрович", true, "1990.01.01", descrSource: "SampleDescription.md", factsSource: "SampleHumanFacts.json");
             root.MainPhoto = ctx.AddPhoto("1.jpg");

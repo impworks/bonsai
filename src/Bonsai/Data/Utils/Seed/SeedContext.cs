@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
-using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
@@ -21,17 +20,13 @@ namespace Bonsai.Data.Utils.Seed
     /// </summary>
     public class SeedContext
     {
-        public SeedContext(AppDbContext db, ISearchEngine search, string rootPath = null)
+        public SeedContext(AppDbContext db, string rootPath = null)
         {
             _db = db;
-            _search = search;
             _rootPath = StringHelper.Coalesce(rootPath, Path.Combine(Path.GetFullPath(Directory.GetCurrentDirectory()), "Data", "Utils", "Seed"));
-            _pages = new List<Page>();
         }
 
         private readonly AppDbContext _db;
-        private readonly ISearchEngine _search;
-        private readonly List<Page> _pages;
         private readonly string _rootPath;
 
         /// <summary>
@@ -100,8 +95,6 @@ namespace Bonsai.Data.Utils.Seed
             };
             _db.Pages.Add(page);
             _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Key = key.ToLowerInvariant(), Title = title, Page = page});
-
-            _pages.Add(page);
 
             return page;
         }
@@ -242,9 +235,6 @@ namespace Bonsai.Data.Utils.Seed
         public async Task SaveAsync()
         {
             await _db.SaveChangesAsync();
-
-            foreach (var page in _pages)
-                await _search.AddPageAsync(page);
         }
 
         /// <summary>

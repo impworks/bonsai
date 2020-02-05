@@ -63,38 +63,38 @@ namespace Bonsai.Code.Config
                 }
             );
 
-            if (seedConfig.ClearAll || seedConfig.ResetElastic)
-            {
-                tasks = tasks.ContinueWith(
-                    "ElasticClear",
-                    "Очистка поискового индекса",
-                    async () => await sp.GetService<ISearchEngine>().ClearDataAsync()
-                );
-            }
-
             if (seedConfig.ClearAll)
             {
                 tasks = tasks.ContinueWith(
                     "DatabaseClear",
                     "Очистка базы данных",
-                    async () => await SeedData.ClearPreviousDataAsync(sp.GetService<AppDbContext>())
+                    () => SeedData.ClearPreviousDataAsync(sp.GetService<AppDbContext>())
                 );
             }
-
-            tasks = tasks.ContinueWith(
-                "ElasticInit",
-                "Подготовка поискового индекса",
-                async () => await sp.GetService<ISearchEngine>().InitializeAsync()
-            );
 
             if (seedConfig.Enable)
             {
                 tasks = tasks.ContinueWith(
                     "DatabaseSeed",
                     "Подготовка тестовых данных",
-                    async () => await SeedData.EnsureSampleDataSeededAsync(sp.GetService<AppDbContext>(), sp.GetService<ISearchEngine>())
+                    () => SeedData.EnsureSampleDataSeededAsync(sp.GetService<AppDbContext>())
                 );
             }
+
+            tasks = tasks.ContinueWith(
+                "FullTextIndexInit",
+                "Подготовка поискового индекса",
+                async () =>
+                {
+                    var search = sp.GetService<ISearchEngine>();
+                    var db = sp.GetService<AppDbContext>();
+
+                    await search.InitializeAsync();
+
+                    var pages = await db.Pages.ToListAsync();
+                    foreach (var page in pages)
+                        await search.AddPageAsync(page);
+                });
 
             tasks.ContinueWith("Finalize", "", async () => scope.Dispose());
         }

@@ -10,8 +10,7 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureSearchServices(IServiceCollection services)
         {
-            services.AddSingleton(Configuration.ElasticSearch);
-            services.AddScoped<ISearchEngine, ElasticService>();
+            services.AddSingleton<ISearchEngine, LuceneNetService>();
         }
     }
 }
