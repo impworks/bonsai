@@ -217,7 +217,11 @@ namespace Bonsai.Areas.Admin.Logic
                 media.IsDeleted = false;
 
             _db.MediaTags.RemoveRange(media.Tags);
-            media.Tags = await DeserializeTagsAsync(vm);
+            foreach (var tag in DeserializeTags(vm))
+            {
+                tag.Media = media;
+                _db.MediaTags.Add(tag);
+            }
 
             await ClearCacheAsync(media, prevTags);
         }
@@ -320,7 +324,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Creates tag elements.
         /// </summary>
-        private async Task<ICollection<MediaTag>> DeserializeTagsAsync(MediaEditorVM vm)
+        private ICollection<MediaTag> DeserializeTags(MediaEditorVM vm)
         {
             var tags = JsonConvert.DeserializeObject<IEnumerable<MediaTagVM>>(vm.DepictedEntities ?? "[]")
                                   .Select(x => new MediaTag
