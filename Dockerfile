@@ -1,21 +1,22 @@
 FROM node:lts-alpine as node
-WORKDIR /build
+WORKDIR /build/Bonsai
 
-ADD package.json .
-ADD package-lock.json .
+ADD src/Bonsai/package.json .
+ADD src/Bonsai/package-lock.json .
 RUN npm ci
-ADD . .
+ADD src/Bonsai .
 RUN node_modules/.bin/gulp build
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as net-builder
 WORKDIR /build
-ADD Bonsai.sln .
-ADD Bonsai.csproj .
+ADD src/Bonsai.sln .
+ADD src/Bonsai/Bonsai.csproj Bonsai/
+ADD src/Bonsai.Tests.Search/Bonsai.Tests.Search.csproj Bonsai.Tests.Search/
 
 RUN dotnet restore
-
 COPY --from=node /build .
-RUN dotnet publish --output ../out/ --configuration Release --runtime linux-x64 Bonsai.csproj
+
+RUN dotnet publish --output ../out/ --configuration Release --runtime linux-x64 Bonsai/Bonsai.csproj
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 

@@ -26,15 +26,9 @@ A family wiki and photoalbum engine (in Russian).
 <a href="https://user-images.githubusercontent.com/604496/46574268-43443680-c9a9-11e8-974f-f8a60fbeaa74.png"><img src="https://user-images.githubusercontent.com/604496/46574297-a504a080-c9a9-11e8-8612-d3e5cd1592a4.png" /></a>
 
 ## Installation via Docker
-1. Modify your `vm.max_map_count` to at least 262,144 for ElasticSearch to start:
+1. Download the [docker-compose](docker-compose.yml).
 
-    ```
-    sysctl -w vm.max_map_count=262144
-    ```
-
-2. Download the [docker-compose](docker-compose.yml).
-
-3. _Optional_: 
+2. _Optional_: 
 
     Configure your Bonsai instance to use HTTPS and external auth for better security.
     This requires a bit of work, so if you are just playing around you can skip this step.
@@ -50,27 +44,22 @@ A family wiki and photoalbum engine (in Russian).
     * Uncomment two lines with ``Host(`@@DOMAIN@@`)``
     * Comment two lines with ``PathPrefix(`/`)`` 
 
-4. Bring everything up using `docker compose`:
+3. Bring everything up using `docker compose`:
    ```
    docker-compose up -d
    ```
-5. After everything is brought up Bonsai will listen on ports 80 and 443.
+4. After everything is brought up Bonsai will listen on ports 80 and 443.
 
 ## Development (on Windows)
 
 For development, you will need the following:
 
-* [.NET Core 2.1](https://dotnet.microsoft.com/download/dotnet-core/2.1): the main runtime for Bonsai
-* [Java 8+](https://java.com/en/download/windows-64bit.jsp): required for ElasticSearch
+* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1): the main runtime for Bonsai
 
 1. Install [NodeJS](https://nodejs.org/en/) (10+)
 2. Install [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
-3. Install [ElasticSearch 5.6.x](https://www.elastic.co/downloads/past-releases) (6.0 is not supported yet)
-4. Install [Russian Morphology](https://github.com/imotov/elasticsearch-analysis-morphology) for ElasticSearch.
-   
-   If you're getting a "Syntax of the command is incorrect" error during this step, make sure you have a `JAVA_HOME` environment variable defined.
-5. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
-6. Create a file called `appsettings.Development.json`, add the connection string:
+3. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
+4. Create a file called `appsettings.Development.json`, add the connection string:
 
     ```
     {
@@ -83,7 +72,7 @@ For development, you will need the following:
     }
     ```
 
-7. _Optional, but suggested_:
+5. _Optional, but suggested_:
 
     Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
 
@@ -113,18 +102,18 @@ For development, you will need the following:
 	}
 	```
     
-8. Create the database:
+6. Create the database:
 
     ```
     dotnet ef database update
     ```
-9. Build the styles and scripts:
+7. Build the styles and scripts:
 
     ```
     npm install
     npm run build
     ```
-10. Run the app (as Visual Studio project or using `dotnet run`).
+8. Run the app (as Visual Studio project or using `dotnet run`).
 
 ## Security considerations
 
@@ -138,8 +127,6 @@ You will need to back up the following:
 * Uploaded media in `wwwroot/media` (may contain gigabytes of data)
 
 There are many options available, free and paid: uploading to a cloud storage, copying to external drives, etc. Please consider your usage/budget and select a combination that works best for you.
-
-When restoring the database from a backup, set the `SeedData.ResetElastic` option to `true` in the config to rebuild full text search indices in sync with your current database.
 
 ### Authorization methods
 
