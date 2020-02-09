@@ -15,7 +15,6 @@ using Lucene.Net.Search.Similarities;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 using Newtonsoft.Json.Linq;
-using Page = Bonsai.Data.Models.Page;
 using StringHelper = Impworks.Utils.Strings.StringHelper;
 
 namespace Bonsai.Code.Services.Search
@@ -90,14 +89,18 @@ namespace Bonsai.Code.Services.Search
 
             var searchResultsDocuments = documents.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList();
             
-            var results = searchResultsDocuments.Select(doc => new PageDocumentSearchResult
+            var results = searchResultsDocuments.Select(doc =>
             {
-                Id = Guid.Parse(doc.Get("Id")),
-                Key = doc.Get("Key"),
-                PageType = (PageType) Convert.ToInt32(doc.Get("PageType")),
-                Title = doc.Get("Title"),
-                HighlightedTitle = Highlight(doc, "Title", highlighter),
-                HighlightedDescription = Highlight(doc, "Description", highlighter, true)
+                Enum.TryParse(doc.Get("PageType"), out PageType pt);
+                return new PageDocumentSearchResult
+                {
+                    Id = Guid.Parse(doc.Get("Id")),
+                    Key = doc.Get("Key"),
+                    PageType = pt,
+                    Title = doc.Get("Title"),
+                    HighlightedTitle = Highlight(doc, "Title", highlighter),
+                    HighlightedDescription = Highlight(doc, "Description", highlighter, true)
+                };
             });
 
             return Task.FromResult(results.ToReadOnlyList());
@@ -111,13 +114,17 @@ namespace Bonsai.Code.Services.Search
             var (documents, query) = SearchIndex(phrase, pageTypes, maxCount, true);
             var highlighter = CreateHighlighter(query);
 
-            var results = documents.Select(doc => new PageDocumentSearchResult
+            var results = documents.Select(doc =>
             {
-                Id = Guid.Parse(doc.Get("Id")),
-                Key = doc.Get("Key"),
-                Title = doc.Get("Title"),
-                HighlightedTitle = Highlight(doc, "Title", highlighter),
-                PageType = (PageType) Convert.ToInt32(doc.Get("PageType"))
+                Enum.TryParse(doc.Get("PageType"), out PageType pt);
+                return new PageDocumentSearchResult
+                {
+                    Id = Guid.Parse(doc.Get("Id")),
+                    Key = doc.Get("Key"),
+                    Title = doc.Get("Title"),
+                    HighlightedTitle = Highlight(doc, "Title", highlighter),
+                    PageType = pt
+                };
             });
 
             return Task.FromResult(results.ToReadOnlyList());
@@ -192,7 +199,7 @@ namespace Bonsai.Code.Services.Search
                 var subquery = new BooleanQuery {MinimumNumberShouldMatch = 1};
                 foreach (var type in pageTypes)
                 {
-                    var typeValue = ((int) type).ToString();
+                    var typeValue = type.ToString().ToLower();
                     var termQuery = new TermQuery(new Term("PageType", typeValue));
                     subquery.Add(termQuery, Occur.SHOULD);
                 }
@@ -259,38 +266,28 @@ namespace Bonsai.Code.Services.Search
             static LuceneDocument()
             {
                 var indexedField = new FieldType {IsIndexed = true, IsStored = true, IsTokenized = true};
-                var storedField = new FieldType {IsStored = true};
+                var storedField = new FieldType {IsStored = true, IsIndexed = true};
 
-                KnownFields = new Dictionary<string, Func<PageDocument, Field>>
+                KnownFields = new Dictionary<string, Func<Page, Field>>
                 {
                     { "Id", p => new Field("Id", p.Id.ToString(), storedField) },
                     { "Key", p => new Field("Key", p.Key, indexedField) },
                     { "Title", p => new Field("Title", p.Title, indexedField) { Boost = 500 } },
-                    { "Aliases", p => new Field("Aliases", p.Aliases, indexedField) { Boost = 250 } },
-                    { "PageType", p => new Field("PageType", p.PageType.ToString(), storedField) },
-                    { "Description", p => new Field("Description", p.Description, indexedField) },
+                    { "Aliases", p => new Field("Aliases", GetPageAliases(p).JoinString(", "), indexedField) { Boost = 250 } },
+                    { "PageType", p => new Field("PageType", p.Type.ToString(), storedField) },
+                    { "Description", p => new Field("Description", MarkdownService.Strip(p.Description), indexedField) }
                 };
             }
 
             public LuceneDocument(Page page)
             {
-                var doc = new PageDocument
-                {
-                    Id = page.Id,
-                    Key = page.Key,
-                    Title = page.Title,
-                    Aliases = GetPageAliases(page).JoinString(", "),
-                    PageType = (int) page.Type,
-                    Description = MarkdownService.Strip(page.Description),
-                };
-
-                Fields = KnownFields.Values.Select(v => v(doc)).ToList();
+                Fields = KnownFields.Values.Select(v => v(page)).ToList();
             }
 
             /// <summary>
             /// Field names and descriptions.
             /// </summary>
-            public static readonly Dictionary<string, Func<PageDocument, Field>> KnownFields;
+            public static readonly Dictionary<string, Func<Page, Field>> KnownFields;
 
             /// <summary>
             /// Values of a particular page's fields.
@@ -300,7 +297,7 @@ namespace Bonsai.Code.Services.Search
             /// <summary>
             /// Returns all aliases known for a page (including previous names).
             /// </summary>
-            private IEnumerable<string> GetPageAliases(Page page)
+            private static IEnumerable<string> GetPageAliases(Page page)
             {
                 var aliases = page.Aliases.Select(x => x.Title).ToList();
 
