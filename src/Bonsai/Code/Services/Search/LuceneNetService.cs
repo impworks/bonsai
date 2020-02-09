@@ -15,7 +15,6 @@ using Lucene.Net.Search.Similarities;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 using Newtonsoft.Json.Linq;
-using Page = Bonsai.Data.Models.Page;
 using StringHelper = Impworks.Utils.Strings.StringHelper;
 
 namespace Bonsai.Code.Services.Search
@@ -269,36 +268,26 @@ namespace Bonsai.Code.Services.Search
                 var indexedField = new FieldType {IsIndexed = true, IsStored = true, IsTokenized = true};
                 var storedField = new FieldType {IsStored = true, IsIndexed = true};
 
-                KnownFields = new Dictionary<string, Func<PageDocument, Field>>
+                KnownFields = new Dictionary<string, Func<Page, Field>>
                 {
                     { "Id", p => new Field("Id", p.Id.ToString(), storedField) },
                     { "Key", p => new Field("Key", p.Key, indexedField) },
                     { "Title", p => new Field("Title", p.Title, indexedField) { Boost = 500 } },
-                    { "Aliases", p => new Field("Aliases", p.Aliases, indexedField) { Boost = 250 } },
-                    { "PageType", p => new Field("PageType", ((PageType)p.PageType).ToString(), storedField) },
-                    { "Description", p => new Field("Description", p.Description, indexedField) },
+                    { "Aliases", p => new Field("Aliases", GetPageAliases(p).JoinString(", "), indexedField) { Boost = 250 } },
+                    { "PageType", p => new Field("PageType", p.Type.ToString(), storedField) },
+                    { "Description", p => new Field("Description", MarkdownService.Strip(p.Description), indexedField) }
                 };
             }
 
             public LuceneDocument(Page page)
             {
-                var doc = new PageDocument
-                {
-                    Id = page.Id,
-                    Key = page.Key,
-                    Title = page.Title,
-                    Aliases = GetPageAliases(page).JoinString(", "),
-                    PageType = (int) page.Type,
-                    Description = MarkdownService.Strip(page.Description),
-                };
-
-                Fields = KnownFields.Values.Select(v => v(doc)).ToList();
+                Fields = KnownFields.Values.Select(v => v(page)).ToList();
             }
 
             /// <summary>
             /// Field names and descriptions.
             /// </summary>
-            public static readonly Dictionary<string, Func<PageDocument, Field>> KnownFields;
+            public static readonly Dictionary<string, Func<Page, Field>> KnownFields;
 
             /// <summary>
             /// Values of a particular page's fields.
@@ -308,7 +297,7 @@ namespace Bonsai.Code.Services.Search
             /// <summary>
             /// Returns all aliases known for a page (including previous names).
             /// </summary>
-            private IEnumerable<string> GetPageAliases(Page page)
+            private static IEnumerable<string> GetPageAliases(Page page)
             {
                 var aliases = page.Aliases.Select(x => x.Title).ToList();
 
