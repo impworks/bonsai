@@ -153,7 +153,7 @@ namespace Bonsai.Code.Services.Search
         /// </summary>
         private (List<Document> documents, Query booleanQuery) SearchIndex(string phrase, IReadOnlyList<PageType> pageTypes = null, int? maxCount = null, bool suggest = false)
         {
-            phrase = phrase.ToLower();
+            phrase = (phrase ?? "").ToLower();
             
             using var directoryReader = _writer.GetReader(true);
             var searcher = new IndexSearcher(directoryReader);
@@ -189,10 +189,14 @@ namespace Bonsai.Code.Services.Search
 
             if (pageTypes != null)
             {
-                var pageTypesQueries = pageTypes.Select(v => new TermQuery(new Term("PageType", ((int) v).ToString())));
-
-                foreach (var pageTypesQuery in pageTypesQueries)
-                    booleanQuery.Add(pageTypesQuery, Occur.MUST);
+                var subquery = new BooleanQuery {MinimumNumberShouldMatch = 1};
+                foreach (var type in pageTypes)
+                {
+                    var typeValue = ((int) type).ToString();
+                    var termQuery = new TermQuery(new Term("PageType", typeValue));
+                    subquery.Add(termQuery, Occur.SHOULD);
+                }
+                booleanQuery.Add(subquery, Occur.MUST);
             }
 
             var searchResults = searcher.Search(booleanQuery, maxCount ?? int.MaxValue);
@@ -276,7 +280,7 @@ namespace Bonsai.Code.Services.Search
                     Key = page.Key,
                     Title = page.Title,
                     Aliases = GetPageAliases(page).JoinString(", "),
-                    PageType = (int)page.Type,
+                    PageType = (int) page.Type,
                     Description = MarkdownService.Strip(page.Description),
                 };
 

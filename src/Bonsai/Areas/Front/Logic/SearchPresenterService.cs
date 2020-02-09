@@ -68,7 +68,7 @@ namespace Bonsai.Areas.Front.Logic
             if(q.Length < MIN_QUERY_LENGTH)
                 return new PageTitleVM[0];
 
-            var results = await _search.SuggestAsync(q);
+            var results = await _search.SuggestAsync(q, maxCount: 10);
 
             return results.Select(x => new SearchResultVM
                           {

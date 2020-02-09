@@ -100,6 +100,7 @@ namespace Bonsai.Tests.Search
 
             var result = await _ctx.Search.SuggestAsync(query, new[] { PageType.Person });
 
+            Assert.Contains(result, x => x.Key.Contains("Семенова", StringComparison.InvariantCultureIgnoreCase));
             Assert.DoesNotContain(result, x => x.Key.StartsWith("Свадьба", StringComparison.InvariantCultureIgnoreCase));
         }
 
