@@ -168,7 +168,7 @@ namespace Bonsai.Code.Services.Search
 
             var words = SplitTerms(phrase).ToList();
 
-            var booleanQuery = new BooleanQuery();
+            var booleanQuery = new BooleanQuery() { MinimumNumberShouldMatch = 1};
 
             var fields = new [] {"Title", "Description", "Aliases"};
 
@@ -204,6 +204,7 @@ namespace Bonsai.Code.Services.Search
                     subquery.Add(termQuery, Occur.SHOULD);
                 }
                 booleanQuery.Add(subquery, Occur.MUST);
+                booleanQuery.MinimumNumberShouldMatch++;
             }
 
             var searchResults = searcher.Search(booleanQuery, maxCount ?? int.MaxValue);
