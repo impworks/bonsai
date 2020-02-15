@@ -168,5 +168,16 @@ namespace Bonsai.Tests.Search
             Assert.Contains(result, x => x.Key == "Михайлов_Олег_Евгеньевич");
             Assert.Contains(result, x => x.Key == "Иванов_Петр_Михайлович");
         }
+
+        [Fact]
+        public async Task Suggest_with_page_types_does_not_include_unrelated_matches()
+        {
+            var query = "Барсик";
+
+            var result = await _ctx.Search.SuggestAsync(query, new[] {PageType.Person, PageType.Pet}, 5);
+
+            Assert.Equal(1, result.Count);
+            Assert.Equal(result[0].Key, "Барсик");
+        }
     }
 }
