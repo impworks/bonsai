@@ -15,7 +15,7 @@
         openOnFocus: true,
         valueField: 'id',
         labelField: 'title',
-        sortField: 'title',
+        sortField: [{ field: 'index', direction: 'asc' }],
         searchField: 'title',
         placeholder: opts.placeholder || 'Страница или имя',
         preload: true,
@@ -26,6 +26,10 @@
 
             $.ajax(url)
                 .done(function (data) {
+                    // hack for maintaining relevance order
+                    for (var i = 0; i < data.length; i++)
+                        data['index'] = i;
+
                     // hack for fuzzy search:
                     // cache values returned from server
                     var cache = self.lastLoaded || (self.lastLoaded = {});
@@ -43,7 +47,7 @@
                 var hasItem = self.lastLoaded
                     && self.lastLoaded[query]
                     && self.lastLoaded[query].some(function (x) { return x.id === item.id; });
-                return def(item) + hasItem ? 1 : 0;
+                return def(item) && hasItem ? 1 : 0;
             };
         },
         render: {

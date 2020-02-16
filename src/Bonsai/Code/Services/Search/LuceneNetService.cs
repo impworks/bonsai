@@ -168,9 +168,11 @@ namespace Bonsai.Code.Services.Search
 
             var words = SplitTerms(phrase).ToList();
 
-            var booleanQuery = new BooleanQuery() { MinimumNumberShouldMatch = 1};
+            var booleanQuery = new BooleanQuery { MinimumNumberShouldMatch = 1 };
 
-            var fields = new [] {"Title", "Description", "Aliases"};
+            var fields = suggest
+                ? new [] { "Title", "Aliases"}
+                : new [] { "Title", "Aliases", "Description" };
 
             for (var i = 0; i < words.Count; i++)
             {
@@ -178,25 +180,23 @@ namespace Bonsai.Code.Services.Search
                 foreach (var f in fields)
                 {
                     var term = new Term(f, words[i]);
-                    booleanQuery.Add(new FuzzyQuery(term, 2, 0) {Boost = boostBase}, Occur.SHOULD);
-                    if (!suggest)
+                    booleanQuery.Add(new FuzzyQuery(term, 2, 0) { Boost = boostBase }, Occur.SHOULD);
+                    if (suggest)
                     {
-                        var phraseQuery = new PhraseQuery();
-                        phraseQuery.Add(term);
-                        phraseQuery.Boost = boostBase * 3;
-                        phraseQuery.Slop = 2;
-                        booleanQuery.Add(phraseQuery, Occur.SHOULD);
+                        booleanQuery.Add(new PrefixQuery(term) { Boost = boostBase * 3 }, Occur.SHOULD);
                     }
                     else
                     {
-                        booleanQuery.Add(new PrefixQuery(term) { Boost = boostBase * 3 }, Occur.SHOULD);
+                        var phraseQuery = new PhraseQuery { Boost = boostBase * 3, Slop = 2 };
+                        phraseQuery.Add(term);
+                        booleanQuery.Add(phraseQuery, Occur.SHOULD);
                     }
                 }
             }
 
             if (pageTypes != null)
             {
-                var subquery = new BooleanQuery {MinimumNumberShouldMatch = 1};
+                var subquery = new BooleanQuery { MinimumNumberShouldMatch = 1 };
                 foreach (var type in pageTypes)
                 {
                     var typeValue = type.ToString().ToLower();
