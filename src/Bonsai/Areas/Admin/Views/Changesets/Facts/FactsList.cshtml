@@ -7,7 +7,7 @@
         @foreach (var fact in group.Facts)
         {
             <li>
-                @Html.Partial("~/Areas/Admin/Views/Changesets/Facts/" + fact.Definition.Kind.Name + ".cshtml", fact)
+                @await Html.PartialAsync("~/Areas/Admin/Views/Changesets/Facts/" + fact.Definition.Kind.Name + ".cshtml", fact)
             </li>
         }
     </ul>

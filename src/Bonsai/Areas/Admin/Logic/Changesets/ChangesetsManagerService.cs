@@ -27,7 +27,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
     /// </summary>
     public class ChangesetsManagerService
     {
-        public ChangesetsManagerService(IEnumerable<IChangesetRenderer> renderers, IHostingEnvironment env, AppDbContext db)
+        public ChangesetsManagerService(IEnumerable<IChangesetRenderer> renderers, IWebHostEnvironment env, AppDbContext db)
         {
             _db = db;
             _env = env;
@@ -35,7 +35,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         }
 
         private readonly AppDbContext _db;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly IReadOnlyDictionary<ChangesetEntityType, IChangesetRenderer> _renderers;
 
         #region Public methods

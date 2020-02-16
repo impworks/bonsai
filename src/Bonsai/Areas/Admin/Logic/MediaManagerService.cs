@@ -43,7 +43,7 @@ namespace Bonsai.Areas.Admin.Logic
             AppDbContext db,
             UserManager<AppUser> userMgr,
             IMapper mapper,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             IEnumerable<IMediaHandler> mediaHandlers,
             CacheService cache
         )
@@ -59,7 +59,7 @@ namespace Bonsai.Areas.Admin.Logic
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userMgr;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly IReadOnlyList<IMediaHandler> _mediaHandlers;
         private readonly CacheService _cache;
 

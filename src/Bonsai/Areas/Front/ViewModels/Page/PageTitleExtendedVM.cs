@@ -13,7 +13,7 @@ namespace Bonsai.Areas.Front.ViewModels.Page
         /// <summary>
         /// Unique ID.
         /// </summary>
-        public Guid Id { get; set; }
+        public new Guid Id { get; set; }
 
         /// <summary>
         /// Page's main image.

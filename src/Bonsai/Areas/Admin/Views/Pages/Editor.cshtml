@@ -170,8 +170,8 @@
 
 <input type="file" id="main-photo-file" class="input-hidden" name="file" />
 
-@Html.Partial("~/Areas/Admin/Views/Components/MediaPicker.cshtml")
-@Html.Partial("~/Areas/Admin/Views/Components/PagePicker.cshtml")
+@await Html.PartialAsync("~/Areas/Admin/Views/Components/MediaPicker.cshtml")
+@await Html.PartialAsync("~/Areas/Admin/Views/Components/PagePicker.cshtml")
 
 <script type="text/x-template" id="date-picker-template">
     <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />
@@ -191,5 +191,5 @@
 
 @foreach(var tpl in data.EditorTemplates)
 {
-    Html.RenderPartial(tpl);
+    await Html.RenderPartialAsync(tpl);
 }

@@ -10,7 +10,7 @@
     @if (Model.Results.Any())
     {
         <input type="hidden" id="search-query-hidden" value="@Model.Query" />
-        @Html.Partial("SearchResults", Model.Results)
+        @await Html.PartialAsync("SearchResults", Model.Results)
     }
     else
     {

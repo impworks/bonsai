@@ -6,7 +6,7 @@
     <table class="fact-group">
         @foreach (var fact in group.Facts)
         {
-            @Html.Partial("~/Areas/Front/Views/Page/Facts/" + fact.GetType().Name + ".cshtml", fact)
+            @await Html.PartialAsync("~/Areas/Front/Views/Page/Facts/" + fact.GetType().Name + ".cshtml", fact)
         }
     </table>
     <hr />

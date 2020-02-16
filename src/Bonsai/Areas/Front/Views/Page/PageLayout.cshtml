@@ -13,7 +13,7 @@
 
 <div id="page" class="row flex-grow-1">
     <div class="sidebar col-3">
-        @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
+        @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
     </div>
     <div class="content col-9">
         <div class="content-header">

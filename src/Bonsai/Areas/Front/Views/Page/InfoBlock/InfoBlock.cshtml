@@ -14,9 +14,9 @@
         </div>
     }
 
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain), extras)
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain), extras)
+    @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain), extras)
+    @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain), extras)
 
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain == false), extras)
-    @Html.Partial("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain == false), extras)
+    @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/FactGroupList.cshtml", Model.Facts.Where(x => x.Definition.IsMain == false), extras)
+    @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/RelationCategoryList.cshtml", Model.RelationGroups.Where(x => x.IsMain == false), extras)
 </div>
