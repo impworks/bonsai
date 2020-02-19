@@ -23,7 +23,7 @@ namespace Bonsai.Code.Config
 
             // common
             services.AddScoped<MarkdownService>();
-            services.AddScoped<AppConfigService>();
+            services.AddScoped<BonsaiConfigService>();
             services.AddScoped<CacheService>();
 
             services.AddSingleton<WorkerAlarmService>();
@@ -43,7 +43,7 @@ namespace Bonsai.Code.Config
             services.AddScoped<RelationValidator>();
             services.AddScoped<DashboardPresenterService>();
             services.AddScoped<UsersManagerService>();
-            services.AddScoped<AppConfigManagerService>();
+            services.AddScoped<DynamicConfigManagerService>();
             services.AddScoped<PagesManagerService>();
             services.AddScoped<RelationsManagerService>();
             services.AddScoped<MediaManagerService>();

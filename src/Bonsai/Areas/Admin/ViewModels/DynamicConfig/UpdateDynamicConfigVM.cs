@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.ViewModels.Config
+namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
 {
     /// <summary>
     /// Configuration properties.
     /// </summary>
-    public class UpdateAppConfigVM: IMapped
+    public class UpdateDynamicConfigVM: IMapped
     {
         /// <summary>
         /// The title of the website. Displayed in the top bar and browser title.
@@ -29,10 +28,8 @@ namespace Bonsai.Areas.Admin.ViewModels.Config
 
         public void Configure(IProfileExpression profile)
         {
-            profile.CreateMap<UpdateAppConfigVM, AppConfig>()
-                   .ForMember(x => x.Id, opt => opt.Ignore());
-
-            profile.CreateMap<AppConfig, UpdateAppConfigVM>();
+            profile.CreateMap<UpdateDynamicConfigVM, Code.Services.Config.DynamicConfig>();
+            profile.CreateMap<Code.Services.Config.DynamicConfig, UpdateDynamicConfigVM>();
         }
     }
 }
