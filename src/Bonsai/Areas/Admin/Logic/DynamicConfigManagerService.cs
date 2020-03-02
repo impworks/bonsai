@@ -13,13 +13,15 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class DynamicConfigManagerService
     {
-        public DynamicConfigManagerService(AppDbContext db, IMapper mapper)
+        public DynamicConfigManagerService(AppDbContext db, BonsaiConfigService cfgService, IMapper mapper)
         {
             _db = db;
+            _cfgService = cfgService;
             _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
+        private readonly BonsaiConfigService _cfgService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -27,8 +29,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<UpdateDynamicConfigVM> RequestUpdateAsync()
         {
-            var wrapper = await _db.DynamicConfig.FirstAsync();
-            var config = JsonConvert.DeserializeObject<DynamicConfig>(wrapper.Value);
+            var config = _cfgService.GetDynamicConfig();
             return _mapper.Map<UpdateDynamicConfigVM>(config);
         }
 

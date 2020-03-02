@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.ViewModels.DynamicConfig;
 using Bonsai.Code.Services.Config;
 using Bonsai.Data;
@@ -13,15 +14,17 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/config")]
     public class DynamicConfigController: AdminControllerBase
     {
-        public DynamicConfigController(DynamicConfigManagerService configMgr, BonsaiConfigService config, AppDbContext db)
+        public DynamicConfigController(DynamicConfigManagerService configMgr, BonsaiConfigService config, WorkerAlarmService alarm, AppDbContext db)
         {
             _configMgr = configMgr;
             _config = config;
+            _alarm = alarm;
             _db = db;
         }
 
         private readonly DynamicConfigManagerService _configMgr;
         private readonly BonsaiConfigService _config;
+        private readonly WorkerAlarmService _alarm;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -42,10 +45,14 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Update(UpdateDynamicConfigVM vm)
         {
+            var oldValue = await _configMgr.RequestUpdateAsync();
             await _configMgr.UpdateAsync(vm);
             await _db.SaveChangesAsync();
 
             _config.ResetCache();
+
+            if(oldValue.TreeRenderThoroughness != vm.TreeRenderThoroughness)
+                _alarm.FireTreeLayoutRegenerationRequired();
 
             return RedirectToSuccess("Настройки сохранены");
         }

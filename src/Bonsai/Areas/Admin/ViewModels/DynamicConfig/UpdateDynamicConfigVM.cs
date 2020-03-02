@@ -26,6 +26,12 @@ namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
         /// </summary>
         public bool AllowRegistration { get; set; }
 
+        /// <summary>
+        /// Tree render thoroughness coefficient.
+        /// </summary>
+        [Range(1, 100, ErrorMessage = "Значение должно быть в диапазоне от 1 до 100")]
+        public int TreeRenderThoroughness { get; set; }
+
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<UpdateDynamicConfigVM, Code.Services.Config.DynamicConfig>();

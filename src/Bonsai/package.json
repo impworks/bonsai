@@ -38,6 +38,7 @@
     "jquery-ui": "^1.12.1",
     "magnific-popup": "^1.1.0",
     "popper.js": "^1.15.0",
+    "rangeslider.js": "^2.3.3",
     "selectize": "^0.12.6",
     "simplemde": "^1.11.2",
     "toastr": "^2.1.4",

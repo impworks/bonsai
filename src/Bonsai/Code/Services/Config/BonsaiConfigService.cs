@@ -10,11 +10,15 @@ namespace Bonsai.Code.Services.Config
     /// </summary>
     public class BonsaiConfigService
     {
+        static BonsaiConfigService()
+        {
+            _config = new ConcurrentDictionary<string, DynamicConfig>();
+        }
+
         public BonsaiConfigService(AppDbContext context, StaticConfig cfg)
         {
             _context = context;
             _cfg = cfg;
-            _config = new ConcurrentDictionary<string, DynamicConfig>();
         }
 
         private readonly AppDbContext _context;
@@ -50,9 +54,22 @@ namespace Bonsai.Code.Services.Config
         /// </summary>
         private DynamicConfig LoadDynamicConfig()
         {
-            return JsonConvert.DeserializeObject<DynamicConfig>(
+            var cfg = JsonConvert.DeserializeObject<DynamicConfig>(
                 _context.DynamicConfig.First().Value
             );
+
+            ApplyDefaults(cfg);
+
+            return cfg;
+        }
+
+        /// <summary>
+        /// Sets default values to properties (for backwards compatibility).
+        /// </summary>
+        private void ApplyDefaults(DynamicConfig cfg)
+        {
+            if (cfg.TreeRenderThoroughness == 0)
+                cfg.TreeRenderThoroughness = 50;
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿var ELK = require('./elk.js');
 
-module.exports = function(callback, jsonIn) {
+module.exports = function(callback, jsonIn, config) {
     var data = JSON.parse(jsonIn);
-    var elkJson = generateElkJson(data);
+    var elkJson = generateElkJson(data, config);
     var elk = new ELK();
 
     elk.layout(elkJson)
@@ -15,7 +15,7 @@ module.exports = function(callback, jsonIn) {
        });
 };
 
-function generateElkJson(data) {
+function generateElkJson(data, config) {
     var CARD_WIDTH = 300,
         CARD_HEIGHT = 100,
         SPACING = 30;
@@ -37,7 +37,7 @@ function generateElkJson(data) {
             'elk.layered.spacing.edgeNodeBetweenLayers': SPACING,
             'elk.spacing.nodeNode': SPACING,
             'elk.layered.nodePlacement.favorStraightEdges': false,
-            'elk.layered.thoroughness': 1000
+            'elk.layered.thoroughness': config.Thoroughness
         },
         children: nodes,
         edges: edges

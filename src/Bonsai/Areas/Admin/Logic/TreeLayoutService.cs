@@ -8,6 +8,8 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Config;
+using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
@@ -29,9 +31,10 @@ namespace Bonsai.Areas.Admin.Logic
     {
         #region Constructor
 
-        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, ILogger logger)
+        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, BonsaiConfigService config, ILogger logger)
             : base(services)
         {
+            _config = config;
             _logger = logger;
 
             alarm.OnTreeLayoutRegenerationRequired += (s, e) =>
@@ -45,6 +48,7 @@ namespace Bonsai.Areas.Admin.Logic
 
         #region Fields
 
+        private readonly BonsaiConfigService _config;
         private readonly ILogger _logger;
         private bool _flush;
 
@@ -130,7 +134,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the entire tree.
         /// </summary>
-        public TreeLayoutVM GetSubtree(RelationContext context, HashSet<Guid> visited, Guid rootId)
+        private TreeLayoutVM GetSubtree(RelationContext context, HashSet<Guid> visited, Guid rootId)
         {
             var parents = new HashSet<string>();
 
@@ -280,8 +284,16 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         private async Task<string> RenderTree(INodeServices js, TreeLayoutVM tree)
         {
+            var thoroughness = Interpolator.MapValue(
+                _config.GetDynamicConfig().TreeRenderThoroughness,
+                new IntervalMap(1, 10, 1, 10),
+                new IntervalMap(11, 50, 11, 300),
+                new IntervalMap(51, 100, 301, 8000)
+            );
+
             var json = JsonConvert.SerializeObject(tree);
-            var result = await js.InvokeAsync<string>("./External/tree/tree-layout.js", json);
+            var config = new { Thoroughness = thoroughness };
+            var result = await js.InvokeAsync<string>("./External/tree/tree-layout.js", json, config);
 
             if (string.IsNullOrEmpty(result))
                 throw new Exception("Failed to render tree: output is empty.");
