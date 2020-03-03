@@ -287,13 +287,12 @@ namespace Bonsai.Areas.Admin.Logic
             var thoroughness = Interpolator.MapValue(
                 _config.GetDynamicConfig().TreeRenderThoroughness,
                 new IntervalMap(1, 10, 1, 10),
-                new IntervalMap(11, 50, 11, 300),
-                new IntervalMap(51, 100, 301, 8000)
+                new IntervalMap(11, 50, 11, 600),
+                new IntervalMap(51, 100, 301, 15000)
             );
 
             var json = JsonConvert.SerializeObject(tree);
-            var config = new { Thoroughness = thoroughness };
-            var result = await js.InvokeAsync<string>("./External/tree/tree-layout.js", json, config);
+            var result = await js.InvokeAsync<string>("./External/tree/tree-layout.js", json, thoroughness);
 
             if (string.IsNullOrEmpty(result))
                 throw new Exception("Failed to render tree: output is empty.");
