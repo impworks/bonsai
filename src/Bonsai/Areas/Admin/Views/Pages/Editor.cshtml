@@ -2,19 +2,22 @@
 @addTagHelper *, Bonsai
 @using Bonsai.Areas.Admin.Logic
 @using Bonsai.Areas.Admin.ViewModels.Pages
+@using Bonsai.Data.Models
+@using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 @{
     var data = (PageEditorDataVM)ViewBag.Data;
-    ViewBag.Title = data.IsNew ? "Новая страница" : "Редактирование страницы";
+    ViewBag.Title = data.IsNew ? $"Новая страница" : "Редактирование страницы";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var formAction = Url.Action(data.IsNew ? "Create" : "Update", "Pages", new { area = "Admin" });
     var hasPhoto = data.MainPhotoThumbnailUrl != null;
+    var originalPageType = (PageType?) (int?) TempData[NotificationsService.NOTE_PAGETYPE_RESET_FROM_DRAFT];
 }
 
 <h1>@ViewBag.Title</h1>
 
-@if(!string.IsNullOrEmpty(data.ErrorFields))
+@if (!string.IsNullOrEmpty(data.ErrorFields))
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
         Неверно заполнены поля: @data.ErrorFields
@@ -22,6 +25,14 @@
             <span>&times;</span>
         </button>
     </div>
+}
+@if (originalPageType != null)
+{
+<div class="alert alert-warning">
+    <button type="button" class="close cmd-dismiss-notification">&times;</button>
+    Восстановлен черновик новой страницы типа "@(Model.Type.GetEnumDescription().ToLower())". <br />
+    Если вы хотите создать новую страницу типа "@(originalPageType.Value.GetEnumDescription().ToLower())", сохраните страницу или <a href="#" class="cmd-discard-draft" data-page-type="@originalPageType">удалите</a> черновик.
+</div>
 }
 
 <div class="alert alert-warning" notification-id="@NotificationsService.NOTE_USER_GUIDELINES">
@@ -62,7 +73,7 @@
                     <input type="hidden" asp-for="MainPhotoKey" />
                     <div id="editor-main-photo">
                         <div class="main-photo-wrapper">
-                            @if(hasPhoto)
+                            @if (hasPhoto)
                             {
                                 <img src="@Url.Content(data.MainPhotoThumbnailUrl)" class="main-photo" />
                             }
@@ -90,14 +101,14 @@
         <div class="tab-pane show @(data.Tab == "facts" ? "active" : "")" id="tab-facts" role="tabpanel">
             <div class="form-group">
                 <input type="hidden" asp-for="Facts" />
-                @if(data.FactGroups.Any())
+                @if (data.FactGroups.Any())
                 {
                     <div id="editor-facts">
-                        @foreach(var group in data.FactGroups)
+                        @foreach (var group in data.FactGroups)
                         {
                             <div class="editor-facts-group">
                                 <h4>@group.Title</h4>
-                                @foreach(var fact in group.Defs)
+                                @foreach (var fact in group.Defs)
                                 {
                                     var id = group.Id + "." + fact.Id;
                                     <component is="@fact.Kind.Name" v-bind:data="data" v-bind:def="{title: '@fact.Title', key: '@id'}"></component>
@@ -166,6 +177,7 @@
 
 <form id="discard-draft-form" action="@Url.Action("Remove", "Drafts", new { area = "Admin" })" method="post">
     <input type="hidden" name="id" value="@Model.Id" />
+    <input type="hidden" name="type" value="" />
 </form>
 
 <input type="file" id="main-photo-file" class="input-hidden" name="file" />
@@ -189,7 +201,7 @@
     </div>
 </script>
 
-@foreach(var tpl in data.EditorTemplates)
+@foreach (var tpl in data.EditorTemplates)
 {
     await Html.RenderPartialAsync(tpl);
 }

@@ -33,6 +33,11 @@ namespace Bonsai.Areas.Admin.Logic
         public static readonly string NOTE_PASSWORD_AUTH = "PasswordAuth";
 
         /// <summary>
+        /// Notification ID: user attempted to create a new page, but a draft of a different type was already present.
+        /// </summary>
+        public static readonly string NOTE_PAGETYPE_RESET_FROM_DRAFT = "PageTypeResetFromDraft";
+
+        /// <summary>
         /// Checks if the notification must be shown.
         /// </summary>
         public bool IsShown(string id)

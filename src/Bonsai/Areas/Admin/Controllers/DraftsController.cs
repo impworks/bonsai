@@ -5,6 +5,7 @@ using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Data;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -13,7 +14,7 @@ namespace Bonsai.Areas.Admin.Controllers
     /// Controller for handling drafts.
     /// </summary>
     [Route("admin/drafts")]
-    public class DraftsController: AdminControllerBase
+    public class DraftsController : AdminControllerBase
     {
         public DraftsController(PagesManagerService pages, PagePresenterService pagePresenter, AppDbContext db)
         {
@@ -25,7 +26,7 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly PagesManagerService _pages;
         private readonly PagePresenterService _pagePresenter;
         private readonly AppDbContext _db;
-        
+
         /// <summary>
         /// Discards the draft of a page.
         /// </summary>
@@ -38,21 +39,23 @@ namespace Bonsai.Areas.Admin.Controllers
 
             return Json(info);
         }
-        
+
         /// <summary>
         /// Discards the draft of a page.
         /// </summary>
         [HttpPost]
         [Route("remove")]
-        public async Task<ActionResult> Remove(Guid? id)
+        public async Task<ActionResult> Remove(Guid? id, PageType? type)
         {
             await _pages.DiscardPageDraftAsync(id, User);
             await _db.SaveChangesAsync();
 
-            if (id == null || id == Guid.Empty)
-                return RedirectToAction("Index", "Pages");
+            if (id != null && id != Guid.Empty)
+                return RedirectToAction("Update", "Pages", new { id = id });
 
-            return RedirectToAction("Update", "Pages", new {id = id});
+            return type == null
+                ? RedirectToAction("Index", "Pages")
+                : RedirectToAction("Create", "Pages", new { type = type });
         }
 
         [HttpGet]

@@ -61,6 +61,12 @@
             return;
         }
 
+        var $link = $(this);
+        var origType = $link.data('page-type');
+        if (origType) {
+            $discardForm.find('input[name="type"]').val(origType);
+        }
+
         $discardForm.submit();
     }
 

@@ -71,6 +71,12 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
         {
             var vm = await _pages.RequestCreateAsync(type, User);
+            if (vm.Type != type)
+            {
+                TempData[NotificationsService.NOTE_PAGETYPE_RESET_FROM_DRAFT] = type;
+                return RedirectToAction("Create", "Pages", new {area = "Admin", type = vm.Type});
+            }
+
             return await ViewEditorFormAsync(vm, displayDraft: true);
         }
 
