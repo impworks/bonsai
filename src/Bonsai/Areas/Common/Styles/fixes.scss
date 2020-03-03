@@ -27,3 +27,74 @@
         height: 25px;
     }
 }
+
+/* Fix for rangeslider.js */
+
+$light-blue: #007bff;
+$lighter-blue: #007bff;
+$lightgray: #cccccc;
+
+.rangeslider,
+.rangeslider__fill {
+    display: block;
+    -moz-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px
+}
+
+.rangeslider {
+    background: #e6e6e6;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.rangeslider--horizontal {
+    height: 20px;
+    width: 100%;
+
+    .rangeslider__fill {
+        background: -webkit-linear-gradient(left, $lighter-blue, $light-blue); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(right, $lighter-blue, $light-blue); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, $lighter-blue, $light-blue); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, $lighter-blue, $light-blue); /* Standard syntax (must be last) */
+        position: absolute;
+        top: 0;
+        height: 100%;
+    }
+
+    .rangeslider__handle {
+        background: white;
+        font-weight: bold;
+        font-size: 18px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        display: inline-block;
+        width: 50px;
+        height: 40px;
+        line-height: 38px;
+        text-align: center;
+        position: absolute;
+        -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+        -moz-border-radius: 22px;
+        -webkit-border-radius: 22px;
+        border-radius: 22px;
+        top: -10px;
+        touch-action: pan-y;
+        -ms-touch-action: pan-y;
+
+        &::after {
+            background-image: unset;
+        }
+    }
+}
+
+input[type="range"]:focus + .rangeslider .rangeslider__handle {
+    -moz-box-shadow: 0 0 8px rgba(255, 0, 255, 0.9);
+    -webkit-box-shadow: 0 0 8px rgba(255, 0, 255, 0.9);
+    box-shadow: 0 0 8px rgba(255, 0, 255, 0.9);
+}

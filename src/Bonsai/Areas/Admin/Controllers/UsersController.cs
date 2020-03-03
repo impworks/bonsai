@@ -22,7 +22,7 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/users")]
     public class UsersController : AdminControllerBase
     {
-        public UsersController(UsersManagerService users, PagesManagerService pages, AppConfigService config, AppDbContext db)
+        public UsersController(UsersManagerService users, PagesManagerService pages, BonsaiConfigService config, AppDbContext db)
         {
             _users = users;
             _pages = pages;
@@ -32,7 +32,7 @@ namespace Bonsai.Areas.Admin.Controllers
 
         private readonly UsersManagerService _users;
         private readonly PagesManagerService _pages;
-        private readonly AppConfigService _config;
+        private readonly BonsaiConfigService _config;
         private readonly AppDbContext _db;
 
         /// <summary>

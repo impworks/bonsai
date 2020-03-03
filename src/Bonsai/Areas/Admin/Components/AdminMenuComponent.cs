@@ -49,7 +49,7 @@ namespace Bonsai.Areas.Admin.Components
                 groups.Add(
                     new MenuGroupVM(
                         new MenuItemVM { Title = "Доступ", Icon = "user-circle-o", Url = Url.Action("Index", "Users", new { area = "Admin" }) },
-                        new MenuItemVM { Title = "Настройки", Icon = "cog", Url = Url.Action("Index", "AppConfig", new { area = "Admin" }) }
+                        new MenuItemVM { Title = "Настройки", Icon = "cog", Url = Url.Action("Index", "DynamicConfig", new { area = "Admin" }) }
                     )
                 );
             }

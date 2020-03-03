@@ -1,5 +1,8 @@
-﻿namespace Bonsai.Code.Services.Config
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bonsai.Code.Services.Config
 {
+
     /// <summary>
     /// Global configuration properties defined in appsettings.json.
     /// </summary>

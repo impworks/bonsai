@@ -1,7 +1,7 @@
 ﻿@using Bonsai.Code.Services.Config
-@inject AppConfigService ConfigService
+@inject BonsaiConfigService ConfigService
 @{
-    var config = ConfigService.GetAppConfig();
+    var config = ConfigService.GetDynamicConfig();
 }
 
 <html>

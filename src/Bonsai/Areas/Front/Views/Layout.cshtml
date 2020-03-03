@@ -1,6 +1,6 @@
 ﻿@using Bonsai.Code.Services
 @using Bonsai.Code.Services.Config
-@inject AppConfigService ConfigService
+@inject BonsaiConfigService ConfigService
 @inject StartupService StartupService
 @{
     var appTitle = "Bonsai";
@@ -8,7 +8,7 @@
 
     if (StartupService.IsStarted)
     {
-        appTitle = ConfigService.GetAppConfig().Title;
+        appTitle = ConfigService.GetDynamicConfig().Title;
         rootUrl = Url.Action("Index", "Home", new {area = "Front"});
     }
 }

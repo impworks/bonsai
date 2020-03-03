@@ -2,12 +2,14 @@
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Code.Services.Config;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Newtonsoft.Json;
 using Npgsql;
 
 namespace Bonsai.Data.Utils
@@ -57,14 +59,19 @@ namespace Bonsai.Data.Utils
                 );
             }
 
-            if(!db.Config.Any())
+            if(!db.DynamicConfig.Any())
             {
-                db.Config.Add(new AppConfig
+                db.DynamicConfig.Add(new DynamicConfigWrapper
                 {
                     Id = Guid.NewGuid(),
-                    Title = "Bonsai",
-                    AllowGuests = false,
-                    AllowRegistration = true
+                    Value = JsonConvert.SerializeObject(
+                        new DynamicConfig
+                        {
+                            Title = "Bonsai",
+                            AllowGuests = false,
+                            AllowRegistration = true
+                        }
+                    )
                 });
             }
 

@@ -1,18 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bonsai.Data.Models
+namespace Bonsai.Code.Services.Config
 {
     /// <summary>
     /// General application configuration.
     /// </summary>
-    public class AppConfig
+    public class DynamicConfig
     {
-        /// <summary>
-        /// Surrogate key.
-        /// </summary>
-        public Guid Id { get; set; }
-
         /// <summary>
         /// The title of the website. Displayed in the top bar and browser title.
         /// </summary>
@@ -29,5 +23,10 @@ namespace Bonsai.Data.Models
         /// Flag indicating that new registrations are accepted.
         /// </summary>
         public bool AllowRegistration { get; set; }
+
+        /// <summary>
+        /// Tree render thoroughness coefficient.
+        /// </summary>
+        public int TreeRenderThoroughness { get; set; }
     }
 }

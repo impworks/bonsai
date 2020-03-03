@@ -29,7 +29,7 @@ namespace Bonsai.Areas.Front.Controllers
             AuthProviderService provs,
             PagesManagerService pages,
             ISearchEngine search,
-            AppConfigService cfgProvider,
+            BonsaiConfigService cfgProvider,
             AppDbContext db
         )
         {
@@ -45,7 +45,7 @@ namespace Bonsai.Areas.Front.Controllers
         private readonly AuthProviderService _provs;
         private readonly PagesManagerService _pages;
         private readonly ISearchEngine _search;
-        private readonly AppConfigService _cfgProvider;
+        private readonly BonsaiConfigService _cfgProvider;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace Bonsai.Areas.Front.Controllers
             ViewBag.Data = new LoginDataVM
             {
                 ReturnUrl = returnUrl,
-                AllowGuests = _cfgProvider.GetAppConfig().AllowGuests,
+                AllowGuests = _cfgProvider.GetDynamicConfig().AllowGuests,
                 AllowPasswordAuth = _cfgProvider.GetStaticConfig().Auth.AllowPasswordAuth,
                 Providers = _provs.AvailableProviders,
                 IsFirstUser = await _auth.IsFirstUserAsync(),
@@ -259,7 +259,7 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         private async Task<bool> CanRegisterAsync()
         {
-            if (_cfgProvider.GetAppConfig().AllowRegistration)
+            if (_cfgProvider.GetDynamicConfig().AllowRegistration)
                 return true;
 
             if (await _auth.IsFirstUserAsync())

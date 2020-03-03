@@ -11,13 +11,13 @@ namespace Bonsai.Areas.Front.Logic.Auth
     /// </summary>
     public class AuthHandler: AuthorizationHandler<AuthRequirement>
     {
-        public AuthHandler(AppConfigService cfgProvider, UserManager<AppUser> userMgr)
+        public AuthHandler(BonsaiConfigService cfgProvider, UserManager<AppUser> userMgr)
         {
             _cfgProvider = cfgProvider;
             _userMgr = userMgr;
         }
 
-        private readonly AppConfigService _cfgProvider;
+        private readonly BonsaiConfigService _cfgProvider;
         private readonly UserManager<AppUser> _userMgr;
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
         /// </summary>
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthRequirement requirement)
         {
-            var cfg = _cfgProvider.GetAppConfig();
+            var cfg = _cfgProvider.GetDynamicConfig();
             if (cfg.AllowGuests)
             {
                 context.Succeed(requirement);

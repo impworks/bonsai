@@ -1,6 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using Bonsai.Areas.Admin.ViewModels.Config
-@model UpdateAppConfigVM
+@model Bonsai.Areas.Admin.ViewModels.DynamicConfig.UpdateDynamicConfigVM
 @{
     ViewBag.Title = "Настройки";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
@@ -9,7 +8,7 @@
 <h1>@ViewBag.Title</h1>
 
 <div class="row">
-    <div class="col-md-7 col-sm-12">
+    <div class="col-md-9 col-sm-12">
         <form action="@Url.Action("Update")" method="post">
 
             <div class="form-group row">
@@ -52,6 +51,18 @@
                             Запрещена
                         </label>
                     </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Построение древа</label>
+                <div class="col-sm-9">
+                    <input asp-for="TreeRenderThoroughness" type="range" min="1" max="100" class="form-control"/>
+                    <div class="small text-muted">
+                        <div class="pull-left">Быстро и грубо</div>
+                        <div class="pull-right">Долго и тщательно</div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <span asp-validation-for="TreeRenderThoroughness" class="text-danger"></span>
                 </div>
             </div>
 

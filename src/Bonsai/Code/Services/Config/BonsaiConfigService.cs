@@ -1,32 +1,36 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
 using Bonsai.Data;
-using Bonsai.Data.Models;
+using Newtonsoft.Json;
 
 namespace Bonsai.Code.Services.Config
 {
     /// <summary>
     /// Provides read-only configuration instance.
     /// </summary>
-    public class AppConfigService
+    public class BonsaiConfigService
     {
-        public AppConfigService(AppDbContext context, StaticConfig cfg)
+        static BonsaiConfigService()
+        {
+            _config = new ConcurrentDictionary<string, DynamicConfig>();
+        }
+
+        public BonsaiConfigService(AppDbContext context, StaticConfig cfg)
         {
             _context = context;
             _cfg = cfg;
-            _config = new ConcurrentDictionary<string, AppConfig>();
         }
 
         private readonly AppDbContext _context;
         private readonly StaticConfig _cfg;
-        private static ConcurrentDictionary<string, AppConfig> _config;
+        private static ConcurrentDictionary<string, DynamicConfig> _config;
 
         /// <summary>
         /// Returns the configuration instance.
         /// </summary>
-        public AppConfig GetAppConfig()
+        public DynamicConfig GetDynamicConfig()
         {
-            return _config.GetOrAdd("default", x => LoadOrCreateConfig());
+            return _config.GetOrAdd("default", x => LoadDynamicConfig());
         }
 
         /// <summary>
@@ -48,9 +52,24 @@ namespace Bonsai.Code.Services.Config
         /// <summary>
         /// Loads the configuration instance from the database.
         /// </summary>
-        private AppConfig LoadOrCreateConfig()
+        private DynamicConfig LoadDynamicConfig()
         {
-            return _context.Config.First();
+            var cfg = JsonConvert.DeserializeObject<DynamicConfig>(
+                _context.DynamicConfig.First().Value
+            );
+
+            ApplyDefaults(cfg);
+
+            return cfg;
+        }
+
+        /// <summary>
+        /// Sets default values to properties (for backwards compatibility).
+        /// </summary>
+        private void ApplyDefaults(DynamicConfig cfg)
+        {
+            if (cfg.TreeRenderThoroughness == 0)
+                cfg.TreeRenderThoroughness = 50;
         }
     }
 }
