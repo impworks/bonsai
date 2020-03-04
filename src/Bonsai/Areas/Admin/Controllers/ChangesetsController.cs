@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
-using Bonsai.Areas.Admin.ViewModels.Media;
-using Bonsai.Areas.Admin.ViewModels.Pages;
-using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -18,19 +14,13 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/changes")]
     public class ChangesetsController: AdminControllerBase
     {
-        public ChangesetsController(ChangesetsManagerService changes, MediaManagerService media, PagesManagerService pages, RelationsManagerService rels, AppDbContext db)
+        public ChangesetsController(ChangesetsManagerService changes, AppDbContext db)
         {
             _changes = changes;
-            _media = media;
-            _pages = pages;
-            _rels = rels;
             _db = db;
         }
 
         private readonly ChangesetsManagerService _changes;
-        private readonly MediaManagerService _media;
-        private readonly PagesManagerService _pages;
-        private readonly RelationsManagerService _rels;
         private readonly AppDbContext _db;
 
         #region Public methods
@@ -81,7 +71,7 @@ namespace Bonsai.Areas.Admin.Controllers
             if (!editVm.CanRevert)
                 throw new OperationException("Эта правка не может быть отменена");
 
-            await _changes.RevertChangeAsync(id, User, _media, _pages, _rels);
+            await _changes.RevertChangeAsync(id, User);
             await _db.SaveChangesAsync();
 
             return RedirectToSuccess("Правка была отменена");

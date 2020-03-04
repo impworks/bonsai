@@ -10,6 +10,7 @@ using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
@@ -28,15 +29,31 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
     /// </summary>
     public class ChangesetsManagerService
     {
-        public ChangesetsManagerService(IEnumerable<IChangesetRenderer> renderers, IWebHostEnvironment env, AppDbContext db)
+        public ChangesetsManagerService(
+            IEnumerable<IChangesetRenderer> renderers,
+            IWebHostEnvironment env,
+            MediaManagerService media,
+            PagesManagerService pages,
+            RelationsManagerService rels,
+            ISearchEngine search,
+            AppDbContext db
+        )
         {
             _db = db;
             _env = env;
+            _media = media;
+            _pages = pages;
+            _rels = rels;
+            _search = search;
             _renderers = renderers.ToDictionary(x => x.EntityType, x => x);
         }
 
         private readonly AppDbContext _db;
         private readonly IWebHostEnvironment _env;
+        private readonly MediaManagerService _media;
+        private readonly PagesManagerService _pages;
+        private readonly RelationsManagerService _rels;
+        private readonly ISearchEngine _search;
         private readonly IReadOnlyDictionary<ChangesetEntityType, IChangesetRenderer> _renderers;
 
         #region Public methods
@@ -144,7 +161,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// <summary>
         /// Reverts a change.
         /// </summary>
-        public async Task RevertChangeAsync(Guid id, ClaimsPrincipal user, MediaManagerService media, PagesManagerService pages, RelationsManagerService rels)
+        public async Task RevertChangeAsync(Guid id, ClaimsPrincipal user)
         {
             var chg = await _db.Changes
                                .AsNoTracking()
@@ -157,12 +174,14 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 {
                     if (isRemoving)
                     {
-                        await media.RemoveAsync(new RemoveMediaRequestVM { Id = chg.EditedMediaId.Value, RemoveFile = false }, user);
-                        return;
+                        await _media.RemoveAsync(new RemoveMediaRequestVM { Id = chg.EditedMediaId.Value, RemoveFile = false }, user);
+                    }
+                    else
+                    {
+                        var vm = JsonConvert.DeserializeObject<MediaEditorVM>(chg.OriginalState);
+                        await _media.UpdateAsync(vm, user, id);
                     }
 
-                    var vm = JsonConvert.DeserializeObject<MediaEditorVM>(chg.OriginalState);
-                    await media.UpdateAsync(vm, user, id);
                     return;
                 }
 
@@ -170,12 +189,15 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 {
                     if (isRemoving)
                     {
-                        await pages.RemoveAsync(chg.EditedPageId.Value, user);
-                        return;
+                        var page = await _pages.RemoveAsync(chg.EditedPageId.Value, user);
+                        await _search.RemovePageAsync(page);
                     }
-
-                    var vm = JsonConvert.DeserializeObject<PageEditorVM>(chg.OriginalState);
-                    await pages.UpdateAsync(vm, user, id);
+                    else
+                    {
+                        var vm = JsonConvert.DeserializeObject<PageEditorVM>(chg.OriginalState);
+                        var page = await _pages.UpdateAsync(vm, user, id);
+                        await _search.AddPageAsync(page);
+                    }
                     return;
                 }
 
@@ -183,11 +205,14 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 {
                     if (isRemoving)
                     {
-                        await rels.RemoveAsync(chg.EditedRelationId.Value, user);
-                        return;
+                        await _rels.RemoveAsync(chg.EditedRelationId.Value, user);
                     }
-                    var vm = JsonConvert.DeserializeObject<RelationEditorVM>(chg.OriginalState);
-                    await rels.UpdateAsync(vm, user, id);
+                    else
+                    {
+                        var vm = JsonConvert.DeserializeObject<RelationEditorVM>(chg.OriginalState);
+                        await _rels.UpdateAsync(vm, user, id);
+                    }
+
                     return;
                 }
 
