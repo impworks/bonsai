@@ -1,33 +1,35 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Admin.ViewModels.Changesets
 @using Bonsai.Data.Models
 @using Humanizer
 @model Bonsai.Areas.Admin.ViewModels.Changesets.ChangesetDetailsVM
 @{
-    string GetEntityType()
+    string GetEntityType(bool dative = false)
     {
-        switch(Model.EntityType)
+        switch (Model.EntityType)
         {
             case ChangesetEntityType.Media:
-                return "медиа-файла";
+                return dative ? "медиа-файл" : "медиа-файла";
 
             case ChangesetEntityType.Page:
-                return "страницы";
+                return dative ? "страницу" : "страницы";
 
             case ChangesetEntityType.Relation:
-                return "отношения";
-
-            default:
-                return null;
+                return dative ? "отношение" : "отношения";
         }
+
+        return null;
     }
 
-    ViewBag.Title = "Восстановление " + GetEntityType();
+    var isRemoving = Model.ChangeType == ChangesetType.Created;
+
+    ViewBag.Title = (isRemoving ? "Удаление " : "Восстановление ") + GetEntityType();
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 }
 
 <h1>@ViewBag.Title</h1>
 
-@if(!string.IsNullOrEmpty(Model.ThumbnailUrl))
+@if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
 {
     <div class="card d-inline-block">
         <div class="card-body">
@@ -50,14 +52,23 @@
     </div>
 </div>
 
-<p>
-    Вы уверены, что хотите восстановить изначальное состояние @GetEntityType()?<br/>
-    При этом будет сброшена текущая правка и все последующие, если они существуют.
-</p>
+@if (isRemoving)
+{
+    <p>
+        Вы уверены, что хотите удалить @GetEntityType(dative: true)?<br />
+    </p>
+}
+else
+{
+    <p>
+        Вы уверены, что хотите восстановить предыдущее состояние @GetEntityType()?<br />
+        При этом будет сброшена текущая правка и все последующие, если они существуют.
+    </p>
+}
 
 <form action="@Url.Action("Revert", "Changesets", new {area = "Admin"})" method="POST">
     <input type="hidden" name="confirm" value="true" />
     <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger" type="submit">Восстановить</button>
+    <button class="btn btn-danger" type="submit">@(isRemoving ? "Удалить" : "Восстановить")</button>
     <a href="@Url.Action("Index", "Changesets", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
 </form>

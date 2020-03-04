@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
 using Bonsai.Areas.Admin.ViewModels.Media;
@@ -80,7 +81,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 query = query.Where(x => x.Author.Id == request.UserId);
 
             var totalCount = await query.CountAsync();
-            result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
+            result.PageCount = (int)Math.Ceiling((double)totalCount / PageSize);
 
             var dir = request.OrderDescending.Value;
             if (request.OrderBy == nameof(Changeset.Author))
@@ -93,17 +94,17 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                         .ToListAsync();
 
             result.Items = changesets.Select(x => new ChangesetTitleVM
-                                     {
-                                         Id = x.Id,
-                                         Date = x.Date,
-                                         ChangeType = GetChangeType(x),
-                                         Author = x.Author.FirstName + " " + x.Author.LastName,
-                                         EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
-                                         EntityType = x.Type,
-                                         EntityTitle = GetEntityTitle(x),
-                                         EntityThumbnailUrl = GetEntityThumbnailUrl(x),
-                                         PageType = GetPageType(x),
-                                         CanRevert = CanRevert(x)
+            {
+                Id = x.Id,
+                Date = x.Date,
+                ChangeType = GetChangeType(x),
+                Author = x.Author.FirstName + " " + x.Author.LastName,
+                EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
+                EntityType = x.Type,
+                EntityTitle = GetEntityTitle(x),
+                EntityThumbnailUrl = GetEntityThumbnailUrl(x),
+                PageType = GetPageType(x),
+                CanRevert = CanRevert(x)
             })
                                      .ToList();
 
@@ -141,27 +142,54 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         }
 
         /// <summary>
-        /// Restores the contents of an entity to the state befor an edit.
+        /// Reverts a change.
         /// </summary>
-        public async Task<IVersionable> GetReverseEditorStateAsync(Guid id)
+        public async Task RevertChangeAsync(Guid id, ClaimsPrincipal user, MediaManagerService media, PagesManagerService pages, RelationsManagerService rels)
         {
             var chg = await _db.Changes
                                .AsNoTracking()
                                .GetAsync(x => x.Id == id, "Правка не найдена");
 
-            if (string.IsNullOrEmpty(chg.OriginalState))
-                throw new OperationException("Правка не может быть отменена");
-
+            var isRemoving = string.IsNullOrEmpty(chg.OriginalState);
             switch (chg.Type)
             {
                 case ChangesetEntityType.Media:
-                    return JsonConvert.DeserializeObject<MediaEditorVM>(chg.OriginalState);
+                {
+                    if (isRemoving)
+                    {
+                        await media.RemoveAsync(new RemoveMediaRequestVM { Id = chg.EditedMediaId.Value, RemoveFile = false }, user);
+                        return;
+                    }
+
+                    var vm = JsonConvert.DeserializeObject<MediaEditorVM>(chg.OriginalState);
+                    await media.UpdateAsync(vm, user, id);
+                    return;
+                }
 
                 case ChangesetEntityType.Page:
-                    return JsonConvert.DeserializeObject<PageEditorVM>(chg.OriginalState);
+                {
+                    if (isRemoving)
+                    {
+                        await pages.RemoveAsync(chg.EditedPageId.Value, user);
+                        return;
+                    }
+
+                    var vm = JsonConvert.DeserializeObject<PageEditorVM>(chg.OriginalState);
+                    await pages.UpdateAsync(vm, user, id);
+                    return;
+                }
 
                 case ChangesetEntityType.Relation:
-                    return JsonConvert.DeserializeObject<RelationEditorVM>(chg.OriginalState);
+                {
+                    if (isRemoving)
+                    {
+                        await rels.RemoveAsync(chg.EditedRelationId.Value, user);
+                        return;
+                    }
+                    var vm = JsonConvert.DeserializeObject<RelationEditorVM>(chg.OriginalState);
+                    await rels.UpdateAsync(vm, user, id);
+                    return;
+                }
 
                 default:
                     throw new ArgumentException($"Неизвестный тип сущности: {chg.Type}!");
@@ -177,14 +205,14 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private ChangesetsListRequestVM NormalizeListRequest(ChangesetsListRequestVM vm)
         {
-            if(vm == null)
+            if (vm == null)
                 vm = new ChangesetsListRequestVM();
 
             var orderableFields = new[] { nameof(Changeset.Date), nameof(Changeset.Author) };
-            if(!orderableFields.Contains(vm.OrderBy))
+            if (!orderableFields.Contains(vm.OrderBy))
                 vm.OrderBy = orderableFields[0];
 
-            if(vm.Page < 0)
+            if (vm.Page < 0)
                 vm.Page = 0;
 
             if (vm.OrderDescending == null)
@@ -230,10 +258,10 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             var wasNull = string.IsNullOrEmpty(chg.OriginalState);
             var isNull = string.IsNullOrEmpty(chg.UpdatedState);
 
-            if(wasNull)
+            if (wasNull)
                 return ChangesetType.Created;
 
-            if(isNull)
+            if (isNull)
                 return ChangesetType.Removed;
 
             return ChangesetType.Updated;
@@ -252,7 +280,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private IReadOnlyList<ChangeVM> GetDiff(IReadOnlyList<ChangePropertyValue> prevData, IReadOnlyList<ChangePropertyValue> nextData, IChangesetRenderer renderer)
         {
-            if(prevData.Count != nextData.Count)
+            if (prevData.Count != nextData.Count)
                 throw new InvalidOperationException("Internal error: rendered changeset values mismatch!");
 
             var result = new List<ChangeVM>();
@@ -287,7 +315,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             {
                 var user = await _db.Users
                                     .Where(x => x.Id == request.UserId)
-                                    .Select(x => new {x.FirstName, x.LastName})
+                                    .Select(x => new { x.FirstName, x.LastName })
                                     .FirstOrDefaultAsync();
 
                 if (user != null)
@@ -345,7 +373,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         private bool CanRevert(Changeset chg)
         {
             var chgType = GetChangeType(chg);
-            if (chgType == ChangesetType.Created || chgType == ChangesetType.Restored)
+            if (chgType == ChangesetType.Restored)
                 return false;
 
             if (chg.EditedMedia != null)

@@ -81,15 +81,7 @@ namespace Bonsai.Areas.Admin.Controllers
             if (!editVm.CanRevert)
                 throw new OperationException("Эта правка не может быть отменена");
 
-            var vm = await _changes.GetReverseEditorStateAsync(id);
-
-            if (vm is MediaEditorVM mvm)
-                await _media.UpdateAsync(mvm, User, id);
-            else if (vm is PageEditorVM pvm)
-                await _pages.UpdateAsync(pvm, User, id);
-            else if (vm is RelationEditorVM rvm)
-                await _rels.UpdateAsync(rvm, User, id);
-
+            await _changes.RevertChangeAsync(id, User, _media, _pages, _rels);
             await _db.SaveChangesAsync();
 
             return RedirectToSuccess("Правка была отменена");
