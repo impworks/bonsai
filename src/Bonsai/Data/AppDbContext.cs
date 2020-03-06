@@ -22,6 +22,7 @@ namespace Bonsai.Data
         public virtual DbSet<MediaEncodingJob> MediaJobs => Set<MediaEncodingJob>();
         public virtual DbSet<Page> Pages => Set<Page>();
         public virtual DbSet<PageAlias> PageAliases => Set<PageAlias>();
+        public virtual DbSet<PageScored> PagesScored => Set<PageScored>();
         public virtual DbSet<Relation> Relations => Set<Relation>();
         public virtual DbSet<PageDraft> PageDrafts => Set<PageDraft>();
         public virtual DbSet<TreeLayout> TreeLayouts => Set<TreeLayout>();
@@ -56,10 +57,13 @@ namespace Bonsai.Data
             builder.Entity<Media>().HasIndex(x => x.Key).IsUnique(true);
             builder.Entity<Media>().HasIndex(x => x.IsDeleted).IsUnique(false);
 
-            builder.Entity<MediaEncodingJob>().HasOne(x => x.Media).WithOne().HasForeignKey<MediaEncodingJob>(x => x.MediaId).IsRequired(true);
+            builder.Entity<MediaEncodingJob>().HasOne(x => x.Media).WithOne().IsRequired(true).HasForeignKey<MediaEncodingJob>(x => x.MediaId);
 
             builder.Entity<MediaTag>().HasOne(x => x.Media).WithMany(x => x.Tags);
             builder.Entity<MediaTag>().HasOne(x => x.Object).WithMany(x => x.MediaTags);
+
+            builder.Entity<PageScored>().ToView("PageWithCompletenessScore");
+            builder.Entity<PageScored>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
         }
     }
 }
