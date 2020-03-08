@@ -49,7 +49,8 @@ const ifProd = act => gulpif(isProd(), act);
         },
         fonts: [
             './node_modules/font-awesome/fonts/*.*',
-            './node_modules/gijgo/fonts/*.*'
+            './node_modules/gijgo/fonts/*.*',
+            './Areas/Common/Fonts/*.*'
         ]
     },
     content: {

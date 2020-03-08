@@ -54,7 +54,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             request = NormalizeListRequest(request);
 
-            var query = _db.Pages
+            var query = _db.PagesScored
                            .Include(x => x.MainPhoto)
                            .Where(x => x.IsDeleted == false);
 
@@ -67,7 +67,7 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
 
             var items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
-                                   .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                                   .ProjectTo<PageScoredVM>(_mapper.ConfigurationProvider)
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
                                    .ToListAsync();
@@ -373,7 +373,7 @@ namespace Bonsai.Areas.Admin.Logic
             if (vm == null)
                 vm = new PagesListRequestVM();
 
-            var orderableFields = new[] {nameof(Page.Title), nameof(Page.LastUpdateDate), nameof(Page.CreationDate)};
+            var orderableFields = new[] {nameof(PageScoredVM.Title), nameof(PageScoredVM.LastUpdateDate), nameof(PageScoredVM.CreationDate), nameof(PageScoredVM.CompletenessScore)};
             if (!orderableFields.Contains(vm.OrderBy))
                 vm.OrderBy = orderableFields[0];
 

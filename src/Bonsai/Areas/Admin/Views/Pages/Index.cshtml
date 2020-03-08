@@ -50,42 +50,57 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th width="60%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.Title), title = "Название"})</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.CreationDate), title = "Создана"})</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new {url = baseUrl, request = Model.Request, propName = nameof(PageTitleExtendedVM.LastUpdateDate), title = "Изменена"})</th>
+                <th width="50%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.Title), title = "Название" })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.CreationDate), title = "Создана" })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.LastUpdateDate), title = "Изменена" })</th>
+                <th width="10%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.CompletenessScore), title = "Ранг" })</th>
                 <th width="1px"></th>
             </tr>
         </thead>
         <tbody>
             @foreach(var p in Model.Items)
             {
-                <tr class="admin-row">
-                    <td>
-                        <page-image image="@p.MainPhotoPath" type="@p.Type" size="@MediaSize.Small"></page-image>
-                        <a href="@Url.Action("Update", "Pages", new {area = "Admin", id = p.Id})" title="Редактировать">
-                            @p.Title
-                        </a>
-                    </td>
-                    <td><span title="@p.CreationDate.LocalDateTime.ToString("G")">@p.CreationDate.Humanize()</span></td>
-                    <td><span title="@p.LastUpdateDate.LocalDateTime.ToString("G")">@p.LastUpdateDate.Humanize()</span></td>
-                    <td class="admin-row-actions">
-                        <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Id})">
-                            <span class="fa fa-remove" title="Удалить"></span>
-                        </a>
-                        <a href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = p.Id})">
-                            <span class="fa fa-database" title="История изменений"></span>
-                        </a>
-                        <a href="@Url.Action("Index", "Relations", new {area = "Admin", entityId = p.Id})">
-                            <span class="fa fa-retweet" title="Связи"></span>
-                        </a>
-                        <a href="@Url.Action("Index", "Media", new {area = "Admin", entityId = p.Id})">
-                            <span class="fa fa-picture-o" title="Связи"></span>
-                        </a>
-                        <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank">
-                            <span class="fa fa-external-link-square" title="Просмотреть"></span>
-                        </a>
-                    </td>
-                </tr>
+            <tr class="admin-row">
+                <td>
+                    <page-image image="@p.MainPhotoPath" type="@p.Type" size="@MediaSize.Small"></page-image>
+                    <a href="@Url.Action("Update", "Pages", new {area = "Admin", id = p.Id})" title="Редактировать">
+                        @p.Title
+                    </a>
+                </td>
+                <td><span title="@p.CreationDate.LocalDateTime.ToString("G")">@p.CreationDate.Humanize()</span></td>
+                <td><span title="@p.LastUpdateDate.LocalDateTime.ToString("G")">@p.LastUpdateDate.Humanize()</span></td>
+                <td class="popover-wrapper">
+                    <span class="popover-handle">@p.CompletenessScore%</span>
+                    <div class="popover-contents">
+                        <ul class="completeness-criterions list-unstyled">
+                            @foreach (var crit in p.Criterions)
+                            {
+                            <li>
+                                <span class="fa @(crit.IsFilled ? "fa-check-circle-o completeness-criterion-filled" : "fa-circle-o completeness-criterion-unfilled")"></span>
+                                <span>@crit.Title</span>
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                </td>
+                <td class="admin-row-actions">
+                    <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Id})">
+                        <span class="fa fa-remove" title="Удалить"></span>
+                    </a>
+                    <a href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = p.Id})">
+                        <span class="fa fa-database" title="История изменений"></span>
+                    </a>
+                    <a href="@Url.Action("Index", "Relations", new {area = "Admin", entityId = p.Id})">
+                        <span class="fa fa-retweet" title="Связи"></span>
+                    </a>
+                    <a href="@Url.Action("Index", "Media", new {area = "Admin", entityId = p.Id})">
+                        <span class="fa fa-picture-o" title="Связи"></span>
+                    </a>
+                    <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank">
+                        <span class="fa fa-external-link-square" title="Просмотреть"></span>
+                    </a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
