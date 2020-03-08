@@ -7,7 +7,7 @@ namespace Bonsai.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-CREATE OR REPLACE VIEW ""PagesWithCompletenessScore""
+CREATE OR REPLACE VIEW ""PagesScored""
 AS
 SELECT
 	pp.""Id"",
@@ -76,7 +76,7 @@ FROM (
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"DROP VIEW ""PagesWithCompletenessScore""");
+            migrationBuilder.Sql(@"DROP VIEW ""PagesScored""");
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Bonsai.Data
             builder.Entity<MediaTag>().HasOne(x => x.Media).WithMany(x => x.Tags);
             builder.Entity<MediaTag>().HasOne(x => x.Object).WithMany(x => x.MediaTags);
 
-            builder.Entity<PageScored>().ToView("PageWithCompletenessScore");
+            builder.Entity<PageScored>().ToView("PagesScored");
             builder.Entity<PageScored>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
         }
     }

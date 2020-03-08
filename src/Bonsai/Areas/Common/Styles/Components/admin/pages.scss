@@ -70,3 +70,16 @@
         white-space: nowrap;
     }
 }
+
+.completeness-criterions {
+    margin-bottom: 0;
+
+    .completeness-criterion-filled {
+        color: #28a745;
+    }
+
+    .completeness-criterion-unfilled {
+        color: #6c757d;
+        opacity: 0.6;
+    }
+}

@@ -8,18 +8,18 @@ namespace Bonsai.Data.Models
     public enum PageType
     {
         [Description("Человек")]
-        Person,
+        Person = 0,
 
         [Description("Питомец")]
-        Pet,
+        Pet = 1,
 
         [Description("Событие")]
-        Event,
+        Event = 2,
 
         [Description("Место")]
-        Location,
+        Location = 3,
 
         [Description("Прочее")]
-        Other
+        Other = 4
     }
 }

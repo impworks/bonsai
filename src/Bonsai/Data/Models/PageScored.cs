@@ -55,6 +55,7 @@ namespace Bonsai.Data.Models
         public bool HasText { get; set; }
         public bool HasPhoto { get; set; }
         public bool HasRelations { get; set; }
+        public bool HasGender { get; set; }
         public bool HasHumanName { get; set; }
         public bool HasAnimalName { get; set; }
         public bool HasAnimalSpecies { get; set; }

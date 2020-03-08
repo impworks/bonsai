@@ -48,3 +48,9 @@
 .content {
     padding: 1rem 3rem;
 }
+
+.popover-wrapper {
+    .popover-contents {
+        display: none;
+    }
+}
