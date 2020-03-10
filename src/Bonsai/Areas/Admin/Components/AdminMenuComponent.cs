@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Menu;
+using Bonsai.Data;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Admin.Components
 {
@@ -13,12 +15,14 @@ namespace Bonsai.Areas.Admin.Components
     /// </summary>
     public class AdminMenuComponent: ViewComponent
     {
-        public AdminMenuComponent(UserManager<AppUser> userMgr)
+        public AdminMenuComponent(UserManager<AppUser> userMgr, AppDbContext db)
         {
             _userMgr = userMgr;
+            _db = db;
         }
 
         private readonly UserManager<AppUser> _userMgr;
+        private readonly AppDbContext _db;
 
         /// <summary>
         /// Displays the menu.
@@ -46,9 +50,10 @@ namespace Bonsai.Areas.Admin.Components
 
             if (roles.Contains(nameof(UserRole.Admin)))
             {
+                var newUsers = await _db.Users.CountAsync(x => !x.IsValidated);
                 groups.Add(
                     new MenuGroupVM(
-                        new MenuItemVM { Title = "Доступ", Icon = "user-circle-o", Url = Url.Action("Index", "Users", new { area = "Admin" }) },
+                        new MenuItemVM { Title = "Доступ", Icon = "user-circle-o", Url = Url.Action("Index", "Users", new { area = "Admin" }), NotificationsCount = newUsers },
                         new MenuItemVM { Title = "Настройки", Icon = "cog", Url = Url.Action("Index", "DynamicConfig", new { area = "Admin" }) }
                     )
                 );

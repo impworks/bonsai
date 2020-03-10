@@ -24,5 +24,10 @@
         /// Flag indicating that the element is selected.
         /// </summary>
         public bool IsSelected { get; set; }
+
+        /// <summary>
+        /// Additional pill text for showing notifications in the section.
+        /// </summary>
+        public int? NotificationsCount { get; set; }
     }
 }
