@@ -6,8 +6,12 @@ namespace Bonsai.Data.Models
     /// <summary>
     /// The log of an entity's modification.
     /// </summary>
-    public class Changeset
+    public class ChangesetGrouped
     {
+        // TODO: rewrite this to use inheritance from Changeset when EF supports TPT mapping (likely 5.0)
+
+        #region Changeset properties
+
         /// <summary>
         /// Surrogate ID.
         /// </summary>
@@ -78,5 +82,9 @@ namespace Bonsai.Data.Models
         /// The new state (after the change).
         /// </summary>
         public string UpdatedState { get; set; }
+
+#endregion
+
+        public string GroupKey { get; set; }
     }
 }
