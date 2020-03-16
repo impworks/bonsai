@@ -111,18 +111,18 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                         .ToListAsync();
 
             result.Items = changesets.Select(x => new ChangesetTitleVM
-            {
-                Id = x.Id,
-                Date = x.Date,
-                ChangeType = GetChangeType(x),
-                Author = x.Author.FirstName + " " + x.Author.LastName,
-                EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
-                EntityType = x.Type,
-                EntityTitle = GetEntityTitle(x),
-                EntityThumbnailUrl = GetEntityThumbnailUrl(x),
-                PageType = GetPageType(x),
-                CanRevert = CanRevert(x)
-            })
+                                     {
+                                         Id = x.Id,
+                                         Date = x.Date,
+                                         ChangeType = GetChangeType(x),
+                                         Author = x.Author.FirstName + " " + x.Author.LastName,
+                                         EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
+                                         EntityType = x.Type,
+                                         EntityTitle = GetEntityTitle(x),
+                                         EntityThumbnailUrl = GetEntityThumbnailUrl(x),
+                                         PageType = GetPageType(x),
+                                         CanRevert = CanRevert(x)
+                                     })
                                      .ToList();
 
             return result;

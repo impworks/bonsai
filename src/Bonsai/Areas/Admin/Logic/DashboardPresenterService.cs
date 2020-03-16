@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
-using Bonsai.Areas.Admin.ViewModels.Users;
-using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Areas.Front.ViewModels.Media;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
+using Bonsai.Data.Models;
+using Impworks.Utils.Format;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Admin.Logic
@@ -16,13 +18,15 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class DashboardPresenterService
     {
-        public DashboardPresenterService(AppDbContext db, IMapper mapper)
+        public DashboardPresenterService(AppDbContext db, IUrlHelper url, IMapper mapper)
         {
             _db = db;
+            _url = url;
             _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
+        private readonly IUrlHelper _url;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -30,58 +34,55 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<DashboardVM> GetDashboardAsync()
         {
-            var pages = await GetLastUpdatedPagesAsync(5);
-            var media = await GetLastUploadedMediaAsync(5);
-            var users = await GetNewUsersAsync();
-
             return new DashboardVM
             {
-                UpdatedPages = pages,
-                UploadedMedia = media,
-                NewUsers = users
+                Changesets = await GetChangesetGroupsAsync().ToListAsync(),
+                PagesCount = await _db.Pages.CountAsync(),
+                PagesToImproveCount = await _db.PagesScored.CountAsync(x => x.CompletenessScore <= 50),
+                MediaCount = await _db.Media.CountAsync(),
+                MediaToTagCount = await _db.Media.CountAsync(x => !x.Tags.Any()),
+                RelationsCount = await _db.Relations.CountAsync()
             };
         }
 
-        #region Private helpers
-
         /// <summary>
-        /// Returns the last X updated pages (for front page).
+        /// Returns the list of changeset groups at given offset.
         /// </summary>
-        private async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
+        public async IAsyncEnumerable<ChangesetGroupVM> GetChangesetGroupsAsync(int page = 0)
         {
-            return await _db.Pages
-                            .Where(x => !x.IsDeleted)
-                            .OrderByDescending(x => x.LastUpdateDate)
-                            .Take(count)
-                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
-                            .ToListAsync();
-        }
-        
-        /// <summary>
-        /// Returns the last X uploaded media files (for front page).
-        /// </summary>
-        private async Task<IReadOnlyList<MediaThumbnailExtendedVM>> GetLastUploadedMediaAsync(int count)
-        {
-            return await _db.Media
-                            .Where(x => !x.IsDeleted)
-                            .OrderByDescending(x => x.UploadDate)
-                            .Take(count)
-                            .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
-                            .ToListAsync();
-        }
+            const int PAGE_SIZE = 20;
 
-        /// <summary>
-        /// Returns users that are not yet validated.
-        /// </summary>
-        private async Task<IReadOnlyList<UserTitleVM>> GetNewUsersAsync()
-        {
-            return await _db.Users
-                            .Where(x => x.IsValidated == false)
-                            .ProjectTo<UserTitleVM>(_mapper.ConfigurationProvider)
-                            .OrderBy(x => x.FullName)
-                            .ToListAsync();
-        }
+            var elems = await _db.ChangesGrouped
+                                 .AsNoTracking()
+                                 .Include(x => x.EditedMedia)
+                                 .Include(x => x.EditedPage)
+                                 .Include(x => x.EditedRelation)
+                                 .GroupBy(x => x.GroupKey)
+                                 .Skip(PAGE_SIZE * page)
+                                 .Take(PAGE_SIZE)
+                                 .ToListAsync();
 
-        #endregion
+            foreach (var elem in elems)
+            {
+                var firstChange = elem.First();
+                var vm = _mapper.Map<ChangesetGroupVM>(firstChange);
+
+                if (firstChange.Type == ChangesetEntityType.Page)
+                {
+                    vm.Title = firstChange.EditedPage.Title;
+                    vm.Url = _url.Action("Description", "Page", new {area = "Front", key = firstChange.EditedPage.Key});
+                }
+                else if (firstChange.Type == ChangesetEntityType.Relation)
+                {
+                    vm.Title = "связь " + firstChange.EditedRelation.Type.GetEnumDescription();
+                }
+                else if (firstChange.Type == ChangesetEntityType.Media)
+                {
+                    vm.MediaThumbnails = elem.Select(x => _mapper.Map<MediaThumbnailVM>(x.EditedMedia)).ToList();
+                }
+
+                yield return vm;
+            }
+        }
     }
 }
