@@ -12,7 +12,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
     /// <summary>
     /// Details of a changeset to be displayed in the dashboard view.
     /// </summary>
-    public class ChangesetGroupVM: IMapped
+    public class ChangesetEventVM: IMapped
     {
         /// <summary>
         /// Edit date.
@@ -46,7 +46,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 
         public void Configure(IProfileExpression profile)
         {
-            profile.CreateMap<ChangesetGrouped, ChangesetGroupVM>()
+            profile.CreateMap<Changeset, ChangesetEventVM>()
                    .ForMember(x => x.Type, opt => opt.MapFrom(x => x.Type))
                    .ForMember(x => x.Date, opt => opt.MapFrom(x => x.Date))
                    .ForMember(x => x.User, opt => opt.MapFrom(x => x.Author))

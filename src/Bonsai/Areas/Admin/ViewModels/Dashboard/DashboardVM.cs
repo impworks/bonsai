@@ -10,7 +10,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         /// <summary>
         /// Last edits made by users.
         /// </summary>
-        public IReadOnlyList<ChangesetGroupVM> Changesets { get; set; }
+        public IReadOnlyList<ChangesetEventVM> Events { get; set; }
 
         /// <summary>
         /// Total number of pages.

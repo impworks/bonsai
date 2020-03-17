@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,6 +9,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +38,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return new DashboardVM
             {
-                Changesets = await GetChangesetGroupsAsync().ToListAsync(),
+                Events = await GetEventsAsync().ToListAsync(),
                 PagesCount = await _db.Pages.CountAsync(),
                 PagesToImproveCount = await _db.PagesScored.CountAsync(x => x.CompletenessScore <= 50),
                 MediaCount = await _db.Media.CountAsync(),
@@ -48,24 +50,32 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the list of changeset groups at given offset.
         /// </summary>
-        public async IAsyncEnumerable<ChangesetGroupVM> GetChangesetGroupsAsync(int page = 0)
+        public async IAsyncEnumerable<ChangesetEventVM> GetEventsAsync(int page = 0)
         {
             const int PAGE_SIZE = 20;
 
-            var elems = await _db.ChangesGrouped
-                                 .AsNoTracking()
-                                 .Include(x => x.EditedMedia)
-                                 .Include(x => x.EditedPage)
-                                 .Include(x => x.EditedRelation)
-                                 .GroupBy(x => x.GroupKey)
-                                 .Skip(PAGE_SIZE * page)
-                                 .Take(PAGE_SIZE)
-                                 .ToListAsync();
+            var groups = await _db.ChangeEvents
+                                  .OrderByDescending(x => x.Date)
+                                  .Skip(PAGE_SIZE * page)
+                                  .Take(PAGE_SIZE)
+                                  .ToListAsync();
 
-            foreach (var elem in elems)
+            var parsedGroups = groups.Select(x => new {x.GroupKey, Ids = x.Ids.Split(',').Select(y => y.Parse<Guid>())})
+                                     .ToList();
+
+            var changeIds = parsedGroups.SelectMany(x => x.Ids).ToList();
+            var changes = await _db.Changes
+                                   .AsNoTracking()
+                                   .Include(x => x.EditedMedia)
+                                   .Include(x => x.EditedPage)
+                                   .Include(x => x.EditedRelation)
+                                   .Where(x => changeIds.Contains(x.Id))
+                                   .ToDictionaryAsync(x => x.Id, x => x);
+
+            foreach (var group in parsedGroups)
             {
-                var firstChange = elem.First();
-                var vm = _mapper.Map<ChangesetGroupVM>(firstChange);
+                var firstChange = changes[group.Ids.First()];
+                var vm = _mapper.Map<ChangesetEventVM>(firstChange);
 
                 if (firstChange.Type == ChangesetEntityType.Page)
                 {
@@ -78,7 +88,7 @@ namespace Bonsai.Areas.Admin.Logic
                 }
                 else if (firstChange.Type == ChangesetEntityType.Media)
                 {
-                    vm.MediaThumbnails = elem.Select(x => _mapper.Map<MediaThumbnailVM>(x.EditedMedia)).ToList();
+                    vm.MediaThumbnails = group.Ids.Select(x => _mapper.Map<MediaThumbnailVM>(changes[x].EditedMedia)).ToList();
                 }
 
                 yield return vm;

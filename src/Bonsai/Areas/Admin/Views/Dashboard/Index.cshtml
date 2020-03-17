@@ -5,4 +5,43 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 }
 
-<div>TODO</div>
+<div class="dashboard-cards">
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">@Model.PagesCount</h2>
+                <p class="card-text text-center">страниц</p>
+            </div>
+            @if (Model.PagesToImproveCount > 0)
+            {
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <a href="@Url.Action("Index", "Pages", new {area = "Admin", OrderBy = "CompletenessScore", OrderDescending = false})">@Model.PagesToImproveCount страниц можно улучшить</a>
+                    </small>
+                </div>
+            }
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">@Model.MediaCount</h2>
+                <p class="card-text text-center">медиа-файлов</p>
+            </div>
+            @if (Model.MediaToTagCount > 0)
+            {
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">@Model.MediaToTagCount файлов без отметов</a>
+                    </small>
+                </div>
+            }
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">@Model.RelationsCount</h2>
+                <p class="card-text text-center">связей</p>
+            </div>
+        </div>
+    </div>
+</div>
