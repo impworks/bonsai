@@ -1,8 +1,27 @@
-﻿@model Bonsai.Areas.Admin.ViewModels.Dashboard.DashboardVM
+﻿@using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Bonsai.Code.Utils.Helpers
+@model Bonsai.Areas.Admin.ViewModels.Dashboard.DashboardVM
 @addTagHelper *, Bonsai
 @{
     ViewBag.Title = "Панель администрации";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    string GetChangeClass(ChangesetType type)
+    {
+        switch (type)
+        {
+            case ChangesetType.Created:
+                return "plus";
+            case ChangesetType.Removed:
+                return "times";
+            case ChangesetType.Updated:
+                return "pencil";
+            case ChangesetType.Restored:
+                return "undo";
+            default:
+                return "";
+        }
+    }
 }
 
 <div class="dashboard-cards">
@@ -10,13 +29,15 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title text-center">@Model.PagesCount</h2>
-                <p class="card-text text-center">страниц</p>
+                <p class="card-text text-center">@Model.PagesCount.DisplayNumeric("страница", "страницы", "страниц", false)</p>
             </div>
             @if (Model.PagesToImproveCount > 0)
             {
                 <div class="card-footer">
                     <small class="text-muted">
-                        <a href="@Url.Action("Index", "Pages", new {area = "Admin", OrderBy = "CompletenessScore", OrderDescending = false})">@Model.PagesToImproveCount страниц можно улучшить</a>
+                        <a href="@Url.Action("Index", "Pages", new {area = "Admin", OrderBy = "CompletenessScore", OrderDescending = false})">
+                            @Model.PagesToImproveCount.DisplayNumeric("страницу", "страницы", "страниц") можно улучшить
+                        </a>
                     </small>
                 </div>
             }
@@ -25,13 +46,13 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title text-center">@Model.MediaCount</h2>
-                <p class="card-text text-center">медиа-файлов</p>
+                <p class="card-text text-center">@Model.MediaCount.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов", false)</p>
             </div>
             @if (Model.MediaToTagCount > 0)
             {
                 <div class="card-footer">
                     <small class="text-muted">
-                        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">@Model.MediaToTagCount файлов без отметов</a>
+                        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">@Model.MediaToTagCount.DisplayNumeric("файл", "файла", "файлов") без отметок</a>
                     </small>
                 </div>
             }
@@ -40,8 +61,37 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title text-center">@Model.RelationsCount</h2>
-                <p class="card-text text-center">связей</p>
+                <p class="card-text text-center">@Model.RelationsCount.DisplayNumeric("связь", "связи", "связей", false)</p>
             </div>
         </div>
     </div>
+</div>
+
+<div class="dashboard-events">
+    @if (Model.Events?.Count > 0)
+    {
+        <ul class="list-unstyled">
+            @foreach (var evt in Model.Events)
+            {
+                <li>
+                    <span class="fa fa-@(GetChangeClass(evt.ChangeType))"></span>
+                    @if (evt.Url != null)
+                    {
+                        <span><a href="@evt.Url">@evt.Title</a></span>
+                    }
+                    else
+                    {
+                        <span>@evt.Title</span>
+                    }
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Здесь будет показываться список последних действий с базой.<br />
+            Вы можете создать <a href="@Url.Action("Index", "Pages", new { area = "Admin" } )">страницу</a> или <a href="@Url.Action("Upload", "Media", new { area = "Admin" })">загрузить медиа-файлы</a>.
+        </div>
+    }
 </div>

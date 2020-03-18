@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Bonsai.Areas.Admin.ViewModels.Changesets;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.Infrastructure;
@@ -22,7 +23,12 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         /// <summary>
         /// Type of the changed entity.
         /// </summary>
-        public ChangesetEntityType Type { get; set; }
+        public ChangesetEntityType EntityType { get; set; }
+
+        /// <summary>
+        /// Type of the change.
+        /// </summary>
+        public ChangesetType ChangeType { get; set; }
 
         /// <summary>
         /// Changed element title.
@@ -47,12 +53,27 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<Changeset, ChangesetEventVM>()
-                   .ForMember(x => x.Type, opt => opt.MapFrom(x => x.Type))
+                   .ForMember(x => x.EntityType, opt => opt.MapFrom(x => x.Type))
+                   .ForMember(x => x.ChangeType, opt => opt.ResolveUsing(GetChangesetType))
                    .ForMember(x => x.Date, opt => opt.MapFrom(x => x.Date))
                    .ForMember(x => x.User, opt => opt.MapFrom(x => x.Author))
                    .Ignore(x => x.MediaThumbnails)
                    .Ignore(x => x.Title)
                    .Ignore(x => x.Url);
+
+            ChangesetType GetChangesetType(Changeset chg)
+            {
+                if (chg.RevertedChangesetId != null)
+                    return ChangesetType.Restored;
+
+                if (chg.OriginalState == null)
+                    return ChangesetType.Created;
+
+                if (chg.UpdatedState == null)
+                    return ChangesetType.Removed;
+
+                return ChangesetType.Updated;
+            }
         }
     }
 }
