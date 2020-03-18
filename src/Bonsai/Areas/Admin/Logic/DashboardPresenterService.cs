@@ -39,11 +39,11 @@ namespace Bonsai.Areas.Admin.Logic
             return new DashboardVM
             {
                 Events = await GetEventsAsync().ToListAsync(),
-                PagesCount = await _db.Pages.CountAsync(),
-                PagesToImproveCount = await _db.PagesScored.CountAsync(x => x.CompletenessScore <= 50),
-                MediaCount = await _db.Media.CountAsync(),
-                MediaToTagCount = await _db.Media.CountAsync(x => !x.Tags.Any()),
-                RelationsCount = await _db.Relations.CountAsync()
+                PagesCount = await _db.Pages.CountAsync(x => x.IsDeleted == false),
+                PagesToImproveCount = await _db.PagesScored.CountAsync(x => x.IsDeleted == false && x.CompletenessScore <= 50),
+                MediaCount = await _db.Media.CountAsync(x => x.IsDeleted == false),
+                MediaToTagCount = await _db.Media.CountAsync(x => x.IsDeleted == false && !x.Tags.Any()),
+                RelationsCount = await _db.Relations.CountAsync(x => x.IsComplementary == false && x.IsDeleted == false)
             };
         }
 

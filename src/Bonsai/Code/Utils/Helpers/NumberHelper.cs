@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Bonsai.Code.Utils.Helpers
+﻿namespace Bonsai.Code.Utils.Helpers
 {
     /// <summary>
     /// Helper methods for working with numbers.
