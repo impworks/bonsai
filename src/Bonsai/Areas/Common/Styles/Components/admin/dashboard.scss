@@ -18,3 +18,40 @@
         }
     }
 }
+
+.dashboard-events {
+    .dashboard-event {
+        margin-bottom: 1rem;
+
+        .dashboard-event-image {
+            width: 64px;
+            height: 64px;
+            margin-right: 0.75rem;
+        }
+
+        .dashboard-event-header {
+            padding-top: 0;
+            margin-top: -2px;
+            margin-bottom: 0.25rem;
+        }
+
+        .dashboard-event-media {
+            margin-top: -0.5rem;
+            margin-bottom: 0;
+
+            .list-inline-item {
+                margin-right: 0.25rem;
+            }
+
+            .media-thumb-wrapper {
+                width: unset;
+                padding: 5px;
+
+                .media-thumb-square {
+                    width: 64px;
+                    height: 64px;
+                }
+            }
+        }
+    }
+}

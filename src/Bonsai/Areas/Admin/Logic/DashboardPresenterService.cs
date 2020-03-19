@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
+using Bonsai.Areas.Admin.ViewModels.Users;
+using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
+using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -68,31 +73,57 @@ namespace Bonsai.Areas.Admin.Logic
                                    .AsNoTracking()
                                    .Include(x => x.EditedMedia)
                                    .Include(x => x.EditedPage)
-                                   .Include(x => x.EditedRelation)
+                                   .Include(x => x.EditedRelation.Destination)
+                                   .Include(x => x.EditedRelation.Source)
+                                   .Include(x => x.Author)
                                    .Where(x => changeIds.Contains(x.Id))
                                    .ToDictionaryAsync(x => x.Id, x => x);
 
             foreach (var group in parsedGroups)
             {
-                var firstChange = changes[group.Ids.First()];
-                var vm = _mapper.Map<ChangesetEventVM>(firstChange);
-
-                if (firstChange.Type == ChangesetEntityType.Page)
+                var chg = changes[group.Ids.First()];
+                var vm = _mapper.Map<ChangesetEventVM>(chg);
+                if (chg.Type == ChangesetEntityType.Page)
                 {
-                    vm.Title = firstChange.EditedPage.Title;
-                    vm.Url = _url.Action("Description", "Page", new {area = "Front", key = firstChange.EditedPage.Key});
+                    vm.MainLink = GetLinkToPage(chg.EditedPage);
                 }
-                else if (firstChange.Type == ChangesetEntityType.Relation)
+                else if (chg.Type == ChangesetEntityType.Relation)
                 {
-                    vm.Title = "связь " + firstChange.EditedRelation.Type.GetEnumDescription();
+                    var rel = chg.EditedRelation;
+                    vm.MainLink = new LinkVM
+                    {
+                        Title = chg.EditedRelation.Type.GetEnumDescription(),
+                        Url = _url.Action("Update", "Relations", new { area = "Admin", id = rel.Id })
+                    };
+                    vm.ExtraLinks = new[] {GetLinkToPage(rel.Destination), GetLinkToPage(rel.Source)};
                 }
-                else if (firstChange.Type == ChangesetEntityType.Media)
+                else if (chg.Type == ChangesetEntityType.Media)
                 {
-                    vm.MediaThumbnails = group.Ids.Select(x => _mapper.Map<MediaThumbnailVM>(changes[x].EditedMedia)).ToList();
+                    vm.MediaThumbnails = group.Ids
+                                              .Select(x => changes[x].EditedMedia)
+                                              .Select(x => new MediaThumbnailVM
+                                              {
+                                                  Key = x.Key,
+                                                  Type = x.Type,
+                                                  ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small),
+                                              })
+                                              .ToList();
                 }
 
                 yield return vm;
             }
+        }
+
+        /// <summary>
+        /// Builds a link to the page.
+        /// </summary>
+        private LinkVM GetLinkToPage(Page page)
+        {
+            return new LinkVM
+            {
+                Title = page.Title,
+                Url = _url.Action("Description", "Page", new {area = "Front", key = page.Key})
+            };
         }
     }
 }

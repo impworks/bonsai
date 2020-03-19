@@ -11,9 +11,9 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// URL to the avatar.
+        /// User's registered email.
         /// </summary>
-        public string Avatar { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// Flag indicating that this user has access to admin panel.

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.Infrastructure;
@@ -31,16 +32,6 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         public ChangesetType ChangeType { get; set; }
 
         /// <summary>
-        /// Changed element title.
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// URL for page/relation filter.
-        /// </summary>
-        public string Url { get; set; }
-
-        /// <summary>
         /// Thumbnails for media.
         /// </summary>
         public IReadOnlyList<MediaThumbnailVM> MediaThumbnails { get; set; }
@@ -50,6 +41,16 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         /// </summary>
         public UserTitleVM User { get; set; }
 
+        /// <summary>
+        /// Link to the entity.
+        /// </summary>
+        public LinkVM MainLink { get; set; }
+
+        /// <summary>
+        /// Related links.
+        /// </summary>
+        public IReadOnlyList<LinkVM> ExtraLinks { get; set; }
+
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<Changeset, ChangesetEventVM>()
@@ -58,8 +59,8 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
                    .ForMember(x => x.Date, opt => opt.MapFrom(x => x.Date))
                    .ForMember(x => x.User, opt => opt.MapFrom(x => x.Author))
                    .Ignore(x => x.MediaThumbnails)
-                   .Ignore(x => x.Title)
-                   .Ignore(x => x.Url);
+                   .Ignore(x => x.MainLink)
+                   .Ignore(x => x.ExtraLinks);
 
             ChangesetType GetChangesetType(Changeset chg)
             {

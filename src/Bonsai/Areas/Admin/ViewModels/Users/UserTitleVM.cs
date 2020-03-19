@@ -44,6 +44,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         {
             profile.CreateMap<AppUser, UserTitleVM>()
                    .ForMember(x => x.Role, opt => opt.Ignore())
+                   .ForMember(x => x.Email, opt => opt.MapFrom(y => y.Email))
                    .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName))
                    .ForMember(x => x.AuthType, opt => opt.MapFrom(x => x.AuthType))
                    .ForMember(x => x.LockoutEnd, opt => opt.MapFrom(x => x.LockoutEnd));
