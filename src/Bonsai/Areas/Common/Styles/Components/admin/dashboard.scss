@@ -23,10 +23,26 @@
     .dashboard-event {
         margin-bottom: 1rem;
 
-        .dashboard-event-image {
-            width: 64px;
-            height: 64px;
-            margin-right: 0.75rem;
+        .dashboard-event-image-wrapper {
+            position: relative;
+
+            .dashboard-event-image {
+                width: 64px;
+                height: 64px;
+                margin-right: 0.75rem;
+            }
+
+            .dashboard-event-icon {
+                background: #fff;
+                border-radius: 1rem;
+                padding: 4px;
+                position: absolute;
+                right: 9px;
+                bottom: -4px;
+                box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+                width: 25px;
+                text-align: center;
+            }
         }
 
         .dashboard-event-header {

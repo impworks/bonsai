@@ -95,13 +95,18 @@
             @foreach (var evt in Model.Events)
             {
                 <div class="media dashboard-event">
-                    <img src="@ViewHelper.GetGravatarUrl(evt.User.Email)" class="dashboard-event-image" title="@evt.User.FullName" />
+                    <div class="dashboard-event-image-wrapper">
+                        <img src="@ViewHelper.GetGravatarUrl(evt.User.Email)" class="dashboard-event-image" title="@evt.User.FullName" />
+                        <div class="dashboard-event-icon">
+                            <span class="fa fa-@(GetChangeClass(evt.ChangeType))"></span>
+                        </div>
+                    </div>
                     <div class="media-body">
                         <h5 class="dashboard-event-header" title="@evt.Date.LocalDateTime.ToInvariantString()">@evt.Date.Humanize().Capitalize()</h5>
                         @if (evt.ChangeType == ChangesetType.Created && evt.EntityType == ChangesetEntityType.Media)
                         {
                             <span>
-                                @(evt.MediaThumbnails.Count == 1 ? "Загружен" : "Загружено") @evt.MediaThumbnails.Count.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов"):
+                                @(evt.MediaThumbnails.Count == 1 ? "Загружен" : "Загружено") @evt.MediaThumbnails.Count.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов")
                             </span>
                         }
                         else
@@ -110,13 +115,16 @@
                                 @GetChangeDescription(evt.ChangeType, evt.EntityType)
                                 @GetEntityName(evt.EntityType)
                             </span>
-                            @if (!string.IsNullOrEmpty(evt.MainLink.Url))
+                            if (evt.MainLink != null)
                             {
-                                <a href="@evt.MainLink.Url">@evt.MainLink.Title</a>
-                            }
-                            else
-                            {
-                                <span>@evt.MainLink.Title</span>
+                                @if (!string.IsNullOrEmpty(evt.MainLink.Url))
+                                {
+                                    <a href="@evt.MainLink.Url">@evt.MainLink.Title</a>
+                                }
+                                else
+                                {
+                                    <span>@evt.MainLink.Title</span>
+                                }
                             }
                             @if (evt.EntityType == ChangesetEntityType.Relation && evt.ExtraLinks != null)
                             {
@@ -124,7 +132,6 @@
                                     между страницами: <a href="@evt.ExtraLinks[0].Url">@evt.ExtraLinks[0].Title</a> и <a href="@evt.ExtraLinks[1].Url">@evt.ExtraLinks[1].Title</a>
                                 </span>
                             }
-                            <text>.</text>
                         }
 
                         @if (evt.MediaThumbnails?.Count > 0)
@@ -150,7 +157,7 @@
     else
     {
         <div class="alert alert-info">
-            Здесь будет показываться список последних действий с базой.<br />
+            Здесь будет показываться список последних действий.<br />
             Вы можете создать <a href="@Url.Action("Index", "Pages", new { area = "Admin" } )">страницу</a> или <a href="@Url.Action("Upload", "Media", new { area = "Admin" })">загрузить медиа-файлы</a>.
         </div>
     }
