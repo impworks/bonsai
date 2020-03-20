@@ -32,7 +32,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// Returns the list of events at specified page.
         /// </summary>
         [Route("events")]
-        public async Task<ActionResult> GetEvents([FromQuery] int page = 0)
+        public async Task<ActionResult> Events([FromQuery] int page = 0)
         {
             var vm = await _dash.GetEventsAsync(page).ToListAsync();
             return View(vm);
