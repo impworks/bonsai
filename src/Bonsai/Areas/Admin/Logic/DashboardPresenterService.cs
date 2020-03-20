@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -15,6 +16,7 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Impworks.Utils.Strings;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,14 +27,16 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class DashboardPresenterService
     {
-        public DashboardPresenterService(AppDbContext db, IUrlHelper url, IMapper mapper)
+        public DashboardPresenterService(AppDbContext db, IWebHostEnvironment env, IUrlHelper url, IMapper mapper)
         {
             _db = db;
+            _env = env;
             _url = url;
             _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
+        private readonly IWebHostEnvironment _env;
         private readonly IUrlHelper _url;
         private readonly IMapper _mapper;
 
@@ -101,6 +105,7 @@ namespace Bonsai.Areas.Admin.Logic
                 {
                     vm.MediaThumbnails = group.Ids
                                               .Select(x => changes[x].EditedMedia)
+                                              .Where(x => File.Exists(_env.GetMediaPath(x)))
                                               .Select(x => new MediaThumbnailVM
                                               {
                                                   Key = x.Key,
