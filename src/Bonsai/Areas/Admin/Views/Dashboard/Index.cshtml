@@ -52,8 +52,10 @@
 <div class="dashboard-events">
     @if (Model.Events?.Count > 0)
     {
-        <div class="load-on-scroll" data-load-url="@Url.Action("Events", "Dashboard", new { area = "Admin" })" data-load-elem-class=".dashboard-event">
-            @await Html.PartialAsync("Events", Model.Events)
+        <div class="card">
+            <div class="load-on-scroll" data-load-url="@Url.Action("Events", "Dashboard", new { area = "Admin" })" data-load-elem-class=".dashboard-event">
+                @await Html.PartialAsync("Events", Model.Events)
+            </div>
         </div>
     }
     else

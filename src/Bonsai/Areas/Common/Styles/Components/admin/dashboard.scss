@@ -20,50 +20,67 @@
 }
 
 .dashboard-events {
+    
     .dashboard-event {
-        margin-bottom: 1rem;
+        margin: 0;
+        padding-top: 1rem;
 
         .dashboard-event-image-wrapper {
+            margin: 0 1rem;
             position: relative;
 
             .dashboard-event-image {
-                width: 64px;
-                height: 64px;
-                margin-right: 0.75rem;
+                width: 3rem;
+                height: 3rem;
+                border-radius: 0.4rem;
             }
 
             .dashboard-event-icon {
                 background: #fff;
-                border-radius: 1rem;
                 padding: 4px;
                 position: absolute;
-                right: 9px;
-                bottom: -4px;
-                box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+                right: 0;
+                bottom: 0;
                 width: 25px;
                 text-align: center;
+                font-size: 0.8rem;
+                border-radius: 0.4rem 0 0 0;
+            }
+        }
+        
+        .dashboard-event-header {
+            margin: 0;
+            
+            .dashboard-event-title {
+                padding: 0;
+            }
+
+            .dashboard-event-date {
+                font-size: 0.9rem;
             }
         }
 
-        .dashboard-event-header {
-            padding-top: 0;
-            margin-top: -2px;
-            margin-bottom: 0.25rem;
+        .dashboard-event-content {
+            padding: 0 1rem 1rem 0;
+        }
+        
+        &:not(:last-child) .dashboard-event-content {
+            border-bottom: 1px solid rgba($black, .125);
         }
 
         .dashboard-event-media {
-            margin-top: 0.5rem;
-            margin-bottom: 0;
             line-height: 0;
             font-size: 0;
-
+            margin: 0 -0.5rem;
+            
             .list-inline-item {
-                margin-right: 0.25rem;
+                margin: 0.5rem;
             }
 
             .media-thumb-wrapper {
                 width: unset;
                 padding: 5px;
+                margin: 0;
 
                 .media-thumb-square {
                     width: 64px;

@@ -12,21 +12,21 @@
     {
         return entity == ChangesetEntityType.Media
             ? type switch {
-                ChangesetType.Created => "Загружен",
-                ChangesetType.Removed => "Удален",
-                ChangesetType.Updated => "Обновлен",
-                ChangesetType.Restored => "Восстановлен"
+                ChangesetType.Created => "загрузил",
+                ChangesetType.Removed => "удалил",
+                ChangesetType.Updated => "обновил",
+                ChangesetType.Restored => "восстановил"
             }
             : type switch {
-                ChangesetType.Created => "Создана",
-                ChangesetType.Removed => "Удалена",
-                ChangesetType.Updated => "Обновлена",
-                ChangesetType.Restored => "Восстановлена"
+                ChangesetType.Created => "создал",
+                ChangesetType.Removed => "удалил",
+                ChangesetType.Updated => "обновил",
+                ChangesetType.Restored => "восстановил"
             };
     }
 
     string GetEntityName(ChangesetEntityType entity) => entity switch {
-        ChangesetEntityType.Page => "cтраница",
+        ChangesetEntityType.Page => "cтраницу",
         ChangesetEntityType.Media => "медиа-файл",
         ChangesetEntityType.Relation => "связь"
     };
@@ -39,70 +39,87 @@
     };
 }
 
+
 @foreach (var evt in Model)
 {
-    <div class="media dashboard-event">
-        <div class="dashboard-event-image-wrapper">
-            <img src="@ViewHelper.GetGravatarUrl(evt.User.Email)" class="dashboard-event-image" title="@evt.User.FullName" />
-            <div class="dashboard-event-icon">
-                <span class="fa fa-@(GetChangeClass(evt.ChangeType))"></span>
+
+    <div class="row dashboard-event">
+        <div class="col-auto p-0">
+            <div class="dashboard-event-image-wrapper">
+                <img src="@ViewHelper.GetGravatarUrl(evt.User.Email)" class="dashboard-event-image" title="@evt.User.FullName" />
+                <div class="dashboard-event-icon">
+                    <span class="fa fa-@(GetChangeClass(evt.ChangeType))"></span>
+                </div>
             </div>
         </div>
-        <div class="media-body">
-            <h5 class="dashboard-event-header" title="@evt.Date.LocalDateTime.ToInvariantString()">@evt.Date.Humanize().Capitalize()</h5>
-            @if (evt.ChangeType == ChangesetType.Created && evt.EntityType == ChangesetEntityType.Media)
-            {
-                <span>
-                    @(evt.MediaThumbnails.Count == 1 ? "Загружен" : "Загружено") @evt.MediaThumbnails.Count.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов")
-                </span>
-            }
-            else
-            {
-                <span>
-                    @GetChangeDescription(evt.ChangeType, evt.EntityType)
-                    @GetEntityName(evt.EntityType)
-                </span>
-                if (evt.MainLink != null)
+        <div class="col p-0">
+            <div class="row dashboard-event-header">
+                <div class="col dashboard-event-title">
+                    <h6>
+                        @evt.User.FullName 
+                        @if (evt.ChangeType == ChangesetType.Created && evt.EntityType == ChangesetEntityType.Media)
+                        {
+                            <span>
+                                загрузил @evt.MediaThumbnails.Count.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов")
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                @GetChangeDescription(evt.ChangeType, evt.EntityType)
+                                @GetEntityName(evt.EntityType)
+                            </span>
+                        }
+                    </h6>
+                </div>
+                <div class="col-auto dashboard-event-date">
+                    @evt.Date.Humanize().Capitalize()
+                </div>
+            </div>
+            <div class="dashboard-event-content">
+                @if (evt.MediaThumbnails?.Count > 0)
                 {
-                    @if (!string.IsNullOrEmpty(evt.MainLink.Url))
-                    {
-                        <a href="@evt.MainLink.Url">@evt.MainLink.Title</a>
-                    }
-                    else
-                    {
-                        <span>@evt.MainLink.Title</span>
-                    }
-                }
-                @if (evt.EntityType == ChangesetEntityType.Relation && evt.ExtraLinks != null)
-                {
-                    <span>
-                        между страницами: <a href="@evt.ExtraLinks[0].Url">@evt.ExtraLinks[0].Title</a> и <a href="@evt.ExtraLinks[1].Url">@evt.ExtraLinks[1].Title</a>
-                    </span>
-                }
-            }
-
-            @if (evt.MediaThumbnails?.Count > 0)
-            {
-                <ul class="list-inline dashboard-event-media">
-                    @foreach (var elem in evt.MediaThumbnails)
-                    {
-                        <li class="list-inline-item">
-                            <div class="media-thumb-wrapper">
-                                @if (evt.ChangeType == ChangesetType.Removed)
-                                {
-                                    <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')"></div>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = elem.Key})" class="media-thumb-link" data-media="@elem.Key">
+                    <ul class="list-inline dashboard-event-media">
+                        @foreach (var elem in evt.MediaThumbnails)
+                        {
+                            <li class="list-inline-item">
+                                <div class="media-thumb-wrapper">
+                                    @if (evt.ChangeType == ChangesetType.Removed)
+                                    {
                                         <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')"></div>
-                                    </a>
-                                }
-                            </div>
-                        </li>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = elem.Key})" class="media-thumb-link" data-media="@elem.Key">
+                                            <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')"></div>
+                                        </a>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    if (evt.MainLink != null)
+                    {
+                        @if (!string.IsNullOrEmpty(evt.MainLink.Url))
+                        {
+                            <a href="@evt.MainLink.Url">@evt.MainLink.Title</a>
+                        }
+                        else
+                        {
+                            <span>@evt.MainLink.Title</span>
+                        }
                     }
-                </ul>
-            }
+                    @if (evt.EntityType == ChangesetEntityType.Relation && evt.ExtraLinks != null)
+                    {
+                        <span>
+                            между страницами: <a href="@evt.ExtraLinks[0].Url">@evt.ExtraLinks[0].Title</a> и <a href="@evt.ExtraLinks[1].Url">@evt.ExtraLinks[1].Title</a>
+                        </span>
+                    }
+                }
+            </div>
         </div>
     </div>
 }
