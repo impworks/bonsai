@@ -9,10 +9,10 @@
 <div class="dashboard-cards">
     <div class="card-deck">
         <div class="card">
-            <div class="card-body">
+            <a class="card-body" href="@Url.Action("Index", "Pages", new {area = "Admin"})">
                 <h2 class="card-title text-center">@Model.PagesCount</h2>
                 <p class="card-text text-center">@Model.PagesCount.DisplayNumeric("страница", "страницы", "страниц", false)</p>
-            </div>
+            </a>
             @if (Model.PagesToImproveCount > 0)
             {
                 <div class="card-footer">
@@ -26,10 +26,10 @@
         </div>
 
         <div class="card">
-            <div class="card-body">
+            <a class="card-body" href="@Url.Action("Index", "Media", new { area = "Admin" })">
                 <h2 class="card-title text-center">@Model.MediaCount</h2>
                 <p class="card-text text-center">@Model.MediaCount.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов", false)</p>
-            </div>
+            </a>
             @if (Model.MediaToTagCount > 0)
             {
                 <div class="card-footer">
@@ -41,18 +41,18 @@
         </div>
 
         <div class="card">
-            <div class="card-body">
+            <a class="card-body" href="@Url.Action("Index", "Relations", new { area = "Admin" })">
                 <h2 class="card-title text-center">@Model.RelationsCount</h2>
                 <p class="card-text text-center">@Model.RelationsCount.DisplayNumeric("связь", "связи", "связей", false)</p>
-            </div>
+            </a>
         </div>
 
 
         <div class="card">
-            <div class="card-body">
+            <a class="card-body" href="@Url.Action("Index", "Users", new { area = "Admin" })">
                 <h2 class="card-title text-center">@Model.UsersCount</h2>
                 <p class="card-text text-center">@Model.UsersCount.DisplayNumeric("пользователь", "пользователя", "пользователей", false)</p>
-            </div>
+            </a>
             @if (Model.UsersPendingValidationCount > 0)
             {
                 <div class="card-footer">
