@@ -1,6 +1,7 @@
 ﻿@model IReadOnlyList<Bonsai.Areas.Admin.ViewModels.Dashboard.ChangesetEventVM>
 
 @using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
 @using Humanizer
@@ -8,21 +9,23 @@
 @using Impworks.Utils.Strings
 
 @{
-    string GetChangeDescription(ChangesetType type, ChangesetEntityType entity)
+    string GetChangeDescription(ChangesetEventVM evt)
     {
-        return entity == ChangesetEntityType.Media
-            ? type switch {
+        var baseForm = evt.EntityType == ChangesetEntityType.Media
+            ? evt.ChangeType switch {
                 ChangesetType.Created => "загрузил",
                 ChangesetType.Removed => "удалил",
                 ChangesetType.Updated => "обновил",
                 ChangesetType.Restored => "восстановил"
             }
-            : type switch {
+            : evt.ChangeType switch {
                 ChangesetType.Created => "создал",
                 ChangesetType.Removed => "удалил",
                 ChangesetType.Updated => "обновил",
                 ChangesetType.Restored => "восстановил"
             };
+
+        return evt.User.IsMale == false ? baseForm + "а" : baseForm;
     }
 
     string GetEntityName(ChangesetEntityType entity) => entity switch {
@@ -66,13 +69,13 @@
                         else
                         {
                             <span>
-                                @GetChangeDescription(evt.ChangeType, evt.EntityType)
+                                @GetChangeDescription(evt)
                                 @GetEntityName(evt.EntityType)
                             </span>
                         }
                     </h6>
                 </div>
-                <div class="col-auto dashboard-event-date">
+                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToInvariantString()">
                     @evt.Date.Humanize().Capitalize()
                 </div>
             </div>

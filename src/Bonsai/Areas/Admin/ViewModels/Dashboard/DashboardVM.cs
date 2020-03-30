@@ -36,5 +36,15 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         /// Total number of relations.
         /// </summary>
         public int RelationsCount { get; set; }
+
+        /// <summary>
+        /// Total number of users.
+        /// </summary>
+        public int UsersCount { get; set; }
+
+        /// <summary>
+        /// Number of newly registered users.
+        /// </summary>
+        public int UsersPendingValidationCount { get; set; }
     }
 }

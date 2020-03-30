@@ -18,7 +18,7 @@
                 <div class="card-footer">
                     <small class="text-muted">
                         <a href="@Url.Action("Index", "Pages", new {area = "Admin", OrderBy = "CompletenessScore", OrderDescending = false})">
-                            @Model.PagesToImproveCount.DisplayNumeric("страницу", "страницы", "страниц") можно улучшить
+                            @Model.PagesToImproveCount можно улучшить
                         </a>
                     </small>
                 </div>
@@ -34,7 +34,7 @@
             {
                 <div class="card-footer">
                     <small class="text-muted">
-                        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">@Model.MediaToTagCount.DisplayNumeric("файл", "файла", "файлов") без отметок</a>
+                        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">@Model.MediaToTagCount без отметок</a>
                     </small>
                 </div>
             }
@@ -45,6 +45,22 @@
                 <h2 class="card-title text-center">@Model.RelationsCount</h2>
                 <p class="card-text text-center">@Model.RelationsCount.DisplayNumeric("связь", "связи", "связей", false)</p>
             </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">@Model.UsersCount</h2>
+                <p class="card-text text-center">@Model.UsersCount.DisplayNumeric("пользователь", "пользователя", "пользователей", false)</p>
+            </div>
+            @if (Model.UsersPendingValidationCount > 0)
+            {
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <a href="@Url.Action("Index", "Users", new {area = "Admin"})">@Model.UsersPendingValidationCount.DisplayNumeric("запрос", "запроса", "запросов") </a>
+                    </small>
+                </div>
+            }
         </div>
     </div>
 </div>

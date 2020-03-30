@@ -8,6 +8,7 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
 using Dapper;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Code.DomainModel.Relations
@@ -148,6 +149,9 @@ namespace Bonsai.Code.DomainModel.Relations
         /// </summary>
         private static async Task<IReadOnlyDictionary<Guid, IReadOnlyList<RelationExcerpt>>> LoadRelationsAsync(AppDbContext db, RelationContextOptions opts)
         {
+            if (opts.PagesOnly)
+                return null;
+
             var query =  db.Relations
                            .Where(x => x.Source.IsDeleted == false
                                        && x.Destination.IsDeleted == false
