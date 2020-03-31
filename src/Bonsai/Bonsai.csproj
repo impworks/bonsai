@@ -10,19 +10,42 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Data\Utils\Seed\SampleHumanFacts.json" />
-    <Content Remove="Data\Utils\Seed\SamplePetFacts.json" />
+    <None Remove="Data\Utils\Seed\Media\1.jpg" />
+    <None Remove="Data\Utils\Seed\Media\1.mp4" />
+    <None Remove="Data\Utils\Seed\Media\2.jpg" />
+    <None Remove="Data\Utils\Seed\Media\3.jpg" />
+    <None Remove="Data\Utils\Seed\Media\doc-preview.png" />
+    <None Remove="Data\Utils\Seed\Media\video-preview.png" />
+    <None Remove="Data\Utils\Seed\SampleDescription.md" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Utils\Seed\Media\" />
+    <Content Include="Data\Utils\Seed\Media\1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Utils\Seed\Media\1.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Utils\Seed\Media\2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Utils\Seed\Media\3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Utils\Seed\Media\doc-preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Utils\Seed\Media\video-preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Utils\Seed\SampleDescription.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="External\tree\" />
     <Folder Include="wwwroot\media\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Data\Utils\Seed\SampleHumanFacts.json" />
-    <None Include="Data\Utils\Seed\SamplePetFacts.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +89,12 @@
     <ItemGroup>
       <Content Update="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Data\Utils\Seed\SampleHumanFacts.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Data\Utils\Seed\SamplePetFacts.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 
