@@ -1,6 +1,8 @@
 ﻿$(function () {
-    var $wrapper = $('.search-results'),
+    var $wrapper = $('.load-on-scroll'),
         $win = $(window),
+        loadUrl = $wrapper.data('load-url'),
+        elemClass = $wrapper.data('load-elem-class'),
         page = 1;
 
     function debounce(func, wait, immediate) {
@@ -30,8 +32,7 @@
     }
 
     function loadMore() {
-        var query = $('#search-query-hidden').val();
-        var url = '/s/results?query=' + encodeURIComponent(query) + '&page=' + page;
+        var url = loadUrl + (loadUrl.indexOf('?') !== -1 ? '&' : '?') + 'page=' + page;
         $.ajax(url).then(function(html) {
             $wrapper.append(html);
             page++;
@@ -40,7 +41,7 @@
     }
 
     function listenForScroll() {
-        var $elem = $wrapper.find('.search-result:last-of-type');
+        var $elem = $wrapper.find(elemClass + ':last-of-type');
 
         if (isInView($elem)) {
             loadMore();

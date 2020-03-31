@@ -9,5 +9,10 @@
         /// Loads only pages of type "Person" and their relations.
         /// </summary>
         public bool PeopleOnly { get; set; }
+
+        /// <summary>
+        /// Omits loading relations.
+        /// </summary>
+        public bool PagesOnly { get; set; }
     }
 }

@@ -6,101 +6,79 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-sm-6">
-        <h3>Обновленные страницы</h3>
-        @if(Model.UpdatedPages.Any())
-        {
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Название</th>
-                    <th width="1px"></th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach(var p in Model.UpdatedPages)
-                {
-                    <tr class="admin-row">
-                        <td>
-                            <page-image image="@p.MainPhotoPath" type="@p.Type"></page-image>
-                            <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank" title="Обновлено: @p.LastUpdateDate.DateTime.ToLongDateString()">@p.Title</a>
-                        </td>
-                        <td class="admin-row-actions">
-                            <a href="@Url.Action("Update", "Pages", new {area = "Admin", id = p.Id})">
-                                <span class="fa fa-pencil-square" title="Редактировать"></span>
-                            </a>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="alert alert-info">Не добавлено ни одной страницы.</div>
-        }
-    </div>
+<div class="dashboard-cards">
+    <div class="card-deck">
+        <div class="card">
+            <a class="card-body" href="@Url.Action("Index", "Pages", new {area = "Admin"})">
+                <h2 class="card-title text-center">@Model.PagesCount</h2>
+                <p class="card-text text-center">@Model.PagesCount.DisplayNumeric("страница", "страницы", "страниц", false)</p>
+            </a>
+            @if (Model.PagesToImproveCount > 0)
+            {
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <a href="@Url.Action("Index", "Pages", new {area = "Admin", OrderBy = "CompletenessScore", OrderDescending = false})">
+                            @Model.PagesToImproveCount можно улучшить
+                        </a>
+                    </small>
+                </div>
+            }
+        </div>
 
-    <div class="col-sm-6">
-        <h3>Пользователи</h3>
-        @if(Model.NewUsers.Any())
-        {
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Имя</th>
-                    <th width="1px"></th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach(var u in Model.NewUsers)
-                {
-                    <tr class="admin-row">
-                        <td>
-                            <img src="@ViewHelper.GetGravatarUrl(u.Email)" />
-                            <a href="@Url.Action("Update", "Users", new {area = "Admin", id = u.Id})" title="Подтвердить">
-                                @u.FullName
-                            </a>
-                        </td>
-                        <td class="admin-row-actions">
-                            <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = u.Id})" title="Удалить">
-                                <span class="fa fa-remove"></span>
-                            </a>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="alert alert-info">Новых регистраций нет.</div>
-        }
+        <div class="card">
+            <a class="card-body" href="@Url.Action("Index", "Media", new { area = "Admin" })">
+                <h2 class="card-title text-center">@Model.MediaCount</h2>
+                <p class="card-text text-center">@Model.MediaCount.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов", false)</p>
+            </a>
+            @if (Model.MediaToTagCount > 0)
+            {
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">@Model.MediaToTagCount без отметок</a>
+                    </small>
+                </div>
+            }
+        </div>
+
+        <div class="card">
+            <a class="card-body" href="@Url.Action("Index", "Relations", new { area = "Admin" })">
+                <h2 class="card-title text-center">@Model.RelationsCount</h2>
+                <p class="card-text text-center">@Model.RelationsCount.DisplayNumeric("связь", "связи", "связей", false)</p>
+            </a>
+        </div>
+
+
+        <div class="card">
+            <a class="card-body" href="@Url.Action("Index", "Users", new { area = "Admin" })">
+                <h2 class="card-title text-center">@Model.UsersCount</h2>
+                <p class="card-text text-center">@Model.UsersCount.DisplayNumeric("пользователь", "пользователя", "пользователей", false)</p>
+            </a>
+            @if (Model.UsersPendingValidationCount > 0)
+            {
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <a href="@Url.Action("Index", "Users", new {area = "Admin"})">@Model.UsersPendingValidationCount.DisplayNumeric("запрос", "запроса", "запросов") </a>
+                    </small>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-sm-12">
-        <h3>Медиа</h3>
-        @if(Model.UploadedMedia.Any())
-        {
-            <ul class="list-inline">
-                @foreach(var m in Model.UploadedMedia)
-                {
-                    <li class="list-inline-item">
-                        <div class="media-thumb-wrapper">
-                            <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = m.Key})" class="media-thumb-link" data-media="@m.Key">
-                                <div class="media-thumb-square" style="background-image: url('@Url.Content(m.ThumbnailUrl)')"></div>
-                            </a>
-                        </div>
-                    </li>
-                }
-            </ul>
-        }
-        else
-        {
-            <div class="alert alert-info">Не загружено ни одного медиафайла.</div>
-        }
-    </div>
+<div class="dashboard-events">
+    @if (Model.Events?.Count > 0)
+    {
+        <div class="card">
+            <div class="load-on-scroll" data-load-url="@Url.Action("Events", "Dashboard", new { area = "Admin" })" data-load-elem-class=".dashboard-event">
+                @await Html.PartialAsync("Events", Model.Events)
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Здесь будет показываться список последних действий.<br />
+            Вы можете создать <a href="@Url.Action("Index", "Pages", new { area = "Admin" } )">страницу</a> или <a href="@Url.Action("Upload", "Media", new { area = "Admin" })">загрузить медиа-файлы</a>.
+        </div>
+    }
 </div>

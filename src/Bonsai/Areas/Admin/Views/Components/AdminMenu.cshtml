@@ -6,9 +6,15 @@
         <div class="list-group">
             @foreach(var item in group.Items)
             {
-                <a href="@item.Url" class="list-group-item list-group-item-action @(item.IsSelected ? "active" : "")">
-                    <i class="fa fa-fw fa-@(item.Icon)"></i>
-                    @item.Title
+                <a href="@item.Url" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @(item.IsSelected ? "active" : "")">
+                    <span>
+                        <i class="fa fa-fw fa-@(item.Icon)"></i>
+                        @item.Title
+                    </span>
+                    @if (item.NotificationsCount > 0)
+                    {
+                        <span class="badge badge-primary badge-pill pull-right">@item.NotificationsCount</span>
+                    }
                 </a>
             }
         </div>

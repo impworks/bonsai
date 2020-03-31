@@ -27,6 +27,7 @@ namespace Bonsai.Code.Config
             services.AddMvc()
                     .AddControllersAsServices()
                     .AddSessionStateTempDataProvider()
+                    .AddRazorRuntimeCompilation()
                     .AddNewtonsoftJson(opts =>
                     {
                         var convs = new List<JsonConverter>

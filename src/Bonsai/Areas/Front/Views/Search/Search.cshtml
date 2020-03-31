@@ -4,7 +4,8 @@
     ViewBag.SearchQuery = Model.Query;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 }
-<div class="search-results">
+
+<div class="search-results load-on-scroll" data-load-url="@Url.Action("SearchResults", "Search")" data-load-elem-class=".search-result">
     <h1>Результаты поиска</h1>
 
     @if (Model.Results.Any())

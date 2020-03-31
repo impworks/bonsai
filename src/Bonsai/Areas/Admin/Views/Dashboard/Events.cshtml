@@ -1,0 +1,135 @@
+﻿@model IReadOnlyList<Bonsai.Areas.Admin.ViewModels.Dashboard.ChangesetEventVM>
+
+@using System.Globalization
+@using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Bonsai.Areas.Admin.ViewModels.Dashboard
+@using Bonsai.Code.Utils.Helpers
+@using Bonsai.Data.Models
+@using Humanizer
+@using Impworks.Utils.Strings
+
+@{
+    string GetChangeDescription(ChangesetEventVM evt)
+    {
+        var baseForm = evt.EntityType == ChangesetEntityType.Media
+            ? evt.ChangeType switch {
+                ChangesetType.Created => "загрузил",
+                ChangesetType.Removed => "удалил",
+                ChangesetType.Updated => "обновил",
+                ChangesetType.Restored => "восстановил"
+            }
+            : evt.ChangeType switch {
+                ChangesetType.Created => "создал",
+                ChangesetType.Removed => "удалил",
+                ChangesetType.Updated => "обновил",
+                ChangesetType.Restored => "восстановил"
+            };
+
+        return evt.User.IsMale == false ? baseForm + "а" : baseForm;
+    }
+
+    string GetEntityName(ChangesetEntityType entity) => entity switch {
+        ChangesetEntityType.Page => "cтраницу",
+        ChangesetEntityType.Media => "медиа-файл",
+        ChangesetEntityType.Relation => "связь"
+    };
+
+    string GetChangeClass(ChangesetType type) => type switch {
+        ChangesetType.Created => "plus",
+        ChangesetType.Removed => "times",
+        ChangesetType.Updated => "pencil",
+        ChangesetType.Restored => "undo"
+    };
+
+    string GetChangeDate(DateTimeOffset date)
+    {
+        return date < DateTimeOffset.Now.AddDays(-14)
+            ? date.LocalDateTime.ToString("dd MMMM yyyy")
+            : date.Humanize().Capitalize();
+    }
+}
+
+@foreach (var evt in Model)
+{
+
+    <div class="row dashboard-event">
+        <div class="col-auto p-0">
+            <div class="dashboard-event-image-wrapper">
+                <img src="@ViewHelper.GetGravatarUrl(evt.User.Email)" class="dashboard-event-image" title="@evt.User.FullName" />
+                <div class="dashboard-event-icon">
+                    <span class="fa fa-@(GetChangeClass(evt.ChangeType))"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col p-0">
+            <div class="row dashboard-event-header">
+                <div class="col dashboard-event-title">
+                    <h6>
+                        @evt.User.FullName 
+                        @if (evt.EntityType == ChangesetEntityType.Media)
+                        {
+                            <span>
+                                @GetChangeDescription(evt)
+                                @evt.ElementCount.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов")
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                @GetChangeDescription(evt)
+                                @GetEntityName(evt.EntityType)
+                            </span>
+                        }
+                    </h6>
+                </div>
+                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)">
+                    @GetChangeDate(evt.Date)
+                </div>
+            </div>
+            <div class="dashboard-event-content">
+                @if (evt.MediaThumbnails?.Count > 0)
+                {
+                    <ul class="list-inline dashboard-event-media">
+                        @foreach (var elem in evt.MediaThumbnails)
+                        {
+                            <li class="list-inline-item">
+                                <div class="media-thumb-wrapper">
+                                    @if (evt.ChangeType == ChangesetType.Removed)
+                                    {
+                                        <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')"></div>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = elem.Key})" class="media-thumb-link" data-media="@elem.Key">
+                                            <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')"></div>
+                                        </a>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    if (evt.MainLink != null)
+                    {
+                        @if (!string.IsNullOrEmpty(evt.MainLink.Url))
+                        {
+                            <a href="@evt.MainLink.Url">@evt.MainLink.Title</a>
+                        }
+                        else
+                        {
+                            <span>@evt.MainLink.Title</span>
+                        }
+                    }
+                    @if (evt.EntityType == ChangesetEntityType.Relation && evt.ExtraLinks != null)
+                    {
+                        <span>
+                            между страницами: <a href="@evt.ExtraLinks[0].Url">@evt.ExtraLinks[0].Title</a> и <a href="@evt.ExtraLinks[1].Url">@evt.ExtraLinks[1].Title</a>
+                        </span>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}

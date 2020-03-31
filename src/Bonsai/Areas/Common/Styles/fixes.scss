@@ -98,3 +98,8 @@ input[type="range"]:focus + .rangeslider .rangeslider__handle {
     -webkit-box-shadow: 0 0 8px rgba(255, 0, 255, 0.9);
     box-shadow: 0 0 8px rgba(255, 0, 255, 0.9);
 }
+
+.list-group .list-group-item.active .badge.badge-primary {
+    color: #007bff;
+    background-color: #fff;
+}

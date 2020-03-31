@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Bonsai.Areas.Admin.ViewModels.Users;
-using Bonsai.Areas.Front.ViewModels.Page;
 
 namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 {
@@ -10,18 +8,43 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
     public class DashboardVM
     {
         /// <summary>
-        /// Newly updated pages.
+        /// Last edits made by users.
         /// </summary>
-        public IReadOnlyList<PageTitleExtendedVM> UpdatedPages { get; set; }
+        public IReadOnlyList<ChangesetEventVM> Events { get; set; }
 
         /// <summary>
-        /// Newly uploaded media files.
+        /// Total number of pages.
         /// </summary>
-        public IReadOnlyList<MediaThumbnailExtendedVM> UploadedMedia { get; set; }
+        public int PagesCount { get; set; }
 
         /// <summary>
-        /// Newly registered users.
+        /// Number of pages with a low completion score that need more info.
         /// </summary>
-        public IReadOnlyList<UserTitleVM> NewUsers { get; set; }
+        public int PagesToImproveCount { get; set; }
+
+        /// <summary>
+        /// Total number of media.
+        /// </summary>
+        public int MediaCount { get; set; }
+
+        /// <summary>
+        /// Number of photos without tags.
+        /// </summary>
+        public int MediaToTagCount { get; set; }
+
+        /// <summary>
+        /// Total number of relations.
+        /// </summary>
+        public int RelationsCount { get; set; }
+
+        /// <summary>
+        /// Total number of users.
+        /// </summary>
+        public int UsersCount { get; set; }
+
+        /// <summary>
+        /// Number of newly registered users.
+        /// </summary>
+        public int UsersPendingValidationCount { get; set; }
     }
 }

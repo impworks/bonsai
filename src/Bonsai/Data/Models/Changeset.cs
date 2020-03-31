@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Bonsai.Data.Models
 {
     /// <summary>
-    /// The log of a page's edit and its consequences on other pages.
+    /// The log of an entity's modification.
     /// </summary>
     public class Changeset
     {

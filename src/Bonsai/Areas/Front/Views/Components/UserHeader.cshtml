@@ -1,11 +1,12 @@
-﻿@model Bonsai.Areas.Front.ViewModels.Auth.UserVM
+﻿@using Bonsai.Code.Utils.Helpers
+@model Bonsai.Areas.Front.ViewModels.Auth.UserVM
 <div class="account">
     <div class="row align-items-center">
         @if (Model != null)
         {
             <div class="col">
                 <span class="user-popover-toggle user-image">
-                    <img src="@Model.Avatar" />
+                    <img src="@ViewHelper.GetGravatarUrl(Model.Email)" />
                 </span>
             </div>
             <div class="col">

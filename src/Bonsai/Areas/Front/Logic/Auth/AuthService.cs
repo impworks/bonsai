@@ -161,7 +161,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             return new UserVM
             {
                 Name = user.FirstName + " " + user.LastName,
-                Avatar = ViewHelper.GetGravatarUrl(user.Email),
+                Email = user.Email,
                 PageKey = user.Page?.Key,
                 IsAdministrator = isAdmin,
                 IsValidated = user.IsValidated

@@ -17,6 +17,7 @@ namespace Bonsai.Data
 
         public virtual DbSet<DynamicConfigWrapper> DynamicConfig => Set<DynamicConfigWrapper>();
         public virtual DbSet<Changeset> Changes => Set<Changeset>();
+        public virtual DbSet<ChangeEventGroup> ChangeEvents => Set<ChangeEventGroup>();
         public virtual DbSet<Media> Media => Set<Media>();
         public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
         public virtual DbSet<MediaEncodingJob> MediaJobs => Set<MediaEncodingJob>();
@@ -64,6 +65,8 @@ namespace Bonsai.Data
 
             builder.Entity<PageScored>().ToView("PagesScored");
             builder.Entity<PageScored>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
+
+            builder.Entity<ChangeEventGroup>().ToView("ChangesGrouped");
         }
     }
 }
