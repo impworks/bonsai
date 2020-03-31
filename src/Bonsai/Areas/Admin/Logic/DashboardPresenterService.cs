@@ -70,7 +70,7 @@ namespace Bonsai.Areas.Admin.Logic
                                   .Take(PAGE_SIZE)
                                   .ToListAsync();
 
-            var parsedGroups = groups.Select(x => new {x.GroupKey, Ids = x.Ids.Split(',').Select(y => y.Parse<Guid>())})
+            var parsedGroups = groups.Select(x => new {x.GroupKey, Ids = x.Ids.Split(',').Select(y => y.Parse<Guid>()).ToList()})
                                      .ToList();
 
             var changeIds = parsedGroups.SelectMany(x => x.Ids).ToList();
@@ -98,6 +98,7 @@ namespace Bonsai.Areas.Admin.Logic
                 if (chg.Type == ChangesetEntityType.Page)
                 {
                     vm.MainLink = GetLinkToPage(chg.EditedPage);
+                    vm.ElementCount = 1;
                 }
                 else if (chg.Type == ChangesetEntityType.Relation)
                 {
@@ -108,10 +109,13 @@ namespace Bonsai.Areas.Admin.Logic
                         Url = _url.Action("Update", "Relations", new { area = "Admin", id = rel.Id })
                     };
                     vm.ExtraLinks = new[] {GetLinkToPage(rel.Destination), GetLinkToPage(rel.Source)};
+                    vm.ElementCount = 1;
                 }
                 else if (chg.Type == ChangesetEntityType.Media)
                 {
+                    vm.ElementCount = group.Ids.Count;
                     vm.MediaThumbnails = group.Ids
+                                              .Take(50)
                                               .Select(x => changes[x].EditedMedia)
                                               .Where(x => File.Exists(_env.GetMediaPath(x)))
                                               .Select(x => new MediaThumbnailVM

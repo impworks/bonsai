@@ -32,7 +32,12 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         public ChangesetType ChangeType { get; set; }
 
         /// <summary>
-        /// Thumbnails for media.
+        /// Number of elements grouped in this change (only for MediaThumbnails for now).
+        /// </summary>
+        public int ElementCount { get; set; }
+
+        /// <summary>
+        /// Thumbnails for media (limited to 50).
         /// </summary>
         public IReadOnlyList<MediaThumbnailVM> MediaThumbnails { get; set; }
 
@@ -58,6 +63,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
                    .ForMember(x => x.ChangeType, opt => opt.ResolveUsing(GetChangesetType))
                    .ForMember(x => x.Date, opt => opt.MapFrom(x => x.Date))
                    .ForMember(x => x.User, opt => opt.MapFrom(x => x.Author))
+                   .Ignore(x => x.ElementCount)
                    .Ignore(x => x.MediaThumbnails)
                    .Ignore(x => x.MainLink)
                    .Ignore(x => x.ExtraLinks);

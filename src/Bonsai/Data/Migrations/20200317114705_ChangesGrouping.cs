@@ -29,10 +29,10 @@ namespace Bonsai.Data.Migrations
 			                        ELSE 'Updated'
 		                        END,
 		                        CASE
-			                        WHEN (cg.""Type"" = 1 AND cg.""EditedMediaId"" IS NOT NULL AND cg.""OriginalState"" IS NULL) THEN
+			                        WHEN cg.""EditedMediaId"" IS NOT NULL THEN
 				                        NULL
 			                        ELSE
-				                        CONCAT('__', COALESCE(cg.""EditedPageId"", cg.""EditedMediaId"", cg.""EditedRelationId"") || '')
+				                        CONCAT('__', COALESCE(cg.""EditedPageId"", cg.""EditedRelationId"") || '')
 		                        END,
 		                        '__',
 		                        (EXTRACT(EPOCH FROM cg.""Date"") / 3600)::int

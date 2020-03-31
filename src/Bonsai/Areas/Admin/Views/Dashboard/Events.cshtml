@@ -1,11 +1,11 @@
 ﻿@model IReadOnlyList<Bonsai.Areas.Admin.ViewModels.Dashboard.ChangesetEventVM>
 
+@using System.Globalization
 @using Bonsai.Areas.Admin.ViewModels.Changesets
 @using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
 @using Humanizer
-@using Impworks.Utils.Format
 @using Impworks.Utils.Strings
 
 @{
@@ -40,8 +40,14 @@
         ChangesetType.Updated => "pencil",
         ChangesetType.Restored => "undo"
     };
-}
 
+    string GetChangeDate(DateTimeOffset date)
+    {
+        return date < DateTimeOffset.Now.AddDays(-14)
+            ? date.LocalDateTime.ToString("dd MMMM yyyy")
+            : date.Humanize().Capitalize();
+    }
+}
 
 @foreach (var evt in Model)
 {
@@ -60,10 +66,11 @@
                 <div class="col dashboard-event-title">
                     <h6>
                         @evt.User.FullName 
-                        @if (evt.ChangeType == ChangesetType.Created && evt.EntityType == ChangesetEntityType.Media)
+                        @if (evt.EntityType == ChangesetEntityType.Media)
                         {
                             <span>
-                                загрузил @evt.MediaThumbnails.Count.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов")
+                                @GetChangeDescription(evt)
+                                @evt.ElementCount.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов")
                             </span>
                         }
                         else
@@ -75,8 +82,8 @@
                         }
                     </h6>
                 </div>
-                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToInvariantString()">
-                    @evt.Date.Humanize().Capitalize()
+                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)">
+                    @GetChangeDate(evt.Date)
                 </div>
             </div>
             <div class="dashboard-event-content">
