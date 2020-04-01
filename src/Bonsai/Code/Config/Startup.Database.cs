@@ -50,7 +50,7 @@ namespace Bonsai.Code.Config
             
             var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var sp = scope.ServiceProvider;
-            var seedConfig = Configuration.SeedData ?? new SeedDataConfig(); // all false
+            var demoCfg = Configuration.DemoMode ?? new DemoModeConfig(); // all false
 
             var tasks = startupService.RegisterStartupTask(
                 "DatabaseMigrate",
@@ -63,22 +63,31 @@ namespace Bonsai.Code.Config
                 }
             );
 
-            if (seedConfig.ClearAll)
+            if (demoCfg.Enabled)
             {
-                tasks = tasks.ContinueWith(
-                    "DatabaseClear",
-                    "Очистка базы данных",
-                    () => SeedData.ClearPreviousDataAsync(sp.GetService<AppDbContext>())
-                );
-            }
+                if (demoCfg.ClearOnStartup)
+                {
+                    tasks = tasks.ContinueWith(
+                        "DatabaseClear",
+                        "Очистка базы данных",
+                        () => SeedData.ClearPreviousDataAsync(sp.GetService<AppDbContext>())
+                    );
+                }
 
-            if (seedConfig.Enable)
-            {
-                tasks = tasks.ContinueWith(
-                    "DatabaseSeed",
-                    "Подготовка тестовых данных",
-                    () => SeedData.EnsureSampleDataSeededAsync(sp.GetService<AppDbContext>())
-                );
+                if (demoCfg.CreateDefaultPages || demoCfg.CreateDefaultAdmin)
+                {
+                    tasks = tasks.ContinueWith(
+                        "DatabaseSeed",
+                        "Подготовка тестовых данных",
+                        async () =>
+                        {
+                            if (demoCfg.CreateDefaultPages)
+                                await SeedData.EnsureSampleDataSeededAsync(sp.GetService<AppDbContext>());
+
+                            if (demoCfg.CreateDefaultAdmin)
+                                await SeedData.EnsureDefaultUserCreatedAsync(sp.GetService<UserManager<AppUser>>());
+                        });
+                }
             }
 
             tasks = tasks.ContinueWith(

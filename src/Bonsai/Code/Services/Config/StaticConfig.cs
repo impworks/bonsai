@@ -10,7 +10,6 @@ namespace Bonsai.Code.Services.Config
     public class StaticConfig
     {
         public ConnectionStringsConfig ConnectionStrings { get; set; }
-        public SeedDataConfig SeedData { get; set; }
         public DebugConfig Debug { get; set; }
         public WebServerConfig WebServer { get; set; }
         public DemoModeConfig DemoMode { get; set; }
@@ -23,15 +22,6 @@ namespace Bonsai.Code.Services.Config
     public class ConnectionStringsConfig
     {
         public string Database { get; set; }
-    }
-    
-    /// <summary>
-    /// Test data seeding properties.
-    /// </summary>
-    public class SeedDataConfig
-    {
-        public bool Enable { get; set; }
-        public bool ClearAll { get; set; }
     }
 
     /// <summary>
@@ -57,6 +47,9 @@ namespace Bonsai.Code.Services.Config
     public class DemoModeConfig
     {
         public bool Enabled { get; set; }
+        public bool CreateDefaultPages { get; set; }
+        public bool CreateDefaultAdmin { get; set; }
+        public bool ClearOnStartup { get; set; }
         public TimeSpan ResetInterval { get; set; }
     }
 

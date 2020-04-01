@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Data.Utils.Seed
 {
@@ -75,6 +77,36 @@ namespace Bonsai.Data.Utils.Seed
             ctx.AddMediaTag(vid1, root);
 
             await ctx.SaveAsync();
+        }
+
+        /// <summary>
+        /// Adds an administrator user account.
+        /// </summary>
+        public static async Task EnsureDefaultUserCreatedAsync(UserManager<AppUser> userMgr)
+        {
+            await AddUser("Тестовый Админ", "admin@example.com", "123456");
+
+            async Task AddUser(string name, string email, string password, UserRole role = UserRole.Admin)
+            {
+                var parts = name.Split(' ');
+                var user = new AppUser
+                {
+                    IsValidated = true,
+                    AuthType = AuthType.Password,
+                    UserName = email,
+                    Email = email,
+                    LastName = parts.Length > 0 ? parts[0] : "",
+                    FirstName = parts.Length > 1 ? parts[1] : "",
+                    MiddleName = parts.Length > 2 ? parts[2] : ""
+                };
+
+                var result = await userMgr.CreateAsync(user);
+                if (!result.Succeeded)
+                    return;
+
+                await userMgr.AddPasswordAsync(user, password);
+                await userMgr.AddToRoleAsync(user, role.ToString());
+            }
         }
 
         /// <summary>

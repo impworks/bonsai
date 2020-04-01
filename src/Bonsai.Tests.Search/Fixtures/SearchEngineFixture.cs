@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data;
 using Bonsai.Data.Utils.Seed;
