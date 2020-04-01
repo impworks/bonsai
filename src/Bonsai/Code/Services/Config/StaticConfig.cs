@@ -46,6 +46,7 @@
         public bool CreateDefaultPages { get; set; }
         public bool CreateDefaultAdmin { get; set; }
         public bool ClearOnStartup { get; set; }
+        public string YandexMetrikaId { get; set; }
     }
 
     /// <summary>

@@ -11,6 +11,8 @@
         appTitle = ConfigService.GetDynamicConfig().Title;
         rootUrl = Url.Action("Index", "Home", new {area = "Front"});
     }
+
+    var demoCfg = ConfigService.GetStaticConfig().DemoMode;
 }
 
 <html>
@@ -42,22 +44,40 @@
                 else
                 {
                     <form class="search" method="get" action="@Url.Action("Search", "Search")">
-                        <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery"/>
+                        <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
                     </form>
                 }
-                
+
                 @if (StartupService.IsStarted)
                 {
                     @await Component.InvokeAsync("UserHeaderComponent")
                 }
             </nav>
         </header>
-         @RenderBody()
+        @RenderBody()
     </div>
 
     <script src="@Url.Content("~/assets/scripts/vendor-common.js")"></script>
     <script src="@Url.Content("~/assets/scripts/common.js")"></script>
     <script src="@Url.Content("~/assets/scripts/front.js")"></script>
     @RenderSection("Scripts", false)
+
+    @if (demoCfg.Enabled && !string.IsNullOrEmpty(demoCfg.YandexMetrikaId))
+    {
+        <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                    m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                    m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+                })
+                (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+            ym(@(demoCfg.YandexMetrikaId), "init", {
+                clickmap: true,
+                trackLinks: true,
+                accurateTrackBounce: true
+            });
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/@(demoCfg.YandexMetrikaId)" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    }
 </body>
 </html>
