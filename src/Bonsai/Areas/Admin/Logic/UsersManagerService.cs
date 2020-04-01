@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Users;
+using Bonsai.Code.Services.Config;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,16 +24,18 @@ namespace Bonsai.Areas.Admin.Logic
     /// </summary>
     public class UsersManagerService
     {
-        public UsersManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper)
+        public UsersManagerService(AppDbContext db, UserManager<AppUser> userMgr, IMapper mapper, BonsaiConfigService config)
         {
             _db = db;
             _userMgr = userMgr;
             _mapper = mapper;
+            _demoCfg = config.GetStaticConfig().DemoMode;
         }
 
         private readonly AppDbContext _db;
         private readonly UserManager<AppUser> _userMgr;
         private readonly IMapper _mapper;
+        private readonly DemoModeConfig _demoCfg;
 
         /// <summary>
         /// Returns the list of all registered users.
@@ -91,6 +93,8 @@ namespace Bonsai.Areas.Admin.Logic
                                 .AsNoTracking()
                                 .GetAsync(x => x.Id == id, "Пользователь не найден");
 
+            ValidateDemoModeRestrictions(user);
+
             var vm = _mapper.Map<UserEditorVM>(user);
 
             var roles = await _userMgr.GetRolesAsync(user);
@@ -109,6 +113,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             var user = await _db.Users
                                 .GetAsync(x => x.Id == request.Id, "Пользователь не найден");
+
+            ValidateDemoModeRestrictions(user);
 
             _mapper.Map(request, user);
             user.IsValidated = true;
@@ -140,6 +146,8 @@ namespace Bonsai.Areas.Admin.Logic
                                 .Include(x => x.Changes)
                                 .GetAsync(x => x.Id == id, "Пользователь не найден");
 
+            ValidateDemoModeRestrictions(user);
+
             return new RemoveUserVM
             {
                 Id = id,
@@ -161,6 +169,8 @@ namespace Bonsai.Areas.Admin.Logic
                                 .Include(x => x.Changes)
                                 .Include(x => x.Page)
                                 .GetAsync(x => x.Id == id, "Пользователь не найден");
+
+            ValidateDemoModeRestrictions(user);
 
             if (user.Changes.Any())
                 throw new OperationException("Нельзя удалить эту учетную запись");
@@ -197,6 +207,9 @@ namespace Bonsai.Areas.Admin.Logic
             ValidatePasswordForm(vm);
 
             var user = await _db.Users.GetAsync(x => x.Id == vm.Id, "Пользователь не найден");
+
+            ValidateDemoModeRestrictions(user);
+
             var token = await _userMgr.GeneratePasswordResetTokenAsync(user);
             var result = await _userMgr.ResetPasswordAsync(user, token, vm.Password);
 
@@ -332,6 +345,17 @@ namespace Bonsai.Areas.Admin.Logic
             val.ThrowIfInvalid();
         }
 
+        /// <summary>
+        /// Checks if the user can be modified depending on current demo mode.
+        /// </summary>
+        private void ValidateDemoModeRestrictions(AppUser user)
+        {
+            if (!_demoCfg.Enabled)
+                return;
+
+            if(user.Email == "admin@example.com" && _demoCfg.CreateDefaultAdmin)
+                throw new OperationException("Запрещено в демо-режиме");
+        }
 
         #endregion
     }

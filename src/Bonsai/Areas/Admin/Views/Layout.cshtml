@@ -1,14 +1,15 @@
 ﻿@using Bonsai.Code.Services.Config
 @inject BonsaiConfigService ConfigService
 @{
-    var config = ConfigService.GetDynamicConfig();
+    var cfg = ConfigService.GetDynamicConfig();
+    var demoCfg = ConfigService.GetStaticConfig().DemoMode;
 }
 
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@config.Title &mdash; @ViewBag.Title</title>
+    <title>@cfg.Title &mdash; @ViewBag.Title</title>
     <link href="@Url.Content("~/assets/styles/style.css")" rel="stylesheet" />
 </head>
 <body>
@@ -21,7 +22,7 @@
                             <img src="/assets/img/logo.svg">
                         </div>
                         <div class="col">
-                            @config.Title
+                            @cfg.Title
                         </div>
                     </div>
                 </a>
@@ -30,6 +31,12 @@
             </nav>
         </header>
         <div class="content text">
+            @if (demoCfg.Enabled)
+            {
+                <div class="alert alert-warning mt-1 mb-0">
+                    <small>Bonsai работает в демонстрационном режиме. Все данные сбрасываются раз в @Math.Ceiling(demoCfg.ResetInterval.TotalMinutes) минут.</small>
+                </div>
+            }
             <div class="row">
                 <div class="col-sm-2">
                     @await Component.InvokeAsync("AdminMenuComponent")

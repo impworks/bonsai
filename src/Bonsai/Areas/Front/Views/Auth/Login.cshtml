@@ -1,12 +1,16 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Front.ViewModels.Auth
+@using Bonsai.Code.Services.Config
 @model LocalLoginVM
+@inject BonsaiConfigService Config
+
 @{
     ViewBag.Title = "Авторизация";
     ViewBag.DisableSearch = true;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 
     var data = (LoginDataVM)ViewBag.Data;
+    var demoCfg = Config.GetStaticConfig().DemoMode;
 }
 
 <div class="content text">
@@ -84,6 +88,21 @@
                     </form>
                 </div>
             </div>
+
+            @if (demoCfg.Enabled && demoCfg.CreateDefaultAdmin)
+            {
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="alert alert-info">
+                            <p>Демонстрационный аккаунт администратора:</p>
+                            <p>
+                                <strong>Логин:</strong> admin@example.com<br />
+                                <strong>Пароль:</strong> 123456
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
         }
     }
 </div>
