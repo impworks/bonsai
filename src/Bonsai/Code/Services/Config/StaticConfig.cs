@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace Bonsai.Code.Services.Config
+﻿namespace Bonsai.Code.Services.Config
 {
-
     /// <summary>
     /// Global configuration properties defined in appsettings.json.
     /// </summary>
@@ -49,7 +46,6 @@ namespace Bonsai.Code.Services.Config
         public bool CreateDefaultPages { get; set; }
         public bool CreateDefaultAdmin { get; set; }
         public bool ClearOnStartup { get; set; }
-        public TimeSpan ResetInterval { get; set; }
     }
 
     /// <summary>
