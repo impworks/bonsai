@@ -7,6 +7,7 @@ using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Infrastructure.Attributes;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -62,7 +63,7 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("upload")]
-        [DisableRequestSizeLimit]
+        [ConfigurableRequestSizeLimit]
         public async Task<ActionResult> Upload(MediaUploadRequestVM vm, IFormFile file)
         {
             try

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bonsai.Code.Infrastructure.Attributes;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Microsoft.AspNetCore.Http;
@@ -64,6 +65,8 @@ namespace Bonsai.Code.Config
             });
             services.AddScoped<ViewRenderService>();
             services.AddScoped(x => Configuration);
+
+            services.AddScoped<ConfigurableRequestSizeLimitFilter>();
 
             if(Configuration.WebServer.RequireHttps)
             {

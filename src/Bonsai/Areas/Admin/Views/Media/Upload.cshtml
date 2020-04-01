@@ -1,6 +1,32 @@
-﻿@{
+﻿@using Bonsai.Code.Services.Config
+@inject BonsaiConfigService Config
+
+@{
     ViewBag.Title = "Загрузка медиа";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
+
+    var maxSize = @Config.GetStaticConfig().WebServer.MaxUploadSize;
+
+    string RenderSize()
+    {
+        if (maxSize == null)
+        {
+            return null;
+        }
+        if (maxSize < 1024)
+        {
+            return maxSize + " Б";
+        }
+        if (maxSize < 1024 * 1024)
+        {
+            return Math.Round(maxSize.Value / 1024M, 2) + " КБ";
+        }
+        if (maxSize < 1024 * 1024 * 1024)
+        {
+            return Math.Round(maxSize.Value / (1024M * 1024), 2) + " МБ";
+        }
+        return Math.Round(maxSize.Value / (1024M * 1024 * 1024), 2) + " ГБ";
+    }
 }
 
 <h1>Загрузка медиа</h1>
@@ -22,15 +48,20 @@
     </div>
 </form>
 
-<div class="card media-uploader">
+<div class="card media-uploader" data-max-size="@maxSize">
     <div class="card-body">
-        <span>Нажмите сюда для загрузки нового файла</span>
+        <div>Нажмите сюда для загрузки нового файла</div>
+            @if (maxSize != null)
+            {
+                <div class="mt-2">
+                    <small class="text-muted">Не более @RenderSize()</small>
+                </div>
+            }
         <input type="file" name="file" multiple="multiple" />
     </div>
 </div>
 
 <div class="media-uploader-items row">
-
 </div>
 
 <script type="text/template" id="uploader-item-template-progress">

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bonsai.Code.Services.Config
 {
@@ -12,6 +13,7 @@ namespace Bonsai.Code.Services.Config
         public SeedDataConfig SeedData { get; set; }
         public DebugConfig Debug { get; set; }
         public WebServerConfig WebServer { get; set; }
+        public DemoModeConfig DemoMode { get; set; }
         public AuthConfig Auth { get; set; }
     }
 
@@ -46,6 +48,16 @@ namespace Bonsai.Code.Services.Config
     public class WebServerConfig
     {
         public bool RequireHttps { get; set; }
+        public long? MaxUploadSize { get; set; }
+    }
+
+    /// <summary>
+    /// Demo mode configuration options.
+    /// </summary>
+    public class DemoModeConfig
+    {
+        public bool Enabled { get; set; }
+        public TimeSpan ResetInterval { get; set; }
     }
 
     /// <summary>

@@ -1,13 +1,22 @@
 ﻿$(function () {
     var $loc = $('#Location'),
         $evt = $('#Event'),
-        $date = $('#Date');
+        $date = $('#Date'),
+        $upl = $('.media-uploader');
 
-    $('.media-uploader input[type="file"]').fileupload({
+    $upl.find('input[type="file"]').fileupload({
         dataType: 'json',
         url: '/admin/media/upload',
         sequentialUploads: true,
         add: function (e, data) {
+            var maxSize = +$upl.data('max-size');
+            if (maxSize) {
+                var size = data.originalFiles[0].size;
+                if (size > maxSize) {
+                    toastr.error('Файл слишком большой!');
+                    return;
+                }
+            }
             data.formData = {
                 Location: $loc.val(),
                 Event: $evt.val(),
