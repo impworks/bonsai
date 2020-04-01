@@ -18,6 +18,10 @@ namespace Bonsai.Code.Services.Config
         public BonsaiConfigService(AppDbContext context, StaticConfig cfg)
         {
             _context = context;
+
+            if(cfg.DemoMode == null)
+                cfg.DemoMode = new DemoModeConfig();
+
             _cfg = cfg;
         }
 

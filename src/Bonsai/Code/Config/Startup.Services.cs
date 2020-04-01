@@ -61,6 +61,7 @@ namespace Bonsai.Code.Config
 
             services.AddHostedService<MediaEncoderService>();
             services.AddHostedService<TreeLayoutService>();
+            services.AddHostedService<DemoModeResetService>();
         }
     }
 }
