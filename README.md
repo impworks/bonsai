@@ -2,6 +2,8 @@
 
 A family wiki and photoalbum engine (in Russian).
 
+### [Live demo](https://bonsai.kirillorlov.pro)
+
 ## Features
 
 * Pages with Markdown text
