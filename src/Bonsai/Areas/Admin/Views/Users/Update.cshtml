@@ -65,14 +65,16 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label form-label-required" asp-for="Role">Блокировка</label>
                     <div class="col-sm-9">
-                        <div class="form-check">
-                            <label>
-                                <input type="radio" asp-for="IsLocked" value="false" /> Активен
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="IsLocked" value="false" class="custom-control-input" id="IsLockedFalse" />
+                            <label class="custom-control-label" for="IsLockedFalse">
+                                Активен
                             </label>
                         </div>
-                        <div class="form-check">
-                            <label>
-                                <input type="radio" asp-for="IsLocked" value="true"/> Заблокирован
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="IsLocked" value="true" class="custom-control-input" id="IsLockedTrue" />
+                            <label class="custom-control-label" for="IsLockedTrue">
+                                Заблокирован
                             </label>
                         </div>
                     </div>
@@ -89,9 +91,11 @@
                     @if (data.CanCreatePersonalPage)
                     {
                         <div>или</div>
-                        <div class="form-check">
-                            <input type="checkbox" asp-for="CreatePersonalPage" class="form-check-input"/>
-                            <label class="form-check-label" asp-for="CreatePersonalPage">Создать новую</label>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" asp-for="CreatePersonalPage" class="custom-control-input" id="CreatePersonalPage" />
+                            <label class="custom-control-label" for="CreatePersonalPage">
+                                Создать новую
+                            </label>
                         </div>
                     }
                 </div>

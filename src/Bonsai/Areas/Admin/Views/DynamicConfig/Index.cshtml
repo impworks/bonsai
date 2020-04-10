@@ -20,41 +20,41 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Доступ</label>
+                <label class="col-sm-3">Доступ</label>
                 <div class="col-sm-9">
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="radio" asp-for="AllowGuests" value="True" class="form-check-input" />
+                    <div class="custom-control custom-radio">
+                        <input type="radio" asp-for="AllowGuests" value="True" class="custom-control-input" id="AllowGuestsTrue" />
+                        <label class="custom-control-label" for="AllowGuestsTrue">
                             Любой посетитель может читать
                         </label>
                     </div>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="radio" asp-for="AllowGuests" value="False" class="form-check-input" />
+                    <div class="custom-control custom-radio">
+                        <input type="radio" asp-for="AllowGuests" value="False" class="custom-control-input" id="AllowGuestsFalse" />
+                        <label class="custom-control-label" for="AllowGuestsFalse">
                             Только зарегистрированный может читать
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Регистрация</label>
+                <label class="col-sm-3">Регистрация</label>
                 <div class="col-sm-9">
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="radio" asp-for="AllowRegistration" value="True" class="form-check-input" />
+                    <div class="custom-control custom-radio">
+                        <input type="radio" asp-for="AllowRegistration" value="True" class="custom-control-input" id="AllowRegistrationTrue" />
+                        <label class="custom-control-label" for="AllowRegistrationTrue">
                             Разрешена
                         </label>
                     </div>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="radio" asp-for="AllowRegistration" value="False" class="form-check-input" />
+                    <div class="custom-control custom-radio">
+                        <input type="radio" asp-for="AllowRegistration" value="False" class="custom-control-input" id="AllowRegistrationFalse" />
+                        <label class="custom-control-label" for="AllowRegistrationFalse">
                             Запрещена
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Построение древа</label>
+                <label class="col-sm-3">Построение древа</label>
                 <div class="col-sm-9">
                     <input asp-for="TreeRenderThoroughness" type="range" min="1" max="100" class="form-control"/>
                     <div class="small text-muted">

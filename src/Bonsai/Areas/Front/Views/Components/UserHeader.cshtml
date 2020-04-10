@@ -1,25 +1,24 @@
 ﻿@using Bonsai.Code.Utils.Helpers
 @model Bonsai.Areas.Front.ViewModels.Auth.UserVM
-<div class="account">
-    <div class="row align-items-center">
-        @if (Model != null)
-        {
-            <div class="col">
-                <span class="user-popover-toggle user-image">
-                    <img src="@ViewHelper.GetGravatarUrl(Model.Email)" />
-                </span>
-            </div>
-            <div class="col">
-                <span class="user-popover-toggle">@Model.Name</span>
-            </div>
-        }
-        else
-        {
-            <div class="col">
-                <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">Войти</a>
-            </div>
-        }
-    </div>
+<div class="account d-flex align-items-center">
+    @if (Model != null)
+    {
+        <div class="account-image">
+            <span class="user-popover-toggle">
+                <img class="user-image rounded-circle" src="@ViewHelper.GetGravatarUrl(Model.Email)" />
+            </span>
+        </div>
+        <div class="account-text">
+            <span class="user-popover-toggle">@Model.Name</span>
+        </div>
+    }
+    else
+    {
+        <div class="account-text">
+            <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">Войти</a>
+        </div>
+    }
+    
     <div id="user-popover-contents">
         @if (!string.IsNullOrEmpty(Model?.PageKey))
         {

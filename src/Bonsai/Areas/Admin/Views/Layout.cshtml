@@ -13,36 +13,41 @@
     <link href="@Url.Content("~/assets/styles/style.css")" rel="stylesheet" />
 </head>
 <body>
-    <div id="main-container" class="d-flex flex-column">
-        <header>
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home", new { Area = "Front" })">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <img src="/assets/img/logo.svg">
-                        </div>
-                        <div class="col">
-                            @cfg.Title
-                        </div>
+    <div class="main-container d-flex flex-column">
+        <header class="main-header border-bottom shadow-sm">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <a class="logotype d-flex" href="@Url.Action("Index", "Home", new { Area = "Front" })">
+                            <div class="logotype-image">
+                                <img src="/assets/img/logo.svg">
+                            </div>
+                            <div class="logotype-text">@cfg.Title</div>
+                        </a>
                     </div>
-                </a>
-                <div class="placeholder"></div>
-                @await Component.InvokeAsync("UserHeaderComponent")
-            </nav>
+                    <div class="col search">
+                    </div>
+                    <div class="col-auto">
+                        @await Component.InvokeAsync("UserHeaderComponent")
+                    </div>
+                </div>
+            </div>
         </header>
-        <div class="content text">
-            @if (demoCfg.Enabled)
-            {
-                <div class="alert alert-warning mt-1 mb-0">
-                    <small>Bonsai работает в демонстрационном режиме. Все данные периодически сбрасываются.</small>
-                </div>
-            }
-            <div class="row">
-                <div class="col-sm-2">
-                    @await Component.InvokeAsync("AdminMenuComponent")
-                </div>
-                <div class="col-sm-10">
-                    @RenderBody()
+        <div class="dashboard">
+            <div class="container-fluid">
+                @if (demoCfg.Enabled)
+                {
+                    <div class="alert alert-warning mt-1 mb-0">
+                        <small>Bonsai работает в демонстрационном режиме. Все данные периодически сбрасываются.</small>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-auto dashboard-sidebar">
+                        @await Component.InvokeAsync("AdminMenuComponent")
+                    </div>
+                    <div class="col dashboard-content">
+                        @RenderBody()
+                    </div>
                 </div>
             </div>
         </div>

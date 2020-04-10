@@ -1,28 +1,38 @@
 ﻿.dashboard-cards {
-    margin-top: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 
-    .card .card-body {
-        h2 {
-            font-size: 3.5rem;
-            line-height: 3rem;
-            margin-top: 0;
-            padding-top: 0;
-            margin-bottom: 0;
-            opacity: 0.7;
-        }
+    .card {
+        
+        .card-body {
 
-        &:hover {
-            text-decoration: none;
+            color: $gray-600;
+            
+            h2 {
+                font-size: 3.5rem;
+                line-height: 3rem;
+                margin-top: 0;
+                padding-top: 0;
+                margin-bottom: 0;
+            }
+
+            &:hover {
+                text-decoration: none;
+
+                p {
+                    text-decoration: underline;
+                }
+            }
 
             p {
-                text-decoration: underline;
+                margin-top: 0;
+                margin-bottom: 0;
             }
+            
+            
         }
-
-        p {
-            margin-top: 0;
-            margin-bottom: 0;
+        
+        .card-footer a {
+            color: $gray-900;
         }
     }
 }
@@ -52,7 +62,7 @@
                 width: 25px;
                 text-align: center;
                 font-size: 0.8rem;
-                border-radius: 0.4rem 0 0 0;
+                border-radius: 0.4rem 0 0.4rem 0;
             }
         }
         
@@ -65,6 +75,7 @@
 
             .dashboard-event-date {
                 font-size: 0.9rem;
+                color: $gray-600;
             }
         }
 

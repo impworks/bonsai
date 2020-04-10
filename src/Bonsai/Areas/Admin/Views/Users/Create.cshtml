@@ -95,9 +95,11 @@
                         <span asp-validation-for="PersonalPageId"></span>
                     </div>
                     <div>или</div>
-                    <div class="form-check">
-                        <input type="checkbox" asp-for="CreatePersonalPage" class="form-check-input"/>
-                        <label class="form-check-label" asp-for="CreatePersonalPage">Создать новую</label>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" asp-for="CreatePersonalPage" class="custom-control-input" id="CreatePersonalPage" />
+                        <label class="custom-control-label" for="CreatePersonalPage">
+                            Создать новую
+                        </label>
                     </div>
                 </div>
             </div>

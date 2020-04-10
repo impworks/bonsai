@@ -1,46 +1,43 @@
 ﻿@import '../variables.scss';
 
-header {
-    border-bottom: 1px solid $color-border;
-    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.03);
+.main-header {
+    z-index: 1;
+    position: relative;
+    padding: 0 0.75rem;
+    
+    .logotype {
+        color: $gray-900;
+        align-items: center;
 
-    .navbar {
-        padding: 0 1.5rem;
-
-        .row {
-            margin: 0;
-
-            .col {
-                padding: 0;
-            }
+        &:hover {
+            text-decoration: none;
         }
-
-        .navbar-brand {
-            margin: 0;
-            padding: 0;
-            color: #2f373a !important;
-            line-height: 1;
+        
+        &-text {
             font-size: 2rem;
             font-weight: bold;
-            font-family: 'PT Serif';
-
-            img {
-                display: block;
-                $size: 2.6rem;
-                width: $size;
-                height: $size;
-                margin-right: 1rem;
-            }
+            font-family: 'PT Serif', serif;
         }
+        
+        &-image img {
+            $image-size: 2.6rem;
+            
+            display: block;
+            margin-right: 1rem;
+            width: $image-size;
+            height: $image-size;
+        }
+    }
 
-        .search, .placeholder {
+    .search {
+        height: 4.2rem;
+        
+        form {
             margin: 0;
-            flex: 1 0 auto;
             position: relative;
-            margin: 0 1.5rem;
-            height: 4.2rem;
 
-            &:before, &:after {
+            &:before,
+            &:after {
                 content: "";
                 display: block;
                 top: 50%;
@@ -49,7 +46,7 @@ header {
                 z-index: 102;
                 position: absolute;
                 margin-top: -1rem;
-                background: $color-border;
+                background: $gray-300;
             }
 
             &:before {
@@ -59,23 +56,16 @@ header {
             &:after {
                 right: 0;
             }
-
-            &:last-child:after {
-                display: none;
-            }
-
+            
             input {
                 border: 0;
                 width: 100%;
-                background: #fff;
-                padding: 1.4rem 1rem;
+                height: 4.2rem;
+                background: $white;
                 border-radius: 0;
-                line-height: 1;
-                z-index: 101;
-                display: block;
-                position: relative;
+                padding: 0 $grid-gutter-width;
 
-                @include placeholder-color($color-caption);
+                @include placeholder-color($gray-600);
 
                 &:focus {
                     outline: none;
@@ -83,25 +73,22 @@ header {
                 }
             }
         }
+    }
+    
+    .account {
+        display: flex;
 
-        .account {
-            white-space: nowrap;
+        &-text a {
+            color: $black;
+        }
 
-            .user-image {
-                margin-right: 1rem;
-            }
-
-            img {
-                $size: 2.2rem;
-                width: $size;
-                height: $size;
-                border-radius: 100%;
-            }
-
-            a {
-                font-size: 0.8rem;
-                color: $color-caption;
-            }
+        &-image img {
+            $image-size: 2.2rem;
+            
+            display: block;
+            margin-right: 1rem;
+            width: $image-size;
+            height: $image-size;
         }
     }
 }
@@ -116,38 +103,51 @@ header {
 
 .user-popover-body {
     padding: 0;
-    width: 160px;
+    width: 180px;
 
     .user-popover-link {
         display: block;
-        padding: 10px;
+        color: $gray-900;
+        padding: 0.7rem 0.9rem;
         text-decoration: none;
 
-        &:not(:last-of-type) {
-            border-bottom: $panel-inner-border;
+        &:first-child {
+            border-radius: $border-radius $border-radius 0 0;
+        }
+
+        &:last-child {
+            border-radius: 0 0 $border-radius $border-radius;
+        }
+
+        &:not(:last-child) {
+            border-bottom: $border-width solid $gray-300;
         }
 
         &:hover {
-            span {
-                text-decoration: underline;
+            background: $gray-100;
+            
+            .fa {
+                color: $red;
             }
         }
 
         .fa {
             margin-right: 5px;
+            color: $primary;
         }
     }
 }
 
 .autocomplete-suggestions {
-    z-index: 100 !important;
-    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1);
+    position: relative;
+    max-height: none !important;
+    box-shadow: $box-shadow;
 
     .autocomplete-suggestion {
         background: #fff;
         cursor: pointer;
-        padding: 0.4rem 1rem;
-        border: 1px solid $color-border;
+        padding: ($grid-gutter-width / 2) $grid-gutter-width;
+        border: 1px solid $gray-300;
 
         &:not(:last-child) {
             border-bottom: 0;

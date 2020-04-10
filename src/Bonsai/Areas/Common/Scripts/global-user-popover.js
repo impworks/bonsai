@@ -6,7 +6,7 @@
         container: 'body',
         content: $('#user-popover-contents').html(),
         html: true,
-        offset: '0, 10',
+        offset: '0, 4',
         placement: 'bottom',
         trigger: 'manual',
         template: '<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-body user-popover-body"></div></div>'

@@ -4,7 +4,7 @@
     margin-bottom: 10px;
 
     .media-group-title {
-        color: $subtle-header-color;
+        color: $gray-600;
         margin-top: 10px;
         margin-bottom: 0;
     }
@@ -14,7 +14,7 @@
     display: inline-block;
     width: 120px;
     padding: 10px;
-    border: $panel-inner-border;
+    border: $gray-400;
     vertical-align: top;
 
     img {
@@ -109,7 +109,6 @@
             }
 
             a {
-                color: #6aa120;
                 @include gradient-underline(#82bb36);
                 text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
 

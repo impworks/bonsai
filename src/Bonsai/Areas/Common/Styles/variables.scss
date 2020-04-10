@@ -1,12 +1,44 @@
-﻿$subtle-header-color: #999999;
+﻿/* Colors */
 
-$panel-color: #fcfcfc;
-$panel-border-color: $subtle-header-color;
-$panel-border: $panel-border-color 1px solid;
-$panel-inner-border-color: #cccccc;
-$panel-inner-border: $panel-inner-border-color 1px solid;
+$gray-100: #f9f9f9;
+$gray-200: #ececec;
+$gray-300: #e2e2e2;
+$gray-400: #d4d4d4;
+$gray-500: #b5b5b5;
+$gray-600: #8e8e8e;
+$gray-700: #505050;
+$gray-800: #3a3a3a;
+$gray-900: #252525;
+
+$red:   #dc3545;
+$green: #6aa120;
+
+$primary: $green;
 
 $error-color: #990000;
+
+
+/* Spacing */
+
+$grid-gutter-width: 1.5rem;
+
+
+/* Popovers */
+
+$popover-border-color: $gray-300;
+
+
+/* Tables */
+
+$table-accent-bg: $gray-100;
+$table-striped-order: even;
+$table-head-bg: $gray-200;
+
+
+/* Links */
+
+$link-hover-color: $red;
+
 
 @mixin clear-container {
     &:after {
@@ -23,10 +55,6 @@ $error-color: #990000;
         margin-top: 0;
     }
 }
-
-
-$color-border: #e0e0e0;
-$color-caption: #808080;
 
 @mixin placeholder-color($color) {
     &::-webkit-input-placeholder {
