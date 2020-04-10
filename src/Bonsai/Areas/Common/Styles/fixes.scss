@@ -56,10 +56,10 @@ $lightgray: #cccccc;
     width: 100%;
 
     .rangeslider__fill {
-        background: -webkit-linear-gradient(left, $lighter-blue, $light-blue); /* For Safari 5.1 to 6.0 */
-        background: -o-linear-gradient(right, $lighter-blue, $light-blue); /* For Opera 11.1 to 12.0 */
-        background: -moz-linear-gradient(right, $lighter-blue, $light-blue); /* For Firefox 3.6 to 15 */
-        background: linear-gradient(to right, $lighter-blue, $light-blue); /* Standard syntax (must be last) */
+        background: -webkit-linear-gradient(left, $primary, $primary); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(right, $primary, $primary); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, $primary, $primary); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, $primary, $primary); /* Standard syntax (must be last) */
         position: absolute;
         top: 0;
         height: 100%;

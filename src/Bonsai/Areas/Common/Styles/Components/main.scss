@@ -1,24 +1,47 @@
-﻿@import '../variables.scss';
+﻿@import "../variables";
 
 body, html {
-    font-family: 'Open Sans';
-    background: #efefef;
-    font-size: 17px;
-    color: #464646;
     height: 100%;
+    font-size: 17px;
+    color: $gray-900;
+    background: $gray-200;
+    font-family: 'Open Sans', sans-serif;
 }
 
-#main-container {
+.main-container {
     margin: auto;
-    overflow: hidden;
-    background: #fff;
     min-height: 100%;
+    overflow: hidden;
     max-width: 1300px;
-    border-left: 1px solid $color-border;
-    border-right: 1px solid $color-border;
+    background: $white;
+    border-left: $border-width solid $gray-300;
+    border-right: $border-width solid $gray-300;
 }
 
 #page {
     margin: 0;
     position: relative;
+}
+
+.table {
+    
+    thead {
+        background: $gray-200;
+        
+        th {
+            text-align: left;
+            font-size: 0.9rem;
+            border-color: $gray-400;
+            border-bottom-width: $border-width;
+            
+            a {
+                color: $gray-900;
+
+                .fa-arrow-up,
+                .fa-arrow-down, {
+                    color: $gray-600;
+                }
+            }
+        }
+    }
 }

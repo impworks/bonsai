@@ -1,7 +1,5 @@
-﻿@import '../variables.scss';
-
-h1, h2, h3, h4, h5, h6 {
-    color: #2f373a;
+﻿h1, h2, h3, h4, h5, h6 {
+    color: $gray-900;;
     font-weight: bold;
     font-family: "PT Serif", serif;
     clear: both;
@@ -56,7 +54,7 @@ p {
 }
 
 .caption {
-    color: $color-caption;
+    color: $gray-600;
     line-height: 2rem;
     margin-bottom: 1.38234rem;
     padding-top: 0.61766rem;
@@ -75,12 +73,6 @@ p {
     }
 
     a {
-        color: #6aa120;
-
-        &:hover {
-            color: #f64b3b;
-            text-decoration: none;
-        }
 
         &:not(.nav-link) {
             @include gradient-underline(#82bb36);

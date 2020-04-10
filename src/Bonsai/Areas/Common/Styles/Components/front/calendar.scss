@@ -23,11 +23,10 @@
                     top: 0;
                     padding: 0.8rem 2rem;
                     font-weight: normal;
-                    font-family: "PT Serif";
+                    font-family: "PT Serif", serif;
                     font-size: 40px;
                     line-height: 1;
                     width: 25%;
-                    color: #6aa120;
 
                     &:hover {
                         color: #f64b3b;
@@ -64,7 +63,7 @@
                         height: 6rem;
                         width: 14.28571428571429%;
                         position: relative;
-                        border: 1px solid $color-border;
+                        border: $border-width solid $gray-300;
 
                         &.calendar-day-selected {
                             background: linear-gradient(45deg, #94c11e, #36a23d);
@@ -147,9 +146,9 @@
         .calendar-events {
             position: relative;
             padding: 0 1.5rem;
-            background: #f5f5f5;
-            border-left: 1px solid $color-border;
-            border-bottom: 1px solid $color-border;
+            background: $gray-100;
+            border-left: $border-width solid $gray-300;
+            border-bottom: $border-width solid $gray-300;
 
             .calendar-events-header {
                 position: relative;
@@ -186,7 +185,7 @@
                             padding: 1.2rem 1rem;
 
                             &.selectable:hover {
-                                background: #f5f5f5;
+                                background: $gray-100;
                             }
 
                             .calendar-events-item-icon {
@@ -235,86 +234,6 @@
                                         margin-bottom: 0;
                                     }
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            .calendar2 {
-                border: 0;
-                border-collapse: collapse;
-                width: 100%;
-                background: #fff;
-
-                th, td {
-                    padding: 5px;
-                    width: 14.285%;
-                }
-
-                thead {
-                    background: $panel-color;
-
-                    th {
-                        text-align: center;
-                    }
-
-                    .calendar-title {
-                        text-align: center;
-
-                        a.cmd-calendar-show {
-                            margin: 0 10px;
-                            font-size: 42px;
-                            line-height: 20px;
-                            position: relative;
-                            top: 4px;
-
-                            &:hover {
-                                text-decoration: none;
-                            }
-                        }
-
-                        span {
-                            display: inline-block;
-                            text-align: center;
-                            width: 250px;
-                        }
-                    }
-                }
-
-                tbody {
-                    .calendar-day {
-                        vertical-align: top;
-                        height: 100px;
-                        color: #2f373a;
-                        font-weight: bold;
-                        font-family: "PT Serif", serif;
-
-                        &.calendar-day-inactive {
-                            opacity: 0.3;
-                            background-color: $panel-color;
-                        }
-
-                        .calendar-day-number {
-                            text-align: center;
-                            font-weight: bold;
-                            font-size: 1.6rem;
-                            margin-bottom: 5px;
-                        }
-
-                        .calendar-event {
-                            display: inline-block;
-                            margin-right: 5px;
-                            cursor: pointer;
-
-                            .page-image {
-                                width: 32px;
-                                height: 32px;
-                            }
-
-                            .calendar-event-details {
-                                display: none;
                             }
                         }
                     }

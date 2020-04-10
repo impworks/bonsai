@@ -24,35 +24,34 @@
     @RenderSection("Head", false)
 </head>
 <body>
-    <div id="main-container" class="d-flex flex-column">
-        <header>
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="@rootUrl">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <img src="/assets/img/logo.svg">
-                        </div>
-                        <div class="col">
-                            @appTitle
-                        </div>
+    <div class="main-container d-flex flex-column">
+        <header class="main-header border-bottom shadow-sm">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <a class="logotype d-flex" href="@rootUrl">
+                            <div class="logotype-image">
+                                <img src="/assets/img/logo.svg">
+                            </div>
+                            <div class="logotype-text">@appTitle</div>
+                        </a>
                     </div>
-                </a>
-                @if (ViewBag.DisableSearch != null)
-                {
-                    <div class="placeholder"></div>
-                }
-                else
-                {
-                    <form class="search" method="get" action="@Url.Action("Search", "Search")">
-                        <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
-                    </form>
-                }
-
-                @if (StartupService.IsStarted)
-                {
-                    @await Component.InvokeAsync("UserHeaderComponent")
-                }
-            </nav>
+                    <div class="col search">
+                        @if (ViewBag.DisableSearch == null)
+                        {
+                            <form method="get" action="@Url.Action("Search", "Search")">
+                                <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
+                            </form>
+                        }
+                    </div>
+                    <div class="col-auto">
+                        @if (StartupService.IsStarted)
+                        {
+                            @await Component.InvokeAsync("UserHeaderComponent")
+                        }
+                    </div>
+                </div>
+            </div>
         </header>
         @RenderBody()
     </div>

@@ -2,10 +2,9 @@
 const gulp = require('gulp');
 
 const sass = require('gulp-sass');
-const concatcss = require('gulp-concat-css');
 const mincss = require('gulp-clean-css');
 
-const concatjs = require('gulp-concat');
+const concat = require('gulp-concat');
 const minjs = require('gulp-uglify');
 
 const rename = require('gulp-rename');
@@ -89,28 +88,28 @@ const ifProd = act => gulpif(isProd(), act);
 const content_styles = function() {
     return gulp.src(config.content.styles.root)
                .pipe(sass())
-               .pipe(concatcss('style.css'))
+               .pipe(concat('style.css'))
                .pipe(ifProd(mincss()))
                .pipe(gulp.dest(config.assets.styles));
 };
 
 const content_scripts_front = () => {
     return gulp.src(config.content.scripts.front)
-               .pipe(concatjs('front.js'))
+               .pipe(concat('front.js'))
                .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
 const content_scripts_common = () => {
     return gulp.src(config.content.scripts.common)
-               .pipe(concatjs('common.js'))
+               .pipe(concat('common.js'))
                .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
 const content_scripts_admin = () => {
     return gulp.src(config.content.scripts.admin)
-               .pipe(concatjs('admin.js'))
+               .pipe(concat('admin.js'))
                .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
@@ -152,14 +151,14 @@ const watch = () => {
 
 const vendor_scripts_common = () => {
     return gulp.src(config.vendor.scripts.common)
-               .pipe(concatjs('vendor-common.js'))
+               .pipe(concat('vendor-common.js'))
                .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
 const vendor_scripts_admin = () => {
     return gulp.src(config.vendor.scripts.admin)
-               .pipe(concatjs('vendor-admin.js'))
+               .pipe(concat('vendor-admin.js'))
                .pipe(ifProd(minjs()))
                .pipe(gulp.dest(config.assets.scripts));
 };
@@ -167,7 +166,7 @@ const vendor_scripts_admin = () => {
 const vendor_scripts_vue = () => {
     const vue = config.vendor.scripts.vue;
     return gulp.src(isProd() ? vue.build : vue.dev)
-               .pipe(concatjs('vendor-vue.js'))
+               .pipe(concat('vendor-vue.js'))
                .pipe(gulp.dest(config.assets.scripts));
 };
 
