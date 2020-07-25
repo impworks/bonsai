@@ -69,7 +69,7 @@ services:
     image: postgres
     restart: unless-stopped
     volumes:
-      - database:/var/lib/postgresql
+      - database:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: test
       POSTGRES_USER: bonsai
