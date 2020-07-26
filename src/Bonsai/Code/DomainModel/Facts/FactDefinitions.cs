@@ -100,7 +100,7 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Основное",
                         true,
                         new FactDefinition<AddressFactModel>("Location", "Адрес"),
-                        new FactDefinition<DateFactModel>("Opening", "Покупка"),
+                        new FactDefinition<DateFactModel>("Opening", "Приобретение"),
                         new FactDefinition<DateFactModel>("Shutdown", "Продажа")
                     )
                 },

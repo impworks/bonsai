@@ -82,7 +82,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
 
                 if (Type == PageType.Pet)
                 {
-                    yield return GetCriterion("Имя", x => x.HasAnimalSpecies);
+                    yield return GetCriterion("Имя", x => x.HasAnimalName);
                     yield return GetCriterion("День рождения", x => x.HasBirthday);
                     yield return GetCriterion("Вид", x => x.HasAnimalSpecies);
                     yield return GetCriterion("Фото", x => x.HasPhoto);
