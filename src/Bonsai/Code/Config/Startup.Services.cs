@@ -19,7 +19,10 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureAppServices(IServiceCollection services)
         {
-            services.AddNodeServices();
+            services.AddNodeServices(x =>
+            {
+                x.InvocationTimeoutMilliseconds = 1800000; // 30 min must be enough?
+            });
 
             // common
             services.AddScoped<MarkdownService>();
