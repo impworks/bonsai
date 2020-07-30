@@ -50,8 +50,10 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
                    .MapMember(x => x.MiddleName, x => x.MiddleName)
                    .MapMember(x => x.LastName, x => x.LastName)
                    .MapMember(x => x.Email, x => x.Email)
+                   .MapMember(x => x.NormalizedEmail, x => x.Email.ToUpperInvariant())
                    .MapMember(x => x.PageId, x => x.PersonalPageId)
-                   .ForMember(x => x.UserName, opt => opt.MapFrom(x => Regex.Replace(x.Email, "[^a-z0-9]", "")))
+                   .ForMember(x => x.UserName, opt => opt.MapFrom(x => ClearEmail(x.Email)))
+                   .ForMember(x => x.NormalizedUserName, opt => opt.MapFrom(x => ClearEmail(x.Email).ToUpperInvariant()))
                    .ForAllOtherMembers(x => x.Ignore());
 
             profile.CreateMap<AppUser, UserEditorVM>()
@@ -62,5 +64,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
                    .ForMember(x => x.Password, opt => opt.Ignore())
                    .ForMember(x => x.PasswordCopy, opt => opt.Ignore());
         }
+
+        private static string ClearEmail(string email) => Regex.Replace(email, "[^a-z0-9]", "");
     }
 }
