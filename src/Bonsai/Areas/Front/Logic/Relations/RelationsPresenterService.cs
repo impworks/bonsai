@@ -65,6 +65,8 @@ namespace Bonsai.Areas.Front.Logic.Relations
         {
             new RelationDefinition("Child-Spouse Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
             new RelationDefinition("Child Child", "Внук|Внучка|Внук", "Внуки", RelationDurationDisplayMode.Birth),
+            new RelationDefinition("Child:f Spouse:m", "Зять", "Зяти"),
+            new RelationDefinition("Child:m Spouse:f", "Невестка", "Невестки"),
             new RelationDefinition("Pet", "Питомец", "Питомцы"),
         };
 
