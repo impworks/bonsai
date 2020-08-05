@@ -130,19 +130,30 @@ You will need to back up the following:
 
 There are many options available, free and paid: uploading to a cloud storage, copying to external drives, etc. Please consider your usage/budget and select a combination that works best for you.
 
-Example backup for docker container:
+backup for docker:
 
-```
+```bash
 sudo docker stop bonsai_bonsai_1
 sudo docker exec -t -u postgres bonsai_postgres_1 pg_dumpall -c -U bonsai > /path/to/backup/bonsai_postgres_1.sql
 sudo docker start bonsai_bonsai_1
 ```
-    
+
+and you can restore database with commands:
+
+in folder with docker-comopse.yml 
+
+```bash
+sudo docker-compsoe up -d
+sudo docker stop bonsai_bonsai_1
+cat /path/to/backup/bonsai_postgres_1.sql | docker exec -i bonsai_postgres_1 psql -U bonsai
+sudo docker start bonsai_bonsai_1
+```
+
 If you used the default docker compose file, you do not need to change anything, otherwise you will have to change the container names and/or database user credentials
 
 For images, everything is simpler, you need to map the directory with the photo to the host file system, then you can copy / archive the photos in any way you like
 
-```
+```yml
 volumes:
   /path/to/your/images:/app/wwwroot/media
 ```
