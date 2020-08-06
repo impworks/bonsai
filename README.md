@@ -156,13 +156,17 @@ For images, everything is simpler, you need to map the directory with the photo 
 ```yml
 ...
 bonsai:
+  ...
   volumes:
     /path/to/your/images:/app/wwwroot/media
+  ...
+...
 ```
 and you can remove:
 
 ```yml
 volumes:
+  ...
   images: {}
 ```
 
