@@ -154,8 +154,16 @@ If you used the default docker compose file, you do not need to change anything,
 For images, everything is simpler, you need to map the directory with the photo to the host file system, then you can copy / archive the photos in any way you like
 
 ```yml
+...
+bonsai:
+  volumes:
+    /path/to/your/images:/app/wwwroot/media
+```
+and you can remove:
+
+```yml
 volumes:
-  /path/to/your/images:/app/wwwroot/media
+  images: {}
 ```
 
 ### Authorization methods
