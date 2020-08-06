@@ -143,7 +143,7 @@ and you can restore database with commands:
 in folder with docker-comopse.yml 
 
 ```bash
-sudo docker-compsoe up -d
+sudo docker-compose up -d
 sudo docker stop bonsai_bonsai_1
 cat /path/to/backup/bonsai_postgres_1.sql | docker exec -i bonsai_postgres_1 psql -U bonsai
 sudo docker start bonsai_bonsai_1
