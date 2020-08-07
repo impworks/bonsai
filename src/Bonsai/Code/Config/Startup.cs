@@ -76,6 +76,7 @@ namespace Bonsai.Code.Config
                .UseAuthorization()
                .UseSession()
                .UseRequestLocalization(GetRequestLocalizationOptions())
+               .UseCookiePolicy()
                .UseEndpoints(x =>
                {
                    x.MapAreaControllerRoute("admin", "Admin", "admin/{controller}/{action}/{id?}");
