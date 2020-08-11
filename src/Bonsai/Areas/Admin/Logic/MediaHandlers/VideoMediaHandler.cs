@@ -24,8 +24,10 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         {
             "video/mp4",
             "video/x-flv",
+            "video/ogg",
             "video/quicktime",
             "video/x-msvideo",
+            "video/x-matroska"
         };
 
         /// <summary>

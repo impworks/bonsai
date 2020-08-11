@@ -1,4 +1,5 @@
-﻿using Bonsai.Areas.Admin.Logic;
+﻿using System;
+using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Logic.Validation;
@@ -8,6 +9,7 @@ using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bonsai.Code.Config
@@ -19,6 +21,14 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureAppServices(IServiceCollection services)
         {
+            services.Configure<FormOptions>(x =>
+            {
+                // actual value set in config via ConfigurableRequestSizeLimitFilter
+                x.MemoryBufferThreshold = int.MaxValue;
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue;
+            });
+
             services.AddNodeServices(x =>
             {
                 x.InvocationTimeoutMilliseconds = 1800000; // 30 min must be enough?
