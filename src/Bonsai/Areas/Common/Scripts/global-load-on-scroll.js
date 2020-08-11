@@ -33,7 +33,9 @@
 
     function loadMore() {
         var url = loadUrl + (loadUrl.indexOf('?') !== -1 ? '&' : '?') + 'page=' + page;
-        $.ajax(url).then(function(html) {
+        $.ajax(url).then(function (html) {
+            if (!html || !html.trim()) return;
+
             $wrapper.append(html);
             page++;
             listenForScroll();
