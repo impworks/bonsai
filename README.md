@@ -1,67 +1,67 @@
 # Bonsai
 
-A family wiki and photoalbum engine (in Russian).
+Фамильный вики-движок и фотоальбом.
 
-### [Live demo](https://bonsai.kirillorlov.pro)
+### [Демо: попробовать в действии](https://bonsai.kirillorlov.pro)
 
-## Features
+## Возможности
 
-* Pages with Markdown text
-* Media files: photos, videos (PDF documents will be supported later)
-* Person tags on photos
-* Relations: validation, inferrence
-* Fact storage (birthday, gender, blood type, languages, hobbies, etc.)
-* Access control: editor, reader and guest roles
-* Changesets: browse changes to any page/media, see diffs, easily revert if necessary
+* Страницы с разметкой Markdown
+* Медиа-файлы: фото, видео, планируется поддержка документов PDF
+* Отметки людей на фото
+* Родственные связи (с проверками и автоматическим выводом)
+* Факты (дата рождения, пол, группа крови, владение языками, хобби, и так далее)
+* Контроль доступа по ролям: администратор, редактор, читатель, гость
+* История правок: для любой страницы или медиа-файла хранится история с diff'ами и возможностью отката к предыдущей версии
 
-## Screenshots
+## Скриншоты
 
-#### Front-end:
+#### Публичные страницы:
 
 <a href="https://user-images.githubusercontent.com/604496/46574247-037d4f00-c9a9-11e8-8585-0d574dda2600.png"><img src="https://user-images.githubusercontent.com/604496/46574252-1859e280-c9a9-11e8-821f-daeaaac7de3f.png" /></a>
 <a href="https://user-images.githubusercontent.com/604496/46574259-2c054900-c9a9-11e8-8ecc-ca542053f665.png"><img src="https://user-images.githubusercontent.com/604496/46574288-9a4a0b80-c9a9-11e8-8373-2a7d3e00289c.png" /></a>
 <a href="https://user-images.githubusercontent.com/604496/46574262-31629380-c9a9-11e8-9ea6-18fbe63f239f.png"><img src="https://user-images.githubusercontent.com/604496/46574291-9f0ebf80-c9a9-11e8-8656-8a54dd2f2be7.png" /></a>
 
-#### Admin panel:
+#### Панель администратора:
 
 <a href="https://user-images.githubusercontent.com/604496/46574266-3f181900-c9a9-11e8-828d-9d9a5db25acb.png"><img src="https://user-images.githubusercontent.com/604496/46574292-a209b000-c9a9-11e8-8193-cd99fc1f5f91.png" /></a>
 <a href="https://user-images.githubusercontent.com/604496/46574268-43443680-c9a9-11e8-974f-f8a60fbeaa74.png"><img src="https://user-images.githubusercontent.com/604496/46574297-a504a080-c9a9-11e8-8612-d3e5cd1592a4.png" /></a>
 
-## Installation via Docker
-1. Download the [docker-compose](docker-compose.yml).
+## Установка с помощью Docker
+1. Скачайте файл [docker-compose](docker-compose.yml).
 
-2. _Optional_: 
+2. _Опционально_: 
 
-    Configure your Bonsai instance to use HTTPS and external auth for better security.
-    This requires a bit of work, so if you are just playing around you can skip this step.
+    Настройте доступ по HTTPS и внешнюю авторизацию для обеспечения максимальной безопасности ваших данных.
+    Это трудоемкий шаг, поэтому если вы просто хотите попробовать Bonsai своими руками - его можно пропустить или отложить.
 
-    Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
+    Создайте [приложение авторизации Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (или Google, Yandex, Вконтакте).
 
-    Modify `docker-compose.yml`:
+    Отредактируйте файл `docker-compose.yml`:
 
-    * Save Facebook authorization credentials to `Auth__Facebook__AppId` and `Auth__Facebook__AppSecret` config properties
-    * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization
-    * Replace `@@YOUR_EMAIL@@` with your email address (for LetsEncrypt auto-SSL)
-    * Replace `@@DOMAIN@@` with the domain name to use (or you can use your IP with xip.io, like `192.168.1.1.xip.io`)
-    * Uncomment two lines with ``Host(`@@DOMAIN@@`)``
-    * Comment two lines with ``PathPrefix(`/`)`` 
+    * Впишите данные для авторизации Facebook в поля `Auth__Facebook__AppId` и `Auth__Facebook__AppSecret`
+    * Задайте настройку `Auth__AllowPasswordAuth=false` если хотите отключить менее безопасную авторизацию по паролю
+    * Замените заглушку `@@YOUR_EMAIL@@` на свой адрес email (для автоматической генерации HTTPS-сертификата LetsEncrypt)
+    * Замените заглушку `@@DOMAIN@@` на доменное имя (если у вас только IP-адрес, используйте xip.io, например `192.168.1.1.xip.io`)
+    * Разкомментируйте две строки с ``Host(`@@DOMAIN@@`)``
+    * Закомментируйте две строки с ``PathPrefix(`/`)`` 
 
-3. Bring everything up using `docker compose`:
+3. Запустите все контейнеры с помощью `docker compose`:
    ```
    docker-compose up -d
    ```
-4. After everything is brought up Bonsai will listen on ports 80 and 443.
+4. После старта Bonsai будет доступен на портах 80 и 443.
 
-## Development (on Windows)
+## Разработка (на Windows)
 
-For development, you will need the following:
+Для участия в разработке понадобится:
 
-* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1): the main runtime for Bonsai
+* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1): основной рантайм для Bonsai
 
-1. Install [NodeJS](https://nodejs.org/en/) (10+)
-2. Install [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
-3. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
-4. Create a file called `appsettings.Development.json`, add the connection string:
+1. Установите [NodeJS](https://nodejs.org/en/) (10+)
+2. Установите [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
+3. Скачайте [shared-сборку ffmpeg](https://ffmpeg.zeranoe.com/builds/) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
+4. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
 
     ```
     {
@@ -74,11 +74,11 @@ For development, you will need the following:
     }
     ```
 
-5. _Optional, but suggested_:
+5. _Опционально, но рекомендуемо_:
 
-    Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
+    Создайте [приложение авторизации Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (или Google, Yandex, Вконтакте).
 
-	Add the retrieved authorization credentials to the `appsettings.Development.json` and set `AllowPasswordAuth` to `false`:
+	Впишите данные для авторизации в файл `appsettings.Development.json` и установите свойство `AllowPasswordAuth` в значение `false`:
 
 	```
 	{
@@ -104,48 +104,49 @@ For development, you will need the following:
 	}
 	```
     
-6. Create the database:
+6. Создайте базу данных:
 
     ```
     dotnet ef database update
     ```
-7. Build the styles and scripts:
+7. Запустите сборку стилей и скриптов:
 
     ```
     npm install
     npm run build
     ```
-8. Run the app (as Visual Studio project or using `dotnet run`).
+8. Запустите приложение (из Visual Studio или через `dotnet run`).
 
-## Security considerations
+## Безопасность
 
-### Data backup
+### Резервные копии данных
 
-If you value the data that you store in Bonsai, make sure that you **SET UP BACKUPS**.
+Если вам ценна информация, которую вы заносите в Bonsai, обязательно **НАСТРОЙТЕ РЕЗЕРВНОЕ КОПИРОВАНИЕ**.
 
-You will need to back up the following:
+Копировать необходимо следующие данные:
 
-* Database (approximately tens of megabytes)
-* Uploaded media in `wwwroot/media` (may contain gigabytes of data)
+* Базу данных (десятки мегабайт)
+* Загруженные медиа-файлы в папке `wwwroot/media` (могут быть гигабайты)
 
-There are many options available, free and paid: uploading to a cloud storage, copying to external drives, etc. Please consider your usage/budget and select a combination that works best for you.
+Существует множество подходов, платных и бесплатных: загрузка в облако, копирование на дополнительные носители и т.д.
+Выбор наиболее уместного подхода, с учетом вашего бюджета и объема данных, остается за вами.
 
-### Authorization methods
+### Способы авторизации
 
-Bonsai features two authorization methods: OAuth and password authorization.
+Bonsai поддерживает 2 метода авторизации: OAuth с использованием внешних сайтов и авторизация по паролю.
 
-OAuth is the preferred method: it's easier to use for end users, more secure and versatile. **Please use the OAuth method if you can!**
-For OAuth, you will need to create an authorization app on [Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-3.0), [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-3.0), [Vkontakte](https://vk.com/editapp?act=create) or [Yandex](https://oauth.yandex.ru/client/new) as described in the installation steps.
-You can enable multiple authorization apps at the same time: users will pick the one they prefer.
+OAuth является предпочтительным: он проще для пользователей, более безопасный и универсальный. **Если можете, используйте его!**
+Для этого вам потребуется создать приложение авторизации на сайте [Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-3.0), [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-3.0), [ВКонтакте](https://vk.com/editapp?act=create) или в [Яндексе](https://oauth.yandex.ru/client/new), как написано в инструкции.
+Можно подключить несколько авторизационных приложений одновременно - пользователи смогут выбирать из них то, которое им больше по душе.
 
-As a fallback, you can also create an account with classic login/password authorization. It can be used for two purposes:
+Также вы можете создать учетную запись с авторизацией по логину и паролю. Она пригодится в двух случаях:
 
-* Playing around with Bonsai (easier to set up: no auth app and https configuration required)
-* Giving access to elder family members who don't have a social network account
+* Быстро попробовать Bonsai в действии (установка без создания приложений значительно быстрее)
+* Дать доступ родственникам, которые не зарегистрированы в соцсетях
 
-Please keep the following facts in mind:
+Несколько фактов об авторизации, которые стоит иметь в виду:
 
-* Any user account can only have one authorization method: password, or Facebook, or Google, etc.
-* It is not possible to change the authorization type for an account once it has been created.
-* Password-based accounts can be locked out if there are too many consecutive failed login attempts.
-* Account password can only be reset by an administrator manually. If you only have one admin account, it is password-based, and the password is lost - there's no way to regain access besides direct database manipulation!
+* У одной учетной записи может быть только один способ авторизации: или пароль, или Facebook, или Google, и т.д.
+* После создания учетной записи поменять тип авторизации нельзя.
+* Учетные записи с авторизацией по паролю автоматически блокируются, если пароль был введен неверно слишком много раз подряд.
+* Пароль может сменить только администратор вручную. Если у вас только одна учетная запись администратора и вы забыли от нее пароль - восстановить доступ можно только с помощью манипуляций с базой данных!
