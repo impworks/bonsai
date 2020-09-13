@@ -1,4 +1,4 @@
-﻿@import '../../variables.scss';
+﻿@import '../../variables.less';
 
 .calendar-wrapper {
 
@@ -63,7 +63,7 @@
                         height: 6rem;
                         width: 14.28571428571429%;
                         position: relative;
-                        border: $border-width solid $gray-300;
+                        border: @border-width solid @gray-300;
 
                         &.calendar-day-selected {
                             background: linear-gradient(45deg, #94c11e, #36a23d);
@@ -146,9 +146,9 @@
         .calendar-events {
             position: relative;
             padding: 0 1.5rem;
-            background: $gray-100;
-            border-left: $border-width solid $gray-300;
-            border-bottom: $border-width solid $gray-300;
+            background: @gray-100;
+            border-left: @border-width solid @gray-300;
+            border-bottom: @border-width solid @gray-300;
 
             .calendar-events-header {
                 position: relative;
@@ -185,7 +185,7 @@
                             padding: 1.2rem 1rem;
 
                             &.selectable:hover {
-                                background: $gray-100;
+                                background: @gray-100;
                             }
 
                             .calendar-events-item-icon {

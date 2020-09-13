@@ -1,7 +1,7 @@
 ﻿.media-uploader {
     &:hover {
-        border-color: $primary;
-        color: $primary;
+        border-color: @primary;
+        color: @primary;
     }
 
     .card-body {
@@ -67,40 +67,40 @@
         }
 
         .ui-resizable-handle {
-            $handle-size: 8px;
-            $handle-half: $handle-size / 2;
+            @handle-size: 8px;
+            @handle-half: @handle-size / 2;
 
             display: none !important;
             position: absolute;
-            width: $handle-size;
-            height: $handle-size;
-            border-radius: $handle-half;
+            width: @handle-size;
+            height: @handle-size;
+            border-radius: @handle-half;
             border: 1px #000 solid;
             background: #FFF;
             touch-action: none;
 
             &.ui-resizable-nw {
                 cursor: nw-resize;
-                top: -$handle-half;
-                left: -$handle-half;
+                top: -@handle-half;
+                left: -@handle-half;
             }
 
             &.ui-resizable-ne {
                 cursor: ne-resize;
-                top: -$handle-half;
-                right: -$handle-half;
+                top: -@handle-half;
+                right: -@handle-half;
             }
 
             &.ui-resizable-sw {
                 cursor: sw-resize;
-                bottom: -$handle-half;
-                left: -$handle-half;
+                bottom: -@handle-half;
+                left: -@handle-half;
             }
 
             &.ui-resizable-se {
                 cursor: se-resize;
-                bottom: -$handle-half;
-                right: -$handle-half;
+                bottom: -@handle-half;
+                right: -@handle-half;
             }
         }
 

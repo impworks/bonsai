@@ -1,5 +1,5 @@
 ﻿h1, h2, h3, h4, h5, h6 {
-    color: $gray-900;;
+    color: @gray-900;;
     font-weight: bold;
     font-family: "PT Serif", serif;
     clear: both;
@@ -54,7 +54,7 @@ p {
 }
 
 .caption {
-    color: $gray-600;
+    color: @gray-600;
     line-height: 2rem;
     margin-bottom: 1.38234rem;
     padding-top: 0.61766rem;
@@ -62,11 +62,11 @@ p {
 
 .typography {
 
-    @mixin gradient-underline($color) {
-        background-image: -webkit-linear-gradient(top,transparent 50%,$color 50%);
-        background-image: -moz-linear-gradient(top,transparent 50%,$color 50%);
-        background-image: -o-linear-gradient(top,transparent 50%,$color 50%);
-        background-image: linear-gradient(to bottom,transparent 50%,$color 50%);
+    .gradient-underline(@color) {
+        background-image: -webkit-linear-gradient(top,transparent 50%,@color 50%);
+        background-image: -moz-linear-gradient(top,transparent 50%,@color 50%);
+        background-image: -o-linear-gradient(top,transparent 50%,@color 50%);
+        background-image: linear-gradient(to bottom,transparent 50%,@color 50%);
         background-position: 0 93%;
         background-repeat: repeat-x;
         background-size: 100% .15rem;
@@ -75,11 +75,12 @@ p {
     a {
 
         &:not(.nav-link) {
-            @include gradient-underline(#82bb36);
+            .gradient-underline(#82bb36);
+
             text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
 
             &:hover {
-                @include gradient-underline(#f64b3b);
+                .gradient-underline(#f64b3b);
             }
         }
     }

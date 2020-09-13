@@ -2,11 +2,11 @@
     margin-bottom: 1.5rem;
 
     .card {
-        
+
         .card-body {
 
-            color: $gray-600;
-            
+            color: @gray-600;
+
             h2 {
                 font-size: 3.5rem;
                 line-height: 3rem;
@@ -27,18 +27,18 @@
                 margin-top: 0;
                 margin-bottom: 0;
             }
-            
-            
+
+
         }
-        
+
         .card-footer a {
-            color: $gray-900;
+            color: @gray-900;
         }
     }
 }
 
 .dashboard-events {
-    
+
     .dashboard-event {
         margin: 0;
         padding-top: 1rem;
@@ -65,33 +65,33 @@
                 border-radius: 0.4rem 0 0.4rem 0;
             }
         }
-        
+
         .dashboard-event-header {
             margin: 0;
-            
+
             .dashboard-event-title {
                 padding: 0;
             }
 
             .dashboard-event-date {
                 font-size: 0.9rem;
-                color: $gray-600;
+                color: @gray-600;
             }
         }
 
         .dashboard-event-content {
             padding: 0 1rem 1rem 0;
         }
-        
+
         &:not(:last-child) .dashboard-event-content {
-            border-bottom: 1px solid rgba($black, .125);
+            border-bottom: 1px solid rgba(@black, .125);
         }
 
         .dashboard-event-media {
             line-height: 0;
             font-size: 0;
             margin: 0 -0.5rem;
-            
+
             .list-inline-item {
                 margin: 0.4rem;
             }

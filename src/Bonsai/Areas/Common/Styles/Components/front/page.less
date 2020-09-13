@@ -1,4 +1,4 @@
-﻿@import '../../variables.scss';
+﻿@import '../../variables.less';
 
 .content {
     .content-header {
@@ -25,7 +25,7 @@
 
 .media-wrapper-inline {
     display: block;
-    border: $border-width solid $gray-300;
+    border: @border-width solid @gray-300;
     border-radius: 0.2rem;
     padding: 0.5rem;
     margin: 1rem 0 0.4rem;
@@ -58,7 +58,7 @@
         border: 1px #fad0c6 solid;
 
         .caption {
-            color: $error-color;
+            color: @error-color;
 
             .break-word {
                 word-wrap: break-word;

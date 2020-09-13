@@ -1,10 +1,10 @@
-﻿@import '../../variables.scss';
+﻿@import '../../variables.less';
 
 .media-thumb-group {
     margin-bottom: 10px;
 
     .media-group-title {
-        color: $gray-600;
+        color: @gray-600;
         margin-top: 10px;
         margin-bottom: 0;
     }
@@ -14,7 +14,7 @@
     display: inline-block;
     width: 120px;
     padding: 10px;
-    border: $gray-400;
+    border: @gray-400;
     vertical-align: top;
 
     img {
@@ -98,24 +98,26 @@
             margin-top: 1.5rem;
             line-height: 1.6;
 
-            @mixin gradient-underline($color) {
-                background-image: -webkit-linear-gradient(top,transparent 50%,$color 50%);
-                background-image: -moz-linear-gradient(top,transparent 50%,$color 50%);
-                background-image: -o-linear-gradient(top,transparent 50%,$color 50%);
-                background-image: linear-gradient(to bottom,transparent 50%,$color 50%);
+            .gradient-underline(@color) {
+                background-image: -webkit-linear-gradient(top,transparent 50%,@color 50%);
+                background-image: -moz-linear-gradient(top,transparent 50%,@color 50%);
+                background-image: -o-linear-gradient(top,transparent 50%,@color 50%);
+                background-image: linear-gradient(to bottom,transparent 50%,@color 50%);
                 background-position: 0 93%;
                 background-repeat: repeat-x;
                 background-size: 100% .15rem;
             }
 
             a {
-                @include gradient-underline(#82bb36);
+                .gradient-underline(#82bb36);
+
                 text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
 
                 &:hover {
                     color: #f64b3b;
                     text-decoration: none;
-                    @include gradient-underline(#f64b3b);
+
+                    .gradient-underline(#f64b3b);
                 }
             }
 
