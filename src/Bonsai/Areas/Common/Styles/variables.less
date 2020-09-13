@@ -1,0 +1,68 @@
+﻿/* Colors */
+
+@gray-100: #f9f9f9;
+@gray-200: #ececec;
+@gray-300: #e2e2e2;
+@gray-400: #d4d4d4;
+@gray-500: #b5b5b5;
+@gray-600: #8e8e8e;
+@gray-700: #505050;
+@gray-800: #3a3a3a;
+@gray-900: #252525;
+
+@red:   #dc3545;
+@green: #6aa120;
+
+@primary: @green;
+
+@error-color: #990000;
+
+/* Spacing */
+
+@grid-gutter-width: 1.5rem;
+
+
+/* Popovers */
+
+@popover-border-color: @gray-300;
+
+
+/* Tables */
+
+@table-accent-bg: @gray-100;
+@table-striped-order: even;
+@table-head-bg: @gray-200;
+
+
+/* Links */
+
+@link-hover-color: @red;
+
+
+.spaced-list(@margin) {
+    margin-top: @margin;
+
+    &:first-of-type {
+        margin-top: 0;
+    }
+}
+
+.placeholder-color(@color) {
+    &::-webkit-input-placeholder {
+        color: @color;
+    }
+
+    &:-ms-input-placeholder {
+        color: @color;
+    }
+
+    &::-moz-placeholder {
+        color: @color;
+        opacity: 1;
+    }
+
+    &:-moz-placeholder {
+        color: @color;
+        opacity: 1;
+    }
+}
