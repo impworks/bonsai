@@ -16,7 +16,7 @@ ADD src/Bonsai.Tests.Search/Bonsai.Tests.Search.csproj Bonsai.Tests.Search/
 RUN dotnet restore
 COPY --from=node /build .
 
-RUN dotnet publish --output ../out/ --configuration Release --runtime linux-musl-x64 --self-contained true -p:PublishTrimmed=true Bonsai/Bonsai.csproj
+RUN dotnet publish --output ../out/ --configuration Release --runtime linux-musl-x64 --self-contained true Bonsai/Bonsai.csproj
 
 FROM alpine:latest
 
