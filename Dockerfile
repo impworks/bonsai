@@ -16,25 +16,21 @@ ADD src/Bonsai.Tests.Search/Bonsai.Tests.Search.csproj Bonsai.Tests.Search/
 RUN dotnet restore
 COPY --from=node /build .
 
-RUN dotnet publish --output ../out/ --configuration Release --runtime linux-x64 Bonsai/Bonsai.csproj
+RUN dotnet publish --output ../out/ --configuration Release --runtime linux-musl-x64 --self-contained true -p:PublishTrimmed=true Bonsai/Bonsai.csproj
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM alpine:latest
 
-RUN apt-get -yqq update && \
-    apt-get -yqq install ffmpeg libc6-dev libgdiplus libx11-dev && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache nodejs ffmpeg libintl icu && \
+    apk add --no-cache libgdiplus --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
 
 WORKDIR /app
 COPY --from=net-builder /out .
 
 RUN mkdir /app/External/ffmpeg
-RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg
-RUN ln -s /usr/bin/ffprobe /app/External/ffmpeg/ffprobe
+RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg && \
+    ln -s /usr/bin/ffprobe /app/External/ffmpeg/ffprobe && \
+    chmod +x /app/Bonsai
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-ENTRYPOINT ["dotnet", "Bonsai.dll"]
+ENTRYPOINT ["/app/Bonsai"]
