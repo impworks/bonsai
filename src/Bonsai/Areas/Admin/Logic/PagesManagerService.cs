@@ -111,6 +111,14 @@ namespace Bonsai.Areas.Admin.Logic
         {
             await ValidateRequestAsync(vm);
 
+            var key = PageHelper.EncodeTitle(vm.Title);
+            var existingRemoved = await _db.Pages
+                                           .Where(x => x.Key == key && x.IsDeleted == true)
+                                           .Select(x => new { x.Id })
+                                           .FirstOrDefaultAsync();
+            if (existingRemoved != null)
+                return await UpdateAsync(vm, principal, pageId: existingRemoved.Id);
+
             var page = _mapper.Map<Page>(vm);
             page.Id = Guid.NewGuid();
             page.CreationDate = DateTimeOffset.Now;
@@ -206,29 +214,30 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the changes to a page.
         /// </summary>
-        public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null)
+        public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal, Guid? revertedChangeId = null, Guid? pageId = null)
         {
             await ValidateRequestAsync(vm);
+
+            if (pageId == null)
+                pageId = vm.Id;
 
             var page = await _db.Pages
                                 .Include(x => x.Aliases)
                                 .Include(x => x.MainPhoto)
-                                .GetAsync(x => x.Id == vm.Id && (x.IsDeleted == false || revertedId != null),
-                                          "Страница не найдена");
+                                .GetAsync(x => x.Id == pageId, "Страница не найдена");
 
             await _validator.ValidateAsync(page, vm.Facts);
 
             var prevVm = page.IsDeleted ? null : _mapper.Map<PageEditorVM>(page);
-            var changeset = await GetChangesetAsync(prevVm, vm, vm.Id, principal, revertedId);
+            var changeset = await GetChangesetAsync(prevVm, vm, pageId.Value, principal, revertedChangeId);
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, page);
             page.MainPhotoId = (await FindMainPhotoAsync(vm.MainPhotoKey))?.Id;
 
-            if (revertedId != null)
-                page.IsDeleted = false;
+            page.IsDeleted = false;
 
-            await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == vm.Id);
+            await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == pageId);
 
             var aliasValues = JsonConvert.DeserializeObject<List<string>>(vm.Aliases ?? "[]");
             if(!aliasValues.Contains(vm.Title))
@@ -255,7 +264,7 @@ namespace Bonsai.Areas.Admin.Logic
                 _cache.Remove<InfoBlockVM>(page.Key);
             }
 
-            if(revertedId == null)
+            if(revertedChangeId == null)
                 await DiscardPageDraftAsync(vm.Id, principal);
 
             return page;

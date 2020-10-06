@@ -64,7 +64,6 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
                    .MapMember(x => x.Aliases, x => JsonConvert.SerializeObject(x.Aliases.OrderBy(y => y.Order).Select(y => y.Title)));
 
             profile.CreateMap<PageEditorVM, Page>()
-                   .MapMember(x => x.Id, x => x.Id)
                    .MapMember(x => x.Title, x => x.Title)
                    .MapMember(x => x.Type, x => x.Type)
                    .MapMember(x => x.Description, x => x.Description)
