@@ -99,30 +99,48 @@ namespace Bonsai.Areas.Admin.Logic
         {
             await ValidateRequestAsync(vm, isNew: true);
 
-            var rels = new List<Relation>();
-            var changesets = new List<Changeset>();
+            var newRels = new List<Relation>();
+            var updatedRels = new List<Relation>();
             var groupId = vm.SourceIds.Length > 1 ? Guid.NewGuid() : (Guid?) null;
+
+            var removedRelations = await _db.Relations
+                                            .Where(x => vm.SourceIds.Contains(x.SourceId)
+                                                && x.DestinationId == vm.DestinationId
+                                                && x.Type == vm.Type
+                                                && x.Id != vm.Id
+                                                && x.IsDeleted == true)
+                                            .ToDictionaryAsync(x => x.SourceId, x => x);
 
             var user = await GetUserAsync(principal);
             foreach (var srcId in vm.SourceIds)
             {
-                var rel = _mapper.Map<Relation>(vm);
-                rel.Id = Guid.NewGuid();
-                rel.SourceId = srcId;
+                Relation rel;
+
+                if (removedRelations.TryGetValue(srcId, out rel))
+                {
+                    rel.IsDeleted = false;
+
+                    updatedRels.Add(rel);
+                }
+                else
+                {
+                    rel = _mapper.Map<Relation>(vm);
+                    rel.Id = Guid.NewGuid();
+                    rel.SourceId = srcId;
+
+                    newRels.Add(rel);
+                }
 
                 var compRel = new Relation {Id = Guid.NewGuid()};
                 MapComplementaryRelation(rel, compRel);
+                newRels.Add(compRel);
 
-                rels.Add(rel);
-                rels.Add(compRel);
-
-                changesets.Add(GetChangeset(null, _mapper.Map<RelationEditorVM>(rel), rel.Id, user, null, groupId));
+                _db.Changes.Add(GetChangeset(null, _mapper.Map<RelationEditorVM>(rel), rel.Id, user, null, groupId));
             }
 
-            await _validator.ValidateAsync(rels);
+            await _validator.ValidateAsync(newRels.Concat(updatedRels).ToList());
 
-            _db.Changes.AddRange(changesets);
-            _db.Relations.AddRange(rels);
+            _db.Relations.AddRange(newRels);
 
             _cache.Clear();
         }
@@ -312,7 +330,8 @@ namespace Bonsai.Areas.Admin.Logic
                                             .AnyAsync(x => vm.SourceIds.Contains(x.SourceId)
                                                            && x.DestinationId == vm.DestinationId
                                                            && x.Type == vm.Type
-                                                           && x.Id != vm.Id);
+                                                           && x.Id != vm.Id
+                                                           && x.IsDeleted == false);
 
             if (existingRelation)
                 val.Add(nameof(vm.DestinationId), "Такая связь уже существует!");
