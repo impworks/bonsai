@@ -139,7 +139,7 @@ namespace Bonsai.Areas.Admin.Logic
             return new LinkVM
             {
                 Title = page.Title,
-                Url = _url.Action("Description", "Page", new {area = "Front", key = page.Key})
+                Url = page.IsDeleted ? null : _url.Action("Description", "Page", new {area = "Front", key = page.Key})
             };
         }
     }
