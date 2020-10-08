@@ -123,7 +123,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 var child = context.Pages[rel.DestinationId];
 
                 if(parent.BirthDate >= child.BirthDate)
-                    Error("Родитель не может быть старше ребенка", parent.Id, child.Id);
+                    Error("Родитель не может быть младше ребенка", parent.Id, child.Id);
             }
         }
 
