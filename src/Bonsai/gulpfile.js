@@ -1,7 +1,7 @@
 /// <binding ProjectOpened='watch, dev' />
 const gulp = require('gulp');
 
-const sass = require('gulp-sass');
+const less = require('gulp-less');
 const mincss = require('gulp-clean-css');
 
 const concat = require('gulp-concat');
@@ -54,9 +54,9 @@ const ifProd = act => gulpif(isProd(), act);
     },
     content: {
         styles: {
-            root: './Areas/Common/Styles/style.scss',
+            root: './Areas/Common/Styles/style.less',
             all: [
-                './Areas/Common/Styles/**/*.scss'
+                './Areas/Common/Styles/**/*.less'
             ]
         },
         scripts: {
@@ -87,7 +87,7 @@ const ifProd = act => gulpif(isProd(), act);
 
 const content_styles = function() {
     return gulp.src(config.content.styles.root)
-               .pipe(sass())
+               .pipe(less())
                .pipe(concat('style.css'))
                .pipe(ifProd(mincss()))
                .pipe(gulp.dest(config.assets.styles));

@@ -3,8 +3,8 @@
 body, html {
     height: 100%;
     font-size: 17px;
-    color: $gray-900;
-    background: $gray-200;
+    color: @gray-900;
+    background: @gray-200;
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -13,9 +13,9 @@ body, html {
     min-height: 100%;
     overflow: hidden;
     max-width: 1300px;
-    background: $white;
-    border-left: $border-width solid $gray-300;
-    border-right: $border-width solid $gray-300;
+    background: @white;
+    border-left: @border-width solid @gray-300;
+    border-right: @border-width solid @gray-300;
 }
 
 #page {
@@ -24,22 +24,22 @@ body, html {
 }
 
 .table {
-    
+
     thead {
-        background: $gray-200;
-        
+        background: @gray-200;
+
         th {
             text-align: left;
             font-size: 0.9rem;
-            border-color: $gray-400;
-            border-bottom-width: $border-width;
-            
+            border-color: @gray-400;
+            border-bottom-width: @border-width;
+
             a {
-                color: $gray-900;
+                color: @gray-900;
 
                 .fa-arrow-up,
                 .fa-arrow-down, {
-                    color: $gray-600;
+                    color: @gray-600;
                 }
             }
         }
