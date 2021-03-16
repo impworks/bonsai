@@ -88,7 +88,7 @@ namespace Bonsai.Areas.Front.Controllers
             var result = await _auth.LocalLoginAsync(vm);
 
             if (result.Status == LoginStatus.Succeeded)
-                return RedirectToAction("Index", "Home", new { area = "Front" });
+                return RedirectLocal(vm.ReturnUrl);
 
             return await ViewLoginFormAsync(result.Status);
         }

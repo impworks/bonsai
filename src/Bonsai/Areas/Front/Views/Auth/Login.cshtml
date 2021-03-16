@@ -70,6 +70,7 @@
             <div class="row">
                 <div class="col-sm-5">
                     <form action="@Url.Action("Login")" method="post">
+                        <input type="hidden" name="returnUrl" value="@data.ReturnUrl" />
                         <div class="form-group row">
                             <label class="col-3 col-form-label" for="Login">Логин</label>
                             <div class="col-sm-9">

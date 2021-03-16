@@ -14,5 +14,10 @@
         /// Account password.
         /// </summary>
         public string Password { get; set; }
+        
+        /// <summary>
+        /// URL to redirect to after logging in.
+        /// </summary>
+        public string ReturnUrl { get; set; }
     }
 }
