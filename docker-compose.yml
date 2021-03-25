@@ -7,7 +7,8 @@
 #    Note that after this change Bonsai will be available only by domain name you specified,
 #    and will not be available by IP.
 
-version: "3.3"
+#uncomment if docker-compose versin low then 1.27, you can use pip install docker-compose to get latest version.
+#version: "3.3"
 services:
   traefik:
     image: traefik
@@ -66,7 +67,9 @@ services:
       - postgres
 
   postgres:
-    image: postgres:12.4
+  # if your database created by postgres 12, using https://github.com/tianon/docker-postgres-upgrade for upgrade postgres to new version, 
+  # be careful you need specify user https://github.com/tianon/docker-postgres-upgrade/issues/10#issuecomment-625484344 and add line to pg_hba.conf https://github.com/tianon/docker-postgres-upgrade/issues/16#issuecomment-570917033
+    image: postgres
     restart: unless-stopped
     volumes:
       - database:/var/lib/postgresql/data
