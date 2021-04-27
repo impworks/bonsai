@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Code.Services.Config;
+using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -22,17 +23,19 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/users")]
     public class UsersController : AdminControllerBase
     {
-        public UsersController(UsersManagerService users, PagesManagerService pages, BonsaiConfigService config, AppDbContext db)
+        public UsersController(UsersManagerService users, PagesManagerService pages, BonsaiConfigService config, ISearchEngine search, AppDbContext db)
         {
             _users = users;
             _pages = pages;
             _config = config;
+            _search = search;
             _db = db;
         }
 
         private readonly UsersManagerService _users;
         private readonly PagesManagerService _pages;
         private readonly BonsaiConfigService _config;
+        private readonly ISearchEngine _search;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -97,6 +100,8 @@ namespace Bonsai.Areas.Admin.Controllers
                     var page = await _pages.CreateDefaultUserPageAsync(vm, User);
                     vm.PersonalPageId = page.Id;
                     vm.CreatePersonalPage = false;
+
+                    await _search.AddPageAsync(page);
                 }
 
                 await _users.UpdateAsync(vm, User);
@@ -143,6 +148,8 @@ namespace Bonsai.Areas.Admin.Controllers
                     var page = await _pages.CreateDefaultUserPageAsync(vm, User);
                     vm.PersonalPageId = page.Id;
                     vm.CreatePersonalPage = false;
+                    
+                    await _search.AddPageAsync(page);
                 }
 
                 await _users.CreateAsync(vm);
