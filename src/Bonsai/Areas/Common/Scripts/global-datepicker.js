@@ -50,7 +50,7 @@
         var year = parseInt(parts[0]) || 2000;
         var month = parseInt(parts.length > 0 ? parts[1] : '') || 1;
         var day = parseInt(parts.length > 1 ? parts[2] : '') || 1;
-        return !isNaN(new Date(year + '.' + month + '.' + day).getTime());
+        return !isNaN(new Date(year + '/' + month + '/' + day).getTime());
     }
 }
 
