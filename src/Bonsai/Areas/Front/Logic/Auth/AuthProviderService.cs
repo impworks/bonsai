@@ -38,6 +38,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                         opts.AppId = id;
                         opts.AppSecret = secret;
                         opts.Scope.Add("email");
+                        opts.AccessDeniedPath = "/auth/failed";
                     });
 
                     return true;
@@ -66,6 +67,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                         opts.Scope.AddRange(new [] { "email" });
                         opts.ClaimActions.MapJsonKey(ClaimTypes.DateOfBirth, "bdate");
                         opts.Fields.Add("bdate");
+                        opts.AccessDeniedPath = "/auth/failed";
                     });
 
                     return true;
@@ -93,6 +95,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                         opts.ClientSecret = secret;
                         opts.Scope.AddRange(new [] { "login:email", "login:birthday", "login:info" });
                         opts.ClaimActions.MapJsonKey(ClaimTypes.DateOfBirth, "birthday");
+                        opts.AccessDeniedPath = "/auth/failed";
                     });
 
                     return true;
@@ -119,6 +122,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
                         opts.ClientId = id;
                         opts.ClientSecret = secret;
                         opts.Scope.AddRange(new [] { "email", "profile" });
+                        opts.AccessDeniedPath = "/auth/failed";
                     });
 
                     return true;

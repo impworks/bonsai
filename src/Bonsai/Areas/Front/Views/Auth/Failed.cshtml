@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Ошибка авторизации";
+    ViewBag.DisableSearch = true;
+    Layout = "~/Areas/Front/Views/Layout.cshtml";
+}
+
+<div class="content text">
+    <h1>Ошибка авторизации</h1>
+
+    <p>
+        Не удалось авторизоваться через выбранного провайдера.<br/>
+        Попробуйте еще раз, или обратитесь к администратору Bonsai.
+    </p>
+    
+    <a href="@Url.Action("Login")" class="btn btn-lg btn-outline-primary">
+        Назад на страницу авторизации
+    </a>
+</div>

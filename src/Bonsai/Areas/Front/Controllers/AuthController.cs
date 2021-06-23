@@ -55,6 +55,9 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("login")]
         public async Task<ActionResult> Login(string returnUrl = null)
         {
+            if (await _auth.IsFirstUserAsync())
+                return RedirectToAction("Register");
+            
             var user = await _auth.GetCurrentUserAsync(User);
             var status = user?.IsValidated == false ? LoginStatus.Unvalidated : (LoginStatus?) null;
             return await ViewLoginFormAsync(status, returnUrl);
@@ -200,6 +203,16 @@ namespace Bonsai.Areas.Front.Controllers
 
             Session.Remove<RegistrationInfo>();
 
+            return View();
+        }
+
+        /// <summary>
+        /// Displays a message when external auth has failed.
+        /// </summary>
+        [HttpGet]
+        [Route("failed")]
+        public ActionResult Failed()
+        {
             return View();
         }
 
