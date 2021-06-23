@@ -49,6 +49,7 @@ services:
       - Auth__Vkontakte__ClientId=
       - Auth__Vkontakte__ClientSecret=
       - WebServer__RequireHttps=false
+      - Debug__DetailedExceptions=false
       - ASPNETCORE_ENVIRONMENT=Production
     labels:
       traefik.enable: true
