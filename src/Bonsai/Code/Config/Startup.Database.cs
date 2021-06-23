@@ -1,4 +1,8 @@
-﻿using Bonsai.Code.Services;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Date;
@@ -8,6 +12,7 @@ using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
 using Dapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -105,7 +110,25 @@ namespace Bonsai.Code.Config
                         await search.AddPageAsync(page);
                 });
 
+            tasks = tasks.ContinueWith("CheckMissingMedia", "", () => CheckMissingMediaAsync(sp));
+            
             tasks.ContinueWith("Finalize", "", async () => scope.Dispose());
+        }
+
+        /// <summary>
+        /// Checks if the media folder is not mounted correctly.
+        /// </summary>
+        private async Task CheckMissingMediaAsync(IServiceProvider sp)
+        {
+            var db = sp.GetService<AppDbContext>();
+            var env = sp.GetService<IWebHostEnvironment>();
+            
+            if (!(await db.Media.AnyAsync()))
+                return;
+
+            var path = Path.Combine(env.WebRootPath, "media");
+            if (!Directory.Exists(path) || !Directory.EnumerateFiles(path).Any())
+                Logger.Error("The 'media' directory is missing. Make sure it is mounted properly.");
         }
     }
 }

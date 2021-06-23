@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
+using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
@@ -16,7 +18,7 @@ namespace Bonsai.Code.Config
     // ReSharper disable once ClassNeverInstantiated.Global
     public partial class Startup
     {
-        public Startup(IWebHostEnvironment env)
+        public Startup(IWebHostEnvironment env, ILogger logger)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -26,10 +28,12 @@ namespace Bonsai.Code.Config
 
             Configuration = builder.Build().Get<StaticConfig>();
             Environment = env;
+            Logger = logger;
         }
 
         private StaticConfig Configuration { get; }
         private IWebHostEnvironment Environment { get; }
+        private ILogger Logger { get; }
 
         /// <summary>
         /// Registers all required services in the dependency injection container.
