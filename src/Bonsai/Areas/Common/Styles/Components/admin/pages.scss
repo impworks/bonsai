@@ -83,3 +83,10 @@
         opacity: 0.6;
     }
 }
+
+.xhover {
+    position: absolute;
+    border: 2px #FF0000 solid;
+    padding: 5px;
+    z-index: 100;
+}
