@@ -16,7 +16,7 @@ using Bonsai.Data.Utils;
 using Dapper;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
-using Microsoft.AspNetCore.NodeServices;
+using Jering.Javascript.NodeJS;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -66,7 +66,7 @@ namespace Bonsai.Areas.Admin.Logic
                 await services.GetRequiredService<StartupService>().WaitForStartup();
 
                 using (var db = services.GetService<AppDbContext>())
-                using (var js = services.GetService<INodeServices>())
+                using (var js = services.GetService<INodeJSService>())
                 {
                     if (_flush)
                         await FlushTreeAsync(db);
@@ -282,7 +282,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Renders the tree using ELK.js.
         /// </summary>
-        private async Task<string> RenderTree(INodeServices js, TreeLayoutVM tree)
+        private async Task<string> RenderTree(INodeJSService js, TreeLayoutVM tree)
         {
             var thoroughness = Interpolator.MapValue(
                 _config.GetDynamicConfig().TreeRenderThoroughness,
@@ -292,7 +292,7 @@ namespace Bonsai.Areas.Admin.Logic
             );
 
             var json = JsonConvert.SerializeObject(tree);
-            var result = await js.InvokeAsync<string>("./External/tree/tree-layout.js", json, thoroughness);
+            var result = await js.InvokeFromFileAsync<string>("./External/tree/tree-layout.js", args: new object[] { json, thoroughness });
 
             if (string.IsNullOrEmpty(result))
                 throw new Exception("Failed to render tree: output is empty.");

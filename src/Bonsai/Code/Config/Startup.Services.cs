@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Net;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
@@ -9,6 +9,7 @@ using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
+using Jering.Javascript.NodeJS;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,10 +30,9 @@ namespace Bonsai.Code.Config
                 x.MultipartBodyLengthLimit = int.MaxValue;
             });
 
-            services.AddNodeServices(x =>
-            {
-                x.InvocationTimeoutMilliseconds = 1800000; // 30 min must be enough?
-            });
+            services.AddNodeJS();
+            services.Configure<OutOfProcessNodeJSServiceOptions>(opts => opts.TimeoutMS = -1);
+            services.Configure<HttpNodeJSServiceOptions>(opts => opts.Version = HttpVersion.Version20);
 
             // common
             services.AddScoped<MarkdownService>();
