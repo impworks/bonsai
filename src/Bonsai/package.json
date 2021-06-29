@@ -29,6 +29,7 @@
     "bootstrap": "4.3.1",
     "datepicker-bootstrap": "1.9.13",
     "devbridge-autocomplete": "1.4.10",
+    "easymde": "2.15.0",
     "elkjs": "0.4.1",
     "font-awesome": "4.7.0",
     "gijgo": "1.9.13",
@@ -39,7 +40,6 @@
     "popper.js": "1.15.0",
     "rangeslider.js": "2.3.3",
     "selectize": "0.12.6",
-    "simplemde": "1.11.2",
     "toastr": "2.1.4",
     "vue": "2.6.10"
   }

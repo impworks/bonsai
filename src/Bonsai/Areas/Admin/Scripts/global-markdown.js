@@ -1,7 +1,7 @@
 ﻿$(function() {
     $('.md-editor').each(function (idx, elem) {
         var allowMedia = $(elem).data('md-pick-media');
-        var editor = new SimpleMDE({
+        var editor = new EasyMDE({
             element: elem,
             blockStyles: {
                 bold: '**',

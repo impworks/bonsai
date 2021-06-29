@@ -38,7 +38,7 @@ const ifProd = act => gulpif(isProd(), act);
                 './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
                 './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
                 './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
-                './node_modules/simplemde/dist/simplemde.min.js',
+                './node_modules/easymde/dist/easymde.min.js',
                 './node_modules/rangeslider.js/dist/rangeslider.js'
             ],
             vue: {
