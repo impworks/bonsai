@@ -3,12 +3,15 @@
     if (!$cm.length)
         return;
 
+    var cm = $cm.get(0).CodeMirror;
+
     var isOpen = false;
     var query = '';
     var $popup = null;
     var results = [];
     var resultIdx = null;
 
+    // command key handler
     document.addEventListener('keydown',
         function(e) {
             if (isOpen) {
@@ -18,19 +21,24 @@
                     e.preventDefault();
                     selectOffset(e.key === 'ArrowDown' ? 1 : -1);
                 } else if (e.key === 'Backspace') {
-                    // todo: ctrl + backspace?
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        return;
+                    }
+
                     if (query)
                         setQuery(query.substr(0, query.length - 1));
                     else
                         closePopup();
-                } else if (e.key === 'Enter') {
+                } else if (e.key === 'Enter' || e.key === 'Tab') {
                     if (resultIdx !== null) {
                         e.preventDefault();
                         pick();
                     }
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    // todo: for now?
+                    e.preventDefault();
                 }
-
-                // todo: left-right?
             } else {
                 if (e.key === '@')
                     openPopup();
@@ -39,6 +47,7 @@
         true
     );
 
+    // typing handler
     document.addEventListener('keypress',
         function(e) {
             if (!isOpen)
@@ -49,6 +58,17 @@
             setQuery(query + e.key);
         },
         true
+    );
+
+    // click outside to close
+    document.addEventListener('click',
+        function(e) {
+            if (!isOpen)
+                return;
+
+            if (!$popup.get(0).contains(e.target))
+                closePopup();
+        }
     );
 
     /**
@@ -101,7 +121,6 @@
                 query: query
             }
         }).then(data => {
-            console.log('found for ' + query + ':', data);
             results = data;
             if (results && results.length)
                 resultIdx = 0;
@@ -126,9 +145,9 @@
             $popup.append(renderEmptyMsg());
         }
 
-        function renderElem(index) {
-            var isActive = index === resultIdx;
-            var text = results[index].title;
+        function renderElem(idx) {
+            var isActive = idx === resultIdx;
+            var text = results[idx].title;
 
             var $elem = $('<div>').addClass('eac-popup-item clickable')
                                   .text(text);
@@ -138,8 +157,7 @@
 
             $elem.on('mouseover', function () { $(this).addClass('active'); });
             $elem.on('mouseout', function () { if (!isActive) $(this).removeClass('active'); });
-
-            // todo: click to select!
+            $elem.on('click', function() { pick(idx); });
 
             return $elem;
         }
@@ -187,13 +205,29 @@
      */
     function pick(idx = null) {
         var result = results[idx || resultIdx];
-        var cm = $cm.get(0).CodeMirror;
         var cursor = cm.doc.getCursor();
+
         cm.replaceRange(
             '[[' + result.title + '|' + result.title + ']]',
-            { line: cursor.line, ch: cursor.ch - query.length - 1 },
+            pos(cursor, query.length + 1),
             cursor
         );
-        closePopup();
+
+        // setTimeout(
+        //     function () {
+        //         var cursor2 = cm.doc.getCursor();
+        //         cm.setSelection(
+        //             pos(cursor2, result.title + 2),
+        //             pos(cursor2, 2)
+        //         );
+        // 
+        //         closePopup();
+        //     },
+        //     100
+        // );
+
+        function pos(cursor, p) {
+            return { line: cursor.line, ch: cursor.ch - p };
+        }
     }
 });
