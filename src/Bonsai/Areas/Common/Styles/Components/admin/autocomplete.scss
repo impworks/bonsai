@@ -1,0 +1,29 @@
+﻿.eac-popup {
+    width: 350px;
+    position: absolute;
+    border: 1px #d4d4d4 solid;
+    border-radius: 4px;
+    z-index: 100;
+
+    .eac-popup-item {
+        display: block;
+        width: 100%;
+        padding: 6px;
+
+        &.active {
+            background-color: #6aa120;
+            color: #ffffff;
+        }
+
+        &:not(:last-child) {
+            border-bottom: 1px #aaa solid;
+        }
+    }
+
+    .eac-popup-empty {
+        display: block;
+        width: 100%;
+        padding: 6px;
+        color: #d4d4d4;
+    }
+}
