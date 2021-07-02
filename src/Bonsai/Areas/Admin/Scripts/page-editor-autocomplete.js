@@ -1,8 +1,4 @@
-﻿$(function() {
-    var $cm = $('.CodeMirror');
-    if (!$cm.length)
-        return;
-
+﻿function setupCodemirrorAutocomplete($cm) {
     var cm = $cm.get(0).CodeMirror;
 
     var isOpen = false;
@@ -13,7 +9,10 @@
 
     // command key handler
     document.addEventListener('keydown',
-        function(e) {
+        function (e) {
+            if (!cm.hasFocus())
+                return;
+
             if (isOpen) {
                 if (e.key === 'Escape') {
                     closePopup();
@@ -49,7 +48,7 @@
 
     // typing handler
     document.addEventListener('keypress',
-        function(e) {
+        function (e) {
             if (!isOpen)
                 return;
             if (query === '' && e.key === '@')
@@ -62,7 +61,7 @@
 
     // click outside to close
     document.addEventListener('click',
-        function(e) {
+        function (e) {
             if (!isOpen)
                 return;
 
@@ -165,7 +164,7 @@
 
             $elem.on('mouseover', function () { $(this).addClass('active'); });
             $elem.on('mouseout', function () { if (!isActive) $(this).removeClass('active'); });
-            $elem.on('click', function() { pick(idx); });
+            $elem.on('click', function () { pick(idx); });
 
             return $elem;
         }
@@ -234,4 +233,10 @@
             return { line: cursor.line, ch: cursor.ch - p };
         }
     }
+}
+
+$(function () {
+    $('.CodeMirror').each(function() {
+        setupCodemirrorAutocomplete($(this));
+    });
 });
