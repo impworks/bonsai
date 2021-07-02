@@ -124,6 +124,7 @@ namespace Bonsai.Code.Services
         {
             var keys = LinkRegex.Matches(html)
                                 .Select(x => x.Groups["key"].Value)
+                                .Distinct()
                                 .ToDictionary(x => x, x => PageHelper.EncodeTitle(x).ToLowerInvariant());
 
             if (!keys.Any())
