@@ -103,6 +103,28 @@
     }
 
     /**
+     * Requests data from server with a debounce of 250ms.
+     */
+    var search = debounce(
+        function () {
+            $.ajax({
+                url: '/admin/pick/pages',
+                method: 'GET',
+                data: {
+                    count: 5,
+                    query: query
+                }
+            }).then(data => {
+                results = data;
+                if (results && results.length)
+                    resultIdx = 0;
+                refreshPopup();
+            });
+        },
+        250
+    );
+
+    /**
      * Updates the query to a new value.
      * @param {string} q
      */
@@ -111,21 +133,7 @@
             return;
 
         query = q;
-
-        // todo: throttle!
-        $.ajax({
-            url: '/admin/pick/pages',
-            method: 'GET',
-            data: {
-                count: 5,
-                query: query
-            }
-        }).then(data => {
-            results = data;
-            if (results && results.length)
-                resultIdx = 0;
-            refreshPopup();
-        });
+        search(query);
     }
 
     /**
@@ -163,7 +171,8 @@
         }
 
         function renderEmptyMsg() {
-            return $('<div>').addClass('eac-popup-empty').text(query ? 'Ничего не найдено' : 'Введите запрос для поиска');
+            return $('<div>').addClass('eac-popup-empty')
+                             .text(query ? 'Ничего не найдено' : 'Введите запрос для поиска');
         }
     }
 
@@ -213,18 +222,13 @@
             cursor
         );
 
-        // setTimeout(
-        //     function () {
-        //         var cursor2 = cm.doc.getCursor();
-        //         cm.setSelection(
-        //             pos(cursor2, result.title + 2),
-        //             pos(cursor2, 2)
-        //         );
-        // 
-        //         closePopup();
-        //     },
-        //     100
-        // );
+        var cursor2 = cm.doc.getCursor();
+        cm.setSelection(
+            pos(cursor2, result.title.length + 2),
+            pos(cursor2, 2)
+        );
+
+        closePopup();
 
         function pos(cursor, p) {
             return { line: cursor.line, ch: cursor.ch - p };
