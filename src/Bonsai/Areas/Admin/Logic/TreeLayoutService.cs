@@ -31,7 +31,12 @@ namespace Bonsai.Areas.Admin.Logic
     {
         #region Constructor
 
-        public TreeLayoutService(WorkerAlarmService alarm, IServiceProvider services, BonsaiConfigService config, ILogger logger)
+        public TreeLayoutService(
+            WorkerAlarmService alarm,
+            IServiceProvider services,
+            INodeJSService nodejs,
+            BonsaiConfigService config, 
+            ILogger logger)
             : base(services)
         {
             _config = config;
@@ -66,8 +71,9 @@ namespace Bonsai.Areas.Admin.Logic
                 await services.GetRequiredService<StartupService>().WaitForStartup();
 
                 using (var db = services.GetService<AppDbContext>())
-                using (var js = services.GetService<INodeJSService>())
                 {
+                    var js = services.GetService<INodeJSService>();
+                        
                     if (_flush)
                         await FlushTreeAsync(db);
 
