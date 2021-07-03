@@ -26,6 +26,7 @@ RUN apk add --no-cache nodejs ffmpeg libintl icu && \
 WORKDIR /app
 COPY --from=net-builder /out .
 
+RUN mkdir /app/External/ffmpeg
 RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg && \
     ln -s /usr/bin/ffprobe /app/External/ffmpeg/ffprobe && \
     chmod +x /app/Bonsai
