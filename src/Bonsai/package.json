@@ -25,7 +25,7 @@
     "gulp-uglify": "3.0.2"
   },
   "dependencies": {
-    "blueimp-file-upload": "9.22.0",
+    "blueimp-file-upload": "9.22.1",
     "bootstrap": "4.3.1",
     "datepicker-bootstrap": "1.9.13",
     "devbridge-autocomplete": "1.4.10",
