@@ -42,7 +42,7 @@ A family wiki and photoalbum engine (in Russian).
     * Save Facebook authorization credentials to `Auth__Facebook__AppId` and `Auth__Facebook__AppSecret` config properties
     * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization
     * Replace `@@YOUR_EMAIL@@` with your email address (for LetsEncrypt auto-SSL)
-    * Replace `@@DOMAIN@@` with the domain name to use (or you can use your IP with xip.io, like `192.168.1.1.xip.io`)
+    * Replace `@@DOMAIN@@` with the domain name to use (or you can use your IP with nip.io, like `192.168.1.1.nip.io`)
     * Uncomment two lines with ``Host(`@@DOMAIN@@`)``
     * Comment two lines with ``PathPrefix(`/`)`` 
 

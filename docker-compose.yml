@@ -2,7 +2,7 @@
 #
 # 1) Replace the following placeholders with actual values:
 #      @@YOUR_EMAIL@@: your email address (required for LetsEncrypt certificate issuing)
-#      @@DOMAIN@@: your domain name (you could use xip.io service to generate one from your IP if you don't have one, i.e. 127.0.0.1.xip.io)
+#      @@DOMAIN@@: your domain name (you could use nip.io service to generate one from your IP if you don't have one, i.e. 127.0.0.1.nip.io)
 # 2) Comment traefik rules with PathPrefix and uncomment with Host
 #    Note that after this change Bonsai will be available only by domain name you specified,
 #    and will not be available by IP.
