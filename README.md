@@ -35,11 +35,11 @@
     Настройте доступ по HTTPS и внешнюю авторизацию для обеспечения максимальной безопасности ваших данных.
     Это трудоемкий шаг, поэтому если вы просто хотите попробовать Bonsai своими руками - его можно пропустить или отложить.
 
-    Создайте [приложение авторизации Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (или Google, Yandex, Вконтакте).
+    Создайте [приложение авторизации Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (или Yandex, Вконтакте).
 
     Отредактируйте файл `docker-compose.yml`:
 
-    * Впишите данные для авторизации Facebook в поля `Auth__Facebook__AppId` и `Auth__Facebook__AppSecret`
+    * Впишите данные для авторизации Facebook в поля `Auth__Google__AppId` и `Auth__Google__AppSecret`
     * Задайте настройку `Auth__AllowPasswordAuth=false` если хотите отключить менее безопасную авторизацию по паролю
     * Замените заглушку `@@YOUR_EMAIL@@` на свой адрес email (для автоматической генерации HTTPS-сертификата LetsEncrypt)
     * Замените заглушку `@@DOMAIN@@` на доменное имя (если у вас только IP-адрес, используйте nip.io, например `192.168.1.1.nip.io`)
@@ -56,53 +56,49 @@
 
 Для участия в разработке понадобится:
 
-* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1): основной рантайм для Bonsai
+* [.NET 5](https://dotnet.microsoft.com/download/dotnet/5.0): основной рантайм для Bonsai
 
 1. Установите [NodeJS](https://nodejs.org/en/) (10+)
 2. Установите [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
 3. Скачайте [shared-сборку ffmpeg](https://ffmpeg.zeranoe.com/builds/) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
 4. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
 
-    ```
+  ```
     {
       "ConnectionStrings": {
         "Database": "Server=127.0.0.1;Port=5432;Database=bonsai;User Id=<login>;Password=<password>;Persist Security Info=true"
       },
       "Auth": {
-	    "AllowPasswordAuth": true
+        "AllowPasswordAuth": true
       } 
     }
-    ```
+  ```
 
 5. _Опционально, но рекомендуемо_:
 
-    Создайте [приложение авторизации Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (или Google, Yandex, Вконтакте).
+    Создайте [приложение авторизации Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (или Yandex, Вконтакте).
 
-	Впишите данные для авторизации в файл `appsettings.Development.json` и установите свойство `AllowPasswordAuth` в значение `false`:
+    Впишите данные для авторизации в файл `appsettings.Development.json` и установите свойство `AllowPasswordAuth` в значение `false`:
 
-	```
-	{
-	    "Auth": {
-		    "AllowPasswordAuth": false,
-		    "Facebook": {
-			  "AppId": "<...>",
-			  "AppSecret": "<...>" 
-			},
-			"Google": {
-			  "ClientId": "<...>",
-			  "ClientSecret": "<...>" 
-			},
-			"Yandex": {
-			  "ClientId": "<...>",
-			  "ClientSecret": "<...>" 
-			},
-			"Vkontakte": {
-			  "ClientId": "<...>",
-			  "ClientSecret": "<...>" 
-			}
-		}
-	}
-	```
+    ```
+    {
+      "Auth": {
+        "AllowPasswordAuth": false,
+        "Google": {
+          "ClientId": "<...>",
+          "ClientSecret": "<...>" 
+        },
+        "Yandex": {
+          "ClientId": "<...>",
+          "ClientSecret": "<...>" 
+        },
+        "Vkontakte": {
+          "ClientId": "<...>",
+          "ClientSecret": "<...>" 
+        }
+      }
+    }
+    ```
     
 6. Создайте базу данных:
 
@@ -136,7 +132,7 @@
 Bonsai поддерживает 2 метода авторизации: OAuth с использованием внешних сайтов и авторизация по паролю.
 
 OAuth является предпочтительным: он проще для пользователей, более безопасный и универсальный. **Если можете, используйте его!**
-Для этого вам потребуется создать приложение авторизации на сайте [Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-3.0), [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-3.0), [ВКонтакте](https://vk.com/editapp?act=create) или в [Яндексе](https://oauth.yandex.ru/client/new), как написано в инструкции.
+Для этого вам потребуется создать приложение авторизации на сайте [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0), [ВКонтакте](https://vk.com/editapp?act=create) или в [Яндексе](https://oauth.yandex.ru/client/new), как написано в инструкции.
 Можно подключить несколько авторизационных приложений одновременно - пользователи смогут выбирать из них то, которое им больше по душе.
 
 Также вы можете создать учетную запись с авторизацией по логину и паролю. Она пригодится в двух случаях:
@@ -146,7 +142,24 @@ OAuth является предпочтительным: он проще для 
 
 Несколько фактов об авторизации, которые стоит иметь в виду:
 
-* У одной учетной записи может быть только один способ авторизации: или пароль, или Facebook, или Google, и т.д.
+* У одной учетной записи может быть только один способ авторизации: или пароль, или Google, или Вконтакте, и т.д.
 * После создания учетной записи поменять тип авторизации нельзя.
 * Учетные записи с авторизацией по паролю автоматически блокируются, если пароль был введен неверно слишком много раз подряд.
 * Пароль может сменить только администратор вручную. Если у вас только одна учетная запись администратора и вы забыли от нее пароль - восстановить доступ можно только с помощью манипуляций с базой данных!
+
+#### Авторизация через Favebook
+
+С лета 2021 года Facebook поменял правила пользования авторизационными приложениями. Приложение должно периодически проходить ручную модерацию, для чего администратор Bonsai должен создать специальную учетную запись и предоставить данные от нее в Facebook. Данный способ имеет смысл на публичных сервисах с автоматической регистрацией, но в контексте Bonsai противоречит основной идее: хранимые данные о семье не должны быть доступны третьим лицам. В связи с этим авторизация через Facebook больше не поддерживается.
+
+Существующие учетные записи, привязанные к Facebook, необходимо перевести в тип "авторизация по паролю" с помощью SQL-скрипта:
+
+```
+UPDATE "public"."AspNetUsers"
+SET
+  "PasswordHash" = 'AQAAAAEAACcQAAAAEOKtY+Y/P0WYToOv6fhFyQKDRj8ZBPbZBNX72ilP9a9jsrk+MsX2L0Q1FVUFkbQ7SQ==',
+  "SecurityStamp" = 'OFYAMDMHVW5CK5Y3W6OJIKQX4INUIZC2',
+  "AuthType" = 1
+WHERE
+  "Email" = '<EMAIL>'
+```
+

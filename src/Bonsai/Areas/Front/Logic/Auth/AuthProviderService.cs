@@ -20,33 +20,6 @@ namespace Bonsai.Areas.Front.Logic.Auth
         {
             new AuthProviderVM
             {
-                Key = "Facebook",
-                Caption = "Facebook",
-                IconClass = "fa fa-facebook-square",
-                TryActivate = (cfg, auth) =>
-                {
-                    if (cfg?.Auth?.Facebook == null)
-                        return false;
-
-                    var id = cfg.Auth.Facebook.AppId;
-                    var secret = cfg.Auth.Facebook.AppSecret;
-                    if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
-                        return false;
-
-                    auth.AddFacebook(opts =>
-                    {
-                        opts.AppId = id;
-                        opts.AppSecret = secret;
-                        opts.Scope.Add("email");
-                        opts.AccessDeniedPath = "/auth/failed";
-                    });
-
-                    return true;
-                }
-            },
-
-            new AuthProviderVM
-            {
                 Key = "Vkontakte",
                 Caption = "ВКонтакте",
                 IconClass = "fa fa-vk",
