@@ -1,7 +1,7 @@
 /// <binding ProjectOpened='watch, dev' />
 const gulp = require('gulp');
 
-const sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 const mincss = require('gulp-clean-css');
 
 const concat = require('gulp-concat');
