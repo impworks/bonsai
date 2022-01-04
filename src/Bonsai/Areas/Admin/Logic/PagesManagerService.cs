@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
+using Bonsai.Areas.Admin.ViewModels.Common;
+using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.Services;
+using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -273,12 +276,20 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Displays the remove confirmation form.
         /// </summary>
-        public async Task<PageTitleExtendedVM> RequestRemoveAsync(Guid id)
+        public async Task<RemoveEntryInfoVM<PageTitleExtendedVM>> RequestRemoveAsync(Guid id, ClaimsPrincipal principal)
         {
-            return await _db.Pages
+            var page = await _db.Pages
                             .Where(x => x.IsDeleted == false)
                             .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
                             .GetAsync(x => x.Id == id, "Страница не найдена");
+
+            var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);
+
+            return new RemoveEntryInfoVM<PageTitleExtendedVM>
+            {
+                Entry = page,
+                CanRemoveCompletely = isAdmin
+            };
         }
 
         /// <summary>
@@ -300,6 +311,94 @@ namespace Bonsai.Areas.Admin.Logic
             _cache.Clear();
 
             return page;
+        }
+
+        /// <summary>
+        /// Removes the page completely with all related entities (tags, relations, changesets).
+        /// </summary>
+        public async Task RemoveCompletelyAsync(Guid id, ClaimsPrincipal principal)
+        {
+            if (await _userMgr.IsInRoleAsync(principal, UserRole.Admin) == false)
+                throw new OperationException("Операция запрещена для данного пользователя!");
+            
+            var page = await _db.Pages
+                                .GetAsync(x => x.Id == id, "Страница не найдена");
+
+            // changesets
+            await _db.Changes.RemoveWhereAsync(x => x.EditedPageId == id);
+            await _db.Changes.RemoveWhereAsync(x => x.EditedRelation.SourceId == id || x.EditedRelation.DestinationId == id);
+            
+            // relations
+            await _db.Relations.RemoveWhereAsync(x => x.SourceId == id || x.DestinationId == id);
+            await foreach (var rel in _db.Relations.WhereAsync(x => x.EventId == id))
+                rel.EventId = null;
+            
+            // media tags
+            await _db.MediaTags.RemoveWhereAsync(x => x.ObjectId == id);
+            await CleanupMediaChangesetsAsync();
+
+            // page-related stuff
+            await _db.PageDrafts.RemoveWhereAsync(x => x.PageId == id);
+            await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == id);
+            
+            // users
+            await foreach (var user in _db.Users.WhereAsync(x => x.PageId == id))
+                user.PageId = null;
+            
+            // page itself
+            _db.Pages.Remove(page);
+
+            _cache.Clear();
+
+            async Task CleanupMediaChangesetsAsync()
+            {
+                var changesets = await _db.Changes.Where(x => x.EditedMediaId != null)
+                                          .ToListAsync();
+
+                foreach (var changeset in changesets)
+                {
+                    var origState = RemoveMediaTagReferences(changeset.OriginalState);
+                    if (origState != null)
+                        changeset.OriginalState = origState;
+
+                    var updState = RemoveMediaTagReferences(changeset.UpdatedState);
+                    if (updState != null)
+                        changeset.UpdatedState = updState;
+                }
+            }
+
+            string RemoveMediaTagReferences(string raw)
+            {
+                var editor = TryParse<MediaEditorVM>(raw);
+                if (editor == null)
+                    return null;
+
+                var tags = TryParse<MediaTagVM[]>(editor.DepictedEntities);
+                if (tags == null)
+                    return null;
+
+                var remainingTags = tags.Where(x => x.PageId != id).ToList();
+                if (remainingTags.Count == tags.Length)
+                    return null;
+
+                editor.DepictedEntities = JsonConvert.SerializeObject(remainingTags);
+                return JsonConvert.SerializeObject(editor);
+            }
+
+            T TryParse<T>(string raw) where T: class
+            {
+                if (string.IsNullOrWhiteSpace(raw))
+                    return null;
+
+                try
+                {
+                    return JsonConvert.DeserializeObject<T>(raw);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
         }
 
         /// <summary>

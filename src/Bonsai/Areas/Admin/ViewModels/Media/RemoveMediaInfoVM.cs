@@ -3,6 +3,5 @@
     public class RemoveMediaInfoVM
     {
         public string ThumbnailUrl { get; set; }
-        public bool CanRemoveFile { get; set; }
     }
 }

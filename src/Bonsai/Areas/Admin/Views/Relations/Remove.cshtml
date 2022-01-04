@@ -1,22 +1,36 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Areas.Admin.ViewModels.Common
+@using Bonsai.Areas.Admin.ViewModels.Relations
 @using Impworks.Utils.Format
-@model Bonsai.Areas.Admin.ViewModels.Relations.RelationTitleVM
+@model RemoveEntryRequestVM
 @{
     ViewBag.Title = "Удаление связи";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
+    var info = (RemoveEntryInfoVM<RelationTitleVM>) ViewBag.Info;
 }
 
 <h1>Удаление связи</h1>
 
 <p>
-    Вы уверены, что хотите удалить страницу связь <b>@Model.Type.GetEnumDescription()</b>
-    между страницами <b>@Model.Destination.Title</b> и <b>@Model.Source.Title</b>?<br />
-    Отменить данную операцию будет невозможно.
+    Вы уверены, что хотите удалить страницу связь <b>@info.Entry.Type.GetEnumDescription()</b>
+    между страницами <b>@info.Entry.Destination.Title</b> и <b>@info.Entry.Source.Title</b>?<br />
 </p>
 
 <form action="@Url.Action("Remove", "Relations", new {area = "Admin"})" method="POST">
-    <input type="hidden" name="confirm" value="true" />
     <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger" type="submit">Удалить</button>
-    <a href="@Url.Action("Index", "Relations", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+    
+        @if (info.CanRemoveCompletely)
+        {
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" asp-for="RemoveCompletely" id="RemoveCompletely" />
+                    <label class="form-check-label" for="RemoveCompletely">Удалить окончательно (восстановление будет невозможно)</label>
+                </div>
+            </div>
+        }
+    
+    <div class="form-group">
+        <button class="btn btn-danger" type="submit">Удалить</button>
+        <a href="@Url.Action("Index", "Relations", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+    </div>
 </form>

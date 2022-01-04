@@ -9,6 +9,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Utils;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Dashboard;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
@@ -17,6 +18,7 @@ using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
+using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -229,47 +231,64 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the confirmation info for the media.
         /// </summary>
-        public async Task<RemoveMediaInfoVM> RequestRemoveAsync(Guid id, ClaimsPrincipal principal)
+        public async Task<RemoveEntryInfoVM<string>> RequestRemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var media = await _db.Media
                                  .AsNoTracking()
                                  .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
 
-            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
-
-            return new RemoveMediaInfoVM
+            var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);
+            
+            return new RemoveEntryInfoVM<string>
             {
-                ThumbnailUrl = MediaPresenterService.GetSizedMediaPath(media.FilePath, MediaSize.Small),
-                CanRemoveFile = await _userMgr.IsInRoleAsync(user, nameof(UserRole.Admin))
+                Entry = MediaPresenterService.GetSizedMediaPath(media.FilePath, MediaSize.Small),
+                CanRemoveCompletely = isAdmin
             };
         }
 
         /// <summary>
         /// Removes the media file.
         /// </summary>
-        public async Task RemoveAsync(RemoveMediaRequestVM vm, ClaimsPrincipal principal)
+        public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var media = await _db.Media
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == vm.Id && x.IsDeleted == false, "Медиа-файл не найден");
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
 
-            var prevState = await RequestUpdateAsync(vm.Id);
-            var changeset = await GetChangesetAsync(prevState, null, vm.Id, principal, null);
+            var prevState = await RequestUpdateAsync(id);
+            var changeset = await GetChangesetAsync(prevState, null, id, principal, null);
             _db.Changes.Add(changeset);
-
-            if (vm.RemoveFile)
-            {
-                var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
-                var canRemove = await _userMgr.IsInRoleAsync(user, nameof(UserRole.Admin));
-
-                if (canRemove)
-                    foreach(var size in new [] {  MediaSize.Original, MediaSize.Large, MediaSize.Medium }) // sic! leaving the .sm thumb
-                        File.Delete(_env.GetMediaPath(media, size));
-            }
 
             media.IsDeleted = true;
 
             await ClearCacheAsync(media);
+        }
+
+        /// <summary>
+        /// Removes the media file irreversibly, including the media on disk.
+        /// </summary>
+        public async Task RemoveCompletelyAsync(Guid id, ClaimsPrincipal principal)
+        {
+            if (await _userMgr.IsInRoleAsync(principal, UserRole.Admin) == false)
+                throw new OperationException("Операция запрещена для данного пользователя!");
+            
+            var media = await _db.Media
+                                 .Include(x => x.Tags)
+                                 .GetAsync(x => x.Id == id, "Медиа-файл не найден");
+            
+            _db.MediaTags.RemoveRange(media.Tags);
+
+            await _db.Changes.RemoveWhereAsync(x => x.EditedMediaId == id);
+            
+            await foreach (var page in _db.Pages.WhereAsync(x => x.MainPhotoId == id))
+                page.MainPhotoId = null;
+            
+            foreach(var size in new [] { MediaSize.Small, MediaSize.Original, MediaSize.Medium, MediaSize.Large })
+                File.Delete(_env.GetMediaPath(media, size));
+
+            _db.Media.Remove(media);
+            
+            _cache.Clear();
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Workers;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Facts;
@@ -151,8 +152,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(Guid id)
         {
-            var vm = await _pages.RequestRemoveAsync(id);
-            return View(vm);
+            ViewBag.Info = await _pages.RequestRemoveAsync(id, User);
+            return View(new RemoveEntryRequestVM { Id = id });
         }
 
         /// <summary>
@@ -160,11 +161,15 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("remove")]
-        public async Task<ActionResult> Remove(Guid id, bool confirm)
+        public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
         {
-            var page = await _pages.RemoveAsync(id, User);
+            if (vm.RemoveCompletely)
+                await _pages.RemoveCompletelyAsync(vm.Id, User);
+            else
+                await _pages.RemoveAsync(vm.Id, User);
+            
             await _db.SaveChangesAsync();
-            await _search.RemovePageAsync(page);
+            await _search.RemovePageAsync(vm.Id);
             _alarm.FireTreeLayoutRegenerationRequired();
 
             return RedirectToSuccess("Страница удалена");

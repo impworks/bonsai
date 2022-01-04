@@ -1,29 +1,43 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model Bonsai.Areas.Front.ViewModels.Page.PageTitleExtendedVM
+@using Bonsai.Areas.Admin.ViewModels.Common
+@using Bonsai.Areas.Front.ViewModels.Page
+@model RemoveEntryRequestVM
 @{
     ViewBag.Title = "Удаление страницы";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
+    var info = (RemoveEntryInfoVM<PageTitleExtendedVM>) ViewBag.Info;
 }
 
 <h1>Удаление страницы</h1>
 
-@if (!string.IsNullOrEmpty(Model.MainPhotoPath))
+@if (!string.IsNullOrEmpty(info.Entry.MainPhotoPath))
 {
     <div class="card d-inline-block">
         <div class="card-body">
-            <img src="@Url.Content(Model.MainPhotoPath)" style="max-width: 200px"/>
+            <img src="@Url.Content(info.Entry.MainPhotoPath)" style="max-width: 200px"/>
         </div>
     </div>
 }
 
 <p>
-    Вы уверены, что хотите удалить страницу <b>@Model.Title</b>?<br />
-    Отменить данную операцию будет невозможно.
+    Вы уверены, что хотите удалить страницу <b>@info.Entry.Title</b>?<br />
 </p>
 
 <form action="@Url.Action("Remove", "Pages", new {area = "Admin"})" method="POST">
-    <input type="hidden" name="confirm" value="true" />
     <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger" type="submit">Удалить</button>
-    <a href="@Url.Action("Index", "Pages", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+    
+    @if (info.CanRemoveCompletely)
+    {
+        <div class="form-group">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" asp-for="RemoveCompletely" id="RemoveCompletely" />
+                <label class="form-check-label" for="RemoveCompletely">Удалить страницу и все ее упоминания окончательно (восстановление будет невозможно)</label>
+            </div>
+        </div>
+    }
+    
+    <div class="form-group">
+        <button class="btn btn-danger" type="submit">Удалить</button>
+        <a href="@Url.Action("Index", "Pages", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+    </div>
 </form>

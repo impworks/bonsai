@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.Utils;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
@@ -162,7 +163,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Remove(Guid id)
         {
             ViewBag.Info = await _media.RequestRemoveAsync(id, User);
-            return View(new RemoveMediaRequestVM { Id = id });
+            return View(new RemoveEntryRequestVM { Id = id });
         }
 
         /// <summary>
@@ -170,9 +171,13 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("remove")]
-        public async Task<ActionResult> Remove(RemoveMediaRequestVM vm)
+        public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
         {
-            await _media.RemoveAsync(vm, User);
+            if (vm.RemoveCompletely)
+                await _media.RemoveCompletelyAsync(vm.Id, User);
+            else
+                await _media.RemoveAsync(vm.Id, User);
+            
             await _db.SaveChangesAsync();
 
             return RedirectToSuccess("Медиа-файл удален");

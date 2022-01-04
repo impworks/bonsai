@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Workers;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -124,8 +125,8 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("remove")]
         public async Task<ActionResult> Remove(Guid id)
         {
-            var vm = await _rels.RequestRemoveAsync(id);
-            return View(vm);
+            ViewBag.Info = await _rels.RequestRemoveAsync(id, User);
+            return View(new RemoveEntryRequestVM { Id = id });
         }
 
         /// <summary>
@@ -133,9 +134,13 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         [HttpPost]
         [Route("remove")]
-        public async Task<ActionResult> Remove(Guid id, bool confirm)
+        public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
         {
-            await _rels.RemoveAsync(id, User);
+            if (vm.RemoveCompletely)
+                await _rels.RemoveCompletelyAsync(vm.Id, User);
+            else
+                await _rels.RemoveAsync(vm.Id, User);
+            
             await _db.SaveChangesAsync();
             _alarm.FireTreeLayoutRegenerationRequired();
 

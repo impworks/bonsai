@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Validation;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services;
+using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -192,12 +194,20 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Returns the brief information about a relation for reviewing before removal.
         /// </summary>
-        public async Task<RelationTitleVM> RequestRemoveAsync(Guid id)
+        public async Task<RemoveEntryInfoVM<RelationTitleVM>> RequestRemoveAsync(Guid id, ClaimsPrincipal principal)
         {
-            return await _db.Relations
-                            .Where(x => x.IsDeleted == false && x.IsComplementary == false)
-                            .ProjectTo<RelationTitleVM>(_mapper.ConfigurationProvider)
-                            .GetAsync(x => x.Id == id, "Связь не найдена");
+            var rel = await _db.Relations
+                               .Where(x => x.IsDeleted == false && x.IsComplementary == false)
+                               .ProjectTo<RelationTitleVM>(_mapper.ConfigurationProvider)
+                               .GetAsync(x => x.Id == id, "Связь не найдена");
+
+            var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);
+            
+            return new RemoveEntryInfoVM<RelationTitleVM>
+            {
+                Entry = rel,
+                CanRemoveCompletely = isAdmin
+            };
         }
 
         /// <summary>
@@ -219,6 +229,31 @@ namespace Bonsai.Areas.Admin.Logic
             rel.IsDeleted = true;
             _db.Relations.Remove(compRel);
 
+            _cache.Clear();
+        }
+
+        /// <summary>
+        /// Removes the relation irreversibly.
+        /// </summary>
+        public async Task RemoveCompletelyAsync(Guid id, ClaimsPrincipal principal)
+        {
+            if (await _userMgr.IsInRoleAsync(principal, UserRole.Admin) == false)
+                throw new OperationException("Операция запрещена для данного пользователя!");
+            
+            var rel = await _db.Relations
+                               .GetAsync(x => x.Id == id
+                                   && x.IsComplementary == false
+                                   && x.IsDeleted == false, "Связь не найдена");
+
+            var compRel = await FindComplementaryRelationAsync(rel);
+            var compRelId = compRel?.Id ?? Guid.Empty;
+
+            await _db.Changes.RemoveWhereAsync(x => x.EditedRelationId == id || x.EditedRelationId == compRelId);
+            
+            _db.Relations.Remove(rel);
+            if (compRel != null)
+                _db.Relations.Remove(compRel);
+            
             _cache.Clear();
         }
 

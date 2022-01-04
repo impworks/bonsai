@@ -174,7 +174,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 {
                     if (isRemoving)
                     {
-                        await _media.RemoveAsync(new RemoveMediaRequestVM { Id = chg.EditedMediaId.Value, RemoveFile = false }, user);
+                        await _media.RemoveAsync(chg.EditedMediaId.Value, user);
                     }
                     else
                     {
@@ -189,8 +189,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 {
                     if (isRemoving)
                     {
-                        var page = await _pages.RemoveAsync(chg.EditedPageId.Value, user);
-                        await _search.RemovePageAsync(page);
+                        var pageId = chg.EditedPageId.Value;
+                        await _pages.RemoveAsync(pageId, user);
+                        await _search.RemovePageAsync(pageId);
                     }
                     else
                     {

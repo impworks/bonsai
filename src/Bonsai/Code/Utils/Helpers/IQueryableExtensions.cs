@@ -39,6 +39,15 @@ namespace Bonsai.Code.Utils.Helpers
         }
 
         /// <summary>
+        /// Returns the filtered sequence as an async enumerable.
+        /// </summary>
+        public static IAsyncEnumerable<T> WhereAsync<T>(this DbSet<T> source, Expression<Func<T, bool>> predicate)
+            where T : class
+        {
+            return source.Where(predicate).AsAsyncEnumerable();
+        }
+
+        /// <summary>
         /// Saves the query to a hashset.
         /// </summary>
         public static async Task<HashSet<T>> ToHashSetAsync<T>(this IQueryable<T> source)

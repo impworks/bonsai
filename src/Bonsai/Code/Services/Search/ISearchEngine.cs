@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bonsai.Data.Models;
 
@@ -12,7 +13,7 @@ namespace Bonsai.Code.Services.Search
         Task InitializeAsync();
 
         Task AddPageAsync(Page page);
-        Task RemovePageAsync(Page page);
+        Task RemovePageAsync(Guid id);
         Task ClearDataAsync();
 
         Task<IReadOnlyList<PageDocumentSearchResult>> SearchAsync(string query, int page = 0);

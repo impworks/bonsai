@@ -1,17 +1,17 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using Bonsai.Areas.Admin.ViewModels.Media
-@model Bonsai.Areas.Admin.ViewModels.Media.RemoveMediaRequestVM
+@using Bonsai.Areas.Admin.ViewModels.Common
+@model Bonsai.Areas.Admin.ViewModels.Common.RemoveEntryRequestVM
 @{
     ViewBag.Title = "Удаление медиа";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
-    var data = (RemoveMediaInfoVM) ViewBag.Info;
+    var info = (RemoveEntryInfoVM<string>) ViewBag.Info;
 }
 
 <h1>Удаление медиа</h1>
 
 <div class="card d-inline-block">
     <div class="card-body">
-        <img src="@Url.Content(data.ThumbnailUrl)" style="max-width: 200px" />
+        <img src="@Url.Content(info.Entry)" style="max-width: 200px" />
     </div>
 </div>
 
@@ -19,12 +19,13 @@
 
 <form action="@Url.Action("Remove", "Media", new {area = "Admin"})" method="POST">
     <input type="hidden" asp-for="Id" />
-    @if (data.CanRemoveFile)
+    
+    @if (info.CanRemoveCompletely)
     {
         <div class="form-group">
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" asp-for="RemoveFile" id="RemoveFile" />
-                <label class="form-check-label" for="RemoveFile">Удалить окончательно (освободит место на диске, восстановление будет невозможно)</label>
+                <input type="checkbox" class="form-check-input" asp-for="RemoveCompletely" id="RemoveCompletely" />
+                <label class="form-check-label" for="RemoveCompletely">Удалить окончательно (освободит место на диске, восстановление будет невозможно)</label>
             </div>
         </div>
     }

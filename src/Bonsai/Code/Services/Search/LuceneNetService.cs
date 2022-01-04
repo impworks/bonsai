@@ -59,9 +59,9 @@ namespace Bonsai.Code.Services.Search
         /// <summary>
         /// Removes a page from the index.
         /// </summary>
-        public Task RemovePageAsync(Page page)
+        public Task RemovePageAsync(Guid id)
         {
-            var query = new TermQuery(new Term("Id", page.Id.ToString()));
+            var query = new TermQuery(new Term("Id", id.ToString()));
             _writer.DeleteDocuments(query);
             _writer.Commit();
             return Task.CompletedTask;
