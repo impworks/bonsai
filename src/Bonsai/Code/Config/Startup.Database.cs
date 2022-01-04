@@ -57,7 +57,7 @@ namespace Bonsai.Code.Config
             var sp = scope.ServiceProvider;
             var demoCfg = Configuration.DemoMode ?? new DemoModeConfig(); // all false
 
-            var tasks = startupService.RegisterStartupTask(
+            startupService.AddTask(
                 "DatabaseMigrate",
                 "Подготовка базы",
                 async () =>
@@ -72,7 +72,7 @@ namespace Bonsai.Code.Config
             {
                 if (demoCfg.ClearOnStartup)
                 {
-                    tasks = tasks.ContinueWith(
+                    startupService.AddTask(
                         "DatabaseClear",
                         "Очистка базы данных",
                         () => SeedData.ClearPreviousDataAsync(sp.GetService<AppDbContext>())
@@ -81,7 +81,7 @@ namespace Bonsai.Code.Config
 
                 if (demoCfg.CreateDefaultPages || demoCfg.CreateDefaultAdmin)
                 {
-                    tasks = tasks.ContinueWith(
+                    startupService.AddTask(
                         "DatabaseSeed",
                         "Подготовка тестовых данных",
                         async () =>
@@ -95,7 +95,7 @@ namespace Bonsai.Code.Config
                 }
             }
 
-            tasks = tasks.ContinueWith(
+            startupService.AddTask(
                 "FullTextIndexInit",
                 "Подготовка поискового индекса",
                 async () =>
@@ -110,9 +110,11 @@ namespace Bonsai.Code.Config
                         await search.AddPageAsync(page);
                 });
 
-            tasks = tasks.ContinueWith("CheckMissingMedia", "", () => CheckMissingMediaAsync(sp));
+            startupService.AddTask("CheckMissingMedia", "", () => CheckMissingMediaAsync(sp));
             
-            tasks.ContinueWith("Finalize", "", async () => scope.Dispose());
+            startupService.AddTask("Finalize", "", async () => scope.Dispose());
+
+            startupService.RunStartupTasks();
         }
 
         /// <summary>

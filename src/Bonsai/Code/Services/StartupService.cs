@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -16,38 +17,57 @@ namespace Bonsai.Code.Services
         {
             _viewRender = viewRender;
             _logger = logger;
+
+            _tcs = new TaskCompletionSource();
+            _workingTasks = new List<StartupTask>();
         }
 
-        private readonly object _lockObject = new object();
-        private readonly List<StartupTask> _workingTasks = new List<StartupTask>();
+        private readonly TaskCompletionSource _tcs;
+        private readonly List<StartupTask> _workingTasks;
         private readonly ViewRenderService _viewRender;
         private readonly ILogger _logger;
-
-        private Task _startupCompleted = Task.CompletedTask;
 
         /// <summary>
         /// Flag indicating that all startup actions have been completed.
         /// </summary>
-        public bool IsStarted => _startupCompleted.IsCompleted;
+        public bool IsStarted => _tcs.Task.IsCompleted;
 
         /// <summary>
         /// Completion task.
         /// </summary>
-        public Task WaitForStartup() => _startupCompleted;
+        public Task WaitForStartup() => _tcs.Task;
 
         /// <summary>
         /// Adds a new task to await before startup is completed.
         /// </summary>
-        public StartupTask RegisterStartupTask(string taskName, string description, Func<Task> task)
+        public void AddTask(string taskName, string description, Func<Task> task)
         {
-            lock (_lockObject)
+            lock (_workingTasks)
             {
-                var startupTask = new StartupTask(_logger, this, taskName, description, task);
+                var startupTask = new StartupTask(_logger, taskName, description, task);
                 _workingTasks.Add(startupTask);
-                
-                _startupCompleted = Task.WhenAll(_startupCompleted, startupTask.Task);
-                return startupTask;
             }
+        }
+
+        /// <summary>
+        /// Executes startup tasks. 
+        /// </summary>
+        public void RunStartupTasks()
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    foreach (var task in _workingTasks)
+                        await task.Execute();
+
+                    _tcs.SetResult();
+                }
+                catch
+                {
+                    // all logged
+                }
+            });
         }
 
         /// <summary>
@@ -55,7 +75,7 @@ namespace Bonsai.Code.Services
         /// </summary>
         public async Task RenderLoadingPage(HttpContext context, Func<Task> nextDelegate)
         {
-            if (_startupCompleted.IsCompleted)
+            if (_tcs.Task.IsCompleted)
             {
                 await nextDelegate();
                 return;

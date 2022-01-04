@@ -4,28 +4,67 @@
     Layout = "Layout.cshtml";
     ViewBag.DisableSearch = true;
     ViewBag.Title = "Загрузка";
+    
+    var hasFailed = Model.Any(x => x.IsFailed);
+    var isAfterFailed = false;
 }
 
 @section head {
-    <meta http-equiv="refresh" content="2" />
+    @if (!hasFailed)
+    {
+        <meta http-equiv="refresh" content="2"/>
+    }
 }
 
 <div class="content text">
-    <p>Bonsai загружается...</p>
+    @if (hasFailed)
+    {
+        <p>
+            При загрузке Bonsai произошла ошибка.<br/>
+            Подробная информация об ошибке записана в логи.
+        </p>
+    }
+    else
+    {
+        <p>Bonsai загружается...</p>
+    }
+    
     @foreach (var task in Model)
     {
-        @if (!task.IsCompleted)
+        if (!string.IsNullOrEmpty(task.Description))
         {
-            <h6>
-                <span class="fa fa-spin fa-spinner"></span> @task.Description...
-            </h6>
+            if (isAfterFailed)
+            {
+                <h6 style="opacity: 0.4">
+                    <span class="fa fa-ellipsis-h"></span> @task.Description
+                </h6>
+            }
+            else if (task.IsCompleted)
+            {
+                <h6>
+                    <span class="fa fa-check"></span> @task.Description
+                </h6>
+            }
+            else if (task.IsFailed)
+            {
+                <h6 style="color: red">
+                    <span class="fa fa-times-circle"></span> @task.Description
+                </h6>
+            }
+            else
+            {
+                <h6>
+                    <span class="fa fa-spin fa-spinner"></span> @task.Description...
+                </h6>
+            }
         }
-        else
-        {
-            <h6>
-                <span class="fa fa-check"></span> @task.Description
-            </h6>
-        }
+        
+        if(task.IsFailed)
+            isAfterFailed = true;
     }
-    <p>Откиньтесь на спинку кресла и отдохните - это займет не более минуты :)</p>
+    
+    @if (!hasFailed)
+    {
+        <p>Откиньтесь на спинку кресла и отдохните - это займет не более минуты :)</p>
+    }
 </div>

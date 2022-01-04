@@ -6,18 +6,21 @@ namespace Bonsai.Code.Services
 {
     public class StartupTask
     {
-        public StartupTask(ILogger logger, StartupService startupService, string name, string description, Func<Task> task)
+        private const int MAX_RETRIES = 3;
+        
+        public StartupTask(ILogger logger, string name, string description, Func<Task> action)
         {
             _logger = logger;
-            _startupService = startupService;
+            _attempt = 1;
+            _action = action;
 
             Name = name;
             Description = description;
-            Task = RetryUntilSuccessAsync(task);
         }
 
+        private readonly Func<Task> _action;
         private readonly ILogger _logger;
-        private readonly StartupService _startupService;
+        private int _attempt;
 
         /// <summary>
         /// Internal name of the task.
@@ -30,40 +33,46 @@ namespace Bonsai.Code.Services
         public string Description { get; }
 
         /// <summary>
-        /// Awaitable task.
-        /// </summary>
-        public Task Task { get; }
-
-        /// <summary>
         /// Completion flag.
         /// </summary>
-        public bool IsCompleted => Task.IsCompleted;
+        public bool IsCompleted { get; private set; }
+        
+        /// <summary>
+        /// Flag indicating that a task has failed.
+        /// </summary>
+        public bool IsFailed { get; private set; }
 
         /// <summary>
-        /// Chains a new task to be completed after the current one.
+        /// Executes the task with specified error handling.
         /// </summary>
-        public StartupTask ContinueWith(string taskName, string description, Func<Task> startupTask)
+        public Task Execute()
         {
-            return _startupService.RegisterStartupTask(taskName, description, () => Task.ContinueWith(_ => startupTask()).Unwrap());
+            return RetryAsync();
         }
 
         /// <summary>
         /// Performs an action with automatic retry on error.
         /// </summary>
-        private async Task RetryUntilSuccessAsync(Func<Task> retryableAction, int retryDelayBackoff = 1000)
+        private async Task RetryAsync(int retryDelayBackoff = 1000)
         {
             try
             {
-                await retryableAction();
-                return;
+                await _action();
+                IsCompleted = true;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Failed to perform {Name} at startup, retrying in {TimeSpan.FromMilliseconds(retryDelayBackoff).TotalSeconds} second(s)...");
+                if (_attempt == MAX_RETRIES)
+                {
+                    IsFailed = true;
+                    throw;
+                }
+                
+                _logger.Error(ex, $"Failed to execute {Name} at startup (attempt {_attempt}), retrying in {TimeSpan.FromMilliseconds(retryDelayBackoff).TotalSeconds} second(s)...");
+                _attempt++;
                 await Task.Delay(retryDelayBackoff);
+                await RetryAsync((int) Math.Min(30000, retryDelayBackoff * 1.5));
             }
-
-            await RetryUntilSuccessAsync(retryableAction, (int) Math.Min(30000, retryDelayBackoff * 1.5));
         }
     }
 }
