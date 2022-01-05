@@ -56,13 +56,21 @@
             <div class="form-group row">
                 <label class="col-sm-3">Построение древа</label>
                 <div class="col-sm-9">
-                    <input asp-for="TreeRenderThoroughness" type="range" min="1" max="100" class="form-control"/>
-                    <div class="small text-muted">
-                        <div class="pull-left">Быстро и грубо</div>
-                        <div class="pull-right">Долго и тщательно</div>
-                        <div class="clearfix"></div>
+                    <div class="mb-2">
+                        <input asp-for="TreeRenderThoroughness" type="range" min="1" max="100" class="form-control"/>
+                        <div class="small text-muted">
+                            <div class="pull-left">Быстро и грубо</div>
+                            <div class="pull-right">Долго и тщательно</div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <span asp-validation-for="TreeRenderThoroughness" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="TreeRenderThoroughness" class="text-danger"></span>
+                    <div class="ml-4">
+                        <input type="checkbox" asp-for="HideBlackRibbon" class="custom-control-input" id="HideBlackRibbon" />
+                        <label class="custom-control-label" for="HideBlackRibbon">
+                            Не показывать черную ленту на карточках умерших
+                        </label>
+                    </div>
                 </div>
             </div>
 

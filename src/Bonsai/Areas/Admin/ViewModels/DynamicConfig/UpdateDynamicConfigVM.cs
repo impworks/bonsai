@@ -25,6 +25,11 @@ namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
         /// Flag indicating that new registrations are accepted.
         /// </summary>
         public bool AllowRegistration { get; set; }
+        
+        /// <summary>
+        /// Flag indicating that black ribbon should not be displayed on deceased relatives in tree view.
+        /// </summary>
+        public bool HideBlackRibbon { get; set; }
 
         /// <summary>
         /// Tree render thoroughness coefficient.

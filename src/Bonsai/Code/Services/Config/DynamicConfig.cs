@@ -23,6 +23,11 @@ namespace Bonsai.Code.Services.Config
         /// Flag indicating that new registrations are accepted.
         /// </summary>
         public bool AllowRegistration { get; set; }
+        
+        /// <summary>
+        /// Flag indicating that the black ribbon should not be displayed for deceased relatives in tree view.
+        /// </summary>
+        public bool HideBlackRibbon { get; set; }
 
         /// <summary>
         /// Tree render thoroughness coefficient.

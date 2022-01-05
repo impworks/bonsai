@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Config;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -19,17 +21,19 @@ namespace Bonsai.Areas.Front.Controllers
     [Authorize(Policy = AuthRequirement.Name)]
     public class PageController: AppControllerBase
     {
-        public PageController(PagePresenterService pages, TreePresenterService tree, AuthService auth, CacheService cache)
+        public PageController(PagePresenterService pages, TreePresenterService tree, AuthService auth, BonsaiConfigService cfgProvider, CacheService cache)
         {
             _pages = pages;
             _tree = tree;
             _auth = auth;
+            _config = cfgProvider.GetDynamicConfig();
             _cache = cache;
         }
 
         private readonly PagePresenterService _pages;
         private readonly TreePresenterService _tree;
         private readonly AuthService _auth;
+        private readonly DynamicConfig _config;
         private readonly CacheService _cache;
 
         /// <summary>
@@ -98,6 +102,8 @@ namespace Bonsai.Areas.Front.Controllers
             try
             {
                 ViewBag.User = await _auth.GetCurrentUserAsync(User);
+                ViewBag.Config = _config;
+                
                 var vm = new PageVM<PageTreeVM>
                 {
                     Body = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageTreeAsync(key)),
