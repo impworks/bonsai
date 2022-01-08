@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Helpers;
@@ -58,7 +59,7 @@ namespace Bonsai.Data.Utils.Seed
                         ["Values"] = new JArray {nameData}
                     };
                 }
-                else
+                else if(FactDefinitions.TryGetDefinition(type, "Main.Name") != null)
                 {
                     factsObj["Main.Name"] = new JObject { ["Value"] = title };
                 }
