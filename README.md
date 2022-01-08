@@ -39,7 +39,7 @@
 
     Отредактируйте файл `docker-compose.yml`:
 
-    * Впишите данные для авторизации Facebook в поля `Auth__Google__AppId` и `Auth__Google__AppSecret`
+    * Впишите данные для авторизации Google в поля `Auth__Google__ClientId` и `Auth__Google__ClientSecret`
     * Задайте настройку `Auth__AllowPasswordAuth=false` если хотите отключить менее безопасную авторизацию по паролю
     * Замените заглушку `@@YOUR_EMAIL@@` на свой адрес email (для автоматической генерации HTTPS-сертификата LetsEncrypt)
     * Замените заглушку `@@DOMAIN@@` на доменное имя (если у вас только IP-адрес, используйте nip.io, например `192.168.1.1.nip.io`)
@@ -56,10 +56,10 @@
 
 Для участия в разработке понадобится:
 
-* [.NET 5](https://dotnet.microsoft.com/download/dotnet/5.0): основной рантайм для Bonsai
+* [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0): основной рантайм для Bonsai
 
-1. Установите [NodeJS](https://nodejs.org/en/) (10+)
-2. Установите [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
+1. Установите [NodeJS 14](https://nodejs.org/en/)
+2. Установите [PostgreSQL server 9.6](https://www.openscg.com/bigsql/postgresql/installers.jsp/)
 3. Скачайте [shared-сборку ffmpeg](https://ffmpeg.zeranoe.com/builds/) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
 4. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
 

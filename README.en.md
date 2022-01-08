@@ -35,11 +35,11 @@ A family wiki and photoalbum engine (in Russian).
     Configure your Bonsai instance to use HTTPS and external auth for better security.
     This requires a bit of work, so if you are just playing around you can skip this step.
 
-    Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
+    Create a [Google Authorization app](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (or Yandex / VK.com).
 
     Modify `docker-compose.yml`:
 
-    * Save Facebook authorization credentials to `Auth__Facebook__AppId` and `Auth__Facebook__AppSecret` config properties
+    * Save Google authorization credentials to `Auth__Google__ClientId` and `Auth__Google__ClientSecret` config properties
     * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization
     * Replace `@@YOUR_EMAIL@@` with your email address (for LetsEncrypt auto-SSL)
     * Replace `@@DOMAIN@@` with the domain name to use (or you can use your IP with nip.io, like `192.168.1.1.nip.io`)
@@ -56,10 +56,10 @@ A family wiki and photoalbum engine (in Russian).
 
 For development, you will need the following:
 
-* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1): the main runtime for Bonsai
+* [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0): the main runtime for Bonsai
 
-1. Install [NodeJS](https://nodejs.org/en/) (10+)
-2. Install [PostgreSQL server](https://www.openscg.com/bigsql/postgresql/installers.jsp/) (9.6+)
+1. Install [NodeJS 14](https://nodejs.org/en/)
+2. Install [PostgreSQL server 9.6](https://www.openscg.com/bigsql/postgresql/installers.jsp/)
 3. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
 4. Create a file called `appsettings.Development.json`, add the connection string:
 
@@ -69,40 +69,36 @@ For development, you will need the following:
         "Database": "Server=127.0.0.1;Port=5432;Database=bonsai;User Id=<login>;Password=<password>;Persist Security Info=true"
       },
       "Auth": {
-	    "AllowPasswordAuth": true
+        "AllowPasswordAuth": true
       } 
     }
     ```
 
 5. _Optional, but suggested_:
 
-    Create a [Facebook Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.1&tabs=aspnetcore2x) (or Google, Yandex or Vkontakte).
+    Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (or Yandex / VK.com).
 
-	Add the retrieved authorization credentials to the `appsettings.Development.json` and set `AllowPasswordAuth` to `false`:
+    Add the retrieved authorization credentials to the `appsettings.Development.json` and set `AllowPasswordAuth` to `false`:
 
-	```
-	{
-	    "Auth": {
-		    "AllowPasswordAuth": false,
-		    "Facebook": {
-			  "AppId": "<...>",
-			  "AppSecret": "<...>" 
-			},
-			"Google": {
-			  "ClientId": "<...>",
-			  "ClientSecret": "<...>" 
-			},
-			"Yandex": {
-			  "ClientId": "<...>",
-			  "ClientSecret": "<...>" 
-			},
-			"Vkontakte": {
-			  "ClientId": "<...>",
-			  "ClientSecret": "<...>" 
-			}
-		}
-	}
-	```
+    ```
+    {
+        "Auth": {
+            "AllowPasswordAuth": false,
+            "Google": {
+              "ClientId": "<...>",
+              "ClientSecret": "<...>" 
+            },
+            "Yandex": {
+              "ClientId": "<...>",
+              "ClientSecret": "<...>" 
+            },
+            "Vkontakte": {
+              "ClientId": "<...>",
+              "ClientSecret": "<...>" 
+            }
+        }
+    }
+    ```
     
 6. Create the database:
 
@@ -135,7 +131,7 @@ There are many options available, free and paid: uploading to a cloud storage, c
 Bonsai features two authorization methods: OAuth and password authorization.
 
 OAuth is the preferred method: it's easier to use for end users, more secure and versatile. **Please use the OAuth method if you can!**
-For OAuth, you will need to create an authorization app on [Facebook](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-3.0), [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-3.0), [Vkontakte](https://vk.com/editapp?act=create) or [Yandex](https://oauth.yandex.ru/client/new) as described in the installation steps.
+For OAuth, you will need to create an authorization app on [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0), [Vkontakte](https://vk.com/editapp?act=create), or [Yandex](https://oauth.yandex.ru/client/new) as described in the installation steps.
 You can enable multiple authorization apps at the same time: users will pick the one they prefer.
 
 As a fallback, you can also create an account with classic login/password authorization. It can be used for two purposes:
