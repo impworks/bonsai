@@ -1,4 +1,4 @@
-FROM node:lts-alpine as node
+FROM node:14-alpine as node
 WORKDIR /build/Bonsai
 
 ADD src/Bonsai/package.json .
@@ -7,7 +7,7 @@ RUN npm ci
 ADD src/Bonsai .
 RUN node_modules/.bin/gulp build
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 as net-builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0 as net-builder
 WORKDIR /build
 ADD src/Bonsai.sln .
 ADD src/Bonsai/Bonsai.csproj Bonsai/

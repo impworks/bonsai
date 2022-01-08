@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Hosting;
 
+#pragma warning disable CA1416 // https://github.com/impworks/bonsai/issues/221
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
@@ -11,12 +12,12 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
     /// </summary>
     public class PdfMediaHandler: IMediaHandler
     {
-        public PdfMediaHandler(IHostingEnvironment env)
+        public PdfMediaHandler(IWebHostEnvironment env)
         {
             _env = env;
         }
 
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
         public bool IsImmediate => true;
         public string[] SupportedMimeTypes => new[] {"application/pdf"};
@@ -40,3 +41,4 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         }
     }
 }
+#pragma warning restore CA1416

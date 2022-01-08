@@ -3,8 +3,9 @@
 @{
     Layout = "Layout.cshtml";
     ViewBag.DisableSearch = true;
+    ViewBag.StartupMode = true;
     ViewBag.Title = "Загрузка";
-    
+
     var hasFailed = Model.Any(x => x.IsFailed);
     var isAfterFailed = false;
 }

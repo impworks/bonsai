@@ -9,11 +9,12 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Strings;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
+#pragma warning disable CA1416 // https://github.com/impworks/bonsai/issues/221
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
@@ -23,7 +24,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
     {
         #region Constructor
 
-        public MediaEncoderService(WorkerAlarmService alarm, IServiceProvider services, IHostingEnvironment env, ILogger logger)
+        public MediaEncoderService(WorkerAlarmService alarm, IServiceProvider services, IWebHostEnvironment env, ILogger logger)
             : base(services)
         {
             _env = env;
@@ -39,7 +40,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
         #region Fields
 
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly ILogger _logger;
 
         #endregion
@@ -158,3 +159,5 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         #endregion
     }
 }
+
+#pragma warning restore CA1416

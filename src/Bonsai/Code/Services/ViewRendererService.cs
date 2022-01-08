@@ -49,7 +49,7 @@ namespace Bonsai.Code.Services
             if(httpContext == null)
                 httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
 
-            var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+            var actionContext = new ActionContext(httpContext, httpContext.GetRouteData(), new ActionDescriptor());
  
             using (var sw = new StringWriter())
             {
