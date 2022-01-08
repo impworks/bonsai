@@ -1,9 +1,8 @@
-﻿using System.Globalization;
-using Bonsai.Code.Infrastructure;
+﻿using System;
+using System.Globalization;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
@@ -40,6 +39,10 @@ namespace Bonsai.Code.Config
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+            AppContext.SetSwitch("System.Drawing.EnableUnixSupport", true);
+
             // order is crucial
             ConfigureMvcServices(services);
             ConfigureDatabaseServices(services);

@@ -1,5 +1,5 @@
 ﻿function debounce(func, wait) {
-    let timeout;
+    var timeout;
 
     return function executedFunction() {
         var context = this;

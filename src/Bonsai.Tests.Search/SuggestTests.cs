@@ -177,7 +177,7 @@ namespace Bonsai.Tests.Search
             var result = await _ctx.Search.SuggestAsync(query, new[] {PageType.Person, PageType.Pet}, 5);
 
             Assert.Equal(1, result.Count);
-            Assert.Equal(result[0].Key, "Барсик");
+            Assert.Equal("Барсик", result[0].Key);
         }
     }
 }

@@ -9,6 +9,7 @@ using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
 using Serilog;
 
+#pragma warning disable CA1416 // https://github.com/impworks/bonsai/issues/221
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
@@ -84,3 +85,5 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         #endregion
     }
 }
+
+#pragma warning restore CA1416

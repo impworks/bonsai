@@ -7,6 +7,11 @@ using System.Linq;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 
+// System.Drawing will eventually drop support for platforms other than windows
+// Currently it is supported via 'System.Drawing.EnableUnixSupport' switch.
+// Tracked issue: https://github.com/impworks/bonsai/issues/221
+#pragma warning disable CA1416
+
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
@@ -100,3 +105,5 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         #endregion
     }
 }
+
+#pragma warning restore CA1416

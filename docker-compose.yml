@@ -40,8 +40,6 @@ services:
     environment:
       - ConnectionStrings__Database=Server=postgres;Port=5432;Database=bonsai;User Id=bonsai;Password=test;Persist Security Info=true
       - Auth__AllowPasswordAuth=true
-      - Auth__Facebook__AppId=
-      - Auth__Facebook__AppSecret=
       - Auth__Google__ClientId=
       - Auth__Google__ClientSecret=
       - Auth__Yandex__ClientId=
