@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,8 +12,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using SixLabors.ImageSharp;
 
-#pragma warning disable CA1416 // https://github.com/impworks/bonsai/issues/221
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
@@ -132,8 +131,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
             _logger.Information("Thumbnail extraction completed.");
 
-            using (var img = Image.FromFile(screenPath))
-                MediaHandlerHelper.CreateThumbnails(screenPath, img);
+            using var img = await Image.LoadAsync(screenPath);
+            await MediaHandlerHelper.CreateThumbnailsAsync(screenPath, img);
 
             File.Delete(screenPath);
         }
@@ -159,5 +158,3 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         #endregion
     }
 }
-
-#pragma warning restore CA1416

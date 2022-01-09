@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Bonsai.Data.Models;
+using SixLabors.ImageSharp;
 
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {

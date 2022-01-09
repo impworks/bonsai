@@ -1,10 +1,9 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Hosting;
+using SixLabors.ImageSharp;
 
-#pragma warning disable CA1416 // https://github.com/impworks/bonsai/issues/221
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
@@ -26,10 +25,10 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Extracts the first page as a thumbnail.
         /// </summary>
-        public Task<Image> ExtractThumbnailAsync(string path, string mime)
+        public async Task<Image> ExtractThumbnailAsync(string path, string mime)
         {
             var thumbPath = Path.Combine(_env.WebRootPath, "assets", "img", "pdf-thumb.png");
-            return Task.FromResult(Image.FromFile(thumbPath));
+            return await Image.LoadAsync(thumbPath);
         }
 
         /// <summary>
@@ -41,4 +40,3 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         }
     }
 }
-#pragma warning restore CA1416

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Data.Models;
-using MetadataExtractor;
-using MetadataExtractor.Formats.Exif;
 using Serilog;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 
-#pragma warning disable CA1416 // https://github.com/impworks/bonsai/issues/221
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
     /// <summary>
@@ -35,27 +33,26 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Returns the image for thumbnail creation.
         /// </summary>
-        public Task<Image> ExtractThumbnailAsync(string path, string mime)
+        public async Task<Image> ExtractThumbnailAsync(string path, string mime)
         {
-            return Task.FromResult(Image.FromFile(path));
+            return await Image.LoadAsync(path);
         }
 
         /// <summary>
         /// Extracts additional data from the media.
         /// </summary>
-        public Task<MediaMetadata> ExtractMetadataAsync(string path, string mime)
+        public async Task<MediaMetadata> ExtractMetadataAsync(string path, string mime)
         {
             try
             {
-                var dirs = ImageMetadataReader.ReadMetadata(path);
-                var dateStr = dirs.OfType<ExifSubIfdDirectory>()
-                                  .FirstOrDefault()
-                                  ?.GetDescription(ExifDirectoryBase.TagDateTimeOriginal);
+                using var image = await Image.LoadAsync(path);
+                var exif = image.Metadata.ExifProfile;
+                var dateRaw = exif.Values?.FirstOrDefault(x => x.Tag == ExifTag.DateTimeOriginal)?.GetValue();
 
-                return Task.FromResult(new MediaMetadata
+                return new MediaMetadata
                 {
-                    Date = ParseDate(dateStr)
-                });
+                    Date = ParseDate(dateRaw?.ToString())
+                };
             }
             catch (Exception ex)
             {
@@ -85,5 +82,3 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         #endregion
     }
 }
-
-#pragma warning restore CA1416

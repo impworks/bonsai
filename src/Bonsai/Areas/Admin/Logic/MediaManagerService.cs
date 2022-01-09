@@ -431,7 +431,7 @@ namespace Bonsai.Areas.Admin.Logic
                 await sourceStream.CopyToAsync(localStream);
 
             using(var frame = await handler.ExtractThumbnailAsync(filePath, file.ContentType))
-                MediaHandlerHelper.CreateThumbnails(filePath, frame);
+                await MediaHandlerHelper.CreateThumbnailsAsync(filePath, frame);
 
             return (filePath, $"~/media/{fileName}");
         }

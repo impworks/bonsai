@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Linq;
+using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
-
-// System.Drawing will eventually drop support for platforms other than windows
-// Currently it is supported via 'System.Drawing.EnableUnixSupport' switch.
-// Tracked issue: https://github.com/impworks/bonsai/issues/221
-#pragma warning disable CA1416
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 {
@@ -34,12 +30,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Encoder for JPEG thumbnails.
         /// </summary>
-        private static ImageCodecInfo JpegEncoder = ImageCodecInfo.GetImageEncoders().First(c => c.FormatID == ImageFormat.Jpeg.Guid);
-
-        /// <summary>
-        /// Parameters for JPEG  encoder.
-        /// </summary>
-        private static EncoderParameters JpegEncoderArgs = new EncoderParameters { Param = new[] { new EncoderParameter(Encoder.Quality, 90L) } };
+        private static IImageEncoder JpegEncoder = new JpegEncoder { Quality = 90 };
 
         #endregion
 
@@ -48,13 +39,13 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Creates thumbnails.
         /// </summary>
-        public static void CreateThumbnails(string path, Image frame)
+        public static async Task CreateThumbnailsAsync(string path, Image frame)
         {
             foreach (var size in Sizes)
             {
                 var thumbPath = MediaPresenterService.GetSizedMediaPath(path, size.Key);
-                using (var image = ResizeToFit(frame, size.Value))
-                    image.Save(thumbPath, JpegEncoder, JpegEncoderArgs);
+                using var image = ResizeToFit(frame, size.Value);
+                await image.SaveAsync(thumbPath, JpegEncoder);
             }
         }
 
@@ -67,24 +58,11 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// </summary>
         private static Image ResizeToFit(Image source, Size maxSize)
         {
-            var propSize = GetProportionalSize(source.Size, maxSize);
-            var srcRect = new Rectangle(0, 0, source.Width, source.Height);
-            var destRect = new Rectangle(0, 0, propSize.Width, propSize.Height);
-
-            var bmp = new Bitmap(destRect.Width, destRect.Height, PixelFormat.Format32bppArgb);
-            using(var gfx = Graphics.FromImage(bmp))
+            var propSize = GetProportionalSize(source.Size(), maxSize);
+            return source.Clone(x =>
             {
-                gfx.Clear(Color.Transparent);
-                gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                gfx.DrawImage(
-                    source,
-                    destRect,
-                    srcRect,
-                    GraphicsUnit.Pixel
-                );
-            }
-
-            return bmp;
+                x.Resize(propSize, KnownResamplers.Lanczos3, true);
+            });
         }
 
         /// <summary>
@@ -105,5 +83,3 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         #endregion
     }
 }
-
-#pragma warning restore CA1416
