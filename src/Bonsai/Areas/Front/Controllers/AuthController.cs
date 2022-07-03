@@ -233,7 +233,7 @@ namespace Bonsai.Areas.Front.Controllers
                     return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Index", "Home");
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Bonsai.Areas.Front.Controllers
                 IsFirstUser = await _auth.IsFirstUserAsync(),
                 Status = status
             };
-            return View(new LocalLoginVM());
+            return View("Login", new LocalLoginVM());
         }
 
         /// <summary>

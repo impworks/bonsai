@@ -65,7 +65,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             var user = await _db.Users.FirstOrDefaultAsync(x => x.NormalizedEmail == email);
             if (user != null)
             {
-                var info = await _signMgr.PasswordSignInAsync(user, vm.Password, isPersistent: true, lockoutOnFailure: true);
+                var info = await _signMgr.PasswordSignInAsync(user, vm.Password ?? "", isPersistent: true, lockoutOnFailure: true);
                 if (info.Succeeded)
                     return new LoginResultVM(LoginStatus.Succeeded);
 
