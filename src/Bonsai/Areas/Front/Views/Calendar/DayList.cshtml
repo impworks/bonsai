@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Calendar
+@using Bonsai.Data.Models
 @addTagHelper *, Bonsai
 @model CalendarDayVM
 
@@ -19,10 +20,10 @@
 
                     var hasNested = evt.OtherPages?.Count > 0;
 
-                    <a href="@url" class="calendar-events-item list-group-item @(url != null ? "selectable" : "") @(hasNested ? "has-nested" : "")">
+                    <a href="@url" class="calendar-events-item list-group-item @(url != null ? "selectable" : "non-selectable") @(hasNested ? "has-nested" : "")">
                         <div class="media">
                             <div class="calendar-events-item-icon mr-3">
-                                <page-image image="@evt.RelatedPage.MainPhotoPath" />
+                                <page-image image="@evt.RelatedPage.MainPhotoPath" type="PageType.Event" />
                             </div>
                             <div class="media-body">
                                 <h6 class="m-0">@evt.RelatedPage.Title</h6>
@@ -38,7 +39,7 @@
                             <a href="@Url.Action("Description", "Page", new { key = p.Key })" class="calendar-events-item nested list-group-item selectable">
                                 <div class="media">
                                     <div class="calendar-events-item-icon mr-3">
-                                        <page-image image="@p.MainPhotoPath" />
+                                        <page-image image="@p.MainPhotoPath" type="p.Type" />
                                     </div>
                                     <div class="media-body">
                                         <h6>@p.Title</h6>

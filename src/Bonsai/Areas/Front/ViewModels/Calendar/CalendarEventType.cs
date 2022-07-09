@@ -7,6 +7,8 @@
     {
         Birth,
         Death,
-        Wedding
+        Wedding,
+        PetAdoption,
+        ChildAdoption
     }
 }

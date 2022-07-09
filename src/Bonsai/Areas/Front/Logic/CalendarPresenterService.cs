@@ -8,6 +8,7 @@ using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
+using Bonsai.Data.Models;
 using Impworks.Utils.Strings;
 
 namespace Bonsai.Areas.Front.Logic
@@ -136,7 +137,7 @@ namespace Bonsai.Areas.Front.Logic
 
             foreach (var rel in context.Relations.SelectMany(x => x.Value))
             {
-                if (!(rel.Duration is FuzzyRange duration) || !(duration.RangeStart is FuzzyDate start) || start.Month != month)
+                if (rel.Duration is not FuzzyRange duration || duration.RangeStart is not FuzzyDate start || start.Month != month)
                     continue;
 
                 if (duration.RangeEnd is FuzzyDate end && end <= maxDate)
@@ -150,25 +151,77 @@ namespace Bonsai.Areas.Front.Logic
                 visited.Add(hash);
                 visited.Add(inverseHash);
 
+                var evt = rel.Type switch
+                {
+                    RelationType.Spouse => GetWeddingEvent(rel, start),
+                    RelationType.Owner or RelationType.Pet => GetPetAdoptionEvent(start),
+                    RelationType.StepChild or RelationType.StepParent => GetChildAdoptionEvent(rel, start),
+                    _ => null
+                };
+
+                if (evt != null)
+                {
+                    evt.Day = start.Day;
+                    evt.OtherPages = new[]
+                    {
+                        Map(context.Pages[rel.SourceId]),
+                        Map(context.Pages[rel.DestinationId])
+                    };
+                    yield return evt;
+                }
+            }
+
+            CalendarEventVM GetWeddingEvent(RelationContext.RelationExcerpt rel, FuzzyDate start)
+            {
                 var title = (year == start.Year && !start.IsDecade)
                     ? "День свадьбы"
                     : (start.Year == null || start.IsDecade)
                         ? "Годовщина"
                         : (year - start.Year.Value) + "-ая годовщина";
 
-                yield return new CalendarEventVM
+                return new CalendarEventVM
                 {
-                    Day = start.Day,
                     Title = title,
                     Type = CalendarEventType.Wedding,
                     RelatedPage = rel.EventId == null
-                        ? new PageTitleExtendedVM { Title = "Свадьба", MainPhotoPath = "~/assets/img/unknown-event.svg" }
+                        ? new PageTitleExtendedVM { Title = "Свадьба" }
                         : Map(context.Pages[rel.EventId.Value]),
-                    OtherPages = new []
-                    {
-                        Map(context.Pages[rel.SourceId]),
-                        Map(context.Pages[rel.DestinationId])
-                    }
+                };
+            }
+
+            CalendarEventVM GetPetAdoptionEvent(FuzzyDate start)
+            {
+                if (year != start.Year || start.IsDecade)
+                    return null;
+
+                return new CalendarEventVM
+                {
+                    Title = "Появление питомца",
+                    Type = CalendarEventType.PetAdoption,
+                    RelatedPage = new PageTitleExtendedVM { Title = "Событие" }
+                };
+            }
+
+            CalendarEventVM GetChildAdoptionEvent(RelationContext.RelationExcerpt rel, FuzzyDate start)
+            {
+                if (year != start.Year || start.IsDecade)
+                    return null;
+
+                var child = context.Pages[
+                    rel.Type == RelationType.StepChild
+                        ? rel.SourceId
+                        : rel.DestinationId
+                ];
+
+                var title = child.Gender == false
+                    ? "Удочерение"
+                    : "Усыновление";
+
+                return new CalendarEventVM
+                {
+                    Title = title,
+                    Type = CalendarEventType.ChildAdoption,
+                    RelatedPage = new PageTitleExtendedVM { Title = "Событие" }
                 };
             }
         }
