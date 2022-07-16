@@ -2,6 +2,7 @@
     var $loc = $('#Location'),
         $evt = $('#Event'),
         $date = $('#Date'),
+        $ufn = $('#UseFileNameAsTitle'),
         $upl = $('.media-uploader');
 
     $upl.find('input[type="file"]').fileupload({
@@ -20,7 +21,8 @@
             data.formData = {
                 Location: $loc.val(),
                 Event: $evt.val(),
-                Date: $date.val()
+                Date: $date.val(),
+                UseFileNameAsTitle: $ufn.is(':checked'),
             };
             data.context = createUploadItem();
             data.submit();

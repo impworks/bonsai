@@ -6,6 +6,11 @@
     public class MediaUploadRequestVM
     {
         /// <summary>
+        /// Flag indicating that file name should be used as title (sanitized). 
+        /// </summary>
+        public bool UseFileNameAsTitle { get; set; }
+        
+        /// <summary>
         /// Optional title for the page.
         /// </summary>
         public string Title { get; set; }

@@ -126,7 +126,7 @@ namespace Bonsai.Areas.Admin.Logic
                 Key = key,
                 Type = handler.MediaType,
                 MimeType = file.ContentType,
-                Title = vm.Title,
+                Title = vm.UseFileNameAsTitle ? SanitizeFileName(file.FileName) : vm.Title,
                 FilePath = paths.UrlPath,
                 UploadDate = DateTimeOffset.Now,
                 Uploader = user,
@@ -547,6 +547,16 @@ namespace Bonsai.Areas.Admin.Logic
 
                 result.Add(tag);
             }
+        }
+
+        /// <summary>
+        /// Returns the "cleaned-up" file name.
+        /// </summary>
+        private string SanitizeFileName(string fileName)
+        {
+            var extless = Path.GetFileNameWithoutExtension(fileName);
+            return extless.ReplaceRegex("[\\W_]", " ")
+                          .ReplaceRegex("\\s{2,}", " ");
         }
 
         #endregion
