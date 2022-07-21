@@ -11,6 +11,6 @@ namespace Bonsai.Areas.Front.ViewModels.Page
         /// <summary>
         /// The list of media item thumbnails for current page.
         /// </summary>
-        public IEnumerable<MediaThumbnailVM> Media { get; set; }
+        public IReadOnlyList<MediaThumbnailVM> Media { get; set; }
     }
 }

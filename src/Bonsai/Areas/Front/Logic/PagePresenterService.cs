@@ -87,6 +87,21 @@ namespace Bonsai.Areas.Front.Logic
         }
 
         /// <summary>
+        /// Returns the list of references to current page.
+        /// </summary>
+        public async Task<PageReferencesVM> GetPageReferencesAsync(string key)
+        {
+            var page = await FindPageAsync(key, q => q.Include(x => x.References).ThenInclude(x => x.Source));
+            var refs = page.References
+                           .Select(x => x.Source)
+                           .Select(x => _mapper.Map<PageTitleVM>(x))
+                           .OrderBy(x => x.Title)
+                           .ToList();
+            
+            return Configure(page, new PageReferencesVM {References = refs});
+        }
+
+        /// <summary>
         /// Returns the data for the page's side block.
         /// </summary>
         public async Task<InfoBlockVM> GetPageInfoBlockAsync(string key)

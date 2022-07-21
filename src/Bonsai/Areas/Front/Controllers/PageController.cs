@@ -58,6 +58,15 @@ namespace Bonsai.Areas.Front.Controllers
         {
             return await DisplayTab(key, () => _pages.GetPageTreeAsync(key));
         }
+        
+        /// <summary>
+        /// Displays the references to current page.
+        /// </summary>
+        [Route("{key}/refs")]
+        public async Task<ActionResult> References(string key)
+        {
+            return await DisplayTab(key, () => _pages.GetPageReferencesAsync(key));
+        }
 
         /// <summary>
         /// Displays the page tab.

@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
+using Impworks.Utils.Strings;
 using JetBrains.Annotations;
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
@@ -65,10 +67,22 @@ namespace Bonsai.Code.Services
             var rendered = markdown;
 
             rendered = MediaRegex.Replace(rendered, "");
-            rendered = LinkRegex.Replace(rendered, me => me.Groups["label"]?.Value ?? me.Groups["key"]?.Value ?? "");
+            rendered = LinkRegex.Replace(rendered, me => StringHelper.Coalesce(me.Groups["label"].Value, me.Groups["key"].Value, ""));
             rendered = MarkupRegex.Replace(rendered, "");
 
             return rendered;
+        }
+
+        /// <summary>
+        /// Returns the list of referenced page keys.
+        /// </summary>
+        public static IReadOnlyList<string> GetPageReferences(string markdown)
+        {
+            return LinkRegex.Matches(markdown)
+                            .Select(x => x.Groups["key"].Value)
+                            .Select(PageHelper.EncodeTitle)
+                            .Distinct()
+                            .ToList();
         }
 
         /// <summary>

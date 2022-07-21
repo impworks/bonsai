@@ -62,6 +62,11 @@
                         </a>
                     </li>
                 }
+                <li class="nav-item">
+                    <a class="nav-link @(pageVm is PageReferencesVM ? "active" : "")" href="@Url.Action("References", new {key = pageVm.Key})">
+                        <i class="fa fa-random"></i> Ссылки
+                    </a>
+                </li>
             </ul>
         }
         @RenderBody()

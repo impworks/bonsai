@@ -26,6 +26,7 @@ namespace Bonsai.Data
         public virtual DbSet<PageScored> PagesScored => Set<PageScored>();
         public virtual DbSet<Relation> Relations => Set<Relation>();
         public virtual DbSet<PageDraft> PageDrafts => Set<PageDraft>();
+        public virtual DbSet<PageReference> PageReferences => Set<PageReference>();
         public virtual DbSet<TreeLayout> TreeLayouts => Set<TreeLayout>();
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -67,6 +68,9 @@ namespace Bonsai.Data
             builder.Entity<PageScored>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
 
             builder.Entity<ChangeEventGroup>().ToView("ChangesGrouped");
+
+            builder.Entity<PageReference>().HasOne(x => x.Source).WithMany().HasForeignKey(x => x.SourceId);
+            builder.Entity<PageReference>().HasOne(x => x.Destination).WithMany(x => x.References).HasForeignKey(x => x.DestinationId);
         }
     }
 }

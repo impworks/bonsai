@@ -1,0 +1,27 @@
+@using Bonsai.Areas.Front.ViewModels.Page
+@model PageVM<PageReferencesVM>
+@{
+    Layout = "PageLayout";
+
+    ViewBag.PageModel = Model;
+    ViewBag.Title = Model.Body.Title;
+}
+
+<div class="typography">
+    @if(Model.Body.References.Any())
+    {
+        <p>На данную страницу ссылаются следующие страницы:</p>
+        <ul>
+            @foreach (var r in Model.Body.References)
+            {
+                <li>
+                    <a href="@Url.Action("Description", "Page", new { key = r.Key })">@r.Title</a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="text-muted">Ссылок на данную страницу нет.</div>
+    }
+</div>

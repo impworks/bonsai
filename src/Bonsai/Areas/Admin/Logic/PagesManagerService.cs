@@ -131,25 +131,10 @@ namespace Bonsai.Areas.Admin.Logic
 
             var changeset = await GetChangesetAsync(null, vm, page.Id, principal, null);
             _db.Changes.Add(changeset);
-
+            
             _db.Pages.Add(page);
-
-            var aliasValues = JsonConvert.DeserializeObject<List<string>>(vm.Aliases ?? "[]");
-            if(!aliasValues.Contains(vm.Title))
-                aliasValues.Add(vm.Title);
-
-            _db.PageAliases.AddRange(
-                aliasValues.Select((x, idx) =>
-                    new PageAlias
-                    {
-                        Id = Guid.NewGuid(),
-                        Page = page,
-                        Key = PageHelper.EncodeTitle(x).ToLowerInvariant(),
-                        Title = x,
-                        Order = idx
-                    }
-                )
-            );
+            _db.PageAliases.AddRange(GetPageAliases(vm.Aliases, vm.Title, page));
+            _db.PageReferences.AddRange(await GetPageReferencesAsync(vm.Description, page));
 
             await DiscardPageDraftAsync(null, principal);
 
@@ -241,21 +226,10 @@ namespace Bonsai.Areas.Admin.Logic
             page.IsDeleted = false;
 
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == pageId);
+            _db.PageAliases.AddRange(GetPageAliases(vm.Aliases, vm.Title, page));
 
-            var aliasValues = JsonConvert.DeserializeObject<List<string>>(vm.Aliases ?? "[]");
-            if(!aliasValues.Contains(vm.Title))
-                aliasValues.Add(vm.Title);
-
-            _db.PageAliases.AddRange(
-                aliasValues.Select((x, idx) => new PageAlias
-                {
-                    Id = Guid.NewGuid(),
-                    Key = PageHelper.EncodeTitle(x).ToLowerInvariant(),
-                    Page = page,
-                    Order = idx,
-                    Title = x
-                })
-            );
+            await _db.PageReferences.RemoveWhereAsync(x => x.SourceId == pageId);
+            _db.PageReferences.AddRange(await GetPageReferencesAsync(vm.Description, page));
 
             if (prevVm?.Title != vm.Title || prevVm?.Facts != vm.Facts)
             {
@@ -307,6 +281,7 @@ namespace Bonsai.Areas.Admin.Logic
             page.IsDeleted = true;
 
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == id);
+            await _db.PageReferences.RemoveWhereAsync(x => x.SourceId == id || x.DestinationId == id);
 
             _cache.Clear();
 
@@ -340,6 +315,7 @@ namespace Bonsai.Areas.Admin.Logic
             // page-related stuff
             await _db.PageDrafts.RemoveWhereAsync(x => x.PageId == id);
             await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == id);
+            await _db.PageReferences.RemoveWhereAsync(x => x.SourceId == id || x.DestinationId == id);
             
             // users
             await foreach (var user in _db.Users.WhereAsync(x => x.PageId == id))
@@ -591,6 +567,49 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Returns the list of aliases for current page.
+        /// </summary>
+        private IEnumerable<PageAlias> GetPageAliases(string aliases, string title, Page page)
+        {
+            var aliasValues = JsonConvert.DeserializeObject<List<string>>(aliases ?? "[]");
+            if(!aliasValues.Contains(title))
+                aliasValues.Add(title);
+
+            return aliasValues.Select((x, idx) =>
+                new PageAlias
+                {
+                    Id = Guid.NewGuid(),
+                    Page = page,
+                    Key = PageHelper.EncodeTitle(x).ToLowerInvariant(),
+                    Title = x,
+                    Order = idx
+                }
+            );
+        }
+
+        /// <summary>
+        /// Returns the list of pages references by the contents of current page.
+        /// </summary>
+        private async Task<IEnumerable<PageReference>> GetPageReferencesAsync(string body, Page page)
+        {
+            var refs = MarkdownService.GetPageReferences(body);
+            var pages = await _db.Pages
+                                 .Where(x => refs.Contains(x.Key))
+                                 .Select(x => new { x.Id, x.Key })
+                                 .ToListAsync();
+            
+            foreach(var p in pages)
+                _cache.Remove<PageReferencesVM>(p.Key);
+
+            return pages.Select(x => new PageReference
+            {
+                Id = Guid.NewGuid(),
+                DestinationId = x.Id,
+                Source = page
+            });
         }
 
         #endregion

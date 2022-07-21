@@ -57,6 +57,11 @@ namespace Bonsai.Data.Models
         /// Media tags.
         /// </summary>
         public ICollection<MediaTag> MediaTags { get; set; }
+        
+        /// <summary>
+        /// List of references to current page.
+        /// </summary>
+        public ICollection<PageReference> References { get; set; }
 
         /// <summary>
         /// Photograph for info block.
