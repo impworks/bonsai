@@ -1,0 +1,42 @@
+@using Bonsai.Code.Services.Config
+@inject BonsaiConfigService ConfigService
+@{
+    var appTitle = ConfigService.GetDynamicConfig().Title;
+    var demoCfg = ConfigService.GetStaticConfig().DemoMode;
+}
+
+<html class="tree-bg">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@appTitle &mdash; @ViewBag.Title</title>
+    <link href="@Url.Content("~/assets/styles/style.css")" rel="stylesheet" />
+</head>
+<body class="tree-bg">
+
+    @RenderBody()
+
+    <script src="@Url.Content("~/assets/scripts/vendor-common.js")"></script>
+    <script src="@Url.Content("~/assets/scripts/common.js")"></script>
+    <script src="@Url.Content("~/assets/scripts/front.js")"></script>
+    @RenderSection("Scripts", false)
+
+    @if (demoCfg.Enabled && !string.IsNullOrEmpty(demoCfg.YandexMetrikaId))
+    {
+        <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                    m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                    m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+                })
+                (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+            ym(@(demoCfg.YandexMetrikaId), "init", {
+                clickmap: true,
+                trackLinks: true,
+                accurateTrackBounce: true
+            });
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/@(demoCfg.YandexMetrikaId)" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    }
+</body>
+</html>

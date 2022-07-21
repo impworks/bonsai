@@ -1,13 +1,24 @@
 ﻿@import '../../variables.scss';
 
+.tree-bg {
+    background: #fff;
+}
+
+.tree-view {
+    iframe {
+        width: 100%;
+        height: 700px;
+        max-height: 700px;
+        border: 1px solid #e2e2e2;
+    }
+}
+
 .tree {
     position: relative;
     background-color: #fff;
 
     .tree-wrapper {
         width: 100%;
-        max-width: 100%;
-        overflow: auto;
         position: relative;
         background-color: #fff;
         cursor: grab;

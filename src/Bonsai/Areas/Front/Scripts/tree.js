@@ -15,13 +15,6 @@
         var key = $wrap.data('key');
 
         requestTreeInfo($wrap, key, 0);
-
-        $tree.find('.cmd-fullscreen').click(function () {
-            var $btn = $(this);
-            var newState = !$(document).fullScreen();
-            $btn.toggleClass('active', newState);
-            $tree.find('.tree-wrapper').fullScreen(newState);
-        });
     });
 
     function requestTreeInfo($wrap, key, count) {
@@ -128,18 +121,11 @@
         if ($card.length === 0) {
             return;
         }
-
-        var vw = $view.width(),
-            vh = $view.height(),
-            cw = $card.width(),
-            ch = $card.height(),
-            cp = $card.position();
-
-        var dx = (vw - cw) / 2,
-            dy = (vh - ch) / 2;
-
-        $view.scrollLeft(Math.max(0, cp.left - dx))
-            .scrollTop(Math.max(0, cp.top - dy));
+        
+        var pos = $card[0].getBoundingClientRect();
+        var x = pos.left + (pos.right - pos.left - window.innerWidth) / 2;
+        var y = pos.top + (pos.bottom - pos.top - window.innerHeight) / 2;
+        window.scroll(x, y);
     }
 
     function enableDrag($view) {
@@ -165,10 +151,9 @@
                 $view.addClass('dragged');
             }
             var newOrigin = { x: e.clientX, y: e.clientY };
-            var dx = newOrigin.x - origin.x;
-            var dy = newOrigin.y - origin.y;
-            $view[0].scrollLeft -= dx;
-            $view[0].scrollTop -= dy;
+            var dx = origin.x - newOrigin.x;
+            var dy = origin.y - newOrigin.y;
+            scrollBy(dx, dy)
             origin = newOrigin;
         };
 
@@ -184,5 +169,12 @@
                 preventClick = false;
             }
         });
+        
+        function scrollBy(dx, dy) {
+            var d = document, r = d.documentElement, b = d.body;
+            var x = r.scrollLeft || b.scrollLeft || 0,
+                y = r.scrollTop || b.scrollTop || 0;
+            window.scroll(x + dx, y + dy);
+        }
     }
 });

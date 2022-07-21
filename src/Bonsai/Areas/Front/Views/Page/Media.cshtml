@@ -1,9 +1,8 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
 @model PageVM<PageMediaVM>
 @{
-    Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
-
-
+    Layout = "PageLayout";
+    
     ViewBag.PageModel = Model;
     ViewBag.Title = Model.Body.Title + " — Медиа";
 
