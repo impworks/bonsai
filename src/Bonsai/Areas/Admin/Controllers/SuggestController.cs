@@ -24,18 +24,6 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly SuggestService _suggest;
 
         /// <summary>
-        /// Suggests relation types.
-        /// </summary>
-        [HttpGet]
-        [Route("suggest/relations")]
-        public ActionResult SuggestRelations()
-        {
-            var names = EnumHelper.GetEnumDescriptions<RelationType>();
-            var data = names.Select(x => new ListItem<RelationType>(x.Key, x.Value));
-            return Json(data);
-        }
-
-        /// <summary>
         /// Suggests pages for relation destination / media tag.
         /// </summary>
         [HttpGet]

@@ -95,17 +95,15 @@ namespace Bonsai.Code.Utils.Helpers
         /// </summary>
         private static string Md5(string str)
         {
-            using(var md5 = MD5.Create())
-            {
-                var input = Encoding.UTF8.GetBytes(str);
-                var output = md5.ComputeHash(input);
+            using var md5 = MD5.Create();
+            var input = Encoding.UTF8.GetBytes(str);
+            var output = md5.ComputeHash(input);
 
-                var sb = new StringBuilder();
-                foreach(var b in output)
-                    sb.Append(b.ToString("x2"));
+            var sb = new StringBuilder();
+            foreach(var b in output)
+                sb.Append(b.ToString("x2"));
 
-                return sb.ToString();
-            }
+            return sb.ToString();
         }
 
         #endregion

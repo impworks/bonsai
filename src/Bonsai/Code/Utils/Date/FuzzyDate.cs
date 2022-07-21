@@ -87,12 +87,12 @@ namespace Bonsai.Code.Utils.Date
         /// <summary>
         /// Short date format (day/month/year).
         /// </summary>
-        public string ShortReadableDate => _shortReadableDate ?? (_shortReadableDate = GetShortReadableDate());
+        public string ShortReadableDate => _shortReadableDate ??= GetShortReadableDate();
 
         /// <summary>
         /// Full readable description of the date.
         /// </summary>
-        public string ReadableDate => _fullReadableDate ?? (_fullReadableDate = GetFullReadableDate());
+        public string ReadableDate => _fullReadableDate ??= GetFullReadableDate();
 
         /// <summary>
         /// Readable year component of the date.
@@ -125,7 +125,7 @@ namespace Bonsai.Code.Utils.Date
         /// <summary>
         /// Gets the canonical string representation.
         /// </summary>
-        public string CanonicalString => _stringValue ?? (_stringValue = GetCanonicalString());
+        public string CanonicalString => _stringValue ??= GetCanonicalString();
 
         /// <summary>
         /// Returns true if all components of the fuzzy date are specified precisely.

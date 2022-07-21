@@ -517,7 +517,7 @@ namespace Bonsai.Areas.Admin.Logic
         private async Task<Changeset> GetChangesetAsync(PageEditorVM prev, PageEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId)
         {
             if(prev == null && next == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(next), "Either prev or next must be provided.");
 
             var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
 

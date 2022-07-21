@@ -2,6 +2,7 @@
 using System.Globalization;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -13,11 +14,10 @@ using Serilog;
 
 namespace Bonsai.Code.Config
 {
-    // ReSharper disable once UnusedMember.Global
-    // ReSharper disable once ClassNeverInstantiated.Global
+    [UsedImplicitly]
     public partial class Startup
     {
-        public Startup(IWebHostEnvironment env, ILogger logger)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -27,12 +27,10 @@ namespace Bonsai.Code.Config
 
             Configuration = builder.Build().Get<StaticConfig>();
             Environment = env;
-            Logger = logger;
         }
 
         private StaticConfig Configuration { get; }
         private IWebHostEnvironment Environment { get; }
-        private ILogger Logger { get; }
 
         /// <summary>
         /// Registers all required services in the dependency injection container.

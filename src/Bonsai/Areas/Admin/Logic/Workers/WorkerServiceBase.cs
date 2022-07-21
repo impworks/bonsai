@@ -83,8 +83,8 @@ namespace Bonsai.Areas.Admin.Logic.Workers
                     continue;
                 }
 
-                using(var scope = _services.CreateScope())
-                    _isAsleep = await ProcessAsync(scope.ServiceProvider);
+                using var scope = _services.CreateScope();
+                _isAsleep = await ProcessAsync(scope.ServiceProvider);
             }
         }
 

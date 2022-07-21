@@ -34,12 +34,9 @@ namespace Bonsai.Areas.Admin.Logic
         public TreeLayoutService(
             WorkerAlarmService alarm,
             IServiceProvider services,
-            INodeJSService nodejs,
-            BonsaiConfigService config, 
             ILogger logger)
             : base(services)
         {
-            _config = config;
             _logger = logger;
 
             alarm.OnTreeLayoutRegenerationRequired += (s, e) =>
@@ -52,8 +49,7 @@ namespace Bonsai.Areas.Admin.Logic
         #endregion
 
         #region Fields
-
-        private readonly BonsaiConfigService _config;
+        
         private readonly ILogger _logger;
         private bool _flush;
 
@@ -66,46 +62,47 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         protected override async Task<bool> ProcessAsync(IServiceProvider services)
         {
+            using var scope = services.CreateScope();
+            
             try
             {
-                await services.GetRequiredService<StartupService>().WaitForStartup();
+                await scope.ServiceProvider.GetRequiredService<StartupService>().WaitForStartup();
 
-                using (var db = services.GetService<AppDbContext>())
-                {
-                    var js = services.GetService<INodeJSService>();
+                using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var js = scope.ServiceProvider.GetRequiredService<INodeJSService>();
+                var cfg = scope.ServiceProvider.GetRequiredService<BonsaiConfigService>();
                         
-                    if (_flush)
-                        await FlushTreeAsync(db);
+                if (_flush)
+                    await FlushTreeAsync(db);
 
-                    var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
-                    if (!hasPages)
-                        return true;
+                var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
+                if (!hasPages)
+                    return true;
 
-                    var opts = new RelationContextOptions { PeopleOnly = true };
-                    var ctx = await RelationContext.LoadContextAsync(db, opts);
-                    var trees = GetAllSubtrees(ctx);
+                var opts = new RelationContextOptions { PeopleOnly = true };
+                var ctx = await RelationContext.LoadContextAsync(db, opts);
+                var trees = GetAllSubtrees(ctx);
 
-                    _logger.Information($"Tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
+                _logger.Information($"Tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
 
-                    foreach (var tree in trees)
+                foreach (var tree in trees)
+                {
+                    var rendered = await RenderTree(js, tree, cfg.GetDynamicConfig());
+                    var layout = new TreeLayout
                     {
-                        var rendered = await RenderTree(js, tree);
-                        var layout = new TreeLayout
-                        {
-                            Id = Guid.NewGuid(),
-                            LayoutJson = rendered,
-                            GenerationDate = DateTimeOffset.Now
-                        };
+                        Id = Guid.NewGuid(),
+                        LayoutJson = rendered,
+                        GenerationDate = DateTimeOffset.Now
+                    };
 
-                        await SaveLayoutAsync(db, tree, layout);
-                    }
-
-                    _logger.Information("Tree layout completed.");
+                    await SaveLayoutAsync(db, tree, layout);
                 }
+
+                _logger.Information("Tree layout completed.");
             }
             catch (Exception ex)
             {
-                if (!(ex is TaskCanceledException))
+                if (ex is not TaskCanceledException)
                     _logger.Error(ex, "Failed to generate a tree layout.");
             }
 
@@ -288,10 +285,10 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Renders the tree using ELK.js.
         /// </summary>
-        private async Task<string> RenderTree(INodeJSService js, TreeLayoutVM tree)
+        private async Task<string> RenderTree(INodeJSService js, TreeLayoutVM tree, DynamicConfig cfg)
         {
             var thoroughness = Interpolator.MapValue(
-                _config.GetDynamicConfig().TreeRenderThoroughness,
+                cfg.TreeRenderThoroughness,
                 new IntervalMap(1, 10, 1, 10),
                 new IntervalMap(11, 50, 11, 600),
                 new IntervalMap(51, 100, 301, 15000)
@@ -315,13 +312,11 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         private async Task FlushTreeAsync(AppDbContext db)
         {
-            using (var conn = db.GetConnection())
-            {
-                await conn.ExecuteAsync(@"
+            using var conn = db.GetConnection();
+            await conn.ExecuteAsync(@"
                     UPDATE ""Pages"" SET ""TreeLayoutId"" = NULL;
                     DELETE FROM ""TreeLayouts""
                 ");
-            }
         }
 
         /// <summary>
@@ -329,19 +324,17 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         private async Task SaveLayoutAsync(AppDbContext db, TreeLayoutVM tree, TreeLayout layout)
         {
-            using (var conn = db.GetConnection())
-            {
-                await conn.ExecuteAsync(
-                    @"INSERT INTO ""TreeLayouts"" (""Id"", ""LayoutJson"", ""GenerationDate"") VALUES (@Id, @LayoutJson, @GenerationDate)",
-                    layout
-                );
+            using var conn = db.GetConnection();
+            await conn.ExecuteAsync(
+                @"INSERT INTO ""TreeLayouts"" (""Id"", ""LayoutJson"", ""GenerationDate"") VALUES (@Id, @LayoutJson, @GenerationDate)",
+                layout
+            );
 
-                // sic! dapper generates incorrect query for "GUID IN (@GUIDS)" with parameters
-                foreach (var batch in tree.Persons.Select(x => x.Id).PartitionBySize(100))
-                {
-                    var ids = batch.Select(x => $"'{x}'").JoinString(", ");
-                    await conn.ExecuteAsync($@"UPDATE ""Pages"" SET ""TreeLayoutId"" = '{layout.Id}' WHERE ""Id"" IN ({ids})");
-                }
+            // sic! dapper generates incorrect query for "GUID IN (@GUIDS)" with parameters
+            foreach (var batch in tree.Persons.Select(x => x.Id).PartitionBySize(100))
+            {
+                var ids = batch.Select(x => $"'{x}'").JoinString(", ");
+                await conn.ExecuteAsync($@"UPDATE ""Pages"" SET ""TreeLayoutId"" = '{layout.Id}' WHERE ""Id"" IN ({ids})");
             }
         }
 

@@ -6,7 +6,6 @@ using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Date;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
@@ -15,9 +14,9 @@ using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Bonsai.Code.Config
 {
@@ -138,7 +137,10 @@ namespace Bonsai.Code.Config
 
             var path = Path.Combine(env.WebRootPath, "media");
             if (!Directory.Exists(path) || !Directory.EnumerateFiles(path).Any())
-                Logger.Error("The 'media' directory is missing. Make sure it is mounted properly.");
+            {
+                var logger = sp.GetService<ILogger>();
+                logger.Error("The 'media' directory is missing. Make sure it is mounted properly.");
+            }
         }
 
         /// <summary>

@@ -95,9 +95,8 @@ namespace Bonsai.Code.DomainModel.Relations
                 ? @"AND p.""Type"" = 0"
                 : "";
 
-            using (var conn = db.GetConnection())
-            {
-                var pagesSource = await conn.QueryAsync<PageExcerpt>(@"
+            using var conn = db.GetConnection();
+            var pagesSource = await conn.QueryAsync<PageExcerpt>(@"
                     SELECT
                         t.""Id"",
                         t.""Title"",
@@ -140,8 +139,7 @@ namespace Bonsai.Code.DomainModel.Relations
                     ) AS t
                 ");
 
-                return pagesSource.ToList();
-            }
+            return pagesSource.ToList();
         }
 
         /// <summary>

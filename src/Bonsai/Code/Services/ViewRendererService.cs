@@ -22,7 +22,8 @@ namespace Bonsai.Code.Services
         public ViewRenderService(
             IRazorViewEngine razorViewEngine,
             ITempDataProvider tempDataProvider,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider
+        )
         {
             _razorViewEngine = razorViewEngine;
             _tempDataProvider = tempDataProvider;
@@ -50,31 +51,29 @@ namespace Bonsai.Code.Services
                 httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
 
             var actionContext = new ActionContext(httpContext, httpContext.GetRouteData(), new ActionDescriptor());
+
+            using var sw = new StringWriter();
+            var viewResult = _razorViewEngine.GetView("", viewName, false);
  
-            using (var sw = new StringWriter())
+            if (viewResult.View == null)
+                throw new ArgumentNullException($"{viewName} does not match any available view.");
+ 
+            var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
             {
-                var viewResult = _razorViewEngine.GetView("", viewName, false);
+                Model = model
+            };
  
-                if (viewResult.View == null)
-                    throw new ArgumentNullException($"{viewName} does not match any available view.");
+            var viewContext = new ViewContext(
+                actionContext,
+                viewResult.View,
+                viewDictionary,
+                new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
+                sw,
+                new HtmlHelperOptions()
+            );
  
-                var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                {
-                    Model = model
-                };
- 
-                var viewContext = new ViewContext(
-                    actionContext,
-                    viewResult.View,
-                    viewDictionary,
-                    new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
-                    sw,
-                    new HtmlHelperOptions()
-                );
- 
-                await viewResult.View.RenderAsync(viewContext);
-                return sw.ToString();
-            }
+            await viewResult.View.RenderAsync(viewContext);
+            return sw.ToString();
         }
 
         #endregion

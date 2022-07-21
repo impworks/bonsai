@@ -51,11 +51,9 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ValidateAutomapperConfig(IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var mapper = scope.ServiceProvider.GetService<IMapper>();
-                mapper.ConfigurationProvider.AssertConfigurationIsValid();
-            }
+            using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var mapper = scope.ServiceProvider.GetService<IMapper>();
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
     }
 }

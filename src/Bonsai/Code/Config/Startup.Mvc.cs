@@ -55,7 +55,7 @@ namespace Bonsai.Code.Config
 
             services.AddSession();
 
-            services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(x =>
             {
                 var httpAcc = x.GetService<IHttpContextAccessor>();
@@ -63,8 +63,7 @@ namespace Bonsai.Code.Config
                 var actionCtx = new ActionContext(httpAcc.HttpContext, httpAcc.HttpContext.GetRouteData(), new ActionDescriptor());
                 return urlFactory.GetUrlHelper(actionCtx);
             });
-            services.AddScoped<ViewRenderService>();
-            services.AddScoped(x => Configuration);
+            services.AddSingleton<ViewRenderService>();
 
             services.AddScoped<ConfigurableRequestSizeLimitFilter>();
 

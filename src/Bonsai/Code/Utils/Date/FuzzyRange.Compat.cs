@@ -21,9 +21,9 @@ namespace Bonsai.Code.Utils.Date
                 var value = reader.Value?.ToString();
 
                 if(objectType == typeof(FuzzyRange?))
-                    return FuzzyRange.TryParse(value);
+                    return TryParse(value);
 
-                return FuzzyRange.Parse(value);
+                return Parse(value);
             }
 
             public override bool CanConvert(Type objectType)
@@ -46,7 +46,7 @@ namespace Bonsai.Code.Utils.Date
 
             public override FuzzyRange? Parse(object value)
             {
-                return FuzzyRange.TryParse(value?.ToString());
+                return TryParse(value?.ToString());
             }
         }
 

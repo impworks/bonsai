@@ -14,8 +14,8 @@ namespace Bonsai.Code.Utils.Helpers
         /// </summary>
         public static async Task InvokeAsync(string file, string args)
         {
-            using (var proc = CreateProcess(file, args))
-                await InvokeInternalAsync(proc, p => p.ExitCode);
+            using var proc = CreateProcess(file, args);
+            await InvokeInternalAsync(proc, p => p.ExitCode);
         }
 
         /// <summary>
@@ -23,8 +23,8 @@ namespace Bonsai.Code.Utils.Helpers
         /// </summary>
         public static async Task<string> GetOutputAsync(string file, string args)
         {
-            using(var proc = CreateProcess(file, args))
-                return await InvokeInternalAsync(proc, p => p.StandardOutput.ReadToEnd());
+            using var proc = CreateProcess(file, args);
+            return await InvokeInternalAsync(proc, p => p.StandardOutput.ReadToEnd());
         }
 
         #region Private helpers

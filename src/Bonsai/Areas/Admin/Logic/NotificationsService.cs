@@ -58,7 +58,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public void Show(string id)
         {
-            _httpAccessor.HttpContext.Response.Cookies.Delete(PREFIX + id, new CookieOptions { IsEssential = true });
+            Response.Cookies.Delete(PREFIX + id, new CookieOptions { IsEssential = true });
         }
     }
 }

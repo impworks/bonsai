@@ -53,32 +53,30 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         {
             await services.GetRequiredService<StartupService>().WaitForStartup();
 
-            using (var db = services.GetService<AppDbContext>())
+            using var db = services.GetService<AppDbContext>();
+            var job = await db.MediaJobs
+                              .Include(x => x.Media)
+                              .OrderBy(x => x.Media.UploadDate)
+                              .FirstOrDefaultAsync();
+
+            if (job == null)
+                return true;
+
+            try
             {
-                var job = await db.MediaJobs
-                                    .Include(x => x.Media)
-                                    .OrderBy(x => x.Media.UploadDate)
-                                    .FirstOrDefaultAsync();
-
-                if (job == null)
-                    return true;
-
-                try
-                {
-                    if (job.Media.Type == MediaType.Video)
-                        await EncodeVideoAsync(job);
-                    else
-                        throw new ArgumentException($"Unsupported media type: {job.Media.Type}");
-                }
-                catch (Exception ex)
-                {
-                    if (!(ex is TaskCanceledException))
-                        _logger.Error(ex, "Failed to convert media.");
-                }
-
-                db.MediaJobs.Remove(job);
-                await db.SaveChangesAsync();
+                if (job.Media.Type == MediaType.Video)
+                    await EncodeVideoAsync(job);
+                else
+                    throw new ArgumentException($"Unsupported media type: {job.Media.Type}");
             }
+            catch (Exception ex)
+            {
+                if (!(ex is TaskCanceledException))
+                    _logger.Error(ex, "Failed to convert media.");
+            }
+
+            db.MediaJobs.Remove(job);
+            await db.SaveChangesAsync();
 
             return false;
         }

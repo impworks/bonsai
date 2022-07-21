@@ -31,7 +31,7 @@ namespace Bonsai.Code.Utils.Helpers
         {
             var raw = session.GetString(key ?? DefaultName<T>());
             return string.IsNullOrEmpty(raw)
-                ? default(T)
+                ? default
                 : JsonConvert.DeserializeObject<T>(raw);
         }
 

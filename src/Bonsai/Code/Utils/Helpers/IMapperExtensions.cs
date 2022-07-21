@@ -15,7 +15,8 @@ namespace Bonsai.Code.Utils.Helpers
         public static IMappingExpression<TSource, TDest> MapMember<TSource, TDest, TProp>(
             this IMappingExpression<TSource, TDest> map,
             Expression<Func<TDest, TProp>> destMember,
-            Expression<Func<TSource, TProp>> sourceMember)
+            Expression<Func<TSource, TProp>> sourceMember
+        )
         {
             return map.ForMember(destMember, opt => opt.MapFrom(sourceMember));
         }
@@ -26,7 +27,8 @@ namespace Bonsai.Code.Utils.Helpers
         public static IMappingExpression<TSource, TDest> MapMemberDynamic<TSource, TDest, TSourceProp, TDestProp>(
             this IMappingExpression<TSource, TDest> map,
             Expression<Func<TDest, TDestProp>> destMember,
-            Expression<Func<TSource, TSourceProp>> sourceMember)
+            Expression<Func<TSource, TSourceProp>> sourceMember
+        )
         {
             return map.ForMember(destMember, opt => opt.MapFrom(sourceMember));
         }
