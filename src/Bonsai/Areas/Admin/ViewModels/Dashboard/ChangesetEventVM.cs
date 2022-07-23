@@ -59,28 +59,14 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         public void Configure(IProfileExpression profile)
         {
             profile.CreateMap<Changeset, ChangesetEventVM>()
-                   .ForMember(x => x.EntityType, opt => opt.MapFrom(x => x.Type))
-                   .ForMember(x => x.ChangeType, opt => opt.ResolveUsing(GetChangesetType))
+                   .ForMember(x => x.EntityType, opt => opt.MapFrom(x => x.EntityType))
+                   .ForMember(x => x.ChangeType, opt => opt.MapFrom(x => x.ChangeType))
                    .ForMember(x => x.Date, opt => opt.MapFrom(x => x.Date))
                    .ForMember(x => x.User, opt => opt.MapFrom(x => x.Author))
                    .Ignore(x => x.ElementCount)
                    .Ignore(x => x.MediaThumbnails)
                    .Ignore(x => x.MainLink)
                    .Ignore(x => x.ExtraLinks);
-
-            ChangesetType GetChangesetType(Changeset chg)
-            {
-                if (chg.RevertedChangesetId != null)
-                    return ChangesetType.Restored;
-
-                if (chg.OriginalState == null)
-                    return ChangesetType.Created;
-
-                if (chg.UpdatedState == null)
-                    return ChangesetType.Removed;
-
-                return ChangesetType.Updated;
-            }
         }
     }
 }

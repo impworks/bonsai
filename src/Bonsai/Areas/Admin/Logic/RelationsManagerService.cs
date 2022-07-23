@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Relations;
@@ -387,11 +388,11 @@ namespace Bonsai.Areas.Admin.Logic
                 Id = Guid.NewGuid(),
                 RevertedChangesetId = revertedId,
                 GroupId = groupId,
-                Type = ChangesetEntityType.Relation,
+                ChangeType = ChangesetHelper.GetChangeType(prev, next, revertedId),
+                EntityType = ChangesetEntityType.Relation,
                 Date = DateTime.Now,
                 EditedRelationId = id,
                 Author = user,
-                OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
             };
         }

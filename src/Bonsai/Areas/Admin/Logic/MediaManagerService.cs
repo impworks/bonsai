@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Utils;
 using Bonsai.Areas.Admin.ViewModels.Common;
@@ -450,11 +451,11 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 Id = Guid.NewGuid(),
                 RevertedChangesetId = revertedId,
-                Type = ChangesetEntityType.Media,
+                ChangeType = ChangesetHelper.GetChangeType(prev, next, revertedId),
+                EntityType = ChangesetEntityType.Media,
                 Date = DateTime.Now,
                 EditedMediaId = id,
                 Author = user,
-                OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
             };
         }

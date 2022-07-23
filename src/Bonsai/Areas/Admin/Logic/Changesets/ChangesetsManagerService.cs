@@ -87,7 +87,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             }
 
             if (request.EntityTypes?.Length > 0)
-                query = query.Where(x => request.EntityTypes.Contains(x.Type));
+                query = query.Where(x => request.EntityTypes.Contains(x.EntityType));
 
             if (request.EntityId != null)
                 query = query.Where(x => x.EditedPageId == request.EntityId
@@ -114,10 +114,10 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                      {
                                          Id = x.Id,
                                          Date = x.Date,
-                                         ChangeType = GetChangeType(x),
+                                         ChangeType = x.ChangeType,
                                          Author = x.Author.FirstName + " " + x.Author.LastName,
                                          EntityId = x.EditedPageId ?? x.EditedMediaId ?? x.EditedRelationId ?? Guid.Empty,
-                                         EntityType = x.Type,
+                                         EntityType = x.EntityType,
                                          EntityTitle = GetEntityTitle(x),
                                          EntityThumbnailUrl = GetEntityThumbnailUrl(x),
                                          PageType = GetPageType(x),
@@ -133,14 +133,10 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         public async Task<ChangesetDetailsVM> GetChangesetDetailsAsync(Guid id)
         {
-            var chg = await _db.Changes
-                               .AsNoTracking()
-                               .Include(x => x.Author)
-                               .Include(x => x.EditedMedia)
-                               .GetAsync(x => x.Id == id, "Правка не найдена");
+            var (chg, prev) = await GetChangesetPairAsync(id, q => q.AsNoTracking().Include(x => x.Author).Include(x => x.EditedMedia));
 
-            var renderer = _renderers[chg.Type];
-            var prevData = await renderer.RenderValuesAsync(chg.OriginalState);
+            var renderer = _renderers[chg.EntityType];
+            var prevData = await renderer.RenderValuesAsync(prev?.UpdatedState);
             var nextData = await renderer.RenderValuesAsync(chg.UpdatedState);
 
             return new ChangesetDetailsVM
@@ -148,8 +144,8 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 Id = chg.Id,
                 Author = chg.Author.FirstName + " " + chg.Author.LastName,
                 Date = chg.Date,
-                ChangeType = GetChangeType(chg),
-                EntityType = chg.Type,
+                ChangeType = chg.ChangeType,
+                EntityType = chg.EntityType,
                 ThumbnailUrl = chg.EditedMedia != null
                     ? MediaPresenterService.GetSizedMediaPath(chg.EditedMedia.FilePath, MediaSize.Small)
                     : null,
@@ -163,12 +159,10 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         public async Task RevertChangeAsync(Guid id, ClaimsPrincipal user)
         {
-            var chg = await _db.Changes
-                               .AsNoTracking()
-                               .GetAsync(x => x.Id == id, "Правка не найдена");
-
-            var isRemoving = string.IsNullOrEmpty(chg.OriginalState);
-            switch (chg.Type)
+            var (chg, prev) = await GetChangesetPairAsync(id, q => q.AsNoTracking());
+            var isRemoving = string.IsNullOrEmpty(prev?.UpdatedState);
+            
+            switch (chg.EntityType)
             {
                 case ChangesetEntityType.Media:
                 {
@@ -178,7 +172,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                     }
                     else
                     {
-                        var vm = JsonConvert.DeserializeObject<MediaEditorVM>(chg.OriginalState);
+                        var vm = JsonConvert.DeserializeObject<MediaEditorVM>(prev.UpdatedState);
                         await _media.UpdateAsync(vm, user, id);
                     }
 
@@ -195,7 +189,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                     }
                     else
                     {
-                        var vm = JsonConvert.DeserializeObject<PageEditorVM>(chg.OriginalState);
+                        var vm = JsonConvert.DeserializeObject<PageEditorVM>(prev.UpdatedState);
                         var page = await _pages.UpdateAsync(vm, user, id);
                         await _search.AddPageAsync(page);
                     }
@@ -210,7 +204,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                     }
                     else
                     {
-                        var vm = JsonConvert.DeserializeObject<RelationEditorVM>(chg.OriginalState);
+                        var vm = JsonConvert.DeserializeObject<RelationEditorVM>(prev.UpdatedState);
                         await _rels.UpdateAsync(vm, user, id);
                     }
 
@@ -218,7 +212,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 }
 
                 default:
-                    throw new ArgumentException($"Неизвестный тип сущности: {chg.Type}!");
+                    throw new ArgumentException($"Неизвестный тип сущности: {chg.EntityType}!");
             }
         }
 
@@ -271,26 +265,6 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 return MediaPresenterService.GetSizedMediaPath(file, MediaSize.Small);
 
             return null;
-        }
-
-        /// <summary>
-        /// Returns the changeset type.
-        /// </summary>
-        private ChangesetType GetChangeType(Changeset chg)
-        {
-            if (chg.RevertedChangesetId != null)
-                return ChangesetType.Restored;
-
-            var wasNull = string.IsNullOrEmpty(chg.OriginalState);
-            var isNull = string.IsNullOrEmpty(chg.UpdatedState);
-
-            if (wasNull)
-                return ChangesetType.Created;
-
-            if (isNull)
-                return ChangesetType.Removed;
-
-            return ChangesetType.Updated;
         }
 
         /// <summary>
@@ -398,8 +372,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private bool CanRevert(Changeset chg)
         {
-            var chgType = GetChangeType(chg);
-            if (chgType == ChangesetType.Restored)
+            if (chg.ChangeType == ChangesetType.Restored)
                 return false;
 
             if (chg.EditedMedia != null)
@@ -411,6 +384,37 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             return true;
         }
+        
+        /// <summary>
+        /// Returns the current changeset by ID and the previous one related to current entity, if one exists.
+        /// </summary>
+        private async Task<ChangesetPair> GetChangesetPairAsync(Guid id, Func<IQueryable<Changeset>, IQueryable<Changeset>> config = null)
+        {
+            config ??= x => x;
+            
+            var chg = await config(_db.Changes).GetAsync(x => x.Id == id, "Правка не найдена");
+            
+            var prevQuery = config(_db.Changes);
+            if (chg.EditedMediaId != null)
+                prevQuery = prevQuery.Where(x => x.EditedMediaId == chg.EditedMediaId);
+            else if (chg.EditedPageId != null)
+                prevQuery = prevQuery.Where(x => x.EditedPageId == chg.EditedPageId);
+            else if (chg.EditedRelationId != null)
+                prevQuery = prevQuery.Where(x => x.EditedRelationId == chg.EditedRelationId);
+
+            var prev = await prevQuery.OrderByDescending(x => x.Date)
+                                      .Where(x => x.Date < chg.Date)
+                                      .FirstOrDefaultAsync();
+
+            return new ChangesetPair(chg, prev);
+        }
+        
+        /// <summary>
+        /// Current and previous changesets for the same entity.
+        /// </summary>
+        /// <param name="current">Current changeset</param>
+        /// <param name="previous">The previous changeset related to current entity</param>
+        private record ChangesetPair(Changeset current, Changeset previous);
 
         #endregion
     }
