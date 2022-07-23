@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace Bonsai.Data.Models
 {
@@ -11,6 +12,7 @@ namespace Bonsai.Data.Models
         Photo,
 
         [Description("Фотосфера")]
+        [Obsolete("Not yet implemented")]
         Photo360,
 
         [Description("Видео")]

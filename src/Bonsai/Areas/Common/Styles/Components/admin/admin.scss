@@ -26,11 +26,12 @@
 
     .admin-row {
         img, .image {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
 
             display: inline-block;
             vertical-align: bottom;
+            margin: -5px 5px -6px -3px;
         }
 
         .admin-full-image {
@@ -39,12 +40,14 @@
 
             img {
                 height: 48px;
+                margin: 0;
                 width: auto;
             }
 
             .image {
                 height: 48px;
                 width: 64px;
+                margin: 0;
                 background-position: center;
                 background-size: cover;
             }
@@ -56,7 +59,7 @@
 
         .admin-row-actions {
             white-space: nowrap;
-            padding: 8px 12px;
+            padding: 12px;
         }
 
         .admin-row-actions a, .admin-row-action {

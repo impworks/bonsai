@@ -64,6 +64,7 @@ namespace Bonsai.Areas.Admin.Components
                         | BindingFlags.GetField;
 
             return enumType.GetFields(flags)
+                           .Where(x => x.GetCustomAttribute<ObsoleteAttribute>() == null)
                            .Select(x => new
                            {
                                Description = x.GetCustomAttribute<DescriptionAttribute>()?.Description,
