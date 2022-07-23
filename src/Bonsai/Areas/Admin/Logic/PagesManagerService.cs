@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Media;
@@ -333,10 +334,6 @@ namespace Bonsai.Areas.Admin.Logic
 
                 foreach (var changeset in changesets)
                 {
-                    var origState = RemoveMediaTagReferences(changeset.OriginalState);
-                    if (origState != null)
-                        changeset.OriginalState = origState;
-
                     var updState = RemoveMediaTagReferences(changeset.UpdatedState);
                     if (updState != null)
                         changeset.UpdatedState = updState;
@@ -525,11 +522,11 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 Id = Guid.NewGuid(),
                 RevertedChangesetId = revertedId,
-                Type = ChangesetEntityType.Page,
+                ChangeType = ChangesetHelper.GetChangeType(prev, next, revertedId),
+                EntityType = ChangesetEntityType.Page,
                 Date = DateTime.Now,
                 EditedPageId = id,
                 Author = user,
-                OriginalState = prev == null ? null : JsonConvert.SerializeObject(prev),
                 UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
             };
         }

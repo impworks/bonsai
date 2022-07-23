@@ -28,11 +28,16 @@ namespace Bonsai.Data.Models
         /// </summary>
         [Required]
         public AppUser Author { get; set; }
+        
+        /// <summary>
+        /// Type of the change (created, edited, removed, reverted).
+        /// </summary>
+        public ChangesetType ChangeType { get; set; }
 
         /// <summary>
         /// Type of the changed entity.
         /// </summary>
-        public ChangesetEntityType Type { get; set; }
+        public ChangesetEntityType EntityType { get; set; }
 
         /// <summary>
         /// Original changeset which has been reverted by the current one.
@@ -68,12 +73,7 @@ namespace Bonsai.Data.Models
         /// Edited relation.
         /// </summary>
         public Relation EditedRelation { get; set; }
-
-        /// <summary>
-        /// The original state (before the change).
-        /// </summary>
-        public string OriginalState { get; set; }
-
+        
         /// <summary>
         /// The new state (after the change).
         /// </summary>

@@ -95,12 +95,12 @@ namespace Bonsai.Areas.Admin.Logic
                 if (vm.User.PageId != null)
                     vm.User.IsMale = ctx.Pages[vm.User.PageId.Value].Gender;
 
-                if (chg.Type == ChangesetEntityType.Page)
+                if (chg.EntityType == ChangesetEntityType.Page)
                 {
                     vm.MainLink = GetLinkToPage(chg.EditedPage);
                     vm.ElementCount = 1;
                 }
-                else if (chg.Type == ChangesetEntityType.Relation)
+                else if (chg.EntityType == ChangesetEntityType.Relation)
                 {
                     var rel = chg.EditedRelation;
                     vm.MainLink = new LinkVM
@@ -111,7 +111,7 @@ namespace Bonsai.Areas.Admin.Logic
                     vm.ExtraLinks = new[] {GetLinkToPage(rel.Destination), GetLinkToPage(rel.Source)};
                     vm.ElementCount = 1;
                 }
-                else if (chg.Type == ChangesetEntityType.Media)
+                else if (chg.EntityType == ChangesetEntityType.Media)
                 {
                     vm.ElementCount = group.Ids.Count;
                     vm.MediaThumbnails = group.Ids
