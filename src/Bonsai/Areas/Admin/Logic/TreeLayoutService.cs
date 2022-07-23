@@ -62,15 +62,13 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         protected override async Task<bool> ProcessAsync(IServiceProvider services)
         {
-            using var scope = services.CreateScope();
-            
             try
             {
-                await scope.ServiceProvider.GetRequiredService<StartupService>().WaitForStartup();
+                await services.GetRequiredService<StartupService>().WaitForStartup();
 
-                using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                var js = scope.ServiceProvider.GetRequiredService<INodeJSService>();
-                var cfg = scope.ServiceProvider.GetRequiredService<BonsaiConfigService>();
+                using var db = services.GetRequiredService<AppDbContext>();
+                var js = services.GetRequiredService<INodeJSService>();
+                var cfg = services.GetRequiredService<BonsaiConfigService>();
                         
                 if (_flush)
                     await FlushTreeAsync(db);

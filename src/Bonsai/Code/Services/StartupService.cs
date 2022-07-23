@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Bonsai.Code.Services
@@ -13,9 +14,9 @@ namespace Bonsai.Code.Services
     /// </summary>
     public class StartupService
     {
-        public StartupService(ViewRenderService viewRender, ILogger logger)
+        public StartupService(IServiceProvider services, ILogger logger)
         {
-            _viewRender = viewRender;
+            _services = services;
             _logger = logger;
 
             _tcs = new TaskCompletionSource();
@@ -24,7 +25,7 @@ namespace Bonsai.Code.Services
 
         private readonly TaskCompletionSource _tcs;
         private readonly List<StartupTask> _workingTasks;
-        private readonly ViewRenderService _viewRender;
+        private readonly IServiceProvider _services;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -81,8 +82,10 @@ namespace Bonsai.Code.Services
                 return;
             }
 
+            using var scope = _services.CreateScope();
+            var viewRender = scope.ServiceProvider.GetRequiredService<ViewRenderService>();
             var vm = _workingTasks.Where(x => !string.IsNullOrEmpty(x.Description));
-            var body = await _viewRender.RenderToStringAsync("~/Areas/Front/Views/loading.cshtml", vm, context);
+            var body = await viewRender.RenderToStringAsync("~/Areas/Front/Views/loading.cshtml", vm, context);
             await context.Response.WriteAsync(body);
         }
     }

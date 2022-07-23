@@ -63,7 +63,7 @@ namespace Bonsai.Code.Config
                 var actionCtx = new ActionContext(httpAcc.HttpContext, httpAcc.HttpContext.GetRouteData(), new ActionDescriptor());
                 return urlFactory.GetUrlHelper(actionCtx);
             });
-            services.AddSingleton<ViewRenderService>();
+            services.AddScoped<ViewRenderService>();
 
             services.AddScoped<ConfigurableRequestSizeLimitFilter>();
 
