@@ -130,7 +130,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             await _validator.ValidateAsync(page, vm.Facts);
 
-            var changeset = await GetChangesetAsync(null, vm, page.Id, principal, null);
+            var changeset = await GetChangesetAsync(null, _mapper.Map<PageEditorVM>(page), page.Id, principal, null);
             _db.Changes.Add(changeset);
             
             _db.Pages.Add(page);
