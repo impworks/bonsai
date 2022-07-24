@@ -190,7 +190,8 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                     else
                     {
                         var vm = JsonConvert.DeserializeObject<PageEditorVM>(prev.UpdatedState);
-                        var page = await _pages.UpdateAsync(vm, user, id);
+                        var pageId = vm.Id == Guid.Empty ? chg.EditedPageId.Value : vm.Id; // workaround for a legacy bug
+                        var page = await _pages.UpdateAsync(vm, user, id, pageId);
                         await _search.AddPageAsync(page);
                     }
                     return;
