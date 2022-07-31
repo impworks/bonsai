@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic.Workers;
+using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
@@ -23,11 +24,18 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
     {
         #region Constructor
 
-        public MediaEncoderService(WorkerAlarmService alarm, IServiceProvider services, IWebHostEnvironment env, ILogger logger)
+        public MediaEncoderService(
+            WorkerAlarmService alarm,
+            IServiceProvider services,
+            IWebHostEnvironment env,
+            ILogger logger,
+            CacheService cache
+        )
             : base(services)
         {
             _env = env;
             _logger = logger;
+            _cache = cache;
 
             alarm.OnNewEncoderJob += (s, e) =>
             {
@@ -41,6 +49,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
 
         private readonly IWebHostEnvironment _env;
         private readonly ILogger _logger;
+        private readonly CacheService _cache;
 
         #endregion
 
@@ -68,6 +77,8 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
                     await EncodeVideoAsync(job);
                 else
                     throw new ArgumentException($"Unsupported media type: {job.Media.Type}");
+                
+                _cache.Remove<MediaVM>(job.Media.Key);
             }
             catch (Exception ex)
             {

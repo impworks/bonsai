@@ -1,4 +1,6 @@
-﻿@using Humanizer
+﻿@using Bonsai.Areas.Front.Components
+@using Bonsai.Code.Utils.Helpers
+@using Humanizer
 @addTagHelper *, Bonsai
 @model Bonsai.Areas.Front.ViewModels.Home.HomeVM
 @{
@@ -49,7 +51,7 @@
                         <li class="list-inline-item">
                             <div class="media-thumb-wrapper">
                                 <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = m.Key})" class="media-thumb-link" data-media="@m.Key">
-                                    <div class="media-thumb-square" style="background-image: url('@Url.Content(m.ThumbnailUrl)')"></div>
+                                    <div class="media-thumb-square" style="background-image: url('@Url.MediaUrl(m)')"></div>
                                 </a>
                             </div>
                         </li>

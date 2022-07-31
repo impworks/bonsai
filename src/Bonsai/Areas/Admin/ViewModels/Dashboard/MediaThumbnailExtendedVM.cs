@@ -45,6 +45,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
                    .MapMember(x => x.Date, x => FuzzyDate.TryParse(x.Date))
                    .MapMember(x => x.UploadDate, x => x.UploadDate)
                    .MapMember(x => x.Title, x => x.Title)
+                   .MapMember(x => x.IsProcessed, x => x.IsProcessed)
                    .MapMember(x => x.MediaTagsCount, x => x.Tags.Count(y => y.Type == MediaTagType.DepictedEntity))
                    .MapMember(x => x.ThumbnailUrl, x => MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small));
         }

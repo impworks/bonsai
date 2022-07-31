@@ -1,5 +1,6 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
 @using Bonsai.Areas.Front.ViewModels.Page.InfoBlock
+@using Bonsai.Code.Utils.Helpers
 @model InfoBlockVM
 @{
     var pageVm = (PageTitleVM) ViewBag.PageModel.Body;
@@ -10,7 +11,7 @@
     @if(Model.Photo != null)
     {
         <div class="profile-photo">
-            <img src="@Url.Content(Model.Photo.ThumbnailUrl)" alt="@pageVm.Title" />
+            <img src="@Url.MediaUrl(Model.Photo)" alt="@pageVm.Title" />
         </div>
     }
 

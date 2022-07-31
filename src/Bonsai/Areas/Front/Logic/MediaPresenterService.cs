@@ -81,6 +81,7 @@ namespace Bonsai.Areas.Front.Logic
                                 Type = x.Type,
                                 ThumbnailUrl = GetSizedMediaPath(x.FilePath, MediaSize.Small),
                                 Date = FuzzyDate.TryParse(x.Date),
+                                IsProcessed = x.IsProcessed
                             })
                             .ToListAsync();
         }
@@ -182,7 +183,8 @@ namespace Bonsai.Areas.Front.Logic
                 Type = media.Type,
                 Key = media.Key,
                 ThumbnailUrl = GetSizedMediaPath(media.FilePath, size),
-                Date = FuzzyDate.TryParse(media.Date)
+                Date = FuzzyDate.TryParse(media.Date),
+                IsProcessed = media.IsProcessed
             };
         }
 

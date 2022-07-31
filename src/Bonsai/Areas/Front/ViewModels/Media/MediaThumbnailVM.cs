@@ -27,5 +27,10 @@ namespace Bonsai.Areas.Front.ViewModels.Media
         /// Date of the media's origin.
         /// </summary>
         public FuzzyDate? Date { get; set; }
+        
+        /// <summary>
+        /// Flag indicating that the media file is ready for viewing.
+        /// </summary>
+        public bool IsProcessed { get; set; }
     }
 }

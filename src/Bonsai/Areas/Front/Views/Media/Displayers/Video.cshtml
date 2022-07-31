@@ -1,4 +1,5 @@
-﻿@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
+﻿@using Bonsai.Code.Utils.Helpers
+@model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 
 @if(Model.IsProcessed)
 {
@@ -12,7 +13,7 @@
 else
 {
     <div class="photo-wrapper">
-        <img src="@Url.Content(Model.PreviewPath)" class="media-photo" alt="Видео обрабатывается..." />
+        <img src="@Url.MediaUrl(Model)" class="media-photo" alt="Видео обрабатывается..." />
     </div>
     <div class="alert alert-info">
         Видео будет доступно после обработки. Попробуйте перезагрузить страницу.

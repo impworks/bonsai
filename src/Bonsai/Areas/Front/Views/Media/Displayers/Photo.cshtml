@@ -1,11 +1,12 @@
 ﻿@using System.Drawing
+@using Bonsai.Code.Utils.Helpers
 @model Bonsai.Areas.Front.ViewModels.Media.MediaVM
 @{
     string Size(float s) => (s * 100.0f).ToString(System.Globalization.CultureInfo.InvariantCulture) + "%";
 }
 
 <div class="photo-wrapper">
-    <img src="@Url.Content(Model.PreviewPath)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
+    <img src="@Url.MediaUrl(Model)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
     @foreach (var tag in Model.Tags)
     {
         if (tag.Rect is RectangleF r)

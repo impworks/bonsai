@@ -96,12 +96,12 @@
                                 <div class="media-thumb-wrapper">
                                     @if (evt.ChangeType == ChangesetType.Removed)
                                     {
-                                        <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')"></div>
+                                        <div class="media-thumb-square" style="background-image: url('@Url.MediaUrl(elem)')"></div>
                                     }
                                     else
                                     {
                                         <a href="@Url.Action("ViewMedia", "Media", new {area = "Front", key = elem.Key})" class="media-thumb-link" data-media="@elem.Key">
-                                            <div class="media-thumb-square" style="background-image: url('@Url.Content(elem.ThumbnailUrl)')"></div>
+                                            <div class="media-thumb-square" style="background-image: url('@Url.MediaUrl(elem)')"></div>
                                         </a>
                                     }
                                 </div>
