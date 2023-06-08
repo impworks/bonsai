@@ -56,7 +56,7 @@
 
 Для участия в разработке понадобится:
 
-* [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0): основной рантайм для Bonsai
+* [.NET 7](https://dotnet.microsoft.com/download/dotnet/7.0): основной рантайм для Bonsai
 
 1. Установите [NodeJS 14](https://nodejs.org/en/)
 2. Установите [PostgreSQL server 9.6](https://www.openscg.com/bigsql/postgresql/installers.jsp/)

@@ -56,7 +56,7 @@ A family wiki and photoalbum engine (in Russian).
 
 For development, you will need the following:
 
-* [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0): the main runtime for Bonsai
+* [.NET 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0): the main runtime for Bonsai
 
 1. Install [NodeJS 14](https://nodejs.org/en/)
 2. Install [PostgreSQL server 9.6](https://www.openscg.com/bigsql/postgresql/installers.jsp/)
