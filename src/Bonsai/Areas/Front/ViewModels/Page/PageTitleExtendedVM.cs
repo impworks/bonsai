@@ -1,7 +1,6 @@
 ﻿using System;
-using AutoMapper;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Utils.Helpers;
+using Mapster;
 
 namespace Bonsai.Areas.Front.ViewModels.Page
 {
@@ -30,16 +29,16 @@ namespace Bonsai.Areas.Front.ViewModels.Page
         /// </summary>
         public DateTimeOffset CreationDate { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Data.Models.Page, PageTitleExtendedVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Title, x => x.Title)
-                   .MapMember(x => x.Key, x => x.Key)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.MainPhotoPath, x => x.MainPhoto.FilePath)
-                   .MapMember(x => x.LastUpdateDate, x => x.LastUpdateDate)
-                   .MapMember(x => x.CreationDate, x => x.CreationDate);
+            config.NewConfig<Data.Models.Page, PageTitleExtendedVM>()
+                   .Map(x => x.Id, x => x.Id)
+                   .Map(x => x.Title, x => x.Title)
+                   .Map(x => x.Key, x => x.Key)
+                   .Map(x => x.Type, x => x.Type)
+                   .Map(x => x.MainPhotoPath, x => x.MainPhoto.FilePath)
+                   .Map(x => x.LastUpdateDate, x => x.LastUpdateDate)
+                   .Map(x => x.CreationDate, x => x.CreationDate);
         }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
+using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Front.ViewModels.Page
 {
     /// <summary>
     /// Base view model for all page sections.
     /// </summary>
-    public class PageTitleVM
+    public class PageTitleVM: IMapped
     {
         /// <summary>
         /// Surrogate ID of the page.
@@ -27,5 +29,14 @@ namespace Bonsai.Areas.Front.ViewModels.Page
         /// Type of the entity described by this page.
         /// </summary>
         public PageType Type { get; set; }
+
+        public void Configure(TypeAdapterConfig config)
+        {
+            config.NewConfig<Data.Models.Page, PageTitleVM>()
+                  .Map(x => x.Id, x => x.Id)
+                  .Map(x => x.Title, x => x.Title)
+                  .Map(x => x.Key, x => x.Key)
+                  .Map(x => x.Type, x => x.Type);
+        }
     }
 }

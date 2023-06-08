@@ -58,7 +58,7 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// </summary>
         private static Image ResizeToFit(Image source, Size maxSize)
         {
-            var propSize = GetProportionalSize(source.Size(), maxSize);
+            var propSize = GetProportionalSize(source.Size, maxSize);
             return source.Clone(x =>
             {
                 x.Resize(propSize, KnownResamplers.Lanczos3, true);

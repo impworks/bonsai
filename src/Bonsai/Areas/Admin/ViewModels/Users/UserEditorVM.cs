@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using AutoMapper;
 using Bonsai.Areas.Front.ViewModels.Auth;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Users
 {
@@ -42,27 +41,28 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         /// <summary>
         /// Configures automatic mapping.
         /// </summary>
-        public override void Configure(IProfileExpression profile)
+        public override void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<UserEditorVM, AppUser>()
-                   .MapMember(x => x.Birthday, x => x.Birthday)
-                   .MapMember(x => x.FirstName, x => x.FirstName)
-                   .MapMember(x => x.MiddleName, x => x.MiddleName)
-                   .MapMember(x => x.LastName, x => x.LastName)
-                   .MapMember(x => x.Email, x => x.Email)
-                   .MapMember(x => x.NormalizedEmail, x => x.Email.ToUpperInvariant())
-                   .MapMember(x => x.PageId, x => x.PersonalPageId)
-                   .ForMember(x => x.UserName, opt => opt.MapFrom(x => ClearEmail(x.Email)))
-                   .ForMember(x => x.NormalizedUserName, opt => opt.MapFrom(x => ClearEmail(x.Email).ToUpperInvariant()))
-                   .ForAllOtherMembers(x => x.Ignore());
+            config.NewConfig<UserEditorVM, AppUser>()
+                  .Map(x => x.Birthday, x => x.Birthday)
+                  .Map(x => x.FirstName, x => x.FirstName)
+                  .Map(x => x.MiddleName, x => x.MiddleName)
+                  .Map(x => x.LastName, x => x.LastName)
+                  .Map(x => x.Email, x => x.Email)
+                  .Map(x => x.NormalizedEmail, x => x.Email.ToUpperInvariant())
+                  .Map(x => x.PageId, x => x.PersonalPageId)
+                  .Map(x => x.UserName, x => ClearEmail(x.Email))
+                  .Map(x => x.NormalizedUserName, x => ClearEmail(x.Email).ToUpperInvariant());
 
-            profile.CreateMap<AppUser, UserEditorVM>()
-                   .MapMember(x => x.PersonalPageId, x => x.PageId)
-                   .MapMember(x => x.IsLocked, x => x.LockoutEnabled && x.LockoutEnd > DateTimeOffset.Now)
-                   .ForMember(x => x.Role, opt => opt.Ignore())
-                   .ForMember(x => x.CreatePersonalPage, opt => opt.Ignore())
-                   .ForMember(x => x.Password, opt => opt.Ignore())
-                   .ForMember(x => x.PasswordCopy, opt => opt.Ignore());
+            config.NewConfig<AppUser, UserEditorVM>()
+                  .Map(x => x.Birthday, x => x.Birthday)
+                  .Map(x => x.FirstName, x => x.FirstName)
+                  .Map(x => x.MiddleName, x => x.MiddleName)
+                  .Map(x => x.LastName, x => x.LastName)
+                  .Map(x => x.Email, x => x.Email)
+                  .Map(x => x.PersonalPageId, x => x.PageId)
+                  .Map(x => x.IsLocked, x => x.LockoutEnabled && x.LockoutEnd > DateTimeOffset.Now)
+                  .IgnoreNonMapped(true);
         }
 
         private static string ClearEmail(string email) => Regex.Replace(email, "[^a-z0-9]", "");

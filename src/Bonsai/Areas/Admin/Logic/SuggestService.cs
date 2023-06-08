@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Areas.Front.Logic;
@@ -14,6 +12,8 @@ using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,7 +54,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var pages = await _db.Pages
                                  .Where(x => ids.Contains(x.Id))
-                                 .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                                 .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
                                  .ToDictionaryAsync(x => x.Id, x => x);
 
             // URL is global for easier usage in JSON
@@ -119,7 +119,7 @@ namespace Bonsai.Areas.Admin.Logic
             var vms = await q.OrderBy(x => x.Title)
                              .Skip(offset)
                              .Take(count)
-                             .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                             .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
                              .ToListAsync();
 
             foreach (var vm in vms)

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
 using Bonsai.Areas.Admin.ViewModels.DynamicConfig;
 using Bonsai.Code.Services.Config;
 using Bonsai.Data;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 

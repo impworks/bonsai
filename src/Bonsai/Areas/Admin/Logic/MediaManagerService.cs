@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Utils;
@@ -28,6 +26,8 @@ using Bonsai.Data.Models;
 using Impworks.Utils.Dictionary;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -97,7 +97,7 @@ namespace Bonsai.Areas.Admin.Logic
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
             result.Items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
-                                      .ProjectTo<MediaThumbnailExtendedVM>(_mapper.ConfigurationProvider)
+                                      .ProjectToType<MediaThumbnailExtendedVM>(_mapper.Config)
                                       .Skip(PageSize * request.Page)
                                       .Take(PageSize)
                                       .ToListAsync();
@@ -299,7 +299,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return await _db.Media
                             .Where(x => ids.Contains(x.Id))
-                            .ProjectTo<MediaUploadResultVM>(_mapper.ConfigurationProvider)
+                            .ProjectToType<MediaUploadResultVM>(_mapper.Config)
                             .ToListAsync();
         }
 
@@ -427,8 +427,8 @@ namespace Bonsai.Areas.Admin.Logic
             var fileName = key + ext;
             var filePath = Path.Combine(_env.WebRootPath, "media", fileName);
 
-            using (var localStream = new FileStream(filePath, FileMode.CreateNew))
-            using(var sourceStream = file.OpenReadStream())
+            await using (var localStream = new FileStream(filePath, FileMode.CreateNew))
+            await using (var sourceStream = file.OpenReadStream())
                 await sourceStream.CopyToAsync(localStream);
 
             using(var frame = await handler.ExtractThumbnailAsync(filePath, file.ContentType))

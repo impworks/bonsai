@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using Bonsai.Code.Infrastructure;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
 {
@@ -37,10 +37,15 @@ namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
         [Range(1, 100, ErrorMessage = "Значение должно быть в диапазоне от 1 до 100")]
         public int TreeRenderThoroughness { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<UpdateDynamicConfigVM, Code.Services.Config.DynamicConfig>();
-            profile.CreateMap<Code.Services.Config.DynamicConfig, UpdateDynamicConfigVM>();
+            config.NewConfig<UpdateDynamicConfigVM, Code.Services.Config.DynamicConfig>()
+                  .TwoWays()
+                  .Map(x => x.Title, x => x.Title)
+                  .Map(x => x.AllowGuests, x => x.AllowGuests)
+                  .Map(x => x.AllowRegistration, x => x.AllowRegistration)
+                  .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
+                  .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
-using AutoMapper;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Users
 {
@@ -50,16 +50,16 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
         /// </summary>
         public bool? IsMale { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<AppUser, UserTitleVM>()
-                   .ForMember(x => x.Role, opt => opt.Ignore())
-                   .ForMember(x => x.Email, opt => opt.MapFrom(y => y.Email))
-                   .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName))
-                   .ForMember(x => x.AuthType, opt => opt.MapFrom(x => x.AuthType))
-                   .ForMember(x => x.LockoutEnd, opt => opt.MapFrom(x => x.LockoutEnd))
-                   .ForMember(x => x.PageId, opt => opt.MapFrom(x => x.PageId))
-                   .ForMember(x => x.IsMale, opt => opt.Ignore());
+            config.NewConfig<AppUser, UserTitleVM>()
+                  .Map(x => x.Id, x => x.Id)
+                  .Map(x => x.Email, x => x.Email)
+                  .Map(x => x.FullName, y => y.FirstName + " " + y.LastName)
+                  .Map(x => x.AuthType, x => x.AuthType)
+                  .Map(x => x.LockoutEnd, x => x.LockoutEnd)
+                  .Map(x => x.PageId, x => x.PageId)
+                  .Ignore(x => x.Role, x => x.IsMale);
         }
     }
 }

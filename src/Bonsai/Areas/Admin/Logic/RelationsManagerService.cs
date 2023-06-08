@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Common;
@@ -20,6 +18,8 @@ using Bonsai.Data.Models;
 using Impworks.Utils.Dictionary;
 using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -87,7 +87,7 @@ namespace Bonsai.Areas.Admin.Logic
             else
                 query = query.OrderBy(x => x.Type, dir);
 
-            result.Items = await query.ProjectTo<RelationTitleVM>(_mapper.ConfigurationProvider)
+            result.Items = await query.ProjectToType<RelationTitleVM>(_mapper.Config)
                                       .Skip(PageSize * request.Page)
                                       .Take(PageSize)
                                       .ToListAsync();
@@ -199,7 +199,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var rel = await _db.Relations
                                .Where(x => x.IsDeleted == false && x.IsComplementary == false)
-                               .ProjectTo<RelationTitleVM>(_mapper.ConfigurationProvider)
+                               .ProjectToType<RelationTitleVM>(_mapper.Config)
                                .GetAsync(x => x.Id == id, "Связь не найдена");
 
             var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);

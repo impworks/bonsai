@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using AutoMapper;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Front.ViewModels.Auth
 {
@@ -66,16 +66,16 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         /// <summary>
         /// Configures Automapper maps.
         /// </summary>
-        public virtual void Configure(IProfileExpression profile)
+        public virtual void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<RegisterUserVM, AppUser>()
-                   .ForMember(x => x.Birthday, opt => opt.MapFrom(x => x.Birthday))
-                   .ForMember(x => x.FirstName, opt => opt.MapFrom(x => x.FirstName))
-                   .ForMember(x => x.MiddleName, opt => opt.MapFrom(x => x.MiddleName))
-                   .ForMember(x => x.LastName, opt => opt.MapFrom(x => x.LastName))
-                   .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
-                   .ForMember(x => x.UserName, opt => opt.MapFrom(x => Regex.Replace(x.Email, "[^a-z0-9]", "")))
-                   .ForAllOtherMembers(opt => opt.Ignore());
+            config.NewConfig<RegisterUserVM, AppUser>()
+                  .Map(x => x.Birthday, x => x.Birthday)
+                  .Map(x => x.FirstName, x => x.FirstName)
+                  .Map(x => x.MiddleName, x => x.MiddleName)
+                  .Map(x => x.LastName, x => x.LastName)
+                  .Map(x => x.Email, x => x.Email)
+                  .Map(x => x.UserName, x => Regex.Replace(x.Email, "[^a-z0-9]", ""))
+                  .IgnoreNonMapped(true);
         }
     }
 }

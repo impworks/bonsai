@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Admin.ViewModels.Common;
@@ -20,6 +18,8 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -71,7 +71,7 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
 
             var items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
-                                   .ProjectTo<PageScoredVM>(_mapper.ConfigurationProvider)
+                                   .ProjectToType<PageScoredVM>(_mapper.Config)
                                    .Skip(PageSize * request.Page)
                                    .Take(PageSize)
                                    .ToListAsync();
@@ -92,7 +92,7 @@ namespace Bonsai.Areas.Admin.Logic
             return await _db.Pages
                             .Include(x => x.MainPhoto)
                             .Where(x => pages.Any(y => x.Id == y) && x.IsDeleted == false)
-                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                            .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
                             .ToDictionaryAsync(x => x.Id, x => x);
         }
 
@@ -255,7 +255,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var page = await _db.Pages
                             .Where(x => x.IsDeleted == false)
-                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                            .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
                             .GetAsync(x => x.Id == id, "Страница не найдена");
 
             var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);

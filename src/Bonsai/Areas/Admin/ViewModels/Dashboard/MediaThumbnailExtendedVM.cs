@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using AutoMapper;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Date;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 {
@@ -36,18 +35,18 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         /// </summary>
         public string Title { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Data.Models.Media, MediaThumbnailExtendedVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Key, x => x.Key)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.Date, x => FuzzyDate.TryParse(x.Date))
-                   .MapMember(x => x.UploadDate, x => x.UploadDate)
-                   .MapMember(x => x.Title, x => x.Title)
-                   .MapMember(x => x.IsProcessed, x => x.IsProcessed)
-                   .MapMember(x => x.MediaTagsCount, x => x.Tags.Count(y => y.Type == MediaTagType.DepictedEntity))
-                   .MapMember(x => x.ThumbnailUrl, x => MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small));
+            config.NewConfig<Data.Models.Media, MediaThumbnailExtendedVM>()
+                   .Map(x => x.Id, x => x.Id)
+                   .Map(x => x.Key, x => x.Key)
+                   .Map(x => x.Type, x => x.Type)
+                   .Map(x => x.Date, x => FuzzyDate.TryParse(x.Date))
+                   .Map(x => x.UploadDate, x => x.UploadDate)
+                   .Map(x => x.Title, x => x.Title)
+                   .Map(x => x.IsProcessed, x => x.IsProcessed)
+                   .Map(x => x.MediaTagsCount, x => x.Tags.Count(y => y.Type == MediaTagType.DepictedEntity))
+                   .Map(x => x.ThumbnailUrl, x => MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small));
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
-using AutoMapper;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Date;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Relations
 {
@@ -48,19 +47,20 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         /// </summary>
         public string DurationEnd { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Relation, RelationEditorVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.SourceIds, x => new [] { x.SourceId })
-                   .MapMember(x => x.DestinationId, x => x.DestinationId)
-                   .MapMember(x => x.EventId, x => x.EventId)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.DurationStart, x => FuzzyRange.TrySplit(x.Duration)[0])
-                   .MapMember(x => x.DurationEnd, x => FuzzyRange.TrySplit(x.Duration)[1])
-                   .ReverseMap()
-                   .MapMember(x => x.Duration, x => FuzzyRange.TryCombine(x.DurationStart, x.DurationEnd))
-                   .MapMember(x => x.SourceId, x => x.SourceIds != null && x.SourceIds.Length > 0 ? x.SourceIds[0] : Guid.Empty);
+            config.NewConfig<Relation, RelationEditorVM>()
+                  .Map(x => x.Id, x => x.Id)
+                  .Map(x => x.SourceIds, x => new[] {x.SourceId})
+                  .Map(x => x.DestinationId, x => x.DestinationId)
+                  .Map(x => x.EventId, x => x.EventId)
+                  .Map(x => x.Type, x => x.Type)
+                  .Map(x => x.DurationStart, x => FuzzyRange.TrySplit(x.Duration)[0])
+                  .Map(x => x.DurationEnd, x => FuzzyRange.TrySplit(x.Duration)[1]);
+
+            config.NewConfig<RelationEditorVM, Relation>()
+                  .Map(x => x.Duration, x => FuzzyRange.TryCombine(x.DurationStart, x.DurationEnd))
+                  .Map(x => x.SourceId, x => x.SourceIds != null && x.SourceIds.Length > 0 ? x.SourceIds[0] : Guid.Empty);
         }
     }
 }

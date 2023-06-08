@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoMapper;
-using Bonsai.Areas.Admin.ViewModels.Changesets;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Dashboard
 {
@@ -56,17 +54,14 @@ namespace Bonsai.Areas.Admin.ViewModels.Dashboard
         /// </summary>
         public IReadOnlyList<LinkVM> ExtraLinks { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Changeset, ChangesetEventVM>()
-                   .ForMember(x => x.EntityType, opt => opt.MapFrom(x => x.EntityType))
-                   .ForMember(x => x.ChangeType, opt => opt.MapFrom(x => x.ChangeType))
-                   .ForMember(x => x.Date, opt => opt.MapFrom(x => x.Date))
-                   .ForMember(x => x.User, opt => opt.MapFrom(x => x.Author))
-                   .Ignore(x => x.ElementCount)
-                   .Ignore(x => x.MediaThumbnails)
-                   .Ignore(x => x.MainLink)
-                   .Ignore(x => x.ExtraLinks);
+            config.NewConfig<Changeset, ChangesetEventVM>()
+                  .Map(x => x.EntityType, x => x.EntityType)
+                  .Map(x => x.ChangeType, x => x.ChangeType)
+                  .Map(x => x.Date, x => x.Date)
+                  .Map(x => x.User, x => x.Author)
+                  .IgnoreNonMapped(true);
         }
     }
 }

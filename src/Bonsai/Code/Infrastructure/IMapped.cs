@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 
 namespace Bonsai.Code.Infrastructure
 {
@@ -7,6 +7,6 @@ namespace Bonsai.Code.Infrastructure
     /// </summary>
     internal interface IMapped
     {
-        void Configure(IProfileExpression profile);
+        void Configure(TypeAdapterConfig config);
     }
 }

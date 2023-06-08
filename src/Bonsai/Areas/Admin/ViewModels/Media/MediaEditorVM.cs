@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Media
 {
@@ -64,23 +63,22 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// </summary>
         public MediaEditorSaveAction SaveAction { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Bonsai.Data.Models.Media, MediaEditorVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.FilePath, x => x.FilePath)
-                   .MapMember(x => x.Date, x => x.Date)
-                   .MapMember(x => x.Title, x => x.Title)
-                   .MapMember(x => x.Description, x => x.Description)
-                   .Ignore(x => x.DepictedEntities)
-                   .Ignore(x => x.Location)
-                   .Ignore(x => x.Event)
-                   .Ignore(x => x.SaveAction)
-                   .ReverseMap()
-                   .Ignore(x => x.Id)
-                   .Ignore(x => x.Type)
-                   .Ignore(x => x.FilePath);
+            config.NewConfig<Bonsai.Data.Models.Media, MediaEditorVM>()
+                   .Map(x => x.Id, x => x.Id)
+                   .Map(x => x.Type, x => x.Type)
+                   .Map(x => x.FilePath, x => x.FilePath)
+                   .Map(x => x.Date, x => x.Date)
+                   .Map(x => x.Title, x => x.Title)
+                   .Map(x => x.Description, x => x.Description)
+                   .IgnoreNonMapped(true);
+
+            config.NewConfig<MediaEditorVM, Bonsai.Data.Models.Media>()
+                  .Map(x => x.Date, x => x.Date)
+                  .Map(x => x.Title, x => x.Title)
+                  .Map(x => x.Description, x => x.Description)
+                  .IgnoreNonMapped(true);
         }
     }
 }

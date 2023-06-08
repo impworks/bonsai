@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
@@ -14,6 +12,8 @@ using Bonsai.Code.Services;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 
@@ -143,7 +143,7 @@ namespace Bonsai.Areas.Front.Logic
                             .Where(x => !x.IsDeleted)
                             .OrderByDescending(x => x.LastUpdateDate)
                             .Take(count)
-                            .ProjectTo<PageTitleExtendedVM>(_mapper.ConfigurationProvider)
+                            .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
                             .ToListAsync();
         }
 

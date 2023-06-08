@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using AutoMapper;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
@@ -52,25 +52,25 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// </summary>
         public string Aliases { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Page, PageEditorVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Title, x => x.Title)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.Description, x => x.Description)
-                   .MapMember(x => x.Facts, x => x.Facts)
-                   .MapMember(x => x.MainPhotoKey, x => x.MainPhoto.Key)
-                   .MapMember(x => x.Aliases, x => JsonConvert.SerializeObject(x.Aliases.OrderBy(y => y.Order).Select(y => y.Title)));
+            config.NewConfig<Page, PageEditorVM>()
+                  .Map(x => x.Id, x => x.Id)
+                  .Map(x => x.Title, x => x.Title)
+                  .Map(x => x.Type, x => x.Type)
+                  .Map(x => x.Description, x => x.Description)
+                  .Map(x => x.Facts, x => x.Facts)
+                  .Map(x => x.MainPhotoKey, x => x.MainPhoto.Key)
+                  .Map(x => x.Aliases, x => JsonConvert.SerializeObject(x.Aliases.OrderBy(y => y.Order).Select(y => y.Title)));
 
-            profile.CreateMap<PageEditorVM, Page>()
-                   .MapMember(x => x.Title, x => x.Title)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.Description, x => x.Description)
-                   .MapMember(x => x.Facts, x => x.Facts)
-                   .MapMember(x => x.LastUpdateDate, x => DateTimeOffset.Now)
-                   .MapMember(x => x.Key, x => PageHelper.EncodeTitle(x.Title))
-                   .ForAllOtherMembers(opt => opt.Ignore());
+            config.NewConfig<PageEditorVM, Page>()
+                  .Map(x => x.Title, x => x.Title)
+                  .Map(x => x.Type, x => x.Type)
+                  .Map(x => x.Description, x => x.Description)
+                  .Map(x => x.Facts, x => x.Facts)
+                  .Map(x => x.LastUpdateDate, x => DateTimeOffset.Now)
+                  .Map(x => x.Key, x => PageHelper.EncodeTitle(x.Title))
+                  .IgnoreNonMapped(true);
         }
     }
 }

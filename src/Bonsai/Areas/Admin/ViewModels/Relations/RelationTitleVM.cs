@@ -1,10 +1,9 @@
 ﻿using System;
-using AutoMapper;
 using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Date;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Relations
 {
@@ -43,15 +42,15 @@ namespace Bonsai.Areas.Admin.ViewModels.Relations
         /// </summary>
         public FuzzyRange? Duration { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Relation, RelationTitleVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMemberDynamic(x => x.Source, x => x.Source)
-                   .MapMemberDynamic(x => x.Destination, x => x.Destination)
-                   .MapMemberDynamic(x => x.Event, x => x.Event)
-                   .MapMember(x => x.Duration, x => FuzzyRange.TryParse(x.Duration));
+            config.NewConfig<Relation, RelationTitleVM>()
+                   .Map(x => x.Id, x => x.Id)
+                   .Map(x => x.Type, x => x.Type)
+                   .Map(x => x.Source, x => x.Source)
+                   .Map(x => x.Destination, x => x.Destination)
+                   .Map(x => x.Event, x => x.Event)
+                   .Map(x => x.Duration, x => FuzzyRange.TryParse(x.Duration));
         }
     }
 }

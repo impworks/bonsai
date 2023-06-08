@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoMapper;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
 {
@@ -102,27 +101,27 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
             }
         }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<PageScored, PageScoredVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Title, x => x.Title)
-                   .MapMember(x => x.Key, x => x.Key)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.MainPhotoPath, x => x.MainPhoto.FilePath)
-                   .MapMember(x => x.CreationDate, x => x.CreationDate)
-                   .MapMember(x => x.LastUpdateDate, x => x.LastUpdateDate)
-                   .MapMember(x => x.HasText, x => x.HasText)
-                   .MapMember(x => x.HasPhoto, x => x.HasPhoto)
-                   .MapMember(x => x.HasRelations, x => x.HasRelations)
-                   .MapMember(x => x.HasHumanName, x => x.HasHumanName)
-                   .MapMember(x => x.HasAnimalName, x => x.HasAnimalName)
-                   .MapMember(x => x.HasAnimalSpecies, x => x.HasAnimalSpecies)
-                   .MapMember(x => x.HasBirthday, x => x.HasBirthday)
-                   .MapMember(x => x.HasBirthPlace, x => x.HasBirthPlace)
-                   .MapMember(x => x.HasEventDate, x => x.HasEventDate)
-                   .MapMember(x => x.HasLocationAddress, x => x.HasLocationAddress)
-                   .MapMember(x => x.CompletenessScore, x => x.CompletenessScore);
+            config.NewConfig<PageScored, PageScoredVM>()
+                  .Map(x => x.Id, x => x.Id)
+                  .Map(x => x.Title, x => x.Title)
+                  .Map(x => x.Key, x => x.Key)
+                  .Map(x => x.Type, x => x.Type)
+                  .Map(x => x.MainPhotoPath, x => x.MainPhoto.FilePath)
+                  .Map(x => x.CreationDate, x => x.CreationDate)
+                  .Map(x => x.LastUpdateDate, x => x.LastUpdateDate)
+                  .Map(x => x.HasText, x => x.HasText)
+                  .Map(x => x.HasPhoto, x => x.HasPhoto)
+                  .Map(x => x.HasRelations, x => x.HasRelations)
+                  .Map(x => x.HasHumanName, x => x.HasHumanName)
+                  .Map(x => x.HasAnimalName, x => x.HasAnimalName)
+                  .Map(x => x.HasAnimalSpecies, x => x.HasAnimalSpecies)
+                  .Map(x => x.HasBirthday, x => x.HasBirthday)
+                  .Map(x => x.HasBirthPlace, x => x.HasBirthPlace)
+                  .Map(x => x.HasEventDate, x => x.HasEventDate)
+                  .Map(x => x.HasLocationAddress, x => x.HasLocationAddress)
+                  .Map(x => x.CompletenessScore, x => x.CompletenessScore);
         }
 
         /// <summary>

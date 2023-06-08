@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Utils;
@@ -14,6 +12,8 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -279,7 +279,7 @@ namespace Bonsai.Areas.Admin.Logic
                                         .ToDictionaryAsync(x => x.UserId, x => x.RoleId);
 
             var users = await _db.Users
-                                 .ProjectTo<UserTitleVM>(_mapper.ConfigurationProvider)
+                                 .ProjectToType<UserTitleVM>(_mapper.Config)
                                  .ToListAsync();
 
             foreach (var user in users)

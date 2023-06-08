@@ -1,9 +1,8 @@
 ﻿using System;
-using AutoMapper;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Utils.Helpers;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Media
 {
@@ -32,13 +31,13 @@ namespace Bonsai.Areas.Admin.ViewModels.Media
         /// </summary>
         public bool IsProcessed { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Data.Models.Media, MediaUploadResultVM>()
-                   .MapMember(x => x.Id, x => x.Id)
-                   .MapMember(x => x.Key, x => x.Key)
-                   .MapMember(x => x.IsProcessed, x => x.IsProcessed)
-                   .MapMember(x => x.ThumbnailPath, x => MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small));
+            config.NewConfig<Data.Models.Media, MediaUploadResultVM>()
+                   .Map(x => x.Id, x => x.Id)
+                   .Map(x => x.Key, x => x.Key)
+                   .Map(x => x.IsProcessed, x => x.IsProcessed)
+                   .Map(x => x.ThumbnailPath, x => MediaPresenterService.GetSizedMediaPath(x.FilePath, MediaSize.Small));
         }
     }
 }

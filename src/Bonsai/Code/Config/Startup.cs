@@ -46,7 +46,7 @@ namespace Bonsai.Code.Config
             ConfigureDatabaseServices(services);
             ConfigureAuthServices(services);
             ConfigureSearchServices(services);
-            ConfigureAutomapper(services);
+            ConfigureMapster(services);
             ConfigureAppServices(services);
         }
 
@@ -69,7 +69,6 @@ namespace Bonsai.Code.Config
             if (Configuration.Debug.DetailedExceptions)
                 app.UseDeveloperExceptionPage();
             
-            ValidateAutomapperConfig(app);
             InitDatabase(app);
             
             app.UseForwardedHeaders(GetforwardedHeadersOptions())

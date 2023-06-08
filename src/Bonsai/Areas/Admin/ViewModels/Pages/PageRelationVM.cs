@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using Bonsai.Code.Infrastructure;
-using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
 {
@@ -38,15 +37,16 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         [StringLength(30)]
         public string Duration { get; set; }
 
-        public void Configure(IProfileExpression profile)
+        public void Configure(TypeAdapterConfig config)
         {
-            profile.CreateMap<Relation, PageRelationVM>()
-                   .MapMember(x => x.SourceId, x => x.SourceId)
-                   .MapMember(x => x.DestinationId, x => x.DestinationId)
-                   .MapMember(x => x.Type, x => x.Type)
-                   .MapMember(x => x.Duration, x => x.Duration)
-                   .MapMember(x => x.EventId, x => x.EventId)
-                   .ReverseMap();
+            config.NewConfig<Relation, PageRelationVM>()
+                  .TwoWays()
+                  .Map(x => x.SourceId, x => x.SourceId)
+                  .Map(x => x.DestinationId, x => x.DestinationId)
+                  .Map(x => x.Type, x => x.Type)
+                  .Map(x => x.Duration, x => x.Duration)
+                  .Map(x => x.EventId, x => x.EventId)
+                  .IgnoreNonMapped(true);
         }
     }
 }
