@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
-using Bonsai.Areas.Admin.Logic.Workers;
-using Bonsai.Areas.Admin.Utils;
+using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Infrastructure.Attributes;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -17,8 +17,6 @@ using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -29,17 +27,17 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/media")]
     public class MediaController: AdminControllerBase
     {
-        public MediaController(MediaManagerService media, PagesManagerService pages, WorkerAlarmService workerAlarm, AppDbContext db)
+        public MediaController(MediaManagerService media, PagesManagerService pages, IBackgroundJobService jobs, AppDbContext db)
         {
             _media = media;
             _pages = pages;
-            _workerAlarm = workerAlarm;
+            _jobs = jobs;
             _db = db;
         }
 
         private readonly MediaManagerService _media;
         private readonly PagesManagerService _pages;
-        private readonly WorkerAlarmService _workerAlarm;
+        private readonly IBackgroundJobService _jobs;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -78,7 +76,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _db.SaveChangesAsync();
 
                 if (!result.IsProcessed)
-                    _workerAlarm.FireNewEncoderJob();
+                    await _jobs.RunAsync(JobBuilder.For<MediaEncoderJob>().WithArgs(result.Id));
 
                 return Json(result);
             }
