@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
@@ -39,13 +40,13 @@ namespace Bonsai.Areas.Admin.Logic.MediaHandlers
         /// <summary>
         /// Creates thumbnails.
         /// </summary>
-        public static async Task CreateThumbnailsAsync(string path, Image frame)
+        public static async Task CreateThumbnailsAsync(string path, Image frame, CancellationToken token = default)
         {
             foreach (var size in Sizes)
             {
                 var thumbPath = MediaPresenterService.GetSizedMediaPath(path, size.Key);
-                using var image = ResizeToFit(frame, size.Value);
-                await image.SaveAsync(thumbPath, JpegEncoder);
+                using var image = await Task.Run(() => ResizeToFit(frame, size.Value), token);
+                await image.SaveAsync(thumbPath, JpegEncoder, token);
             }
         }
 

@@ -1,7 +1,10 @@
 ﻿using System.IO;
 using System.Reflection;
+using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Code.Config;
+using Bonsai.Code.Services.Jobs;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -27,10 +30,18 @@ namespace Bonsai
                 .ConfigureWebHostDefaults(web =>
                 {
                     web.UseKestrel()
-                       .UseUrls("http://0.0.0.0:80/")
+                       // .UseUrls("http://0.0.0.0:80/")
                        .UseContentRoot(Directory.GetCurrentDirectory())
                        .UseIIS()
                        .UseStartup<Startup>();
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton<BackgroundJobService>();
+                    services.AddSingleton<IBackgroundJobService>(sp => sp.GetService<BackgroundJobService>());
+                    services.AddHostedService(sp => sp.GetService<BackgroundJobService>());
+
+                    services.AddTransient<MediaEncoderJob>();
                 })
                 .Build()
                 .Run();

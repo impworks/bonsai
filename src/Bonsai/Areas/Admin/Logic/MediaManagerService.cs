@@ -17,6 +17,7 @@ using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
@@ -48,6 +49,7 @@ namespace Bonsai.Areas.Admin.Logic
             IMapper mapper,
             IWebHostEnvironment env,
             IEnumerable<IMediaHandler> mediaHandlers,
+            IBackgroundJobService jobs,
             CacheService cache
         )
         {
@@ -55,6 +57,7 @@ namespace Bonsai.Areas.Admin.Logic
             _mapper = mapper;
             _userMgr = userMgr;
             _env = env;
+            _jobs = jobs;
             _mediaHandlers = mediaHandlers.ToList();
             _cache = cache;
         }
@@ -63,6 +66,7 @@ namespace Bonsai.Areas.Admin.Logic
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userMgr;
         private readonly IWebHostEnvironment _env;
+        private readonly IBackgroundJobService _jobs;
         private readonly IReadOnlyList<IMediaHandler> _mediaHandlers;
         private readonly CacheService _cache;
 
@@ -141,13 +145,7 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Media.Add(media);
 
             if (!handler.IsImmediate)
-            {
-                _db.MediaJobs.Add(new MediaEncodingJob
-                {
-                    Id = Guid.NewGuid(),
-                    MediaId = media.Id
-                });
-            }
+                await _jobs.RunAsync(JobBuilder.For<MediaEncoderJob>().WithArgs(media.Id));
 
             var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal, null);
             _db.Changes.Add(changeset);

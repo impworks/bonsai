@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bonsai.Code.Utils.Helpers
@@ -12,19 +13,19 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Invokes the process.
         /// </summary>
-        public static async Task InvokeAsync(string file, string args)
+        public static async Task InvokeAsync(string file, string args, CancellationToken token = default)
         {
             using var proc = CreateProcess(file, args);
-            await InvokeInternalAsync(proc, p => p.ExitCode);
+            await InvokeInternalAsync(proc, p => p.ExitCode, token);
         }
 
         /// <summary>
         /// Invokes the process and returns its output as a string.
         /// </summary>
-        public static async Task<string> GetOutputAsync(string file, string args)
+        public static async Task<string> GetOutputAsync(string file, string args, CancellationToken token = default)
         {
             using var proc = CreateProcess(file, args);
-            return await InvokeInternalAsync(proc, p => p.StandardOutput.ReadToEnd());
+            return await InvokeInternalAsync(proc, p => p.StandardOutput.ReadToEnd(), token);
         }
 
         #region Private helpers
@@ -51,12 +52,12 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Wraps the process as a task.
         /// </summary>
-        private static Task<T> InvokeInternalAsync<T>(Process p, Func<Process, T> result)
+        private static async Task<T> InvokeInternalAsync<T>(Process p, Func<Process, T> result, CancellationToken token)
         {
-            var tcs = new TaskCompletionSource<T>();
-            p.Exited += (s, e) => tcs.SetResult(result(p));
             p.Start();
-            return tcs.Task;
+            await p.WaitForExitAsync(token);
+            p.WaitForExit(); // sic! this forces waiting until all output is ready
+            return result(p);
         }
 
         #endregion
