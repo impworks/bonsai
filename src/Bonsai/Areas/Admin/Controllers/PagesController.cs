@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
-using Bonsai.Areas.Admin.Logic.Workers;
+using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
@@ -29,19 +30,19 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/pages")]
     public class PagesController: AdminControllerBase
     {
-        public PagesController(PagesManagerService pages, ISearchEngine search, AppDbContext db, WorkerAlarmService alarm)
+        public PagesController(PagesManagerService pages, ISearchEngine search, AppDbContext db, IBackgroundJobService jobs)
         {
             _pages = pages;
             _search = search;
             _db = db;
-            _alarm = alarm;
+            _jobs = jobs;
         }
 
         private readonly PagesManagerService _pages;
         private readonly ISearchEngine _search;
         private readonly AppDbContext _db;
-        private readonly WorkerAlarmService _alarm;
-        
+        private readonly IBackgroundJobService _jobs;
+
         /// <summary>
         /// Readable captions of the fields.
         /// </summary>
@@ -96,7 +97,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 var page = await _pages.CreateAsync(vm, User);
                 await _db.SaveChangesAsync();
                 await _search.AddPageAsync(page);
-                _alarm.FireTreeLayoutRegenerationRequired();
+                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Страница создана");
             }
@@ -133,7 +134,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 var page = await _pages.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
                 await _search.AddPageAsync(page);
-                _alarm.FireTreeLayoutRegenerationRequired();
+                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Страница обновлена");
             }
@@ -170,7 +171,7 @@ namespace Bonsai.Areas.Admin.Controllers
             
             await _db.SaveChangesAsync();
             await _search.RemovePageAsync(vm.Id);
-            _alarm.FireTreeLayoutRegenerationRequired();
+            await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess("Страница удалена");
         }

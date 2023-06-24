@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
-using Bonsai.Areas.Admin.Logic.Workers;
+using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Relations;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -22,18 +23,18 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/relations")]
     public class RelationsController: AdminControllerBase
     {
-        public RelationsController(RelationsManagerService rels, PagesManagerService pages, AppDbContext db, WorkerAlarmService alarm)
+        public RelationsController(RelationsManagerService rels, PagesManagerService pages, AppDbContext db, IBackgroundJobService jobs)
         {
             _rels = rels;
             _pages = pages;
             _db = db;
-            _alarm = alarm;
+            _jobs = jobs;
         }
 
         private readonly RelationsManagerService _rels;
         private readonly PagesManagerService _pages;
         private readonly AppDbContext _db;
-        private readonly WorkerAlarmService _alarm;
+        private readonly IBackgroundJobService _jobs;
 
         /// <summary>
         /// Displays the list of relations.
@@ -71,7 +72,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 await _rels.CreateAsync(vm, User);
                 await _db.SaveChangesAsync();
-                _alarm.FireTreeLayoutRegenerationRequired();
+                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Связь создана");
             }
@@ -107,7 +108,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 await _rels.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
-                _alarm.FireTreeLayoutRegenerationRequired();
+                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Связь обновлена");
             }
@@ -142,7 +143,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _rels.RemoveAsync(vm.Id, User);
             
             await _db.SaveChangesAsync();
-            _alarm.FireTreeLayoutRegenerationRequired();
+            await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess("Связь удалена");
         }

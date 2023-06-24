@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
-using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -18,96 +18,58 @@ using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Jering.Javascript.NodeJS;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Serilog;
 
-namespace Bonsai.Areas.Admin.Logic
+namespace Bonsai.Areas.Admin.Logic.Tree
 {
     /// <summary>
-    /// A background service for calculating family tree layouts.
+    /// Background job for recalculating the entire tree's layout.
     /// </summary>
-    public class TreeLayoutService : WorkerServiceBase
+    public class EntireTreeLayoutJob : JobBase
     {
-        #region Constructor
-
-        public TreeLayoutService(
-            WorkerAlarmService alarm,
-            IServiceProvider services,
-            ILogger logger)
-            : base(services)
-        {
-            _logger = logger;
-
-            alarm.OnTreeLayoutRegenerationRequired += (s, e) =>
-            {
-                _isAsleep = false;
-                _flush = true;
-            };
-        }
-
-        #endregion
-
-        #region Fields
-        
+        private readonly AppDbContext _db;
+        private readonly INodeJSService _js;
+        private readonly BonsaiConfigService _config;
         private readonly ILogger _logger;
-        private bool _flush;
 
-        #endregion
-
-        #region Processor logic
-
-        /// <summary>
-        /// Main loop.
-        /// </summary>
-        protected override async Task<bool> ProcessAsync(IServiceProvider services)
+        public EntireTreeLayoutJob(AppDbContext db, INodeJSService js, BonsaiConfigService config, ILogger logger)
         {
-            try
-            {
-                await services.GetRequiredService<StartupService>().WaitForStartup();
-
-                using var db = services.GetRequiredService<AppDbContext>();
-                var js = services.GetRequiredService<INodeJSService>();
-                var cfg = services.GetRequiredService<BonsaiConfigService>();
-                        
-                if (_flush)
-                    await FlushTreeAsync(db);
-
-                var hasPages = await db.Pages.AnyAsync(x => x.TreeLayoutId == null);
-                if (!hasPages)
-                    return true;
-
-                var opts = new RelationContextOptions { PeopleOnly = true };
-                var ctx = await RelationContext.LoadContextAsync(db, opts);
-                var trees = GetAllSubtrees(ctx);
-
-                _logger.Information($"Tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
-
-                foreach (var tree in trees)
-                {
-                    var rendered = await RenderTree(js, tree, cfg.GetDynamicConfig());
-                    var layout = new TreeLayout
-                    {
-                        Id = Guid.NewGuid(),
-                        LayoutJson = rendered,
-                        GenerationDate = DateTimeOffset.Now
-                    };
-
-                    await SaveLayoutAsync(db, tree, layout);
-                }
-
-                _logger.Information("Tree layout completed.");
-            }
-            catch (Exception ex)
-            {
-                if (ex is not TaskCanceledException)
-                    _logger.Error(ex, "Failed to generate a tree layout.");
-            }
-
-            return true;
+            _db = db;
+            _js = js;
+            _config = config;
+            _logger = logger;
         }
 
-        #endregion
+        protected override async Task ExecuteAsync(CancellationToken token)
+        {
+            await FlushTreeAsync(_db);
+
+            var hasPages = await _db.Pages.AnyAsync(x => x.TreeLayoutId == null);
+            if (!hasPages)
+                return;
+
+            var opts = new RelationContextOptions { PeopleOnly = true };
+            var ctx = await RelationContext.LoadContextAsync(_db, opts);
+            var trees = GetAllSubtrees(ctx);
+
+            _logger.Information($"Tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
+
+            foreach (var tree in trees)
+            {
+                var rendered = await RenderTree(_js, tree, _config.GetDynamicConfig());
+                var layout = new TreeLayout
+                {
+                    Id = Guid.NewGuid(),
+                    LayoutJson = rendered,
+                    GenerationDate = DateTimeOffset.Now
+                };
+
+                await SaveLayoutAsync(_db, tree, layout);
+            }
+
+            _logger.Information("Tree layout completed.");
+        }
 
         #region Tree generation
 
@@ -239,11 +201,7 @@ namespace Bonsai.Areas.Admin.Logic
                 var from = r1.ToString();
                 var to = r2.ToString();
                 if (from.CompareTo(to) >= 1)
-                {
-                    var tmp = from;
-                    from = to;
-                    to = tmp;
-                }
+                    (from, to) = (to, from);
 
                 var key = keyOverride;
                 if (string.IsNullOrEmpty(key))

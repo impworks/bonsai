@@ -3,7 +3,6 @@ using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
 using Bonsai.Areas.Admin.Logic.Validation;
-using Bonsai.Areas.Admin.Logic.Workers;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
@@ -39,7 +38,6 @@ namespace Bonsai.Code.Config
             services.AddSingleton<CacheService>();
             services.AddTransient<BonsaiConfigService>();
 
-            services.AddSingleton<WorkerAlarmService>();
             services.AddSingleton<StartupService>();
 
             // frontend
@@ -71,8 +69,6 @@ namespace Bonsai.Code.Config
             services.AddScoped<IMediaHandler, PhotoMediaHandler>();
             services.AddScoped<IMediaHandler, VideoMediaHandler>();
             services.AddScoped<IMediaHandler, PdfMediaHandler>();
-            
-            services.AddHostedService<TreeLayoutService>();
         }
     }
 }
