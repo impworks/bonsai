@@ -79,7 +79,10 @@ namespace Bonsai.Code.Services.Jobs
             
             var jobsToTerminate = _jobs.Values.Where(x => x.ResourceKey == key).ToList();
             foreach (var job in jobsToTerminate)
+            {
+                _logger.Information($"Cancelling job {job}.");
                 job.Cancellation.Cancel();
+            }
         }
         
         #endregion
@@ -158,6 +161,7 @@ namespace Bonsai.Code.Services.Jobs
                 Arguments = jb.Args,
                 ResourceKey = job.GetResourceKey(jb.Args),
                 Cancellation = new CancellationTokenSource(),
+                Scope = scope,
                 JobStateId = state.Id
             };
         }
