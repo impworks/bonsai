@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
+using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Code.Config;
 using Bonsai.Code.Services.Jobs;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +31,7 @@ namespace Bonsai
                 .ConfigureWebHostDefaults(web =>
                 {
                     web.UseKestrel()
-                       // .UseUrls("http://0.0.0.0:80/")
+                       .UseUrls("http://0.0.0.0:80/")
                        .UseContentRoot(Directory.GetCurrentDirectory())
                        .UseIIS()
                        .UseStartup<Startup>();
@@ -42,6 +43,7 @@ namespace Bonsai
                     services.AddHostedService(sp => sp.GetService<BackgroundJobService>());
 
                     services.AddTransient<MediaEncoderJob>();
+                    services.AddTransient<EntireTreeLayoutJob>();
                 })
                 .Build()
                 .Run();

@@ -57,7 +57,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
 
             foreach (var tree in trees)
             {
-                var rendered = await RenderTree(_js, tree, _config.GetDynamicConfig());
+                var rendered = await RenderTree(_js, tree, _config.GetDynamicConfig(), token);
                 var layout = new TreeLayout
                 {
                     Id = Guid.NewGuid(),
@@ -241,7 +241,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// <summary>
         /// Renders the tree using ELK.js.
         /// </summary>
-        private async Task<string> RenderTree(INodeJSService js, TreeLayoutVM tree, DynamicConfig cfg)
+        private async Task<string> RenderTree(INodeJSService js, TreeLayoutVM tree, DynamicConfig cfg, CancellationToken token)
         {
             var thoroughness = Interpolator.MapValue(
                 cfg.TreeRenderThoroughness,
@@ -251,7 +251,11 @@ namespace Bonsai.Areas.Admin.Logic.Tree
             );
 
             var json = JsonConvert.SerializeObject(tree);
-            var result = await js.InvokeFromFileAsync<string>("./External/tree/tree-layout.js", args: new object[] { json, thoroughness });
+            var result = await js.InvokeFromFileAsync<string>(
+                "./External/tree/tree-layout.js",
+                args: new object[] {json, thoroughness},
+                cancellationToken: token
+            );
 
             if (string.IsNullOrEmpty(result))
                 throw new Exception("Failed to render tree: output is empty.");
@@ -270,9 +274,9 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         {
             using var conn = db.GetConnection();
             await conn.ExecuteAsync(@"
-                    UPDATE ""Pages"" SET ""TreeLayoutId"" = NULL;
-                    DELETE FROM ""TreeLayouts""
-                ");
+                UPDATE ""Pages"" SET ""TreeLayoutId"" = NULL;
+                DELETE FROM ""TreeLayouts""
+            ");
         }
 
         /// <summary>

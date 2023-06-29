@@ -144,9 +144,6 @@ namespace Bonsai.Areas.Admin.Logic
 
             _db.Media.Add(media);
 
-            if (!handler.IsImmediate)
-                await _jobs.RunAsync(JobBuilder.For<MediaEncoderJob>().WithArgs(media.Id));
-
             var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal, null);
             _db.Changes.Add(changeset);
 
