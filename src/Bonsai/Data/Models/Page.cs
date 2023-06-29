@@ -94,6 +94,11 @@ namespace Bonsai.Data.Models
         public Guid? TreeLayoutId { get; set; }
 
         /// <summary>
+        /// Brief information, relevant if this page describes a living being.
+        /// </summary>
+        public LivingBeingOverview LivingBeingOverview { get; set; }
+
+        /// <summary>
         /// Flag indicating that this resource is removed.
         /// </summary>
         public bool IsDeleted { get; set; }
