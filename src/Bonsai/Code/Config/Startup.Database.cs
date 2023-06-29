@@ -5,12 +5,10 @@ using System.Threading.Tasks;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
-using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
-using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,11 +38,6 @@ namespace Bonsai.Code.Config
                     })
                     .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
-
-            SqlMapper.AddTypeHandler(new FuzzyDate.FuzzyDateTypeHandler());
-            SqlMapper.AddTypeHandler(new FuzzyDate.NullableFuzzyDateTypeHandler());
-            SqlMapper.AddTypeHandler(new FuzzyRange.FuzzyRangeTypeHandler());
-            SqlMapper.AddTypeHandler(new FuzzyRange.NullableFuzzyRangeTypeHandler());
         }
 
         /// <summary>

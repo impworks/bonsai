@@ -7,7 +7,6 @@ using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
-using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Code.DomainModel.Relations

@@ -12,8 +12,6 @@ using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Bonsai.Data.Utils;
-using Dapper;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Jering.Javascript.NodeJS;
@@ -272,11 +270,8 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// </summary>
         private async Task FlushTreeAsync(AppDbContext db)
         {
-            using var conn = db.GetConnection();
-            await conn.ExecuteAsync(@"
-                UPDATE ""Pages"" SET ""TreeLayoutId"" = NULL;
-                DELETE FROM ""TreeLayouts""
-            ");
+            await db.Pages.ExecuteUpdateAsync(x => x.SetProperty(p => p.TreeLayoutId, (Guid?)null));
+            await db.TreeLayouts.ExecuteDeleteAsync();
         }
 
         /// <summary>
@@ -284,17 +279,14 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// </summary>
         private async Task SaveLayoutAsync(AppDbContext db, TreeLayoutVM tree, TreeLayout layout)
         {
-            using var conn = db.GetConnection();
-            await conn.ExecuteAsync(
-                @"INSERT INTO ""TreeLayouts"" (""Id"", ""LayoutJson"", ""GenerationDate"") VALUES (@Id, @LayoutJson, @GenerationDate)",
-                layout
-            );
+            db.TreeLayouts.Add(layout);
+            await db.SaveChangesAsync();
 
-            // sic! dapper generates incorrect query for "GUID IN (@GUIDS)" with parameters
-            foreach (var batch in tree.Persons.Select(x => x.Id).PartitionBySize(100))
+            foreach (var batch in tree.Persons.Select(x => Guid.Parse(x.Id)).PartitionBySize(100))
             {
-                var ids = batch.Select(x => $"'{x}'").JoinString(", ");
-                await conn.ExecuteAsync($@"UPDATE ""Pages"" SET ""TreeLayoutId"" = '{layout.Id}' WHERE ""Id"" IN ({ids})");
+                await db.Pages
+                        .Where(x => batch.Contains(x.Id))
+                        .ExecuteUpdateAsync(x => x.SetProperty(p => p.TreeLayoutId, layout.Id));
             }
         }
 
