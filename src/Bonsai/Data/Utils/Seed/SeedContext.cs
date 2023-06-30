@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Media;
@@ -94,6 +96,14 @@ namespace Bonsai.Data.Utils.Seed
                 CreationDate = DateTimeOffset.Now,
                 LastUpdateDate = DateTimeOffset.Now
             };
+
+            page.LivingBeingOverview = PagesManagerService.MapLivingBeingOverview(new PageEditorVM
+            {
+                Facts = page.Facts,
+                Id = page.Id,
+                Type = type
+            });
+
             _db.Pages.Add(page);
             _db.PageAliases.Add(new PageAlias {Id = Guid.NewGuid(), Key = key.ToLowerInvariant(), Title = title, Page = page});
 

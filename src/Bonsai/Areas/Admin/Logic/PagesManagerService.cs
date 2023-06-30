@@ -615,7 +615,7 @@ namespace Bonsai.Areas.Admin.Logic
         /// <summary>
         /// Updates the cached values for living being overview from page facts.
         /// </summary>
-        private LivingBeingOverview MapLivingBeingOverview(PageEditorVM vm, LivingBeingOverview overview = null)
+        public static LivingBeingOverview MapLivingBeingOverview(PageEditorVM vm, LivingBeingOverview overview = null)
         {
             if (vm.Type is not PageType.Person and not PageType.Pet)
                 return null;
