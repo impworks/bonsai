@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Code.Services.Config;
@@ -36,14 +35,6 @@ namespace Bonsai.Data.Utils
             var applied = await context.GetService<IHistoryRepository>().GetAppliedMigrationsAsync();
             var total = context.GetService<IMigrationsAssembly>().Migrations;
             return !total.Select(x => x.Key).Except(applied.Select(x => x.MigrationId)).Any();
-        }
-
-        /// <summary>
-        /// Creates a new connection from existing context.
-        /// </summary>
-        public static IDbConnection GetConnection(this AppDbContext context)
-        {
-            return new NpgsqlConnection(context.Database.GetDbConnection().ConnectionString);
         }
 
         /// <summary>
