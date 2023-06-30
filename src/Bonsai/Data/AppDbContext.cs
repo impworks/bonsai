@@ -44,6 +44,7 @@ namespace Bonsai.Data
             builder.Entity<Page>().HasMany(x => x.Aliases).WithOne(x => x.Page).IsRequired();
             builder.Entity<Page>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
             builder.Entity<Page>().HasOne(x => x.TreeLayout).WithMany().IsRequired(false).HasForeignKey(x => x.TreeLayoutId);
+            builder.Entity<Page>().HasOne(x => x.LivingBeingOverview).WithOne().HasForeignKey<LivingBeingOverview>(x => x.PageId).IsRequired(false);
 
             builder.Entity<PageAlias>().HasIndex(x => x.Key).IsUnique(true);
 

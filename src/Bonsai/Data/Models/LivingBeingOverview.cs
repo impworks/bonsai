@@ -35,7 +35,6 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Short name of the person, or pet nickname.
         /// </summary>
-        [Required]
         public string ShortName { get; set; }
 
         /// <summary>
