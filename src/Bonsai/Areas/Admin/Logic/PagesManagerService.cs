@@ -127,6 +127,7 @@ namespace Bonsai.Areas.Admin.Logic
             page.Id = Guid.NewGuid();
             page.CreationDate = DateTimeOffset.Now;
             page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey);
+            page.LivingBeingOverview = MapLivingBeingOverview(vm);
 
             await _validator.ValidateAsync(page, vm.Facts);
 
@@ -213,6 +214,7 @@ namespace Bonsai.Areas.Admin.Logic
             var page = await _db.Pages
                                 .Include(x => x.Aliases)
                                 .Include(x => x.MainPhoto)
+                                .Include(x => x.LivingBeingOverview)
                                 .GetAsync(x => x.Id == pageId, "Страница не найдена");
 
             await _validator.ValidateAsync(page, vm.Facts);
@@ -223,6 +225,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             _mapper.Map(vm, page);
             page.MainPhotoId = (await FindMainPhotoAsync(vm.MainPhotoKey))?.Id;
+            page.LivingBeingOverview = MapLivingBeingOverview(vm, page.LivingBeingOverview);
 
             page.IsDeleted = false;
 
@@ -607,6 +610,56 @@ namespace Bonsai.Areas.Admin.Logic
                 DestinationId = x.Id,
                 Source = page
             });
+        }
+
+        /// <summary>
+        /// Updates the cached values for living being overview from page facts.
+        /// </summary>
+        private LivingBeingOverview MapLivingBeingOverview(PageEditorVM vm, LivingBeingOverview overview = null)
+        {
+            if (vm.Type is not PageType.Person and not PageType.Pet)
+                return null;
+
+            if (string.IsNullOrEmpty(vm.Facts))
+                return null;
+
+            overview ??= new LivingBeingOverview {PageId = vm.Id};
+
+            var json = JObject.Parse(vm.Facts);
+            overview.BirthDate = json["Birth.Date"]?["Value"]?.Value<string>();
+            overview.DeathDate = json["Death.Date"]?["Value"]?.Value<string>();
+            overview.IsDead = json["Death.Date"] is not null;
+            overview.Gender = json["Bio.Gender"]?["IsMale"]?.Value<bool?>() == true;
+
+            if (vm.Type is PageType.Person)
+            {
+                var names = json["Main.Name"]?["Values"];
+
+                overview.MaidenName = names?.FirstOrDefault() is { } oldestName
+                    ? oldestName["LastName"]?.Value<string>()
+                    : null;
+
+                overview.ShortName = names?.LastOrDefault() is { } newestName
+                    ? GetShortName(newestName)
+                    : null;
+            }
+            else
+            {
+                overview.ShortName = json["Main.Name"]?["Value"]?.Value<string>();
+            }
+
+            return overview;
+
+            string GetShortName(JToken newestName)
+            {
+                var firstName = newestName["FirstName"]?.Value<string>();
+                var lastName = newestName["LastName"]?.Value<string>();
+
+                if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+                    return null;
+
+                return $"{firstName} {lastName}";
+            }
         }
 
         #endregion

@@ -61,7 +61,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
                   .Map(x => x.Description, x => x.Description)
                   .Map(x => x.Facts, x => x.Facts)
                   .Map(x => x.MainPhotoKey, x => x.MainPhoto.Key)
-                  .Map(x => x.Aliases, x => JsonConvert.SerializeObject(x.Aliases.OrderBy(y => y.Order).Select(y => y.Title)));
+                  .Map(x => x.Aliases, x => x.Aliases != null ? JsonConvert.SerializeObject(x.Aliases.OrderBy(y => y.Order).Select(y => y.Title)) : null);
 
             config.NewConfig<PageEditorVM, Page>()
                   .Map(x => x.Title, x => x.Title)
