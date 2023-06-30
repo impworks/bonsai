@@ -89,55 +89,34 @@ namespace Bonsai.Code.DomainModel.Relations
         /// </summary>
         private static async Task<List<PageExcerpt>> LoadPagesAsync(AppDbContext db, RelationContextOptions opts)
         {
-            var filterByPeople = opts.PeopleOnly
-                ? @"AND p.""Type"" = 0"
-                : "";
+            var query = db.Pages
+                          .AsNoTracking()
+                          .Include(x => x.LivingBeingOverview)
+                          .Include(x => x.MainPhoto)
+                          .Where(x => x.IsDeleted == false);
 
-            using var conn = db.GetConnection();
-            var pagesSource = await conn.QueryAsync<PageExcerpt>(@"
-                    SELECT
-                        t.""Id"",
-                        t.""Title"",
-                        t.""Key"",
-                        t.""Type"",
-                        t.""BirthDate"",
-                        t.""DeathDate"",
-                        t.""IsDead"",
-                        t.""Gender"",
-                        COALESCE(
-                            t.""Nickname"",
-                            CASE
-                                WHEN t.""LastName"" IS NULL THEN NULL
-                                ELSE CONCAT(t.""FirstName"", ' ', t.""LastName"")
-                            END
-                        ) AS ""ShortName"",
-                        CASE
-                            WHEN t.""MaidenName"" = t.""LastName"" THEN NULL
-                            ELSE t.""MaidenName""
-                        END AS ""MaidenName"",
-                        t.""MainPhotoPath""
-                    FROM (
-                        SELECT
-                            p.""Id"",
-                            p.""Title"",
-                            p.""Key"",
-                            p.""Type"",
-                            p.""Facts""::json#>>'{Main.Name,Values,-1,FirstName}' AS ""FirstName"",
-                            p.""Facts""::json#>>'{Main.Name,Values,-1,LastName}' AS ""LastName"",
-                            p.""Facts""::json#>>'{Main.Name,Value}' AS ""Nickname"",
-                            p.""Facts""::json#>>'{Main.Name,Values,0,LastName}' AS ""MaidenName"",
-                            p.""Facts""::json#>>'{Birth.Date,Value}' AS ""BirthDate"",
-                            p.""Facts""::json#>>'{Death.Date,Value}' AS ""DeathDate"",
-                            p.""Facts""::json->'Death.Date' IS NOT NULL AS ""IsDead"",
-                            CAST(p.""Facts""::json#>>'{Bio.Gender,IsMale}' AS BOOLEAN) AS ""Gender"",
-                            m.""FilePath"" AS ""MainPhotoPath""
-                        FROM ""Pages"" AS p
-                        LEFT JOIN ""Media"" AS m ON m.""Id"" = p.""MainPhotoId"" AND m.""IsDeleted"" = false
-                        WHERE p.""IsDeleted"" = false " + filterByPeople + @"
-                    ) AS t
-                ");
+            if (opts.PeopleOnly)
+                query = query.Where(x => x.Type == PageType.Person);
 
-            return pagesSource.ToList();
+            var pageData = await query.Select(x => new {x.Id, x.Title, x.Key, x.Type, x.LivingBeingOverview, x.MainPhoto.FilePath})
+                                      .ToListAsync();
+
+            var excerpts = pageData.Select(x => new PageExcerpt
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Type = x.Type,
+                Key = x.Key,
+                MainPhotoPath = x.FilePath,
+                BirthDate = FuzzyDate.TryParse(x.LivingBeingOverview?.BirthDate),
+                DeathDate = FuzzyDate.TryParse(x.LivingBeingOverview?.DeathDate),
+                IsDead = x.LivingBeingOverview?.IsDead ?? false,
+                Gender = x.LivingBeingOverview?.Gender,
+                ShortName = x.LivingBeingOverview?.ShortName,
+                MaidenName = x.LivingBeingOverview?.MaidenName
+            });
+
+            return excerpts.ToList();
         }
 
         /// <summary>
