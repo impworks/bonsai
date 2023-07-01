@@ -4,7 +4,7 @@
 @model RelationEditorVM
 @{
     var data = (RelationEditorDataVM)ViewBag.Data;
-    ViewBag.Title = data.IsNew ? "Создание связи" : "Редактор связи";
+    ViewBag.Title = data.IsNew ? "Создание связи" : "Редактирование связи";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var formAction = Url.Action(data.IsNew ? "Create" : "Update", "Relations", new { area = "Admin" });

@@ -2,7 +2,7 @@
 @using Bonsai.Areas.Admin.ViewModels.Users
 @model Bonsai.Areas.Admin.ViewModels.Users.UserEditorVM
 @{
-    ViewBag.Title = Model.IsValidated ? "Изменение пользователя" : "Валидация пользователя";
+    ViewBag.Title = Model.IsValidated ? "Редактирование пользователя" : "Валидация пользователя";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var data = (UserEditorDataVM) ViewBag.Data;

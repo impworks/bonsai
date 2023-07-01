@@ -62,6 +62,7 @@ namespace Bonsai.Areas.Admin.ViewModels.Users
                   .Map(x => x.Email, x => x.Email)
                   .Map(x => x.PersonalPageId, x => x.PageId)
                   .Map(x => x.IsLocked, x => x.LockoutEnabled && x.LockoutEnd > DateTimeOffset.Now)
+                  .Map(x => x.IsValidated, x => x.IsValidated)
                   .IgnoreNonMapped(true);
         }
 
