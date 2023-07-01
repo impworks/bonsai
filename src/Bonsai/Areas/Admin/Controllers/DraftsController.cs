@@ -72,6 +72,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 InfoBlock = await _pagePresenter.GetPageInfoBlockAsync(page)
             };
             ViewBag.IsPreview = true;
+            ViewBag.DisableSearch = true;
             return View("~/Areas/Front/Views/Page/Description.cshtml", vm);
         }
     }
