@@ -323,7 +323,7 @@ namespace Bonsai.Areas.Admin.Logic
             if(vm == null)
                 vm = new MediaListRequestVM { OrderDescending = true };
 
-            var orderableFields = new[] { nameof(Media.UploadDate), nameof(Media.Date) };
+            var orderableFields = new[] { nameof(Media.UploadDate), nameof(Media.Date), nameof(Media.Title) };
             if(!orderableFields.Contains(vm.OrderBy))
                 vm.OrderBy = orderableFields[0];
 
