@@ -21,15 +21,17 @@ namespace Bonsai.Code.Services.Jobs
     /// </summary>
     public class BackgroundJobService: IHostedService, IBackgroundJobService
     {
-        public BackgroundJobService(IServiceScopeFactory scopeFactory, ILogger logger)
+        public BackgroundJobService(IServiceScopeFactory scopeFactory, StartupService startup, ILogger logger)
         {
             _scopeFactory = scopeFactory;
+            _startup = startup;
             _logger = logger;
             
             _jobs = new ConcurrentDictionary<Guid, JobDescriptor>();
         }
         
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly StartupService _startup;
         private readonly ILogger _logger;
 
         private readonly ConcurrentDictionary<Guid, JobDescriptor> _jobs;
@@ -39,6 +41,8 @@ namespace Bonsai.Code.Services.Jobs
         /// </summary>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            await _startup.WaitForStartup();
+
             foreach (var def in await LoadPendingJobsAsync())
                 _ = ExecuteJobAsync(def);
         }
