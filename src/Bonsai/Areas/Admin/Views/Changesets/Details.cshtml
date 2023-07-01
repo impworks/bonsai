@@ -1,6 +1,7 @@
-﻿@using Bonsai.Areas.Admin.ViewModels.Changesets
+﻿@using System.Globalization
 @using Humanizer
 @using Impworks.Utils.Format
+
 @model Bonsai.Areas.Admin.ViewModels.Changesets.ChangesetDetailsVM
 @{
     ViewBag.Title = "Просмотр правки";
@@ -28,7 +29,7 @@
             <dd class="col-sm-10">@Model.Author</dd>
 
             <dt class="col-sm-2">Дата</dt>
-            <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f") (@Model.Date.ToLocalTime().Humanize())</dd>
+            <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f", CultureInfo.GetCultureInfo("ru-RU")) (@Model.Date.ToLocalTime().Humanize())</dd>
         </dl>
 
         @if(Model.Changes.Any())

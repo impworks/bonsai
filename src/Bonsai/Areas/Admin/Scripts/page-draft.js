@@ -36,7 +36,7 @@
             .then(function (data) {
                 isModified = false;
                 var date = new Date(data.lastUpdateDate);
-                $draftInfo.text('Черновик сохранен в ' + date.toLocaleTimeString() + '.');
+                $draftInfo.text('Черновик сохранен в ' + date.toLocaleTimeString('ru-RU') + '.');
             });
     }
 

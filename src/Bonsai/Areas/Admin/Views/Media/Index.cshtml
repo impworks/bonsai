@@ -1,13 +1,16 @@
-﻿@using Bonsai.Areas.Admin.ViewModels.Dashboard
+﻿@addTagHelper *, Bonsai
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model MediaListVM
+
+@using System.Globalization
+@using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Areas.Admin.ViewModels.Media
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
 @using Humanizer
 @using Impworks.Utils.Strings
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper *, Bonsai
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model MediaListVM
+
 @{
     ViewBag.Title = "Список медиа";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
@@ -16,12 +19,14 @@
 
     string GetMediaTitleFallback(MediaThumbnailExtendedVM media)
     {
-        var part = media.Type == MediaType.Photo ? "Фото"
-                 : media.Type == MediaType.Video ? "Видео"
-                 : media.Type == MediaType.Document ? "Документ"
-                                                    : "Прочее";
-
-        return $"{part} от {media.UploadDate:dd MMMM yyyy}";
+        var date = media.UploadDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("ru-RU"));
+        var part = media.Type switch {
+            MediaType.Photo => "Фото",
+            MediaType.Video => "Видео",
+            MediaType.Document => "Документ",
+            _ => "Прочее"
+        };
+        return $"{part} от {date}";
     }
 }
 

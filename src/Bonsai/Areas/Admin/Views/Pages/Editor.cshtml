@@ -1,5 +1,6 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Bonsai
+@using System.Globalization
 @using Bonsai.Areas.Admin.Logic
 @using Bonsai.Areas.Admin.ViewModels.Pages
 @using Bonsai.Data.Models
@@ -163,7 +164,7 @@
                 @if (data.DraftLastUpdateDate is DateTimeOffset draftDate)
                 {
                     var today = draftDate.Date == DateTimeOffset.Now.Date;
-                    <text>Загружено из черновика от @data.DraftLastUpdateDate.Value.ToString(today ? "T" : "G").</text>
+                    <text>Загружено из черновика от @data.DraftLastUpdateDate.Value.ToString(today ? "T" : "G", CultureInfo.GetCultureInfo("ru-RU")).</text>
                 }
             </span>
             @if (data.DraftDisplayNotification)
