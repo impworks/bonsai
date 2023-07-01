@@ -45,13 +45,13 @@
 
 @foreach (var evt in Model)
 {
-
+    var iconClass = GetChangeClass(evt.ChangeType);
     <div class="row dashboard-event">
         <div class="col-auto p-0">
             <div class="dashboard-event-image-wrapper">
                 <img src="@ViewHelper.GetGravatarUrl(evt.User.Email)" class="dashboard-event-image shadow-sm" title="@evt.User.FullName" />
-                <div class="dashboard-event-icon">
-                    <span class="fa fa-@(GetChangeClass(evt.ChangeType))"></span>
+                <div class="dashboard-event-icon dashboard-event-icon-@(iconClass)">
+                    <span class="fa fa-@(iconClass)"></span>
                 </div>
             </div>
         </div>
