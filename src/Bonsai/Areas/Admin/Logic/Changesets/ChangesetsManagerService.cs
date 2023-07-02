@@ -91,6 +91,9 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             if (request.EntityTypes?.Length > 0)
                 query = query.Where(x => request.EntityTypes.Contains(x.EntityType));
 
+            if (request.ChangesetTypes?.Length > 0)
+                query = query.Where(x => request.ChangesetTypes.Contains(x.ChangeType));
+
             if (request.EntityId != null)
                 query = query.Where(x => x.EditedPageId == request.EntityId
                                          || x.EditedMediaId == request.EntityId
@@ -244,8 +247,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private ChangesetsListRequestVM NormalizeListRequest(ChangesetsListRequestVM vm)
         {
-            if (vm == null)
-                vm = new ChangesetsListRequestVM();
+            vm ??= new ChangesetsListRequestVM();
 
             var orderableFields = new[] { nameof(Changeset.Date), nameof(Changeset.Author) };
             if (!orderableFields.Contains(vm.OrderBy))
@@ -254,8 +256,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             if (vm.Page < 0)
                 vm.Page = 0;
 
-            if (vm.OrderDescending == null)
-                vm.OrderDescending = true;
+            vm.OrderDescending ??= true;
 
             return vm;
         }

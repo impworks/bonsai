@@ -47,6 +47,11 @@
             @await Component.InvokeAsync("ListEnumFilterComponent", new
             {
                 request = Model.Request,
+                 propName = nameof(ChangesetsListRequestVM.ChangesetTypes)
+            })
+            @await Component.InvokeAsync("ListEnumFilterComponent", new
+            {
+                request = Model.Request,
                 propName = nameof(ChangesetsListRequestVM.EntityTypes)
             })
             <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(ChangesetsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Название" />

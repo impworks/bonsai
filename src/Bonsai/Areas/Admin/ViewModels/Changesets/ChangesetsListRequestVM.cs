@@ -30,14 +30,20 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         public ChangesetEntityType[] EntityTypes { get; set; }
 
         /// <summary>
+        /// Types of the change.
+        /// </summary>
+        public ChangesetType[] ChangesetTypes { get; set; }
+
+        /// <summary>
         /// Checks if the request has no filter applied.
         /// </summary>
         public override bool IsEmpty()
         {
             return base.IsEmpty()
-                && EntityId == null
-                && string.IsNullOrEmpty(UserId)
-                && (EntityTypes == null || EntityTypes.Length == 0);
+                   && EntityId == null
+                   && string.IsNullOrEmpty(UserId)
+                   && (EntityTypes == null || EntityTypes.Length == 0)
+                   && (ChangesetTypes == null || ChangesetTypes.Length == 0);
         }
     }
 }
