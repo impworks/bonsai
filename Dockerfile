@@ -7,7 +7,7 @@ RUN npm ci
 ADD src/Bonsai .
 RUN node_modules/.bin/gulp build
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 as net-builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as net-builder
 WORKDIR /build
 ADD src/Bonsai.sln .
 ADD src/Bonsai/Bonsai.csproj Bonsai/

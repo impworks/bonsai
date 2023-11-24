@@ -30,7 +30,7 @@ namespace Bonsai.Code.Config
             });
 
             services.AddNodeJS();
-            services.Configure<OutOfProcessNodeJSServiceOptions>(opts => opts.TimeoutMS = -1);
+            services.Configure<OutOfProcessNodeJSServiceOptions>(opts => opts.InvocationTimeoutMS = -1);
             services.Configure<HttpNodeJSServiceOptions>(opts => opts.Version = HttpVersion.Version20);
 
             // common
