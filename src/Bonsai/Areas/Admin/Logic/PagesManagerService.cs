@@ -256,16 +256,16 @@ namespace Bonsai.Areas.Admin.Logic
         /// </summary>
         public async Task<RemoveEntryInfoVM<PageTitleExtendedVM>> RequestRemoveAsync(Guid id, ClaimsPrincipal principal)
         {
+            // todo: figure out why ProjectToType<> does not work in this particular case
+            // https://github.com/impworks/bonsai/issues/252
             var page = await _db.Pages
-                            .Where(x => x.IsDeleted == false)
-                            .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
-                            .GetAsync(x => x.Id == id, "Страница не найдена");
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
 
             var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);
 
             return new RemoveEntryInfoVM<PageTitleExtendedVM>
             {
-                Entry = page,
+                Entry = _mapper.Map<PageTitleExtendedVM>(page),
                 CanRemoveCompletely = isAdmin
             };
         }
