@@ -1,10 +1,15 @@
-﻿@model IEnumerable<Bonsai.Areas.Front.ViewModels.Page.InfoBlock.RelationCategoryVM>
+﻿@using Bonsai.Code.Utils.Helpers
+@model IEnumerable<Bonsai.Areas.Front.ViewModels.Page.InfoBlock.RelationCategoryVM>
 
 @foreach (var cat in Model)
 {
     <h6>@cat.Title</h6>
-    foreach (var group in cat.Groups)
+    foreach (var (group, idx) in cat.Groups.WithIndex())
     {
+        @if (idx != 0)
+        {
+            <hr />
+        }
         <div class="relation-group">
             @foreach (var rel in group.Relations)
             {

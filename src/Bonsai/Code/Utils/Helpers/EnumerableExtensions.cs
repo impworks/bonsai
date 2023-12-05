@@ -29,5 +29,13 @@ namespace Bonsai.Code.Utils.Helpers
 
             return result;
         }
+
+        /// <summary>
+        /// Adds an index to the sequence.
+        /// </summary>
+        public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> source)
+        {
+            return source.Select((x, id) => (x, id));
+        }
     }
 }
