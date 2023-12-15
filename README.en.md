@@ -28,35 +28,38 @@ A family wiki and photoalbum engine (in Russian).
 <a href="https://user-images.githubusercontent.com/604496/46574268-43443680-c9a9-11e8-974f-f8a60fbeaa74.png"><img src="https://user-images.githubusercontent.com/604496/46574297-a504a080-c9a9-11e8-8612-d3e5cd1592a4.png" /></a>
 
 ## Installation via Docker
-1. Download the [docker-compose](docker-compose.yml).
+1. Download the [docker-compose.lite.yml](docker-compose.lite.yml).
 
 2. _Optional_: 
 
-    Configure your Bonsai instance to use HTTPS and external auth for better security.
-    This requires a bit of work, so if you are just playing around you can skip this step.
+    Configure your Bonsai instance to use HTTPS for better security.
+
+    You can use any vendor-specific options: e.g. Cloudflare Tunnel (free, fairly easy to configure, but requires a domain), Synology DDNS (free, very easy, requires a Synology NAS device), etc.
+
+    This requires a bit of work, so if you just want to give Bonsai a quick spin - feel free to skip or postpone this one and the next.
+
+3. _Optional_:
 
     Create a [Google Authorization app](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (or Yandex / VK.com).
 
-    Modify `docker-compose.yml`:
+    Modify `docker-compose.lite.yml`:
 
     * Save Google authorization credentials to `Auth__Google__ClientId` and `Auth__Google__ClientSecret` config properties
     * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization
-    * Replace `@@YOUR_EMAIL@@` with your email address (for LetsEncrypt auto-SSL)
-    * Replace `@@DOMAIN@@` with the domain name to use (or you can use your IP with nip.io, like `192.168.1.1.nip.io`)
-    * Uncomment two lines with ``Host(`@@DOMAIN@@`)``
-    * Comment two lines with ``PathPrefix(`/`)`` 
 
-3. Bring everything up using `docker compose`:
+    
+
+4. Bring everything up using `docker compose`:
    ```
    docker-compose up -d
    ```
-4. After everything is brought up Bonsai will listen on ports 80 and 443.
+5. After everything is brought up Bonsai will listen on port `8080`.
 
 ## Development (on Windows)
 
 For development, you will need the following:
 
-* [.NET 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0): the main runtime for Bonsai
+* [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0): the main runtime for Bonsai
 
 1. Install [NodeJS 14](https://nodejs.org/en/)
 2. Install [PostgreSQL server 9.6](https://www.openscg.com/bigsql/postgresql/installers.jsp/)
