@@ -35,6 +35,21 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         public ChangesetEntityType EntityType { get; set; }
 
         /// <summary>
+        /// ID of the entity that has been edited.
+        /// </summary>
+        public Guid EntityId { get; set; }
+
+        /// <summary>
+        /// Flag indicating that the entity has a current version that can be viewed.
+        /// </summary>
+        public bool EntityExists { get; set; }
+
+        /// <summary>
+        /// Frontend-based key of the entity.
+        /// </summary>
+        public string EntityKey { get; set; }
+
+        /// <summary>
         /// URL of the thumbnail (for media changesets).
         /// </summary>
         public string ThumbnailUrl { get; set; }

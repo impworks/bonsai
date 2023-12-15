@@ -120,6 +120,10 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                          EntityType = x.EntityType,
                                          EntityTitle = GetEntityTitle(x),
                                          EntityThumbnailUrl = GetEntityThumbnailUrl(x),
+                                         EntityExists = x.EditedMedia?.IsDeleted == false
+                                                        || x.EditedPage?.IsDeleted == false
+                                                        || x.EditedRelation?.IsDeleted == false,
+                                         EntityKey = x.EditedPage?.Key ?? x.EditedMedia?.Key,
                                          PageType = GetPageType(x),
                                          CanRevert = CanRevert(x)
                                      })
@@ -133,7 +137,14 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         public async Task<ChangesetDetailsVM> GetChangesetDetailsAsync(Guid id)
         {
-            var (chg, prev) = await GetChangesetPairAsync(id, q => q.AsNoTracking().Include(x => x.Author).Include(x => x.EditedMedia));
+            var (chg, prev) = await GetChangesetPairAsync(
+                id,
+                q => q.AsNoTracking()
+                      .Include(x => x.Author)
+                      .Include(x => x.EditedMedia)
+                      .Include(x => x.EditedPage)
+                      .Include(x => x.EditedRelation)
+            );
 
             var renderer = _renderers[chg.EntityType];
             var prevData = await renderer.RenderValuesAsync(prev?.UpdatedState);
@@ -146,6 +157,11 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 Date = chg.Date,
                 ChangeType = chg.ChangeType,
                 EntityType = chg.EntityType,
+                EntityId = chg.EditedPageId ?? chg.EditedMediaId ?? chg.EditedRelationId ?? Guid.Empty,
+                EntityExists = chg.EditedMedia?.IsDeleted == false
+                               || chg.EditedPage?.IsDeleted == false
+                               || chg.EditedRelation?.IsDeleted == false,
+                EntityKey = chg.EditedPage?.Key ?? chg.EditedMedia?.Key,
                 ThumbnailUrl = chg.EditedMedia != null
                     ? MediaPresenterService.GetSizedMediaPath(chg.EditedMedia.FilePath, MediaSize.Small)
                     : null,

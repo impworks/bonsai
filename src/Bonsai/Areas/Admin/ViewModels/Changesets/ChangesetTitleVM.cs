@@ -44,6 +44,16 @@ namespace Bonsai.Areas.Admin.ViewModels.Changesets
         public Guid EntityId { get; set; }
 
         /// <summary>
+        /// Flag indicating that the entity has a current version that can be viewed.
+        /// </summary>
+        public bool EntityExists { get; set; }
+
+        /// <summary>
+        /// Frontend-based key of the entity.
+        /// </summary>
+        public string EntityKey { get; set; }
+
+        /// <summary>
         /// Author of the change.
         /// </summary>
         public string Author { get; set; }

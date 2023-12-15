@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Bonsai.Data.Models
 @using Humanizer
 @using Impworks.Utils.Format
 @using Impworks.Utils.Strings
@@ -81,7 +82,22 @@
                             @(StringHelper.Coalesce(c.EntityTitle, "—"))
                         </a>
                     </td>
-                    <td>@c.EntityType.GetEnumDescription()</td>
+                    <td>
+                        @if (c.EntityExists)
+                        {
+                            var editUrl = c.EntityType switch
+                            {
+                                ChangesetEntityType.Page => Url.Action("Update", "Pages", new { area = "Admin", id = c.EntityId }),
+                                ChangesetEntityType.Media => Url.Action("Update", "Media", new { area = "Admin", id = c.EntityId }),
+                                ChangesetEntityType.Relation => Url.Action("Update", "Relations", new { area = "Admin", id = c.EntityId }),
+                            };
+                            <a href="@editUrl">@c.EntityType.GetEnumDescription()</a>
+                        }
+                        else
+                        {
+                            <text>@c.EntityType.GetEnumDescription()</text>
+                        }
+                    </td>
                     <td><span title="@c.Date.LocalDateTime.ToLongDateString()">@c.Date.Humanize()</span></td>
                     <td>@c.ChangeType.GetEnumDescription()</td>
                     <td>@c.Author</td>
@@ -91,6 +107,22 @@
                             <a href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = c.Id})">
                                 <span class="fa fa-history" title="Восстановить"></span>
                             </a>
+                        }
+                        @if (c.EntityExists)
+                        {
+                            var outUrl = c.EntityType switch
+                            {
+                                ChangesetEntityType.Page => Url.Action("Description", "Page", new { area = "Front", key = c.EntityKey }),
+                                ChangesetEntityType.Media => Url.Action("Index", "Home", new { area = "Front" }) + "#media-" + c.EntityKey,
+                                _ => null
+                            };
+
+                            if (outUrl != null)
+                            {
+                                <a href="@outUrl" target="_blank">
+                                    <span class="fa fa-external-link-square" title="Просмотреть текущую версию"></span>
+                                </a>
+                            }
                         }
                     </td>
                 </tr>

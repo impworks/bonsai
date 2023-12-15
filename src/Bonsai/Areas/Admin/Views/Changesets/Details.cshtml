@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using Bonsai.Data.Models
 @using Humanizer
 @using Impworks.Utils.Format
 
@@ -50,4 +51,29 @@
 @if (Model.CanRevert)
 {
     <a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = Model.Id})">Восстановить</a>
+}
+
+@if (Model.EntityExists)
+{
+    var editUrl = Model.EntityType switch
+    {
+        ChangesetEntityType.Page => Url.Action("Update", "Pages", new { area = "Admin", id = Model.EntityId }),
+        ChangesetEntityType.Media => Url.Action("Update", "Media", new { area = "Admin", id = Model.EntityId }),
+        ChangesetEntityType.Relation => Url.Action("Update", "Relations", new { area = "Admin", id = Model.EntityId }),
+    };
+    var outUrl = Model.EntityType switch
+    {
+        ChangesetEntityType.Page => Url.Action("Description", "Page", new { area = "Front", key = Model.EntityKey }),
+        ChangesetEntityType.Media => Url.Action("Index", "Home", new { area = "Front" }) + "#media-" + Model.EntityKey,
+        _ => null
+    };
+
+    <a class="btn btn-warning" href="@editUrl">Редактировать</a>
+
+    if (outUrl != null)
+    {
+        <a class="ml-4" href="@outUrl" target="_blank">
+            <span class="fa fa-external-link-square"></span> Текущая версия
+        </a>
+    }
 }
