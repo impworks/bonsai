@@ -9,7 +9,6 @@
 @using Bonsai.Data.Models
 @using Humanizer
 @using Impworks.Utils.Strings
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewBag.Title = "Список медиа";
@@ -104,6 +103,10 @@
 
                         <a href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = m.Id})">
                             <span class="fa fa-database" title="История изменений"></span>
+                        </a>
+                        
+                        <a href="@(Url.Action("Index", "Home", new {area = "Front"}) + "#media-" + m.Key)" target="_blank">
+                            <span class="fa fa-external-link-square" title="Просмотреть"></span>
                         </a>
                     </td>
                 </tr>
