@@ -94,5 +94,15 @@
         .fact-item {
             margin-bottom: 0.3rem;
         }
+
+        .big-icons {
+            font-size: 32px;
+            line-height: 32px;
+
+            .big-icon {
+                display: inline-block;
+                margin-right: 0.5rem;
+            }
+        }
     }
 }

@@ -55,6 +55,12 @@ namespace Bonsai.Code.DomainModel.Facts
                         new FactDefinition<SkillFactModel>("Skill", "Хобби"),
                         new FactDefinition<StringListFactModel>("Profession", "Профессия", "Профессия|Профессии"),
                         new FactDefinition<StringListFactModel>("Religion", "Религия", "Религия|Религии")
+                    ),
+                    new FactDefinitionGroup(
+                        "Meta",
+                        "Прочее",
+                        false,
+                        new FactDefinition<SocialProfilesFactModel>("SocialProfiles", "Соцсети")
                     )
                 },
 

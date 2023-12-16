@@ -1,0 +1,11 @@
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Impworks.Utils.Format
+@model SocialProfilesFactModel
+
+@Model.ShortTitle:
+<ul>
+    @foreach (var item in Model.Values)
+    {
+        <li>@item.Type.GetEnumDescription(): @item.Value</li>
+    }
+</ul>
