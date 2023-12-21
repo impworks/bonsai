@@ -27,16 +27,16 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Рождение",
                         true,
                         new FactDefinition<BirthDateFactModel>("Date", "Дата рождения", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
+                        new FactDefinition<AutoCompletePlaceFactModel>("Place", "Место рождения", "Место")
                     ),
                     new FactDefinitionGroup(
                         "Death",
                         "Смерть",
                         true,
                         new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
+                        new FactDefinition<AutoCompletePlaceFactModel>("Place", "Место смерти", "Место"),
                         new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
-                        new FactDefinition<StringFactModel>("Burial", "Место захоронения")
+                        new FactDefinition<AutoCompletePlaceFactModel>("Burial", "Место захоронения")
                     ),
                     new FactDefinitionGroup(
                         "Bio",
@@ -77,16 +77,16 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Рождение",
                         true,
                         new FactDefinition<BirthDateFactModel>("Date", "Дата рождения", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
+                        new FactDefinition<AutoCompletePlaceFactModel>("Place", "Место рождения", "Место")
                     ),
                     new FactDefinitionGroup(
                         "Death",
                         "Смерть",
                         true,
                         new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
+                        new FactDefinition<AutoCompletePlaceFactModel>("Place", "Место смерти", "Место"),
                         new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
-                        new FactDefinition<StringFactModel>("Burial", "Место захоронения")
+                        new FactDefinition<AutoCompletePlaceFactModel>("Burial", "Место захоронения")
                     ),
                     new FactDefinitionGroup(
                         "Bio",
