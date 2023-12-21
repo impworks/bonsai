@@ -204,6 +204,19 @@
     </div>
 </script>
 
+@if (Environment.GetEnvironmentVariable("AutoComplete__Google__AuthToken") != null)
+{
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=@(Environment.GetEnvironmentVariable("AutoComplete__Google__AuthToken"))"></script>
+    <script type="text/javascript">
+        google.maps.event.addDomListener(window, 'load', function () {
+            var elements = document.querySelectorAll('[id=autocomplete-fact]');
+            for(var i = 0; i < elements.length; i++) {
+                new google.maps.places.Autocomplete(elements[i]);
+            }
+        });
+    </script>   
+}
+
 @foreach (var tpl in data.EditorTemplates)
 {
     await Html.RenderPartialAsync(tpl);
