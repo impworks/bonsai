@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using Bonsai.Code.Utils.Validation;
+using Bonsai.Data.Models;
 
 namespace Bonsai.Code.DomainModel.Facts.Models
 {
@@ -7,6 +10,18 @@ namespace Bonsai.Code.DomainModel.Facts.Models
     /// </summary>
     public class SocialProfilesFactModel: FactListModelBase<SocialProfileFactItem>
     {
+        public override void Validate()
+        {
+            for (var i = 0; i < Values.Length; i++)
+            {
+                var item = Values[i];
+                if (!Enum.IsDefined(item.Type))
+                    throw new ValidationException(nameof(Page.Facts), $"Профиль #{i + 1}: тип не указан");
+
+                if (item.Value?.StartsWith("https://") != true)
+                    throw new ValidationException(nameof(Page.Facts), $"Профиль #{i + 1}: ссылка должна начинаться с 'https://'");
+            }
+        }
     }
 
     /// <summary>

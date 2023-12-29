@@ -34,6 +34,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         {
             new RelationDefinition("Parent:m", "Отец"),
             new RelationDefinition("Parent:f", "Мать"),
+            new RelationDefinition("Parent-Parent:m-Parent:f", "Родитель", "Родители"),
             new RelationDefinition("Parent Child:m", "Брат", "Братья"),
             new RelationDefinition("Parent Child:f", "Сестра", "Сестры"),
             new RelationDefinition("Parent Parent:m", "Дедушка", "Дедушки"),
@@ -45,7 +46,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         public static RelationDefinition[] SpouseDefinitions =
         {
-            new RelationDefinition("!Spouse:m", "Муж", null, RelationDurationDisplayMode.RelationRange), 
+            new RelationDefinition("!Spouse:m", "Муж", null, RelationDurationDisplayMode.RelationRange),
             new RelationDefinition("!Spouse:f", "Жена", null, RelationDurationDisplayMode.RelationRange),
             new RelationDefinition("!Spouse Child+Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
             new RelationDefinition("!Spouse:m Parent:m", "Свекр"),
@@ -75,11 +76,11 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         private static RelationDefinition[] NonRelativeRelations =
         {
-            new RelationDefinition("Friend", "Друг", "Друзья"),
+            new RelationDefinition("Friend", "Друг|Подруга|Друг", "Друзья"),
             new RelationDefinition("Colleague", "Коллега", "Коллеги"),
-            new RelationDefinition("Owner", "Владелец", "Владельцы", RelationDurationDisplayMode.RelationRange),
-            new RelationDefinition("EventVisitor", "Участник", "Участники"),
-            new RelationDefinition("LocationInhabitant", "Житель", "Жители"),
+            new RelationDefinition("Owner", "Владелец|Владелица|Владелец", "Владельцы", RelationDurationDisplayMode.RelationRange),
+            new RelationDefinition("EventVisitor", "Участник|Участница|Участник", "Участники"),
+            new RelationDefinition("LocationInhabitant", "Житель|Жительница|Житель", "Жители"),
         };
 
         /// <summary>

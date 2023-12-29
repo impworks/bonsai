@@ -22,8 +22,11 @@
         public virtual string ShortTitle => Definition.ShortTitleSingle;
 
         /// <summary>
-        /// Flag's inner consistency validation.
+        /// Ensures that the fact contains correct data.
+        /// Throws an error otherwise.
         /// </summary>
-        public virtual bool IsValid => true;
+        public virtual void Validate()
+        {
+        }
     }
 }

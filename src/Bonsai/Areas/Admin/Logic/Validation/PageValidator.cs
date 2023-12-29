@@ -95,9 +95,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 try
                 {
                     var model = JsonConvert.DeserializeObject(prop.Value.ToString(), def.Kind) as FactModelBase;
-
-                    if (!model.IsValid)
-                        throw new Exception();
+                    model.Validate();
                 }
                 catch (Exception ex) when (!(ex is ValidationException))
                 {

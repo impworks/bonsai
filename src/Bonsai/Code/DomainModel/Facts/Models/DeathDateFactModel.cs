@@ -1,4 +1,6 @@
 ﻿using Bonsai.Code.Utils.Date;
+using Bonsai.Code.Utils.Validation;
+using Bonsai.Data.Models;
 
 namespace Bonsai.Code.DomainModel.Facts.Models
 {
@@ -20,6 +22,10 @@ namespace Bonsai.Code.DomainModel.Facts.Models
         /// <summary>
         /// Inner check.
         /// </summary>
-        public override bool IsValid => Value.HasValue != IsUnknown;
+        public override void Validate()
+        {
+            if (IsUnknown == Value.HasValue)
+                throw new ValidationException(nameof(Page.Facts), "Дата смерти не может быть указана, если она неизвестна.");
+        }
     }
 }
