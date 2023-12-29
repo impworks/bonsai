@@ -62,8 +62,8 @@ For development, you will need the following:
 * [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0): the main runtime for Bonsai
 
 1. Install [NodeJS 14](https://nodejs.org/en/)
-2. Install [PostgreSQL server 9.6](https://www.openscg.com/bigsql/postgresql/installers.jsp/)
-3. Download [ffmpeg shared binaries](https://ffmpeg.zeranoe.com/builds/) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
+2. Install [PostgreSQL server 9.6+](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+3. Download [ffmpeg shared binaries](https://www.ffmpeg.org/download.html) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
 4. Create a file called `appsettings.Development.json`, add the connection string:
 
     ```

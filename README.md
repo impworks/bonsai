@@ -60,8 +60,8 @@
 * [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0): основной рантайм для Bonsai
 
 1. Установите [NodeJS 14](https://nodejs.org/en/)
-2. Установите [PostgreSQL server 9.6](https://www.openscg.com/bigsql/postgresql/installers.jsp/)
-3. Скачайте [shared-сборку ffmpeg](https://ffmpeg.zeranoe.com/builds/) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
+2. Установите [PostgreSQL server 9.6+](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+3. Скачайте [shared-сборку ffmpeg](https://www.ffmpeg.org/download.html) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
 4. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
 
   ```
