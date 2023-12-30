@@ -1,6 +1,6 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Bonsai.Data.Migrations
 {
@@ -20,21 +20,42 @@ namespace Bonsai.Data.Migrations
                     table.PrimaryKey("PK_DynamicConfig", x => x.Id);
                 });
 
-            migrationBuilder.Sql(@$"
-                INSERT INTO ""DynamicConfig"" (""Id"", ""Value"")
-                SELECT
-                    ""Id"",
-                    CONCAT(
-	                    '{{""Title"": ""',
-                        ""Title"",
-                        '"", ""AllowGuests"": ',
-                        CASE WHEN ""AllowGuests"" THEN 'true' ELSE 'false' END,
-                        ', ""AllowRegistration"": ',
-                        CASE WHEN ""AllowRegistration"" THEN 'true' ELSE 'false' END,
-                        '}}'
-                    ) AS ""Value""
-                FROM ""Config""
-            ");
+            if (migrationBuilder.IsNpgsql())
+            {
+                migrationBuilder.Sql(@$"
+                    INSERT INTO ""DynamicConfig"" (""Id"", ""Value"")
+                    SELECT
+                        ""Id"",
+                        CONCAT(
+	                        '{{""Title"": ""',
+                            ""Title"",
+                            '"", ""AllowGuests"": ',
+                            CASE WHEN ""AllowGuests"" THEN 'true' ELSE 'false' END,
+                            ', ""AllowRegistration"": ',
+                            CASE WHEN ""AllowRegistration"" THEN 'true' ELSE 'false' END,
+                            '}}'
+                        ) AS ""Value""
+                    FROM ""Config""
+                ");
+            }
+            else
+            {
+                migrationBuilder.Sql(@$"
+                    INSERT INTO ""DynamicConfig"" (""Id"", ""Value"")
+                    SELECT
+                        ""Id"",
+                        (
+	                        '{{""Title"": ""' ||
+                            ""Title"" ||
+                            '"", ""AllowGuests"": ' ||
+                            CASE WHEN ""AllowGuests"" THEN 'true' ELSE 'false' END ||
+                            ', ""AllowRegistration"": ' ||
+                            CASE WHEN ""AllowRegistration"" THEN 'true' ELSE 'false' END ||
+                            '}}'
+                        ) AS ""Value""
+                    FROM ""Config""
+                ");
+            }
 
             migrationBuilder.DropTable(
                 name: "Config");

@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -33,7 +34,10 @@ namespace Bonsai.Data.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.Sql(@"
+            // sic! not needed for sqlite
+            if (migrationBuilder.IsNpgsql())
+            {
+                migrationBuilder.Sql(@"
                     INSERT INTO ""LivingBeingOverview""
                         (""PageId"", ""BirthDate"", ""DeathDate"", ""IsDead"", ""Gender"", ""ShortName"", ""MaidenName"")
                     SELECT
@@ -67,7 +71,8 @@ namespace Bonsai.Data.Migrations
                         FROM ""Pages"" AS p
                         WHERE p.""IsDeleted"" = false AND p.""Type"" IN (0, 1)
                     ) AS t
-");
+                ");
+            }
         }
 
         /// <inheritdoc />

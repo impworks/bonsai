@@ -25,7 +25,14 @@ namespace Bonsai.Code.Config
         /// </summary>
         private void ConfigureDatabaseServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(Configuration.ConnectionStrings.Database));
+            services.AddDbContext<AppDbContext>(opts =>
+            {
+                var cfg = Configuration.ConnectionStrings;
+                if (cfg.UseEmbeddedDatabase)
+                    opts.UseSqlite(cfg.EmbeddedDatabase);
+                else
+                    opts.UseNpgsql(cfg.Database);
+            });
 
             services.AddIdentity<AppUser, IdentityRole>(o =>
                     {
@@ -51,16 +58,27 @@ namespace Bonsai.Code.Config
             var sp = scope.ServiceProvider;
             var demoCfg = Configuration.DemoMode ?? new DemoModeConfig(); // all false
 
-            startupService.AddTask(
-                "DatabaseMigrate",
-                "Подготовка базы",
-                async () =>
-                {
-                    var db = sp.GetService<AppDbContext>();
-                    await db.EnsureDatabaseCreatedAsync();
-                    await db.EnsureSystemItemsCreatedAsync();
-                }
-            );
+            if (DatabaseReplicator.IsReplicationPending(Configuration.ConnectionStrings))
+            {
+                startupService.AddTask(
+                    "DatabaseReplicate",
+                    "Перенос базы",
+                    () => DatabaseReplicator.ReplicateAsync(Configuration.ConnectionStrings)
+                );
+            }
+            else
+            {
+                startupService.AddTask(
+                    "DatabaseMigrate",
+                    "Подготовка базы",
+                    async () =>
+                    {
+                        var db = sp.GetService<AppDbContext>();
+                        await db.EnsureDatabaseCreatedAsync();
+                        await db.EnsureSystemItemsCreatedAsync();
+                    }
+                );
+            }
 
             if (demoCfg.Enabled)
             {
