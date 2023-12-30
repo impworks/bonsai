@@ -18,6 +18,7 @@ namespace Bonsai.Data
         public virtual DbSet<DynamicConfigWrapper> DynamicConfig => Set<DynamicConfigWrapper>();
         public virtual DbSet<Changeset> Changes => Set<Changeset>();
         public virtual DbSet<ChangeEventGroup> ChangeEvents => Set<ChangeEventGroup>();
+        public virtual DbSet<LivingBeingOverview> LivingBeingOverviews => Set<LivingBeingOverview>();
         public virtual DbSet<Media> Media => Set<Media>();
         public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
         

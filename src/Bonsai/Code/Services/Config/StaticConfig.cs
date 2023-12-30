@@ -18,6 +18,8 @@
     public class ConnectionStringsConfig
     {
         public string Database { get; set; }
+        public string EmbeddedDatabase { get; set; }
+        public bool UseEmbeddedDatabase { get; set; }
     }
 
     /// <summary>
