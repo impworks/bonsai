@@ -1,18 +1,21 @@
-﻿using Bonsai.Data.Models;
+﻿using System;
+using System.Linq;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bonsai.Data
 {
     /// <summary>
     /// Main data context of the application.
     /// </summary>
-    public class AppDbContext: IdentityDbContext<AppUser>
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
-            
+
         }
 
         public virtual DbSet<DynamicConfigWrapper> DynamicConfig => Set<DynamicConfigWrapper>();
@@ -21,7 +24,7 @@ namespace Bonsai.Data
         public virtual DbSet<LivingBeingOverview> LivingBeingOverviews => Set<LivingBeingOverview>();
         public virtual DbSet<Media> Media => Set<Media>();
         public virtual DbSet<MediaTag> MediaTags => Set<MediaTag>();
-        
+
         public virtual DbSet<JobState> JobStates => Set<JobState>();
         public virtual DbSet<Page> Pages => Set<Page>();
         public virtual DbSet<PageAlias> PageAliases => Set<PageAlias>();
@@ -35,14 +38,14 @@ namespace Bonsai.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<AppUser>().HasMany(x => x.Changes).WithOne(x => x.Author);
+            builder.Entity<AppUser>().HasMany(x => x.Changes).WithOne(x => x.Author).HasForeignKey(x => x.AuthorId);
             builder.Entity<AppUser>().HasOne(x => x.Page).WithMany().IsRequired(false).HasForeignKey(x => x.PageId);
 
             builder.Entity<Changeset>().HasOne(x => x.Author).WithMany();
 
             builder.Entity<Page>().HasIndex(x => x.Key).IsUnique(true);
             builder.Entity<Page>().HasIndex(x => x.IsDeleted).IsUnique(false);
-            builder.Entity<Page>().HasMany(x => x.Aliases).WithOne(x => x.Page).IsRequired();
+            builder.Entity<Page>().HasMany(x => x.Aliases).WithOne(x => x.Page).HasForeignKey(x => x.PageId).IsRequired();
             builder.Entity<Page>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
             builder.Entity<Page>().HasOne(x => x.TreeLayout).WithMany().IsRequired(false).HasForeignKey(x => x.TreeLayoutId);
             builder.Entity<Page>().HasOne(x => x.LivingBeingOverview).WithOne().HasForeignKey<LivingBeingOverview>(x => x.PageId).IsRequired(false);
@@ -72,6 +75,27 @@ namespace Bonsai.Data
 
             builder.Entity<PageReference>().HasOne(x => x.Source).WithMany().HasForeignKey(x => x.SourceId);
             builder.Entity<PageReference>().HasOne(x => x.Destination).WithMany(x => x.References).HasForeignKey(x => x.DestinationId);
+
+            if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+                ApplyDataTimeOffsetConverter(builder);
+        }
+
+        private void ApplyDataTimeOffsetConverter(ModelBuilder builder)
+        {
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                var properties = entityType.ClrType
+                                           .GetProperties()
+                                           .Where(p => p.PropertyType == typeof(DateTimeOffset)
+                                                       || p.PropertyType == typeof(DateTimeOffset?));
+
+                foreach (var property in properties)
+                {
+                    builder.Entity(entityType.Name)
+                           .Property(property.Name)
+                           .HasConversion(new DateTimeOffsetToStringConverter());
+                }
+            }
         }
     }
 }

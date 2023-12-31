@@ -26,13 +26,16 @@ namespace Bonsai.Data.Utils
             if (pathMatch.Success == false)
                 return false;
 
-            var path = pathMatch.Groups["path"].Name;
+            var path = pathMatch.Groups["path"].Value;
             if (path == ":memory:")
                 return false;
 
             var fullPath = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (File.Exists(fullPath))
                 return false;
+
+            var dir = Path.GetDirectoryName(fullPath);
+            Directory.CreateDirectory(dir);
 
             return true;
         }
@@ -49,6 +52,8 @@ namespace Bonsai.Data.Utils
             var newCtx = GetContext(true, config);
             await newCtx.EnsureDatabaseCreatedAsync();
 
+            await newCtx.Database.ExecuteSqlAsync($"PRAGMA foreign_keys = 0");
+
             await ReplicateEntriesAsync(x => x.Changes);
             await ReplicateEntriesAsync(x => x.DynamicConfig);
             await ReplicateEntriesAsync(x => x.JobStates);
@@ -60,6 +65,8 @@ namespace Bonsai.Data.Utils
             await ReplicateEntriesAsync(x => x.PageDrafts);
             await ReplicateEntriesAsync(x => x.PageReferences);
             await ReplicateEntriesAsync(x => x.Relations);
+            await ReplicateEntriesAsync(x => x.Roles);
+            await ReplicateEntriesAsync(x => x.RoleClaims);
             await ReplicateEntriesAsync(x => x.TreeLayouts);
             await ReplicateEntriesAsync(x => x.Users);
             await ReplicateEntriesAsync(x => x.UserClaims);

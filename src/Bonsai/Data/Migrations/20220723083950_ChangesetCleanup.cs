@@ -113,40 +113,40 @@ ALTER TABLE Changes ADD ChangeType INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE Changes RENAME COLUMN Type TO EntityType;
 ALTER TABLE Changes DROP COLUMN OriginalState;
 
-CREATE VIEW ""ChangesGrouped""
+CREATE VIEW ChangesGrouped
 AS
     SELECT
-        ""GroupKey"",
-        string_agg(""Id"", ',') AS ""Ids"",
-        max(""Date"") AS ""Date""
+        GroupKey,
+        group_concat(Id, ',' ORDER BY Date DESC) AS Ids,
+        max(Date) AS Date
     FROM
     (
         SELECT 
 	        cg.*,
 	        (
-		        cg.""AuthorId"" ||
+		        cg.AuthorId ||
 		        '__' ||
-		        cg.""EntityType"" ||
+		        cg.EntityType ||
 		        '__' ||
-		        CASE cg.""ChangeType""
+		        CASE cg.ChangeType
                     WHEN 3 THEN 'Restored'
                     WHEN 0 THEN 'Created'
                     WHEN 2 THEN 'Removed'
                     ELSE 'Updated'
                 END ||
 		        CASE
-			        WHEN cg.""EditedMediaId"" IS NOT NULL THEN
-				        NULL
+			        WHEN cg.EditedMediaId IS NOT NULL THEN
+				        ''
 			        ELSE
-				        ('__' || COALESCE(cg.""EditedPageId"", cg.""EditedRelationId"", ''))
+				        ('__' || COALESCE(cg.EditedPageId, cg.EditedRelationId, ''))
 		        END ||
 		        '__' ||
-		        CAST(unixepoch(cg.""Date"") / 3600 as int)
-	        ) AS ""GroupKey""
-        FROM ""Changes"" AS cg
+		        CAST(unixepoch(cg.Date) / 3600 as int)
+	        ) AS GroupKey
+        FROM Changes AS cg
     ) AS cc
-    GROUP BY ""GroupKey""
-    ORDER BY ""Date"" DESC
+    GROUP BY GroupKey
+    ORDER BY Date DESC
                 ");
             }
         }

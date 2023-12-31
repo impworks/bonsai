@@ -36,5 +36,10 @@ namespace Bonsai.Data.Models
         /// Related page.
         /// </summary>
         public Page Page { get; set; }
+
+        /// <summary>
+        /// ID of the related page.
+        /// </summary>
+        public Guid PageId { get; set; }
     }
 }
