@@ -299,3 +299,4 @@ src/Bonsai/Logs/**/*.*
 src/Bonsai/appsettings.Development.json
 src/Bonsai/appsettings.Production.json
 src/Bonsai/appsettings.Staging.json
+src/Bonsai/App_Data/

@@ -41,19 +41,19 @@ namespace Bonsai.Data.Migrations
             else
             {
                 migrationBuilder.Sql(@$"
-                    INSERT INTO ""DynamicConfig"" (""Id"", ""Value"")
+                    INSERT INTO DynamicConfig (Id, Value)
                     SELECT
-                        ""Id"",
+                        Id,
                         (
 	                        '{{""Title"": ""' ||
-                            ""Title"" ||
+                            Title ||
                             '"", ""AllowGuests"": ' ||
-                            CASE WHEN ""AllowGuests"" THEN 'true' ELSE 'false' END ||
+                            CASE WHEN AllowGuests THEN 'true' ELSE 'false' END ||
                             ', ""AllowRegistration"": ' ||
-                            CASE WHEN ""AllowRegistration"" THEN 'true' ELSE 'false' END ||
+                            CASE WHEN AllowRegistration THEN 'true' ELSE 'false' END ||
                             '}}'
-                        ) AS ""Value""
-                    FROM ""Config""
+                        ) AS Value
+                    FROM Config
                 ");
             }
 

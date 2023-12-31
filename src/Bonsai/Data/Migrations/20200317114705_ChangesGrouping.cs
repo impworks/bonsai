@@ -51,40 +51,40 @@ AS
                 // todo: ordering in string_agg!
 
                 migrationBuilder.Sql(@"
-CREATE VIEW IF NOT EXISTS ""ChangesGrouped""
+CREATE VIEW IF NOT EXISTS ChangesGrouped
 AS
     SELECT
-        cc.""GroupKey"",
-        string_agg(cc.""Id"", ',') AS ""Ids"",
-        max(cc.""Date"") AS ""Date""
+        GroupKey,
+        group_concat(Id, ',' ORDER BY Date DESC) AS Ids,
+        max(Date) AS Date
     FROM
     (
         SELECT 
 	        cg.*,
 	        (
-		        cg.""AuthorId"" ||
+		        cg.AuthorId ||
 		        '__' ||
-		        cg.""Type"" ||
+		        cg.Type ||
 		        '__' ||
 		        CASE
-			        WHEN cg.""RevertedChangesetId"" IS NOT NULL THEN 'Restored'
-			        WHEN cg.""OriginalState"" IS NULL THEN 'Created'
-			        WHEN cg.""UpdatedState"" IS NULL THEN 'Removed'
+			        WHEN cg.RevertedChangesetId IS NOT NULL THEN 'Restored'
+			        WHEN cg.OriginalState IS NULL THEN 'Created'
+			        WHEN cg.UpdatedState IS NULL THEN 'Removed'
 			        ELSE 'Updated'
 		        END ||
 		        CASE
-			        WHEN cg.""EditedMediaId"" IS NOT NULL THEN
+			        WHEN cg.EditedMediaId IS NOT NULL THEN
 				        NULL
 			        ELSE
-				        ('__' || COALESCE(cg.""EditedPageId"", cg.""EditedRelationId"", ''))
+				        ('__' || COALESCE(cg.EditedPageId, cg.EditedRelationId, ''))
 		        END ||
 		        '__' ||
-		        CAST(unixepoch(cg.""Date"") / 3600 as int)
-	        ) AS ""GroupKey""
-        FROM ""Changes"" AS cg
+		        CAST(unixepoch(cg.Date) / 3600 as int)
+	        ) AS GroupKey
+        FROM Changes AS cg
     ) AS cc
-    GROUP BY cc.""GroupKey""
-    ORDER BY ""Date"" DESC
+    GROUP BY cc.GroupKey
+    ORDER BY Date DESC
                 ");
             }
         }

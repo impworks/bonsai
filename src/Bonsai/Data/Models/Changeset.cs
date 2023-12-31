@@ -28,6 +28,11 @@ namespace Bonsai.Data.Models
         /// </summary>
         [Required]
         public AppUser Author { get; set; }
+
+        /// <summary>
+        /// ID of the author.
+        /// </summary>
+        public string AuthorId { get; set; }
         
         /// <summary>
         /// Type of the change (created, edited, removed, reverted).
