@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services.Config;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Services.Search;
-using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -30,6 +31,7 @@ namespace Bonsai.Areas.Front.Controllers
             PagesManagerService pages,
             ISearchEngine search,
             BonsaiConfigService cfgProvider,
+            IBackgroundJobService jobs,
             AppDbContext db
         )
         {
@@ -38,6 +40,7 @@ namespace Bonsai.Areas.Front.Controllers
             _pages = pages;
             _search = search;
             _cfgProvider = cfgProvider;
+            _jobs = jobs;
             _db = db;
         }
 
@@ -46,6 +49,7 @@ namespace Bonsai.Areas.Front.Controllers
         private readonly PagesManagerService _pages;
         private readonly ISearchEngine _search;
         private readonly BonsaiConfigService _cfgProvider;
+        private readonly IBackgroundJobService _jobs;
         private readonly AppDbContext _db;
 
         /// <summary>
@@ -196,6 +200,7 @@ namespace Bonsai.Areas.Front.Controllers
                     await _db.SaveChangesAsync();
 
                     await _search.AddPageAsync(result.User.Page);
+                    await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
                 }
 
                 return RedirectToAction("Index", "Home");
