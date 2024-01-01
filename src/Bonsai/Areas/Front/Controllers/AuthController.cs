@@ -59,7 +59,15 @@ namespace Bonsai.Areas.Front.Controllers
                 return RedirectToAction("Register");
             
             var user = await _auth.GetCurrentUserAsync(User);
-            var status = user?.IsValidated == false ? LoginStatus.Unvalidated : (LoginStatus?) null;
+            var status = user?.IsValidated switch
+            {
+                true => LoginStatus.Succeeded,
+                false => LoginStatus.Unvalidated,
+                null => (LoginStatus?) null
+            };
+            if (status == LoginStatus.Succeeded)
+                return RedirectToAction("Index", "Home");
+
             return await ViewLoginFormAsync(status, returnUrl);
         }
 
@@ -141,6 +149,14 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("register")]
         public async Task<ActionResult> Register()
         {
+            var user = await _auth.GetCurrentUserAsync(User);
+            if (user != null)
+            {
+                return user.IsValidated
+                    ? RedirectToAction("Index", "Home")
+                    : RedirectToAction("Login");
+            }
+
             if (!await CanRegisterAsync())
                 return View("RegisterDisabled");
 
@@ -199,7 +215,7 @@ namespace Bonsai.Areas.Front.Controllers
         public ActionResult RegisterSuccess()
         {
             if (Session.Get<RegistrationInfo>() == null)
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 
             Session.Remove<RegistrationInfo>();
 
