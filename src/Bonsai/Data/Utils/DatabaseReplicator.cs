@@ -14,7 +14,7 @@ namespace Bonsai.Data.Utils
         /// </summary>
         public static bool IsReplicationPending(ConnectionStringsConfig config)
         {
-            if (config.UseEmbeddedDatabase == false || string.IsNullOrEmpty(config.Database) || string.IsNullOrEmpty(config.EmbeddedDatabase))
+            if (config.UseEmbeddedDatabase == false || string.IsNullOrEmpty(config.EmbeddedDatabase))
                 return false;
 
             var pathMatch = Regex.Match(
@@ -31,7 +31,8 @@ namespace Bonsai.Data.Utils
                 return false;
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
-            return true;
+
+            return !string.IsNullOrEmpty(config.Database);
         }
 
         /// <summary>
