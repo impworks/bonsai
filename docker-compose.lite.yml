@@ -5,25 +5,16 @@ services:
     restart: unless-stopped
     volumes:
       - images:/app/wwwroot/media
+      - database:/app/App_Data
     ports:
       - "8080:80"
     environment:
-      - ConnectionStrings__Database=Server=postgres;Port=5432;Database=bonsai;User Id=bonsai;Password=test;Persist Security Info=true
+      - ConnectionStrings__Database=
+      - ConnectionStrings__EmbeddedDatabase=Data Source=/app/App_Data/bonsai.db
+      - ConnectionStrings__UseEmbeddedDatabase=true
       - Auth__AllowPasswordAuth=true
       - ASPNETCORE_ENVIRONMENT=Production
     stop_signal: SIGKILL
-    links:
-      - postgres
-
-  postgres:
-    image: postgres:12.4
-    restart: unless-stopped
-    volumes:
-      - database:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: test
-      POSTGRES_USER: bonsai
-      POSTGRES_DB: bonsai
 
 volumes:
   database: {}

@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+  bonsai:
+    image: impworks/bonsai:latest
+    restart: unless-stopped
+    volumes:
+      - images:/app/wwwroot/media
+    ports:
+      - "8080:80"
+    environment:
+      - ConnectionStrings__Database=Server=postgres;Port=5432;Database=bonsai;User Id=bonsai;Password=test;Persist Security Info=true
+      - Auth__AllowPasswordAuth=true
+      - ASPNETCORE_ENVIRONMENT=Production
+    stop_signal: SIGKILL
+    links:
+      - postgres
+
+  postgres:
+    image: postgres:12.4
+    restart: unless-stopped
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: bonsai
+      POSTGRES_DB: bonsai
+
+volumes:
+  database: {}
+  images: {}

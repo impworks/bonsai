@@ -27,16 +27,10 @@ namespace Bonsai.Data.Utils
                 return false;
 
             var path = pathMatch.Groups["path"].Value;
-            if (path == ":memory:")
+            if (path == ":memory:" || File.Exists(path))
                 return false;
 
-            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), path);
-            if (File.Exists(fullPath))
-                return false;
-
-            var dir = Path.GetDirectoryName(fullPath);
-            Directory.CreateDirectory(dir);
-
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
             return true;
         }
 
