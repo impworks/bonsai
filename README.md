@@ -49,7 +49,7 @@
 
 4. Запустите все контейнеры с помощью `docker compose`:
    ```
-   docker-compose up -d
+   docker-compose -f docker-compose.lite.yml up -d
    ```
 5. После старта Bonsai будет доступен на порту `8080`.
 
@@ -60,14 +60,14 @@
 * [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0): основной рантайм для Bonsai
 
 1. Установите [NodeJS 14](https://nodejs.org/en/)
-2. Установите [PostgreSQL server 9.6+](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
-3. Скачайте [shared-сборку ffmpeg](https://www.ffmpeg.org/download.html) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
-4. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
+2. Скачайте [shared-сборку ffmpeg](https://www.ffmpeg.org/download.html) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
+3. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
 
   ```
     {
       "ConnectionStrings": {
-        "Database": "Server=127.0.0.1;Port=5432;Database=bonsai;User Id=<login>;Password=<password>;Persist Security Info=true"
+        "EmbeddedDatabase": "Data Source=App_Data/bonsai.db",
+        "UseEmbeddedDatabase": true
       },
       "Auth": {
         "AllowPasswordAuth": true
@@ -125,7 +125,8 @@
 * Базу данных (десятки мегабайт)
 * Загруженные медиа-файлы в папке `wwwroot/media` (могут быть гигабайты)
 
-Существует множество подходов, платных и бесплатных: загрузка в облако, копирование на дополнительные носители и т.д.
+В комплектации по-умолчанию вам достаточно скопировать две папки, используя любые доступные средства (копирование на дополнительные носители, загрузка в облако, и так далее).
+При использовании БД PostgreSQL потребуются дополнительные действия по выгрузке содержимого БД.
 Выбор наиболее уместного подхода, с учетом вашего бюджета и объема данных, остается за вами.
 
 ### Способы авторизации

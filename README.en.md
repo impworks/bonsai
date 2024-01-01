@@ -45,13 +45,11 @@ A family wiki and photoalbum engine (in Russian).
     Modify `docker-compose.lite.yml`:
 
     * Save Google authorization credentials to `Auth__Google__ClientId` and `Auth__Google__ClientSecret` config properties
-    * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization
-
-    
+    * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization    
 
 4. Bring everything up using `docker compose`:
    ```
-   docker-compose up -d
+   docker-compose -f docker-compose.lite.yml up -d
    ```
 5. After everything is brought up Bonsai will listen on port `8080`.
 
@@ -62,14 +60,14 @@ For development, you will need the following:
 * [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0): the main runtime for Bonsai
 
 1. Install [NodeJS 14](https://nodejs.org/en/)
-2. Install [PostgreSQL server 9.6+](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
-3. Download [ffmpeg shared binaries](https://www.ffmpeg.org/download.html) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
-4. Create a file called `appsettings.Development.json`, add the connection string:
+2. Download [ffmpeg shared binaries](https://www.ffmpeg.org/download.html) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
+3. Create a file called `appsettings.Development.json`, add the connection string:
 
     ```
     {
       "ConnectionStrings": {
-        "Database": "Server=127.0.0.1;Port=5432;Database=bonsai;User Id=<login>;Password=<password>;Persist Security Info=true"
+        "EmbeddedDatabase": "Data Source=App_Data/bonsai.db",
+        "UseEmbeddedDatabase": true
       },
       "Auth": {
         "AllowPasswordAuth": true
