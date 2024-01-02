@@ -3,10 +3,13 @@
 @model PagesListVM
 
 @using Bonsai.Areas.Admin.ViewModels.Pages
+@using Bonsai.Areas.Front.Components
 @using Bonsai.Code.DomainModel.Media
+@using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
 @using Humanizer
 @using Impworks.Utils.Format
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewBag.Title = "Список страниц";
@@ -68,8 +71,8 @@
                         @p.Title
                     </a>
                 </td>
-                <td><span title="@p.CreationDate.LocalDateTime.ToString("G")">@p.CreationDate.Humanize()</span></td>
-                <td><span title="@p.LastUpdateDate.LocalDateTime.ToString("G")">@p.LastUpdateDate.Humanize()</span></td>
+                <td><span title="@p.CreationDate.LocalDateTime.ToRussianFullDate()">@p.CreationDate.Humanize()</span></td>
+                <td><span title="@p.LastUpdateDate.LocalDateTime.ToRussianFullDate()">@p.LastUpdateDate.Humanize()</span></td>
                 <td class="popover-wrapper">
                     <span class="popover-handle">@p.CompletenessScore%</span>
                     <div class="popover-contents">

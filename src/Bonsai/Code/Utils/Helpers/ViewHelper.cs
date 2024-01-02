@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Bonsai.Code.Utils.Helpers
     /// <summary>
     /// Helper methods for rendering data.
     /// </summary>
-    public class ViewHelper
+    public static class ViewHelper
     {
         /// <summary>
         /// Returns the select list with current element selected.
@@ -86,6 +87,24 @@ namespace Bonsai.Code.Utils.Helpers
                     <div class=""media-thumb-square"" style=""background-image: url('{url}')""></div>
                 </div>
             ";
+        }
+
+        /// <summary>
+        /// Renders the short-readable date.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static string ToRussianShortDate(this DateTime date)
+        {
+            return date.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("ru-RU"));
+        }
+
+        /// <summary>
+        /// Renders the detailed date.
+        /// </summary>
+        public static string ToRussianFullDate(this DateTime date)
+        {
+            return date.ToString("G", CultureInfo.GetCultureInfo("ru-RU"));
         }
 
         #region Helpers

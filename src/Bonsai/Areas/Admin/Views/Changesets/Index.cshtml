@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
 @using Humanizer
 @using Impworks.Utils.Format
@@ -98,7 +99,7 @@
                             <text>@c.EntityType.GetEnumDescription()</text>
                         }
                     </td>
-                    <td><span title="@c.Date.LocalDateTime.ToLongDateString()">@c.Date.Humanize()</span></td>
+                    <td><span title="@c.Date.LocalDateTime.ToRussianFullDate()">@c.Date.Humanize()</span></td>
                     <td>@c.ChangeType.GetEnumDescription()</td>
                     <td>@c.Author</td>
                     <td class="admin-row-actions">

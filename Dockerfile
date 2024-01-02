@@ -33,5 +33,5 @@ RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg && \
     chmod +x /app/Bonsai
 
 ENV ASPNETCORE_ENVIRONMENT=Production
-
+EXPOSE 80
 ENTRYPOINT ["/app/Bonsai"]

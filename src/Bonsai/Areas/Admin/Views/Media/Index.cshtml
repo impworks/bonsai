@@ -2,7 +2,6 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model MediaListVM
 
-@using System.Globalization
 @using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Areas.Admin.ViewModels.Media
 @using Bonsai.Code.Utils.Helpers
@@ -18,7 +17,7 @@
 
     string GetMediaTitleFallback(MediaThumbnailExtendedVM media)
     {
-        var date = media.UploadDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("ru-RU"));
+        var date = media.UploadDate.LocalDateTime.ToRussianShortDate();
         var part = media.Type switch {
             MediaType.Photo => "Фото",
             MediaType.Video => "Видео",
@@ -94,7 +93,7 @@
                         </a>
                     </td>
                     <td><span>@(m.Date?.ReadableDate ?? "—")</span></td>
-                    <td><span title="@m.UploadDate.LocalDateTime.ToString("G")">@m.UploadDate.Humanize()</span></td>
+                    <td><span title="@m.UploadDate.LocalDateTime.ToRussianFullDate()">@m.UploadDate.Humanize()</span></td>
                     <td>@(m.MediaTagsCount == 0 ? "—" : m.MediaTagsCount.ToString())</td>
                     <td class="admin-row-actions">
                         <a href="@Url.Action("Remove", "Media", new {area = "Admin", id = m.Id})">

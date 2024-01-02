@@ -1,6 +1,5 @@
 ﻿@model IReadOnlyList<Bonsai.Areas.Admin.ViewModels.Dashboard.ChangesetEventVM>
 
-@using System.Globalization
 @using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
@@ -38,7 +37,7 @@
     string GetChangeDate(DateTimeOffset date)
     {
         return date < DateTimeOffset.Now.AddDays(-14)
-            ? date.LocalDateTime.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("ru-RU"))
+            ? date.LocalDateTime.ToRussianShortDate()
             : date.Humanize().Capitalize();
     }
 }
@@ -76,7 +75,7 @@
                         }
                     </h6>
                 </div>
-                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)">
+                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToRussianFullDate()">
                     @GetChangeDate(evt.Date)
                 </div>
             </div>
