@@ -181,8 +181,6 @@ namespace Bonsai.Areas.Front.Controllers
                 return View("RegisterDisabled");
 
             var info = Session.Get<RegistrationInfo>();
-            if (info == null && !(await _auth.IsFirstUserAsync()))
-                return RedirectToAction("Login");
 
             if(!ModelState.IsValid)
                 return await ViewRegisterFormAsync(vm, usesPasswordAuth: info == null);
@@ -276,10 +274,12 @@ namespace Bonsai.Areas.Front.Controllers
         /// </summary>
         private async Task<ActionResult> ViewLoginFormAsync(LoginStatus? status, string returnUrl = null)
         {
+            var dynCfg = _cfgProvider.GetDynamicConfig();
             ViewBag.Data = new LoginDataVM
             {
                 ReturnUrl = returnUrl,
-                AllowGuests = _cfgProvider.GetDynamicConfig().AllowGuests,
+                AllowGuests = dynCfg.AllowGuests,
+                AllowRegistration = dynCfg.AllowRegistration,
                 AllowPasswordAuth = _cfgProvider.GetStaticConfig().Auth.AllowPasswordAuth,
                 Providers = _provs.AvailableProviders,
                 IsFirstUser = await _auth.IsFirstUserAsync(),

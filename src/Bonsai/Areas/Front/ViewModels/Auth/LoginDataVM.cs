@@ -33,6 +33,11 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         public bool AllowPasswordAuth { get; set; }
 
         /// <summary>
+        /// Flag indicating that new registrations are allowed.
+        /// </summary>
+        public bool AllowRegistration { get; set; }
+
+        /// <summary>
         /// List of enabled authentication providers.
         /// </summary>
         public IEnumerable<AuthProviderVM> Providers { get; set; }

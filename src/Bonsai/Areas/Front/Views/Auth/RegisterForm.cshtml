@@ -12,16 +12,18 @@
 <div class="content text">
     <h1>Регистрация</h1>
 
-    <p>Для создания учетной записи, пожалуйста, введите необходимую информацию.</p>
-    @if (data.IsFirstUser)
-    {
-        <p>Ваша учетная запись получит права администратора.</p>
-    }
-    else
-    {
-        <p>Проверьте, что ввели актуальные данные - на русском языке и без ошибок.</p>
-        <p>Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.</p>
-    }
+    <p>Для создания учетной записи, пожалуйста, введите необходимую информацию. <br/>
+        @if (data.IsFirstUser)
+        {
+            <text>Ваша учетная запись получит права администратора.</text>
+        }
+        else
+        {
+            <text>Проверьте, что ввели актуальные данные - на русском языке и без ошибок. <br/>
+                Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.
+            </text>
+        }
+    </p>
 
     <div class="row">
         <div class="col-md-7 col-sm-12">
@@ -58,6 +60,7 @@
                     <label class="col-sm-3 col-form-label form-label-required">E-mail</label>
                     <div class="col-sm-9">
                         <input asp-for="Email" class="form-control" />
+                        <div class="small text-muted">Будет использоваться в качестве логина</div>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
@@ -68,6 +71,7 @@
                         <label class="col-sm-3 col-form-label form-label-required">Пароль</label>
                         <div class="col-sm-9">
                             <input asp-for="Password" class="form-control" type="password" />
+                            <div class="small text-muted">Минимум 6 символов</div>
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     </div>
