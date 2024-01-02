@@ -100,8 +100,18 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
-            result.Items = await query.OrderBy(request.OrderBy, request.OrderDescending ?? false)
-                                      .ProjectToType<MediaThumbnailExtendedVM>(_mapper.Config)
+            if (request.OrderBy == nameof(Media.Tags))
+            {
+                query = request.OrderDescending ?? false
+                    ? query.OrderByDescending(x => x.Tags.Count)
+                    : query.OrderBy(x => x.Tags.Count);
+            }
+            else
+            {
+                query = query.OrderBy(request.OrderBy, request.OrderDescending ?? false);
+            }
+
+            result.Items = await query.ProjectToType<MediaThumbnailExtendedVM>(_mapper.Config)
                                       .Skip(PageSize * request.Page)
                                       .Take(PageSize)
                                       .ToListAsync();
@@ -323,7 +333,7 @@ namespace Bonsai.Areas.Admin.Logic
             if(vm == null)
                 vm = new MediaListRequestVM { OrderDescending = true };
 
-            var orderableFields = new[] { nameof(Media.UploadDate), nameof(Media.Date), nameof(Media.Title) };
+            var orderableFields = new[] { nameof(Media.UploadDate), nameof(Media.Date), nameof(Media.Title), nameof(Media.Tags) };
             if(!orderableFields.Contains(vm.OrderBy))
                 vm.OrderBy = orderableFields[0];
 

@@ -36,7 +36,7 @@
             {
                 <div class="card-footer">
                     <small class="text-muted">
-                        <a href="@Url.Action("Index", "Media", new {area = "Admin"})">@Model.MediaToTagCount без отметок</a>
+                        <a href="@Url.Action("Index", "Media", new {area = "Admin", OrderBy = "Tags", OrderDescending = false})">@Model.MediaToTagCount без отметок</a>
                     </small>
                 </div>
             }

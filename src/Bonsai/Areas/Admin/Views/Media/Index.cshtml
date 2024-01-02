@@ -74,7 +74,7 @@
                 <th width="50%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(MediaThumbnailExtendedVM.Title), title = "Название" })</th>
                 <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(MediaThumbnailExtendedVM.Date), title = "Снято" })</th>
                 <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(MediaThumbnailExtendedVM.UploadDate), title = "Загружено" })</th>
-                <th width="10%">Отметки</th>
+                <th width="10%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(Media.Tags), title = "Теги" })</th>
                 <th width="1px"></th>
             </tr>
         </thead>
