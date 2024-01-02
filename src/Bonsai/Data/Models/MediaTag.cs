@@ -20,6 +20,11 @@ namespace Bonsai.Data.Models
         public Media Media { get; set; }
 
         /// <summary>
+        /// Related media tag.
+        /// </summary>
+        public Guid MediaId { get; set; }
+
+        /// <summary>
         /// Tagged entity (if exists).
         /// </summary>
         public Page Object { get; set; }

@@ -65,8 +65,8 @@ namespace Bonsai.Data
             builder.Entity<Media>().HasIndex(x => x.Key).IsUnique(true);
             builder.Entity<Media>().HasIndex(x => x.IsDeleted).IsUnique(false);
 
-            builder.Entity<MediaTag>().HasOne(x => x.Media).WithMany(x => x.Tags);
-            builder.Entity<MediaTag>().HasOne(x => x.Object).WithMany(x => x.MediaTags);
+            builder.Entity<MediaTag>().HasOne(x => x.Media).WithMany(x => x.Tags).HasForeignKey(x => x.MediaId);
+            builder.Entity<MediaTag>().HasOne(x => x.Object).WithMany(x => x.MediaTags).HasForeignKey(x => x.ObjectId);
 
             builder.Entity<PageScored>().ToView("PagesScored");
             builder.Entity<PageScored>().HasOne(x => x.MainPhoto).WithMany().IsRequired(false).HasForeignKey(x => x.MainPhotoId);
