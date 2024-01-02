@@ -20,7 +20,7 @@ RUN dotnet publish --output ../out/ --configuration Release --runtime linux-musl
 
 FROM alpine:latest
 
-RUN apk add --no-cache nodejs ffmpeg libintl icu && \
+RUN apk add --no-cache nodejs ffmpeg libintl icu icu-data-full && \
     apk add --no-cache libgdiplus --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
 
 WORKDIR /app
