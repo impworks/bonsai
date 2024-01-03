@@ -18,6 +18,11 @@ namespace Bonsai.Data.Models
         public string Title { get; set; }
 
         /// <summary>
+        /// Case-insensitive page title.
+        /// </summary>
+        public string NormalizedTitle { get; set; }
+
+        /// <summary>
         /// Page key (title, url-encoded).
         /// </summary>
         public string Key { get; set; }

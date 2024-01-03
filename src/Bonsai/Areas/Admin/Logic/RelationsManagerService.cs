@@ -67,10 +67,10 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (!string.IsNullOrEmpty(request.SearchQuery))
             {
-                var req = request.SearchQuery.ToLower();
-                query = query.Where(x => x.Destination.Title.ToLower().Contains(req)
-                                         || x.Source.Title.ToLower().Contains(req)
-                                         || x.Event.Title.ToLower().Contains(req));
+                var req = PageHelper.NormalizeTitle(request.SearchQuery);
+                query = query.Where(x => x.Destination.NormalizedTitle.Contains(req)
+                                         || x.Source.NormalizedTitle.Contains(req)
+                                         || x.Event.NormalizedTitle.Contains(req));
             }
 
             if (request.Types?.Length > 0)

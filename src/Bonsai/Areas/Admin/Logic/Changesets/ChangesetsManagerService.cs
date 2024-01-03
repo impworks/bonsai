@@ -11,7 +11,6 @@ using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services.Search;
-using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -77,13 +76,16 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                            .ThenInclude(x => x.MainPhoto)
                            .Include(x => x.EditedMedia)
                            .Include(x => x.EditedRelation)
+                           .ThenInclude(x => x.Source)
+                           .Include(x => x.EditedRelation)
+                           .ThenInclude(x => x.Destination)
                            .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.SearchQuery))
             {
-                var search = request.SearchQuery.ToLower();
-                query = query.Where(x => (x.EditedPage != null && x.EditedPage.Title.ToLower().Contains(search))
-                                         || x.EditedMedia != null && x.EditedMedia.Title.ToLower().Contains(search));
+                var search = PageHelper.NormalizeTitle(request.SearchQuery);
+                query = query.Where(x => (x.EditedPage != null && x.EditedPage.NormalizedTitle.Contains(search))
+                                         || x.EditedMedia != null && x.EditedMedia.NormalizedTitle.Contains(search));
             }
 
             if (request.EntityTypes?.Length > 0)
@@ -263,13 +265,15 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         /// </summary>
         private string GetEntityTitle(Changeset chg)
         {
-            if (chg.EditedPage != null)
-                return chg.EditedPage.Title;
+            if (chg.EditedPage is { } p)
+                return p.Title;
 
-            if (chg.EditedMedia != null)
-                return chg.EditedMedia.Title ?? chg.EditedMedia.Type.GetEnumDescription();
+            if (chg.EditedMedia is { } m)
+                return StringHelper.Coalesce(m.Title, MediaHelper.GetMediaFallbackTitle(m.Type, m.UploadDate));
 
-            return chg.EditedRelation.Type.GetEnumDescription();
+            var rel = chg.EditedRelation;
+            var relType = rel.Type.GetEnumDescription();
+            return $"{relType} ({rel.Source.Title}, {rel.Destination.Title})";
         }
 
         /// <summary>

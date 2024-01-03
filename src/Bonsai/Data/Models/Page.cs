@@ -29,6 +29,11 @@ namespace Bonsai.Data.Models
         public string Key { get; set; }
 
         /// <summary>
+        /// Case-insensitive title of the media for search purposes.
+        /// </summary>
+        public string NormalizedTitle { get; set; }
+
+        /// <summary>
         /// Type of the entity described by this page.
         /// </summary>
         public PageType Type { get; set; }

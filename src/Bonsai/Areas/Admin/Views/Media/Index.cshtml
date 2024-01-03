@@ -14,18 +14,6 @@
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Media", new { area = "Admin" });
-
-    string GetMediaTitleFallback(MediaThumbnailExtendedVM media)
-    {
-        var date = media.UploadDate.LocalDateTime.ToRussianShortDate();
-        var part = media.Type switch {
-            MediaType.Photo => "Фото",
-            MediaType.Video => "Видео",
-            MediaType.Document => "Документ",
-            _ => "Прочее"
-        };
-        return $"{part} от {date}";
-    }
 }
 
 <h1>Список медиа</h1>
@@ -89,7 +77,7 @@
                     </td>
                     <td>
                         <a href="@Url.Action("Update", "Media", new {area = "Admin", id = m.Id})" title="Редактировать">
-                            @(StringHelper.Coalesce(m.Title, GetMediaTitleFallback(m)))
+                            @(StringHelper.Coalesce(m.Title, MediaHelper.GetMediaFallbackTitle(m.Type, m.UploadDate)))
                         </a>
                     </td>
                     <td><span>@(m.Date?.ReadableDate ?? "—")</span></td>

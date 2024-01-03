@@ -62,11 +62,11 @@ namespace Bonsai.Areas.Admin.Logic
                            .Include(x => x.MainPhoto)
                            .Where(x => x.IsDeleted == false);
 
-            if(!string.IsNullOrEmpty(request.SearchQuery))
-                query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
-
             if (request.Types?.Length > 0)
                 query = query.Where(x => request.Types.Contains(x.Type));
+
+            if (!string.IsNullOrEmpty(request.SearchQuery))
+                query = query.Where(x => x.NormalizedTitle.Contains(PageHelper.NormalizeTitle(request.SearchQuery)));
 
             var totalCount = await query.CountAsync();
 
@@ -128,6 +128,7 @@ namespace Bonsai.Areas.Admin.Logic
             page.CreationDate = DateTimeOffset.Now;
             page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey);
             page.LivingBeingOverview = MapLivingBeingOverview(vm);
+            page.NormalizedTitle = PageHelper.NormalizeTitle(page.Title);
 
             await _validator.ValidateAsync(page, vm.Facts);
 
@@ -226,6 +227,7 @@ namespace Bonsai.Areas.Admin.Logic
             _mapper.Map(vm, page);
             page.MainPhotoId = (await FindMainPhotoAsync(vm.MainPhotoKey))?.Id;
             page.LivingBeingOverview = MapLivingBeingOverview(vm, page.LivingBeingOverview);
+            page.NormalizedTitle = PageHelper.NormalizeTitle(page.Title);
 
             page.IsDeleted = false;
 

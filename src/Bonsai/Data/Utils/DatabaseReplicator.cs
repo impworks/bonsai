@@ -41,11 +41,10 @@ namespace Bonsai.Data.Utils
         public static async Task ReplicateAsync(ConnectionStringsConfig config)
         {
             var oldCtx = GetContext(false, config);
-            await oldCtx.EnsureDatabaseCreatedAsync();
-            await oldCtx.EnsureSystemItemsCreatedAsync();
+            await AppDbContextHelper.UpdateDatabaseAsync(oldCtx);
 
             var newCtx = GetContext(true, config);
-            await newCtx.EnsureDatabaseCreatedAsync();
+            await AppDbContextHelper.EnsureDatabaseCreatedAsync(newCtx);
 
             await newCtx.Database.ExecuteSqlAsync($"PRAGMA foreign_keys = 0");
 

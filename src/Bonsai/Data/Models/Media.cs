@@ -52,6 +52,11 @@ namespace Bonsai.Data.Models
         public string Title { get; set; }
 
         /// <summary>
+        /// Case-insensitive title of the media for search purposes.
+        /// </summary>
+        public string NormalizedTitle { get; set; }
+
+        /// <summary>
         /// Markdown description of the media file.
         /// </summary>
         public string Description { get; set; }

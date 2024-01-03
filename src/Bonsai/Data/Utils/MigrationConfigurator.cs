@@ -18,6 +18,7 @@ namespace Bonsai.Data.Utils
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json")
                 .Build()
                 .Get<StaticConfig>()
                 .ConnectionStrings;

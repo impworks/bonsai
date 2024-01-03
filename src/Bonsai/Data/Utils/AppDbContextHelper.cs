@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Code.Services.Config;
+using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Identity;
@@ -15,31 +16,35 @@ namespace Bonsai.Data.Utils
     /// <summary>
     /// Extensions methods for configuring and seeding the database data.
     /// </summary>
-    public static class AppDbContextExtensions
+    public static class AppDbContextHelper
     {
         /// <summary>
-        /// Applies migrations and applies migrations.
+        /// Ensures that the database is properly migrated and populated.
         /// </summary>
-        public static async Task EnsureDatabaseCreatedAsync(this AppDbContext context)
+        public static async Task UpdateDatabaseAsync(AppDbContext context)
         {
-            if(!await context.IsMigratedAsync())
-                await context.Database.MigrateAsync();
+            await EnsureDatabaseCreatedAsync(context);
+            await EnsureSystemItemsCreatedAsync(context);
+            await EnsureTitlesNormalizedAsync(context);
         }
 
         /// <summary>
-        /// Checks if there are no pending migrations.
+        /// Applies migrations and applies migrations.
         /// </summary>
-        private static async Task<bool> IsMigratedAsync(this AppDbContext context)
+        public static async Task EnsureDatabaseCreatedAsync(AppDbContext context)
         {
             var applied = await context.GetService<IHistoryRepository>().GetAppliedMigrationsAsync();
             var total = context.GetService<IMigrationsAssembly>().Migrations;
-            return !total.Select(x => x.Key).Except(applied.Select(x => x.MigrationId)).Any();
+            var isMigrated = !total.Select(x => x.Key).Except(applied.Select(x => x.MigrationId)).Any();
+
+            if(!isMigrated)
+                await context.Database.MigrateAsync();
         }
 
         /// <summary>
         /// Adds required records (identity, config, etc.).
         /// </summary>
-        public static async Task EnsureSystemItemsCreatedAsync(this AppDbContext db)
+        private static async Task EnsureSystemItemsCreatedAsync(AppDbContext db)
         {
             if(!db.Roles.Any())
             {
@@ -66,6 +71,30 @@ namespace Bonsai.Data.Utils
             }
 
             await db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Applies normalized names to pages and media.
+        /// </summary>
+        private static async Task EnsureTitlesNormalizedAsync(AppDbContext db)
+        {
+            var pages = await db.Pages.Where(x => x.NormalizedTitle == null).ToListAsync();
+            if (pages.Any())
+            {
+                foreach (var p in pages)
+                    p.NormalizedTitle = PageHelper.NormalizeTitle(p.Title);
+
+                await db.SaveChangesAsync();
+            }
+
+            var media = await db.Media.Where(x => x.NormalizedTitle == null).ToListAsync();
+            if (media.Any())
+            {
+                foreach (var p in media)
+                    p.NormalizedTitle = PageHelper.NormalizeTitle(p.Title);
+
+                await db.SaveChangesAsync();
+            }
         }
     }
 }

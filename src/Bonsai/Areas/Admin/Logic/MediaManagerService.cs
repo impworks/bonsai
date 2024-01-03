@@ -89,7 +89,7 @@ namespace Bonsai.Areas.Admin.Logic
                            .Where(x => x.IsDeleted == false);
 
             if(!string.IsNullOrEmpty(request.SearchQuery))
-                query = query.Where(x => x.Title.ToLower().Contains(request.SearchQuery.ToLower()));
+                query = query.Where(x => x.NormalizedTitle.Contains(PageHelper.NormalizeTitle(request.SearchQuery)));
 
             if (request.EntityId != null)
                 query = query.Where(x => x.Tags.Any(y => y.ObjectId == request.EntityId));
@@ -135,13 +135,15 @@ namespace Bonsai.Areas.Admin.Logic
             var tags = await GetTagsForUploadedMedia(vm);
             var meta = await handler.ExtractMetadataAsync(paths.LocalPath, file.ContentType);
 
+            var title = vm.UseFileNameAsTitle ? SanitizeFileName(file.FileName) : vm.Title;
             var media = new Media
             {
                 Id = id,
                 Key = key,
                 Type = handler.MediaType,
                 MimeType = file.ContentType,
-                Title = vm.UseFileNameAsTitle ? SanitizeFileName(file.FileName) : vm.Title,
+                Title = title,
+                NormalizedTitle = PageHelper.NormalizeTitle(title),
                 FilePath = paths.UrlPath,
                 UploadDate = DateTimeOffset.Now,
                 Uploader = user,
@@ -220,6 +222,7 @@ namespace Bonsai.Areas.Admin.Logic
             _db.Changes.Add(changeset);
 
             _mapper.Map(vm, media);
+            media.NormalizedTitle = PageHelper.NormalizeTitle(vm.Title);
 
             if(revertedId != null)
                 media.IsDeleted = false;

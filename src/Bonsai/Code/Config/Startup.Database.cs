@@ -74,8 +74,7 @@ namespace Bonsai.Code.Config
                     async () =>
                     {
                         var db = sp.GetService<AppDbContext>();
-                        await db.EnsureDatabaseCreatedAsync();
-                        await db.EnsureSystemItemsCreatedAsync();
+                        await AppDbContextHelper.UpdateDatabaseAsync(db);
                     }
                 );
             }

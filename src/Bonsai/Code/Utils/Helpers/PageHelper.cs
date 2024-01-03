@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
@@ -21,11 +22,24 @@ namespace Bonsai.Code.Utils.Helpers
         );
 
         /// <summary>
+        /// Russian culture cached.
+        /// </summary>
+        private static readonly CultureInfo RuCulture = CultureInfo.GetCultureInfo("ru-RU");
+
+        /// <summary>
         /// Returns the URL-friendly version of the page's title.
         /// </summary>
         public static string EncodeTitle(string title)
         {
             return InvalidChars.Replace(title, "_");
+        }
+
+        /// <summary>
+        /// Applies key-insensitive normalization to a title.
+        /// </summary>
+        public static string NormalizeTitle(string title)
+        {
+            return title?.ToLower(RuCulture);
         }
 
         /// <summary>
