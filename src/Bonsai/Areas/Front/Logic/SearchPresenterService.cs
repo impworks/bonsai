@@ -5,6 +5,8 @@ using Bonsai.Areas.Front.ViewModels.Page;
 using Bonsai.Areas.Front.ViewModels.Search;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Front.Logic
@@ -14,16 +16,29 @@ namespace Bonsai.Areas.Front.Logic
     /// </summary>
     public class SearchPresenterService
     {
-        public SearchPresenterService(AppDbContext db, ISearchEngine search)
+        public SearchPresenterService(AppDbContext db, ISearchEngine search, IMapper mapper)
         {
             _db = db;
             _search = search;
+            _mapper = mapper;
         }
 
         private readonly AppDbContext _db;
         private readonly ISearchEngine _search;
+        private readonly IMapper _mapper;
 
         private const int MIN_QUERY_LENGTH = 3;
+
+        /// <summary>
+        /// Returns the exact match if one exists.
+        /// </summary>
+        public async Task<PageTitleVM> FindExactAsync(string query)
+        {
+            return await _db.Pages
+                            .Where(x => x.IsDeleted == false && x.Aliases.Any(y => y.Title == query))
+                            .ProjectToType<PageTitleVM>(_mapper.Config)
+                            .FirstOrDefaultAsync();
+        }
 
         /// <summary>
         /// Find pages matching the query.

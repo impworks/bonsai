@@ -44,6 +44,10 @@ namespace Bonsai.Areas.Front.Controllers
         [Route("")]
         public async Task<ActionResult> Search([FromQuery] string query)
         {
+            var exact = await _search.FindExactAsync(query);
+            if (exact != null)
+                return RedirectToAction("Description", "Page", new { key = exact.Key });
+
             var results = await _search.SearchAsync(query);
             var vm = new SearchVM {Query = query, Results = results};
             return View(vm);
