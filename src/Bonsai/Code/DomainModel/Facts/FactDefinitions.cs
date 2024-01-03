@@ -36,7 +36,7 @@ namespace Bonsai.Code.DomainModel.Facts
                         new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
                         new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
                         new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
-                        new FactDefinition<StringFactModel>("Burial", "Место захоронения")
+                        new FactDefinition<StringFactModel>("Burial", "Место захоронения", "Захоронение")
                     ),
                     new FactDefinitionGroup(
                         "Bio",
@@ -86,7 +86,7 @@ namespace Bonsai.Code.DomainModel.Facts
                         new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
                         new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
                         new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
-                        new FactDefinition<StringFactModel>("Burial", "Место захоронения")
+                        new FactDefinition<StringFactModel>("Burial", "Место захоронения", "Захоронение")
                     ),
                     new FactDefinitionGroup(
                         "Bio",
