@@ -100,16 +100,13 @@ namespace Bonsai.Areas.Admin.Logic
             var totalCount = await query.CountAsync();
             result.PageCount = (int) Math.Ceiling((double) totalCount / PageSize);
 
+            var isDesc = request.OrderDescending ?? false;
             if (request.OrderBy == nameof(Media.Tags))
-            {
-                query = request.OrderDescending ?? false
-                    ? query.OrderByDescending(x => x.Tags.Count)
-                    : query.OrderBy(x => x.Tags.Count);
-            }
+                query = query.OrderBy(x => x.Tags.Count, isDesc);
+            else if (request.OrderBy == nameof(Media.Title))
+                query = query.OrderBy(x => x.Title, isDesc).ThenBy(x => x.UploadDate, isDesc);
             else
-            {
-                query = query.OrderBy(request.OrderBy, request.OrderDescending ?? false);
-            }
+                query = query.OrderBy(request.OrderBy, isDesc);
 
             result.Items = await query.ProjectToType<MediaThumbnailExtendedVM>(_mapper.Config)
                                       .Skip(PageSize * request.Page)
