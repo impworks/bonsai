@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Bonsai.Data.Models;
 
 namespace Bonsai.Code.Services.Config
 {
@@ -33,5 +34,10 @@ namespace Bonsai.Code.Services.Config
         /// Tree render thoroughness coefficient.
         /// </summary>
         public int TreeRenderThoroughness { get; set; }
+
+        /// <summary>
+        /// Allowed kinds of trees.
+        /// </summary>
+        public TreeKind TreeKinds { get; set; }
     }
 }

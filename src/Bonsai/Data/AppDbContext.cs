@@ -76,6 +76,8 @@ namespace Bonsai.Data
             builder.Entity<PageReference>().HasOne(x => x.Source).WithMany().HasForeignKey(x => x.SourceId);
             builder.Entity<PageReference>().HasOne(x => x.Destination).WithMany(x => x.References).HasForeignKey(x => x.DestinationId);
 
+            builder.Entity<TreeLayout>().HasOne(x => x.Page).WithMany().IsRequired(false).HasForeignKey(x => x.PageId);
+
             if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
                 ApplyDataTimeOffsetConverter(builder);
         }
