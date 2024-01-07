@@ -36,6 +36,8 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly AppDbContext _db;
         private readonly IBackgroundJobService _jobs;
 
+        protected override Type ListStateType => typeof(RelationsListRequestVM);
+
         /// <summary>
         /// Displays the list of relations.
         /// </summary>
@@ -43,6 +45,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("")]
         public async Task<ActionResult> Index(RelationsListRequestVM request)
         {
+            PersistListState(request);
             ViewBag.Data = await GetDataAsync(request);
             var rels = await _rels.GetRelationsAsync(request);
             return View(rels);

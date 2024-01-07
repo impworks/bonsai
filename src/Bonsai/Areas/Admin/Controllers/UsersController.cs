@@ -38,14 +38,17 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly ISearchEngine _search;
         private readonly AppDbContext _db;
 
+        protected override Type ListStateType => typeof(UsersListRequestVM);
+
         /// <summary>
         /// Displays the list of users.
         /// </summary>
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult> Index([FromQuery] UsersListRequestVM vm)
+        public async Task<ActionResult> Index([FromQuery] UsersListRequestVM request)
         {
-            var users = await _users.GetUsersAsync(vm);
+            PersistListState(request);
+            var users = await _users.GetUsersAsync(request);
             ViewBag.AllowPasswordAuth = _config.GetStaticConfig().Auth.AllowPasswordAuth;
             return View(users);
         }

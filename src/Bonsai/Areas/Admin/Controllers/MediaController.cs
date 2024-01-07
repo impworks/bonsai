@@ -40,12 +40,15 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly IBackgroundJobService _jobs;
         private readonly AppDbContext _db;
 
+        protected override Type ListStateType => typeof(MediaListRequestVM);
+
         /// <summary>
         /// Displays the list of pages.
         /// </summary>
         [HttpGet]
         public async Task<ActionResult> Index(MediaListRequestVM request)
         {
+            PersistListState(request);
             var vm = await _media.GetMediaAsync(request);
             return View(vm);
         }
@@ -144,7 +147,7 @@ namespace Bonsai.Areas.Admin.Controllers
                         return RedirectToAction("Update", new {id = nextId.Value, saveAction = vm.SaveAction});
                 }
 
-                return Redirect(DefaultActionUrl);
+                return RedirectToSuccess();
             }
             catch (ValidationException ex)
             {

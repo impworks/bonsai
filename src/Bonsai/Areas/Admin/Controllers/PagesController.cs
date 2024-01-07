@@ -43,6 +43,8 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly AppDbContext _db;
         private readonly IBackgroundJobService _jobs;
 
+        protected override Type ListStateType => typeof(PagesListRequestVM);
+
         /// <summary>
         /// Readable captions of the fields.
         /// </summary>
@@ -61,6 +63,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(PagesListRequestVM request)
         {
+            PersistListState(request);
             var vm = await _pages.GetPagesAsync(request);
             return View(vm);
         }

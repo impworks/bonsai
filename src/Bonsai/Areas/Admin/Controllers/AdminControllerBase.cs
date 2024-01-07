@@ -1,11 +1,14 @@
-﻿using Bonsai.Areas.Admin.Logic.Auth;
+﻿using System;
+using Bonsai.Areas.Admin.Logic.Auth;
 using Bonsai.Areas.Admin.Utils;
+using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -44,9 +47,23 @@ namespace Bonsai.Areas.Admin.Controllers
         /// <summary>
         /// Saves the message for the next page.
         /// </summary>
-        protected ActionResult RedirectToSuccess(string msg)
+        protected ActionResult RedirectToSuccess(string msg = null)
         {
-            ShowMessage(msg);
+            if(!string.IsNullOrEmpty(msg))
+                ShowMessage(msg);
+
+            if (TempData[ListStateKey] is string listState)
+            {
+                try
+                {
+                    var json = (ListRequestVM) JsonConvert.DeserializeObject(listState, ListStateType);
+                    var url = ListRequestHelper.GetUrl(DefaultActionUrl, json);
+                    return Redirect(url);
+                }
+                catch
+                {
+                }
+            }
             return Redirect(DefaultActionUrl);
         }
 
@@ -61,5 +78,23 @@ namespace Bonsai.Areas.Admin.Controllers
                 Message = msg
             });
         }
+
+        /// <summary>
+        /// Stores the last list state in the temporary storage.
+        /// </summary>
+        protected void PersistListState(ListRequestVM request)
+        {
+            TempData[ListStateKey] = JsonConvert.SerializeObject(request, Formatting.None);
+        }
+
+        /// <summary>
+        /// Returns the key for persisting storage.
+        /// </summary>
+        private string ListStateKey => GetType().Name + "." + nameof(ListRequestVM);
+
+        /// <summary>
+        /// Default type to use for list state deserialization.
+        /// </summary>
+        protected virtual Type ListStateType => typeof(ListRequestVM);
     }
 }

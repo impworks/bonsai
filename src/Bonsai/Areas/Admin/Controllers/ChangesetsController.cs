@@ -23,6 +23,8 @@ namespace Bonsai.Areas.Admin.Controllers
         private readonly ChangesetsManagerService _changes;
         private readonly AppDbContext _db;
 
+        protected override Type ListStateType => typeof(ChangesetsListRequestVM);
+
         #region Public methods
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(ChangesetsListRequestVM request)
         {
+            PersistListState(request);
             var vm = await _changes.GetChangesetsAsync(request);
             return View(vm);
         }
