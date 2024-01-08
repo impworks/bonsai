@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace Bonsai.Data.Models
 {
     /// <summary>
     /// Tree kinds which can be configured to auto-calculate.
     /// </summary>
+    [Flags]
     public enum TreeKind
     {
         /// <summary>
