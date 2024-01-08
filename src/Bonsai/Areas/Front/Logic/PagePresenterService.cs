@@ -9,6 +9,7 @@ using Bonsai.Code.DomainModel.Facts;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
+using Bonsai.Code.Services.Config;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -24,18 +25,20 @@ namespace Bonsai.Areas.Front.Logic
     /// </summary>
     public class PagePresenterService
     {
-        public PagePresenterService(AppDbContext db, IMapper mapper, MarkdownService markdown, RelationsPresenterService relations)
+        public PagePresenterService(AppDbContext db, IMapper mapper, MarkdownService markdown, RelationsPresenterService relations, BonsaiConfigService config)
         {
             _db = db;
             _mapper = mapper;
             _markdown = markdown;
             _relations = relations;
+            _config = config;
         }
 
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly MarkdownService _markdown;
         private readonly RelationsPresenterService _relations;
+        private readonly BonsaiConfigService _config;
 
         #region Public methods
 
@@ -76,14 +79,27 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the tree VM (empty).
         /// </summary>
-        public async Task<PageTreeVM> GetPageTreeAsync(string key)
+        public async Task<PageTreeVM> GetPageTreeAsync(string key, TreeKind? kind = null)
         {
-            var page = await FindPageAsync(key);
+            var configValue = _config.GetDynamicConfig().TreeKinds;
+            var supportedKinds = Enum.GetValues<TreeKind>()
+                                     .Where(x => configValue.HasFlag(x))
+                                     .ToList();
 
+            if (kind == null)
+                kind = supportedKinds.Count > 0 ? supportedKinds.First() : throw new KeyNotFoundException();
+            else if (!Enum.IsDefined(kind.Value))
+                throw new KeyNotFoundException();
+
+            var page = await FindPageAsync(key);
             if(page.Type != PageType.Person)
                 throw new KeyNotFoundException();
 
-            return Configure(page, new PageTreeVM());
+            return Configure(page, new PageTreeVM
+            {
+                TreeKind = kind.Value,
+                SupportedKinds = supportedKinds
+            });
         }
 
         /// <summary>

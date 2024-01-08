@@ -11,7 +11,7 @@
 }
 
 <div class="tree">
-    <div class="tree-wrapper" data-key="@Model.Key">
+    <div class="tree-wrapper" data-key="@Model.Key" data-kind="@Model.TreeKind">
         <svg class="tree-back" :width="width" :height="height">
             <polyline :points="e.points" v-for="e in edges" />
         </svg>

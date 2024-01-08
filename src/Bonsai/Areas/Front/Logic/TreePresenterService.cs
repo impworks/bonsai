@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Tree;
+using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bonsai.Areas.Front.Logic
 {
@@ -36,17 +40,17 @@ namespace Bonsai.Areas.Front.Logic
         /// <summary>
         /// Returns the entire tree.
         /// </summary>
-        public async Task<TreeVM> GetTreeAsync(string key)
+        public async Task<TreeVM> GetTreeAsync(string key, TreeKind kind)
         {
             var keyLower = key?.ToLowerInvariant();
-
+            
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.TreeLayout)
                                 .GetAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false, "Страница не найдена");
 
             var result = new TreeVM {RootId = page.Id};
-            var json = page?.TreeLayout?.LayoutJson;
+            var json = await GetLayoutJsonAsync();
             if (!string.IsNullOrEmpty(json))
             {
                 result.Content = JObject.Parse(json);
@@ -62,6 +66,16 @@ namespace Bonsai.Areas.Front.Logic
             }
 
             return result;
+
+            async Task<string> GetLayoutJsonAsync()
+            {
+                if (kind == TreeKind.FullTree)
+                    return page.TreeLayout?.LayoutJson;
+
+                var layout = await _db.TreeLayouts
+                                      .FirstOrDefaultAsync(x => x.Kind == kind && x.PageId == page.Id);
+                return layout?.LayoutJson ?? throw new OperationException("Страница не найдена");
+            }
         }
 
         #endregion

@@ -12,20 +12,22 @@
     $trees.each(function () {
         var $tree = $(this);
         var $wrap = $tree.find('.tree-wrapper');
-        var key = $wrap.data('key');
 
-        requestTreeInfo($wrap, key, 0);
+        var key = $wrap.data('key');
+        var kind = $wrap.data('kind');
+        var url = '/util/tree/' + encodeURIComponent(key) + '?kind=' + encodeURIComponent(kind);
+
+        requestTreeInfo($wrap, url, 0);
     });
 
-    function requestTreeInfo($wrap, key, count) {
-        if (count > 10) {
+    function requestTreeInfo($wrap, url, retryCount) {
+        if (retryCount > 10) {
             var $tree = $wrap.closest('.tree');
             $tree.find('.tree-preloader').remove();
             $tree.find('.tree-error').show();
             return;
         }
 
-        var url = '/util/tree/' + encodeURIComponent(key);
         $.ajax(url)
             .then(function(data) {
                 if (data && data.content) {
@@ -35,10 +37,12 @@
 
                 setTimeout(
                     function () {
-                        requestTreeInfo($wrap, key, count + 1);
+                        requestTreeInfo($wrap, url, retryCount + 1);
                     },
                     5000
                 );
+            }, function () {
+                requestTreeInfo($wrap, url, 11);
             });
     }
 

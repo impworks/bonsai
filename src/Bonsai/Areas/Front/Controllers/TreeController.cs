@@ -4,6 +4,7 @@ using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
+using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,14 +32,14 @@ namespace Bonsai.Areas.Front.Controllers
         /// <summary>
         /// Displays the internal page for a tree.
         /// </summary>
-        [Route("{key}/main")]
-        public async Task<ActionResult> Main(string key)
+        [Route("{key}")]
+        public async Task<ActionResult> Main(string key, [FromQuery] TreeKind kind = TreeKind.FullTree)
         {
             var encKey = PageHelper.EncodeTitle(key);
             if (encKey != key)
                 return RedirectToActionPermanent("Main", new { key = encKey });
 
-            var model = await _cache.GetOrAddAsync(key, () => _pages.GetPageTreeAsync(key));
+            var model = await _cache.GetOrAddAsync(key + "." + kind, () => _pages.GetPageTreeAsync(key, kind));
 
             return View(model);
         }
@@ -47,10 +48,10 @@ namespace Bonsai.Areas.Front.Controllers
         /// Returns the rendered tree.
         /// </summary>
         [Route("~/util/tree/{key}")]
-        public async Task<ActionResult> GetTreeData(string key)
+        public async Task<ActionResult> GetTreeData(string key, [FromQuery] TreeKind kind = TreeKind.FullTree)
         {
             var encKey = PageHelper.EncodeTitle(key);
-            var data = await _tree.GetTreeAsync(encKey);
+            var data = await _tree.GetTreeAsync(encKey, kind);
             return Json(data);
         }
     }
