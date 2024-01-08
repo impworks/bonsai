@@ -1,4 +1,6 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Bonsai.Data.Models
+@using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.DynamicConfig.UpdateDynamicConfigVM
 @{
     ViewBag.Title = "Настройки";
@@ -54,7 +56,16 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3">Построение древа</label>
+                <label class="col-sm-3">Типы деревьев</label>
+                <div class="col-sm-9">
+                    @{ TreeKindOption(TreeKind.FullTree, "Полное дерево", "весь связанный граф родственников"); }
+                    @{ TreeKindOption(TreeKind.CloseFamily, "Близкие родственники", "на два уровня вокруг, от бабушек до внуков"); }
+                    @{ TreeKindOption(TreeKind.Ancestors, "Предки", "все кровные родственники вверх"); }
+                    @{ TreeKindOption(TreeKind.Descendants, "Потомки", "все кровные родственники вниз, включая супругов"); }
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3">Внешний вид дерева</label>
                 <div class="col-sm-9">
                     <div class="mb-2">
                         <input asp-for="TreeRenderThoroughness" type="range" min="1" max="100" class="form-control"/>
@@ -90,3 +101,16 @@
         </form>
     </div>
 </div>
+
+@{
+    void TreeKindOption(TreeKind kind, string caption, string description)
+    {
+        <div class="ml-4">
+            <input type="checkbox" name="TreeKinds[]" value="@kind" checked="@(Model.TreeKinds.Contains(kind))" class="custom-control-input" id="TreeKinds.@kind"/>
+            <label class="custom-control-label" for="TreeKinds.@kind">
+                @caption <br/>
+                <small class="text-muted">@description</small>
+            </label>
+        </div>
+    }
+}

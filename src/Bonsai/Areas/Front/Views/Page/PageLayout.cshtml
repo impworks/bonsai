@@ -1,7 +1,9 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Auth
 @using Bonsai.Areas.Front.ViewModels.Page
 @using Bonsai.Areas.Front.ViewModels.Page.InfoBlock
+@using Bonsai.Code.Services.Config
 @using Bonsai.Data.Models
+@inject BonsaiConfigService ConfigService
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 
@@ -9,6 +11,9 @@
     var infoBlock = (InfoBlockVM)Model.InfoBlock;
     var user = (UserVM)ViewBag.User;
     var isPreview = (bool?)ViewBag.IsPreview ?? false;
+
+    var showTree = pageVm.Type == PageType.Person
+                   && ConfigService.GetDynamicConfig().TreeKinds != 0;
 }
 
 <div id="page" class="row flex-grow-1">
@@ -54,7 +59,7 @@
                         <i class="fa fa-image"></i> Медиа
                     </a>
                 </li>
-                @if(pageVm.Type == PageType.Person)
+                @if (showTree)
                 {
                     <li class="nav-item">
                         <a class="nav-link @(pageVm is PageTreeVM ? "active" : "")" href="@Url.Action("Tree", new {key = pageVm.Key})">
