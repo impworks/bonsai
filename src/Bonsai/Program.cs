@@ -44,6 +44,7 @@ namespace Bonsai
 
                     services.AddTransient<MediaEncoderJob>();
                     services.AddTransient<EntireTreeLayoutJob>();
+                    services.AddTransient<PartialTreesLayoutJob>();
                 })
                 .Build()
                 .Run();
