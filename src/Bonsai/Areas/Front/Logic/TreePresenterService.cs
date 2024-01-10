@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Front.ViewModels.Tree;
 using Bonsai.Code.Utils;
@@ -9,7 +8,6 @@ using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bonsai.Areas.Front.Logic
 {

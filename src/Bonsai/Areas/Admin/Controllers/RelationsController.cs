@@ -75,7 +75,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 await _rels.CreateAsync(vm, User);
                 await _db.SaveChangesAsync();
-                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Связь создана");
             }
@@ -111,7 +111,7 @@ namespace Bonsai.Areas.Admin.Controllers
             {
                 await _rels.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
-                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Связь обновлена");
             }
@@ -146,7 +146,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _rels.RemoveAsync(vm.Id, User);
             
             await _db.SaveChangesAsync();
-            await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+            await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess("Связь удалена");
         }

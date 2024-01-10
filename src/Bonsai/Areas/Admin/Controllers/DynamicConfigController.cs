@@ -53,7 +53,7 @@ namespace Bonsai.Areas.Admin.Controllers
             _config.ResetCache();
 
             if (oldValue.TreeRenderThoroughness != vm.TreeRenderThoroughness)
-                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess("Настройки сохранены");
         }
