@@ -43,8 +43,7 @@ namespace Bonsai
                     services.AddHostedService(sp => sp.GetService<BackgroundJobService>());
 
                     services.AddTransient<MediaEncoderJob>();
-                    services.AddTransient<EntireTreeLayoutJob>();
-                    services.AddTransient<PartialTreesLayoutJob>();
+                    services.AddTransient<TreeLayoutJob>();
                 })
                 .Build()
                 .Run();

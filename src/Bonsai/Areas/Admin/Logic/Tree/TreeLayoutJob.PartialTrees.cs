@@ -5,41 +5,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Code.DomainModel.Relations;
-using Bonsai.Code.Services.Config;
-using Bonsai.Data;
 using Bonsai.Data.Models;
-using Jering.Javascript.NodeJS;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 
 namespace Bonsai.Areas.Admin.Logic.Tree
 {
     /// <summary>
     /// Background job for recalculating the partial trees.
     /// </summary>
-    public class PartialTreesLayoutJob: TreeLayoutJobBase
+    public partial class TreeLayoutJob
     {
-        public PartialTreesLayoutJob(AppDbContext db, INodeJSService js, BonsaiConfigService config, ILogger logger)
-            : base(db, js, config, logger)
-        {
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken token)
-        {
-            var ctx = await GetRelationContextAsync();
-
-            await ProcessTreeKindAsync(TreeKind.CloseFamily, GetCloseFamilyTree, ctx, token);
-            await ProcessTreeKindAsync(TreeKind.Ancestors, GetAncestorsTree, ctx, token);
-            await ProcessTreeKindAsync(TreeKind.Descendants, GetDescendantsTree, ctx, token);
-        }
-
         /// <summary>
         /// Processes the layouts for a particular tree kind.
         /// </summary>
-        private async Task ProcessTreeKindAsync(TreeKind kind, Func<RelationContext, RelationContext.PageExcerpt, TreeLayoutVM> treeGetter, RelationContext ctx, CancellationToken token)
+        private async Task ProcessPartialTreeAsync(TreeKind kind, Func<RelationContext, Guid, TreeLayoutVM> treeGetter, RelationContext ctx, CancellationToken token)
         {
-            var config = _config.GetDynamicConfig();
-            if (config.TreeKinds.HasFlag(kind) == false)
+            if (_config.TreeKinds.HasFlag(kind) == false)
                 return;
 
             _logger.Information($"Partial tree ({kind}) layouts started: {ctx.Pages.Count} subtrees.");
@@ -47,7 +28,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
             var layouts = new List<TreeLayout>();
             foreach (var page in ctx.Pages.Values)
             {
-                var tree = treeGetter(ctx, page);
+                var tree = treeGetter(ctx, page.Id);
                 var rendered = await RenderTreeAsync(tree, 600, token);
                 layouts.Add(new TreeLayout
                 {
@@ -70,7 +51,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// <summary>
         /// Finds close family members for the page.
         /// </summary>
-        private TreeLayoutVM GetCloseFamilyTree(RelationContext ctx, RelationContext.PageExcerpt page)
+        private TreeLayoutVM GetCloseFamilyTree(RelationContext ctx, Guid pageId)
         {
             throw new NotImplementedException();
         }
@@ -78,17 +59,17 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// <summary>
         /// Finds ancestors for the page.
         /// </summary>
-        private TreeLayoutVM GetAncestorsTree(RelationContext ctx, RelationContext.PageExcerpt page)
+        private TreeLayoutVM GetAncestorsTree(RelationContext ctx, Guid pageId)
         {
-            throw new NotImplementedException();
+            return GetSubtree(ctx, pageId, r => r.Type == RelationType.Parent);
         }
 
         /// <summary>
         /// Finds descendants for the page.
         /// </summary>
-        private TreeLayoutVM GetDescendantsTree(RelationContext ctx, RelationContext.PageExcerpt page)
+        private TreeLayoutVM GetDescendantsTree(RelationContext ctx, Guid pageId)
         {
-            throw new NotImplementedException();
+            return GetSubtree(ctx, pageId, rel => rel.Type == RelationType.Child);
         }
     }
 }

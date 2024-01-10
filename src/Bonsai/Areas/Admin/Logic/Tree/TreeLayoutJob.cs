@@ -1,92 +1,92 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading;
 using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Tree;
+using Bonsai.Areas.Front.Logic;
+using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services.Config;
-using Bonsai.Code.Utils;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Data;
-using Bonsai.Data.Models;
-using Impworks.Utils.Linq;
+using Impworks.Utils.Strings;
 using Jering.Javascript.NodeJS;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
+using Bonsai.Data.Models;
+using System.Collections.Generic;
+using System.Linq;
+using Impworks.Utils.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Admin.Logic.Tree
 {
-    /// <summary>
-    /// Background job for recalculating the entire tree's layout.
-    /// </summary>
-    public class EntireTreeLayoutJob : TreeLayoutJobBase
+    public partial class TreeLayoutJob: JobBase
     {
-        public EntireTreeLayoutJob(AppDbContext db, INodeJSService js, BonsaiConfigService config, ILogger logger)
-            : base(db, js, config, logger)
+        public TreeLayoutJob(AppDbContext db, INodeJSService js, BonsaiConfigService config, ILogger logger)
         {
+            _db = db;
+            _js = js;
+            _config = config.GetDynamicConfig();
+            _logger = logger;
         }
+
+        private readonly AppDbContext _db;
+        private readonly INodeJSService _js;
+        private readonly DynamicConfig _config;
+        private readonly ILogger _logger;
 
         protected override async Task ExecuteAsync(CancellationToken token)
         {
-            await FlushTreeAsync(_db);
+            await _db.Pages.ExecuteUpdateAsync(x => x.SetProperty(p => p.TreeLayoutId, (Guid?)null), token);
+            await _db.TreeLayouts.ExecuteDeleteAsync(token);
 
-            if (_config.GetDynamicConfig().TreeKinds.HasFlag(TreeKind.FullTree) == false)
-                return;
+            var opts = new RelationContextOptions { PeopleOnly = true };
+            var ctx = await RelationContext.LoadContextAsync(_db, opts);
 
-            var hasPages = await _db.Pages.AnyAsync();
-            if (!hasPages)
-                return;
+            // await ProcessPartialTreeAsync(TreeKind.CloseFamily, GetCloseFamilyTree, ctx, token);
+            await ProcessPartialTreeAsync(TreeKind.Ancestors, GetAncestorsTree, ctx, token);
+            await ProcessPartialTreeAsync(TreeKind.Descendants, GetDescendantsTree, ctx, token);
 
-            var ctx = await GetRelationContextAsync();
-            var trees = GetAllSubtrees(ctx);
-            var thoroughness = GetThoroughness();
-
-            _logger.Information($"Full tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
-
-            foreach (var tree in trees)
-            {
-                var rendered = await RenderTree(tree, thoroughness, token);
-                var layout = new TreeLayout
-                {
-                    Id = Guid.NewGuid(),
-                    LayoutJson = rendered,
-                    GenerationDate = DateTimeOffset.Now
-                };
-
-                await SaveLayoutAsync(_db, tree, layout);
-            }
-
-            _logger.Information("Full tree layout completed.");
+            await ProcessFullTreeAsync(ctx, token);
         }
 
-        #region Tree generation
-
         /// <summary>
-        /// Loads all pages and groups them into subgraphs by relations.
+        /// Renders the tree using ELK.js.
         /// </summary>
-        private IReadOnlyList<TreeLayoutVM> GetAllSubtrees(RelationContext ctx)
+        protected async Task<string> RenderTreeAsync(TreeLayoutVM tree, int thoroughness, CancellationToken token)
         {
-            var excluded = new HashSet<Guid>();
+            var json = JsonConvert.SerializeObject(tree);
+            var result = await _js.InvokeFromFileAsync<string>(
+                "./External/tree/tree-layout.js",
+                args: [json, thoroughness],
+                cancellationToken: token
+            );
 
-            var result = new List<TreeLayoutVM>();
-
-            while (true)
-            {
-                var root = ctx.Pages.Keys.FirstOrDefault(x => !excluded.Contains(x));
-                if (root == Guid.Empty)
-                    break;
-
-                result.Add(GetSubtree(ctx, excluded, root));
-            }
+            if (string.IsNullOrEmpty(result))
+                throw new Exception("Failed to render tree: output is empty.");
 
             return result;
         }
 
         /// <summary>
-        /// Returns the entire tree.
+        /// Returns the photo for a card, depending on the gender, reverting to a default one if unspecified.
         /// </summary>
-        private TreeLayoutVM GetSubtree(RelationContext context, HashSet<Guid> visited, Guid rootId)
+        protected string GetPhoto(string actual, bool gender)
+        {
+            var defaultPhoto = gender
+                ? "~/assets/img/unknown-male.png"
+                : "~/assets/img/unknown-female.png";
+
+            return StringHelper.Coalesce(
+                MediaPresenterService.GetSizedMediaPath(actual, MediaSize.Small),
+                defaultPhoto
+            );
+        }
+
+        /// <summary>
+        /// Returns a subtree around a page using the relation filter.
+        /// </summary>
+        protected TreeLayoutVM GetSubtree(RelationContext context, Guid rootId, Func<RelationContext.RelationExcerpt, bool> relFilter)
         {
             var parents = new HashSet<string>();
 
@@ -98,7 +98,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
 
             while (pending.TryDequeue(out var currId))
             {
-                if (visited.Contains(currId))
+                if (persons.ContainsKey(currId))
                     continue;
 
                 if (!context.Pages.TryGetValue(currId, out var page))
@@ -121,13 +121,11 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                     }
                 );
 
-                visited.Add(currId);
-
                 if (context.Relations.TryGetValue(currId, out var rels))
                 {
                     foreach (var rel in rels)
                     {
-                        if (rel.Type != RelationType.Child && rel.Type != RelationType.Parent && rel.Type != RelationType.Spouse)
+                        if(!relFilter(rel))
                             continue;
 
                         pending.Enqueue(rel.DestinationId);
@@ -140,6 +138,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
 
             return new TreeLayoutVM
             {
+                PageId = rootId,
                 Persons = persons.Values.OrderBy(x => x.Name).ToList(),
                 Relations = relations.Values.OrderBy(x => x.Id).ToList()
             };
@@ -192,10 +191,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 if (from.CompareTo(to) >= 1)
                     (from, to) = (to, from);
 
-                var key = keyOverride;
-                if (string.IsNullOrEmpty(key))
-                    key = from + ":" + to;
-
+                var key = StringHelper.Coalesce(keyOverride, from + ":" + to);
                 if (relations.ContainsKey(key))
                     return;
 
@@ -207,50 +203,5 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 });
             }
         }
-
-        /// <summary>
-        /// Returns interpolated thoroughness.
-        /// </summary>
-        private int GetThoroughness()
-        {
-            var cfg = _config.GetDynamicConfig();
-            return Interpolator.MapValue(
-                cfg.TreeRenderThoroughness,
-                new IntervalMap(1, 10, 1, 10),
-                new IntervalMap(11, 50, 11, 600),
-                new IntervalMap(51, 100, 601, 15000)
-            );
-        }
-
-        #endregion
-
-        #region Database processing
-
-        /// <summary>
-        /// Removes all existing tree layouts.
-        /// </summary>
-        private async Task FlushTreeAsync(AppDbContext db)
-        {
-            await db.Pages.ExecuteUpdateAsync(x => x.SetProperty(p => p.TreeLayoutId, (Guid?)null));
-            await db.TreeLayouts.ExecuteDeleteAsync();
-        }
-
-        /// <summary>
-        /// Updates the layout.
-        /// </summary>
-        private async Task SaveLayoutAsync(AppDbContext db, TreeLayoutVM tree, TreeLayout layout)
-        {
-            db.TreeLayouts.Add(layout);
-            await db.SaveChangesAsync();
-
-            foreach (var batch in tree.Persons.Select(x => Guid.Parse(x.Id)).PartitionBySize(100))
-            {
-                await db.Pages
-                        .Where(x => batch.Contains(x.Id))
-                        .ExecuteUpdateAsync(x => x.SetProperty(p => p.TreeLayoutId, layout.Id));
-            }
-        }
-
-        #endregion
     }
 }

@@ -198,7 +198,7 @@ namespace Bonsai.Areas.Front.Controllers
                     await _db.SaveChangesAsync();
 
                     await _search.AddPageAsync(result.User.Page);
-                    await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+                    await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
                 }
 
                 return RedirectToAction("Index", "Home");

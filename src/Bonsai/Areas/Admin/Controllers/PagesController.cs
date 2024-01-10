@@ -100,7 +100,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 var page = await _pages.CreateAsync(vm, User);
                 await _db.SaveChangesAsync();
                 await _search.AddPageAsync(page);
-                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Страница создана");
             }
@@ -137,7 +137,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 var page = await _pages.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
                 await _search.AddPageAsync(page);
-                await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
                 return RedirectToSuccess("Страница обновлена");
             }
@@ -174,7 +174,7 @@ namespace Bonsai.Areas.Admin.Controllers
             
             await _db.SaveChangesAsync();
             await _search.RemovePageAsync(vm.Id);
-            await _jobs.RunAsync(JobBuilder.For<EntireTreeLayoutJob>().SupersedeAll());
+            await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess("Страница удалена");
         }
