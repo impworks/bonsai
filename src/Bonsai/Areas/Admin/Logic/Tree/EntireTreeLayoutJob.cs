@@ -4,16 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Tree;
-using Bonsai.Areas.Front.Logic;
-using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services.Config;
-using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
-using Impworks.Utils.Strings;
 using Jering.Javascript.NodeJS;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -24,38 +20,33 @@ namespace Bonsai.Areas.Admin.Logic.Tree
     /// <summary>
     /// Background job for recalculating the entire tree's layout.
     /// </summary>
-    public class EntireTreeLayoutJob : JobBase
+    public class EntireTreeLayoutJob : TreeLayoutJobBase
     {
-        private readonly AppDbContext _db;
-        private readonly INodeJSService _js;
-        private readonly BonsaiConfigService _config;
-        private readonly ILogger _logger;
-
         public EntireTreeLayoutJob(AppDbContext db, INodeJSService js, BonsaiConfigService config, ILogger logger)
+            : base(db, js, config, logger)
         {
-            _db = db;
-            _js = js;
-            _config = config;
-            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken token)
         {
             await FlushTreeAsync(_db);
 
-            var hasPages = await _db.Pages.AnyAsync(x => x.TreeLayoutId == null);
+            if (_config.GetDynamicConfig().TreeKinds.HasFlag(TreeKind.FullTree) == false)
+                return;
+
+            var hasPages = await _db.Pages.AnyAsync();
             if (!hasPages)
                 return;
 
-            var opts = new RelationContextOptions { PeopleOnly = true };
-            var ctx = await RelationContext.LoadContextAsync(_db, opts);
+            var ctx = await GetRelationContextAsync();
             var trees = GetAllSubtrees(ctx);
+            var thoroughness = GetThoroughness();
 
-            _logger.Information($"Tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
+            _logger.Information($"Full tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
 
             foreach (var tree in trees)
             {
-                var rendered = await RenderTree(_js, tree, _config.GetDynamicConfig(), token);
+                var rendered = await RenderTree(tree, thoroughness, token);
                 var layout = new TreeLayout
                 {
                     Id = Guid.NewGuid(),
@@ -66,7 +57,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 await SaveLayoutAsync(_db, tree, layout);
             }
 
-            _logger.Information("Tree layout completed.");
+            _logger.Information("Full tree layout completed.");
         }
 
         #region Tree generation
@@ -218,47 +209,17 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         }
 
         /// <summary>
-        /// Returns the photo for a card, depending on the gender, reverting to a default one if unspecified.
+        /// Returns interpolated thoroughness.
         /// </summary>
-        private string GetPhoto(string actual, bool gender)
+        private int GetThoroughness()
         {
-            var defaultPhoto = gender
-                ? "~/assets/img/unknown-male.png"
-                : "~/assets/img/unknown-female.png";
-
-            return StringHelper.Coalesce(
-                MediaPresenterService.GetSizedMediaPath(actual, MediaSize.Small),
-                defaultPhoto
-            );
-        }
-
-        #endregion
-
-        #region Tree rendering
-
-        /// <summary>
-        /// Renders the tree using ELK.js.
-        /// </summary>
-        private async Task<string> RenderTree(INodeJSService js, TreeLayoutVM tree, DynamicConfig cfg, CancellationToken token)
-        {
-            var thoroughness = Interpolator.MapValue(
+            var cfg = _config.GetDynamicConfig();
+            return Interpolator.MapValue(
                 cfg.TreeRenderThoroughness,
                 new IntervalMap(1, 10, 1, 10),
                 new IntervalMap(11, 50, 11, 600),
-                new IntervalMap(51, 100, 301, 15000)
+                new IntervalMap(51, 100, 601, 15000)
             );
-
-            var json = JsonConvert.SerializeObject(tree);
-            var result = await js.InvokeFromFileAsync<string>(
-                "./External/tree/tree-layout.js",
-                args: new object[] {json, thoroughness},
-                cancellationToken: token
-            );
-
-            if (string.IsNullOrEmpty(result))
-                throw new Exception("Failed to render tree: output is empty.");
-
-            return result;
         }
 
         #endregion

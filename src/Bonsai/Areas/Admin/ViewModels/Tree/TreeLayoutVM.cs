@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Bonsai.Areas.Admin.ViewModels.Tree
 {
@@ -7,6 +8,11 @@ namespace Bonsai.Areas.Admin.ViewModels.Tree
     /// </summary>
     public class TreeLayoutVM
     {
+        /// <summary>
+        /// Related page (for partial trees only).
+        /// </summary>
+        public Guid? PageId { get; set; }
+
         /// <summary>
         /// All available spouse relations.
         /// </summary>
