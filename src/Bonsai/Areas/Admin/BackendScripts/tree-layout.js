@@ -9,9 +9,8 @@ module.exports = function(callback, jsonIn, thoroughness) {
        .then(function (result) {
             var jsonOut = JSON.stringify(result);
             callback(null, jsonOut);
-        }, function(err) {
-            console.error('Tree layout failed!', err);
-            callback(null, null);
+       }, function (err) {
+            callback(err, null);
        });
 };
 

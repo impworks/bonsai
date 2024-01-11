@@ -137,6 +137,13 @@ namespace Bonsai.Code.DomainModel.Relations
                                          && x.Destination.Type == PageType.Person);
             }
 
+            if (opts.TreeRelationsOnly)
+            {
+                query = query.Where(x => x.Type == RelationType.Child
+                                         || x.Type == RelationType.Parent
+                                         || x.Type == RelationType.Spouse);
+            }
+
             var data = await query.Select(x => new RelationExcerpt
                               {
                                   Id = x.Id,

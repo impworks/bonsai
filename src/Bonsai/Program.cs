@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-
+ 
 namespace Bonsai
 {
     public class Program
@@ -24,6 +24,7 @@ namespace Bonsai
                         .Enrich.FromLogContext()
                         .MinimumLevel.Information()
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+                        .MinimumLevel.Override("System.Net.Http", LogEventLevel.Error)
                         .WriteTo.Console()
                         .WriteTo.Debug()
                         .WriteTo.File(path, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7);

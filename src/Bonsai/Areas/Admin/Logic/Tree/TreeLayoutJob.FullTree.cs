@@ -59,7 +59,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 if (visited.Contains(pageId.ToString()))
                     continue;
 
-                var subtree = GetSubtree(ctx, pageId, rel => rel.Type is RelationType.Child or RelationType.Parent or RelationType.Spouse);
+                var subtree = GetSubtree(ctx, pageId, _ => TraverseMode.Normal);
                 result.Add(subtree);
 
                 foreach (var person in subtree.Persons)
