@@ -14,5 +14,10 @@
         /// Omits loading relations.
         /// </summary>
         public bool PagesOnly { get; set; }
+
+        /// <summary>
+        /// Omits loading relations except for "Parent", "Child" and "Spouse" which are required for the tree.
+        /// </summary>
+        public bool TreeRelationsOnly { get; set; }
     }
 }

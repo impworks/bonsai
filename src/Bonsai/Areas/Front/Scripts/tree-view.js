@@ -1,6 +1,8 @@
 $(function () {
     var $view = $('.tree-view'),
-        $iframe = $view.find('iframe');
+        $iframe = $view.find('iframe'),
+        $toggles = $view.find('.cmd-switch-tree'),
+        $newWin = $view.find('.cmd-new-window');
     
     if($view.length === 0)
         return;
@@ -17,5 +19,18 @@ $(function () {
 
     $view.find('.cmd-fullscreen').click(function () {
         $iframe.fullScreen(true);
+    });
+
+    $toggles.click(function (e) {
+        e.preventDefault();
+
+        var $this = $(this);
+
+        $toggles.removeClass('active');
+        $this.addClass('active');
+
+        var url = $this.attr('href');
+        $newWin.attr('href', url);
+        $iframe.attr('src', url);
     });
 });

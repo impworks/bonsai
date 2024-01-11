@@ -1,5 +1,7 @@
-﻿using System.Threading;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Areas.Front.Logic;
@@ -8,15 +10,13 @@ using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Jobs;
 using Bonsai.Data;
+using Bonsai.Data.Models;
+using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Jering.Javascript.NodeJS;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
-using Bonsai.Data.Models;
-using System.Collections.Generic;
-using System.Linq;
-using Impworks.Utils.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Bonsai.Areas.Admin.Logic.Tree
 {
@@ -40,10 +40,10 @@ namespace Bonsai.Areas.Admin.Logic.Tree
             await _db.Pages.ExecuteUpdateAsync(x => x.SetProperty(p => p.TreeLayoutId, (Guid?)null), token);
             await _db.TreeLayouts.ExecuteDeleteAsync(token);
 
-            var opts = new RelationContextOptions { PeopleOnly = true };
+            var opts = new RelationContextOptions { PeopleOnly = true, TreeRelationsOnly = true };
             var ctx = await RelationContext.LoadContextAsync(_db, opts);
 
-            // await ProcessPartialTreeAsync(TreeKind.CloseFamily, GetCloseFamilyTree, ctx, token);
+            await ProcessPartialTreeAsync(TreeKind.CloseFamily, GetCloseFamilyTree, ctx, token);
             await ProcessPartialTreeAsync(TreeKind.Ancestors, GetAncestorsTree, ctx, token);
             await ProcessPartialTreeAsync(TreeKind.Descendants, GetDescendantsTree, ctx, token);
 
@@ -62,7 +62,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 cancellationToken: token
             );
 
-            if (string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result) || result == "null")
                 throw new Exception("Failed to render tree: output is empty.");
 
             return result;
@@ -86,24 +86,63 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// <summary>
         /// Returns a subtree around a page using the relation filter.
         /// </summary>
-        protected TreeLayoutVM GetSubtree(RelationContext context, Guid rootId, Func<RelationContext.RelationExcerpt, bool> relFilter)
+        protected TreeLayoutVM GetSubtree(RelationContext context, Guid rootId, Func<RelationFilterContext, TraverseMode?> relFilter, TraverseMode initialMode = TraverseMode.Normal)
         {
-            var parents = new HashSet<string>();
+            var danglingParents = new HashSet<Guid>();
+            var parentKeys = new HashSet<string>();
 
             var persons = new Dictionary<Guid, TreePersonVM>();
             var relations = new Dictionary<string, TreeRelationVM>();
 
-            var pending = new Queue<Guid>();
-            pending.Enqueue(rootId);
+            var pending = new Queue<Step>();
+            pending.Enqueue(new Step(rootId, initialMode, 0, null));
 
-            while (pending.TryDequeue(out var currId))
+            while (pending.TryDequeue(out var step))
             {
-                if (persons.ContainsKey(currId))
+                if (persons.ContainsKey(step.PageId))
                     continue;
 
-                if (!context.Pages.TryGetValue(currId, out var page))
+                if (!context.Pages.TryGetValue(step.PageId, out var page))
                     continue;
 
+                AddPage(page, step.Mode);
+
+                if (step.Mode.HasFlag(TraverseMode.TraverseRelations) && context.Relations.TryGetValue(step.PageId, out var rels))
+                {
+                    foreach (var rel in rels)
+                    {
+                        var relMode = relFilter(new RelationFilterContext(step.PageId, step.Distance + 1, rel.Type, step.LastRelationType));
+                        if(relMode == null)
+                            continue;
+
+                        pending.Enqueue(new Step(rel.DestinationId, relMode.Value, step.Distance + 1, rel.Type));
+
+                        if (rel.Type == RelationType.Spouse)
+                            AddRelationship(page.Id, rel.DestinationId);
+                    }
+                }
+            }
+
+            foreach (var parentId in danglingParents)
+            {
+                if (persons.ContainsKey(parentId))
+                    continue;
+
+                if (!context.Pages.TryGetValue(parentId, out var page))
+                    continue;
+
+                AddPage(page, TraverseMode.DeadEnd);
+            }
+
+            return new TreeLayoutVM
+            {
+                PageId = rootId,
+                Persons = persons.Values.OrderBy(x => x.Name).ToList(),
+                Relations = relations.Values.OrderBy(x => x.Id).ToList()
+            };
+
+            void AddPage(RelationContext.PageExcerpt page, TraverseMode mode)
+            {
                 persons.Add(
                     page.Id,
                     new TreePersonVM
@@ -117,31 +156,12 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                         IsDead = page.IsDead,
                         Photo = GetPhoto(page.MainPhotoPath, page.Gender ?? true),
                         Url = page.Key,
-                        Parents = GetParentRelationshipId(page)
+                        Parents = mode.HasFlag(TraverseMode.SetParents)
+                            ? GetParentRelationshipId(page)
+                            : null
                     }
                 );
-
-                if (context.Relations.TryGetValue(currId, out var rels))
-                {
-                    foreach (var rel in rels)
-                    {
-                        if(!relFilter(rel))
-                            continue;
-
-                        pending.Enqueue(rel.DestinationId);
-
-                        if (rel.Type == RelationType.Spouse)
-                            AddRelationship(page.Id, rel.DestinationId);
-                    }
-                }
             }
-
-            return new TreeLayoutVM
-            {
-                PageId = rootId,
-                Persons = persons.Values.OrderBy(x => x.Name).ToList(),
-                Relations = relations.Values.OrderBy(x => x.Id).ToList()
-            };
 
             string GetParentRelationshipId(RelationContext.PageExcerpt page)
             {
@@ -152,11 +172,13 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 if (rels.Count == 0)
                     return null;
 
+                danglingParents.AddRange(rels.Select(x => x.DestinationId));
+
                 var relKey = rels.Count == 1
                     ? rels[0].DestinationId + ":unknown"
                     : rels.Select(x => x.DestinationId.ToString()).OrderBy(x => x).JoinString(":");
 
-                if (!parents.Contains(relKey))
+                if (!parentKeys.Contains(relKey))
                 {
                     if (rels.Count == 1)
                     {
@@ -178,7 +200,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                         AddRelationship(rels[0].DestinationId, rels[1].DestinationId);
                     }
 
-                    parents.Add(relKey);
+                    parentKeys.Add(relKey);
                 }
 
                 return relKey;
@@ -203,5 +225,17 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 });
             }
         }
+
+        [Flags]
+        protected enum TraverseMode
+        {
+            DeadEnd = 0,
+            TraverseRelations = 1,
+            SetParents = 2,
+            Normal = 3
+        }
+
+        protected record struct Step(Guid PageId, TraverseMode Mode, int Distance, RelationType? LastRelationType);
+        protected record struct RelationFilterContext(Guid PageId, int Distance, RelationType RelationType, RelationType? LastRelationType);
     }
 }

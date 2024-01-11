@@ -5,6 +5,7 @@ using Bonsai.Areas.Admin.ViewModels.DynamicConfig;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Jobs;
 using Bonsai.Data;
+using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -52,10 +53,16 @@ namespace Bonsai.Areas.Admin.Controllers
 
             _config.ResetCache();
 
-            if (oldValue.TreeRenderThoroughness != vm.TreeRenderThoroughness)
+            if (IsTreeConfigChanged())
                 await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess("Настройки сохранены");
+
+            bool IsTreeConfigChanged()
+            {
+                return oldValue.TreeRenderThoroughness != vm.TreeRenderThoroughness
+                       || oldValue.TreeKinds?.JoinString(",") != vm.TreeKinds?.JoinString(",");
+            }
         }
     }
 }

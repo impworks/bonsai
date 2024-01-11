@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Bonsai.Areas.Admin.Logic.Tree
 {
@@ -29,15 +31,25 @@ namespace Bonsai.Areas.Admin.Logic.Tree
             foreach (var page in ctx.Pages.Values)
             {
                 var tree = treeGetter(ctx, page.Id);
-                var rendered = await RenderTreeAsync(tree, 600, token);
-                layouts.Add(new TreeLayout
+
+                try
                 {
-                    Id = Guid.NewGuid(),
-                    LayoutJson = rendered,
-                    GenerationDate = DateTimeOffset.Now,
-                    PageId = tree.PageId,
-                    Kind = kind
-                });
+                    var rendered = await RenderTreeAsync(tree, 1000, token);
+
+                    layouts.Add(new TreeLayout
+                    {
+                        Id = Guid.NewGuid(),
+                        LayoutJson = rendered,
+                        GenerationDate = DateTimeOffset.Now,
+                        PageId = tree.PageId,
+                        Kind = kind
+                    });
+                }
+                catch (Exception ex)
+                {
+                    var json = JsonConvert.SerializeObject(tree);
+                    _logger.Error(ex.Demystify(), $"Failed to render partial tree ({kind}) for page {page.Id}:\n{json}");
+                }
             }
 
             await _db.TreeLayouts.Where(x => x.Kind == kind).ExecuteDeleteAsync(CancellationToken.None);
@@ -53,7 +65,24 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// </summary>
         private TreeLayoutVM GetCloseFamilyTree(RelationContext ctx, Guid pageId)
         {
-            throw new NotImplementedException();
+            return GetSubtree(
+                ctx,
+                pageId,
+                fc =>
+                {
+                    // explicitly avoid e.g. other husbands of a man's wife
+                    if (fc is {Distance: 1, RelationType: RelationType.Spouse, LastRelationType: RelationType.Spouse})
+                        return null;
+
+                    return fc.Distance switch
+                    {
+                        < 2 => TraverseMode.Normal,
+                        2 => fc.RelationType == RelationType.Child
+                            ? TraverseMode.SetParents
+                            : TraverseMode.DeadEnd,
+                        _ => null
+                    };
+                });
         }
 
         /// <summary>
@@ -61,7 +90,13 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// </summary>
         private TreeLayoutVM GetAncestorsTree(RelationContext ctx, Guid pageId)
         {
-            return GetSubtree(ctx, pageId, r => r.Type == RelationType.Parent);
+            return GetSubtree(
+                ctx,
+                pageId,
+                fc => fc.RelationType == RelationType.Parent
+                    ? TraverseMode.Normal
+                    : null
+            );
         }
 
         /// <summary>
@@ -69,7 +104,21 @@ namespace Bonsai.Areas.Admin.Logic.Tree
         /// </summary>
         private TreeLayoutVM GetDescendantsTree(RelationContext ctx, Guid pageId)
         {
-            return GetSubtree(ctx, pageId, rel => rel.Type == RelationType.Child);
+            return GetSubtree(
+                ctx,
+                pageId,
+                fc =>
+                {
+                    if (fc.RelationType == RelationType.Child)
+                        return TraverseMode.Normal;
+
+                    if (fc.RelationType == RelationType.Parent && fc.PageId != pageId)
+                        return TraverseMode.DeadEnd;
+
+                    return null;
+                },
+                TraverseMode.TraverseRelations
+            );
         }
     }
 }

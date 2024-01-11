@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
+@using Bonsai.Data.Models
 @using Impworks.Utils.Format
 @model PageVM<PageTreeVM>
 @{
@@ -7,7 +8,14 @@
     ViewBag.PageModel = Model;
     ViewBag.Title = Model.Body.Title + " — Фамильное древо";
 
-    var treeUrl = Url.Action("Main", "Tree", new {key = Model.Body.Key});
+    string GetTreeUrl(TreeKind? kind = null)
+    {
+        return Url.Action("Main", "Tree", new
+        {
+            key = Model.Body.Key,
+            kind = kind ?? Model.Body.SupportedKinds.FirstOrDefault()
+        });
+    }
 }
 
 <div class="tree-view">
@@ -15,18 +23,18 @@
         <div class="float-left btn-group btn-group-toggle">
             @foreach (var kind in Model.Body.SupportedKinds)
             {
-                <a href="#" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")" data-kind="@kind">@kind.GetEnumDescription()</a>
+                <a href="@GetTreeUrl(kind)" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")">@kind.GetEnumDescription()</a>
             }
         </div>
         <div class="float-right btn-group">
             <a class="btn btn-sm btn-outline-primary cmd-fullscreen" href="#" title="Во весь экран">
                 <span class="fa fa-arrows-alt"></span> Во весь экран
             </a>
-            <a class="btn btn-sm btn-outline-primary" href="@treeUrl" target="_blank" title="В новом окне">
+            <a class="btn btn-sm btn-outline-primary cmd-new-window" href="@GetTreeUrl()" target="_blank" title="В новом окне">
                 <span class="fa fa-window-maximize"></span> В новом окне
             </a>
         </div>
         <div class="clearfix"></div>
     </div>
-    <iframe src="@treeUrl"></iframe>
+    <iframe src="@GetTreeUrl()"></iframe>
 </div>
