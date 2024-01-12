@@ -2,6 +2,8 @@
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.ViewModels.DynamicConfig;
+using Bonsai.Areas.Front.ViewModels.Page;
+using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Jobs;
 using Bonsai.Data;
@@ -16,18 +18,20 @@ namespace Bonsai.Areas.Admin.Controllers
     [Route("admin/config")]
     public class DynamicConfigController: AdminControllerBase
     {
-        public DynamicConfigController(DynamicConfigManagerService configMgr, BonsaiConfigService config, IBackgroundJobService jobs, AppDbContext db)
+        public DynamicConfigController(DynamicConfigManagerService configMgr, BonsaiConfigService config, IBackgroundJobService jobs, AppDbContext db, CacheService cache)
         {
             _configMgr = configMgr;
             _config = config;
             _jobs = jobs;
             _db = db;
+            _cache = cache;
         }
 
         private readonly DynamicConfigManagerService _configMgr;
         private readonly BonsaiConfigService _config;
         private readonly IBackgroundJobService _jobs;
         private readonly AppDbContext _db;
+        private readonly CacheService _cache;
 
         /// <summary>
         /// Displays the form and edits the config.
@@ -54,7 +58,10 @@ namespace Bonsai.Areas.Admin.Controllers
             _config.ResetCache();
 
             if (IsTreeConfigChanged())
+            {
+                _cache.Remove<PageTreeVM>();
                 await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+            }
 
             return RedirectToSuccess("Настройки сохранены");
 

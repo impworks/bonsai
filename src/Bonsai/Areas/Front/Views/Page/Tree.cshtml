@@ -23,7 +23,7 @@
         <div class="float-left btn-group btn-group-toggle">
             @foreach (var kind in Model.Body.SupportedKinds)
             {
-                <a href="@GetTreeUrl(kind)" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")">@kind.GetEnumDescription()</a>
+                <a href="@GetTreeUrl(kind)" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")" data-kind="@kind">@kind.GetEnumDescription()</a>
             }
         </div>
         <div class="float-right btn-group">
