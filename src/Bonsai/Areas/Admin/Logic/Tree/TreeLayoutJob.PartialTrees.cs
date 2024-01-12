@@ -71,7 +71,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                 fc =>
                 {
                     // explicitly avoid e.g. other husbands of a man's wife
-                    if (fc is {Distance: 1, RelationType: RelationType.Spouse, LastRelationType: RelationType.Spouse})
+                    if (fc is {Distance: 2, RelationType: RelationType.Spouse, LastRelationType: RelationType.Spouse})
                         return null;
 
                     return fc.Distance switch
