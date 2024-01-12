@@ -102,7 +102,7 @@ namespace Bonsai.Areas.Admin.Logic
 
             var isDesc = request.OrderDescending ?? false;
             if (request.OrderBy == nameof(Media.Tags))
-                query = query.OrderBy(x => x.Tags.Count, isDesc);
+                query = query.OrderBy(x => x.Tags.Count(y => y.Type == MediaTagType.DepictedEntity), isDesc);
             else if (request.OrderBy == nameof(Media.Title))
                 query = query.OrderBy(x => x.Title, isDesc).ThenBy(x => x.UploadDate, isDesc);
             else
