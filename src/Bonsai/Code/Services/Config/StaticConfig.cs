@@ -10,6 +10,7 @@
         public WebServerConfig WebServer { get; set; }
         public DemoModeConfig DemoMode { get; set; }
         public AuthConfig Auth { get; set; }
+        public string BuildCommit { get; set; }
     }
 
     /// <summary>

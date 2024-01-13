@@ -25,3 +25,5 @@ jobs:
           context: .
           push: true
           tags: impworks/bonsai:latest
+          build-args: |
+             BUILD_COMMIT=${{ github.sha }}

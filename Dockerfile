@@ -32,6 +32,8 @@ RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg && \
     ln -s /usr/bin/ffprobe /app/External/ffmpeg/ffprobe && \
     chmod +x /app/Bonsai
 
+ARG BUILD_COMMIT
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV BuildCommit=$BUILD_COMMIT
 EXPOSE 80
 ENTRYPOINT ["/app/Bonsai"]
