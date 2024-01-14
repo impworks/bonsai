@@ -22,7 +22,7 @@ namespace Bonsai.Areas.Admin.Components
         public async Task<IViewComponentResult> InvokeAsync(ListRequestVM request, string propName)
         {
             if (request == null || propName == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(request), "Either request or propName must be specified!");
 
             var prop = request.GetType().GetProperty(propName);
             if (prop == null)

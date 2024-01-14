@@ -29,7 +29,7 @@ namespace Bonsai.Areas.Front.ViewModels.Page
         /// </summary>
         public DateTimeOffset CreationDate { get; set; }
 
-        public void Configure(TypeAdapterConfig config)
+        public override void Configure(TypeAdapterConfig config)
         {
             config.NewConfig<Data.Models.Page, PageTitleExtendedVM>()
                    .Map(x => x.Id, x => x.Id)

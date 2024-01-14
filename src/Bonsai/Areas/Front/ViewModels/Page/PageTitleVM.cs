@@ -30,7 +30,7 @@ namespace Bonsai.Areas.Front.ViewModels.Page
         /// </summary>
         public PageType Type { get; set; }
 
-        public void Configure(TypeAdapterConfig config)
+        public virtual void Configure(TypeAdapterConfig config)
         {
             config.NewConfig<Data.Models.Page, PageTitleVM>()
                   .Map(x => x.Id, x => x.Id)

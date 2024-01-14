@@ -9,6 +9,14 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1998;8524</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1998;8524</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Data\Utils\Seed\Media\1.jpg" />
     <None Remove="Data\Utils\Seed\Media\1.mp4" />
