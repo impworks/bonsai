@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace Bonsai.Code.Config
@@ -104,6 +105,20 @@ namespace Bonsai.Code.Config
                                 await SeedData.EnsureDefaultUserCreatedAsync(sp.GetService<UserManager<AppUser>>());
                         });
                 }
+
+                startupService.AddTask(
+                    "PrepareConfig",
+                    "Настройка конфигурации",
+                    async () =>
+                    {
+                        var db = sp.GetRequiredService<AppDbContext>();
+                        var wrapper = await db.DynamicConfig.FirstAsync();
+                        var cfg = JsonConvert.DeserializeObject<DynamicConfig>(wrapper.Value);
+                        cfg.TreeKinds = TreeKind.FullTree | TreeKind.CloseFamily | TreeKind.Ancestors | TreeKind.Descendants;
+                        wrapper.Value = JsonConvert.SerializeObject(cfg);
+                        await db.SaveChangesAsync();
+                    }
+                );
             }
 
             startupService.AddTask(
