@@ -54,9 +54,12 @@
 #editor-main-photo {
     .main-photo-wrapper {
         .main-photo {
-            width: 100%;
-            height: auto;
-
+            object-fit: cover;
+            border-radius: 100%;
+            width: 11rem;
+            height: 11rem;
+            margin: auto;
+            display: block;
             margin-bottom: 15px;
         }
     }
