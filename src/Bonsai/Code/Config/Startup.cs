@@ -27,6 +27,8 @@ namespace Bonsai.Code.Config
 
             Configuration = builder.Build().Get<StaticConfig>();
             Environment = env;
+
+            ConfigValidator.EnsureValid(Configuration);
         }
 
         private StaticConfig Configuration { get; }

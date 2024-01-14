@@ -31,18 +31,18 @@ namespace Bonsai.Code.Utils.Validation
         /// <summary>
         /// Returns the exception.
         /// </summary>
-        public ValidationException Exception()
+        public ValidationException Exception(string message = null)
         {
-            return new ValidationException(_errors);
+            return new ValidationException(message, _errors);
         }
 
         /// <summary>
         /// Throws the exception if there have been any validation warnings.
         /// </summary>
-        public void ThrowIfInvalid()
+        public void ThrowIfInvalid(string message = null)
         {
             if (!IsValid)
-                throw Exception();
+                throw Exception(message);
         }
     }
 }

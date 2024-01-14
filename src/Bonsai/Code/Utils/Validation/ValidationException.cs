@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Impworks.Utils.Linq;
 
 namespace Bonsai.Code.Utils.Validation
 {
@@ -9,12 +11,12 @@ namespace Bonsai.Code.Utils.Validation
     public class ValidationException: Exception
     {
         public ValidationException(IReadOnlyList<KeyValuePair<string, string>> errors)
-            : this(null, errors)
+            : this(GetErrorDescriptions(errors), errors)
         {
         }
 
         public ValidationException(string message, IReadOnlyList<KeyValuePair<string, string>> errors)
-            : base(message)
+            : base(message + "\n" + GetErrorDescriptions(errors))
         {
             Errors = errors;
         }
@@ -23,6 +25,11 @@ namespace Bonsai.Code.Utils.Validation
             : this(new[] {new KeyValuePair<string, string>(key, value)})
         {
 
+        }
+
+        private static string GetErrorDescriptions(IReadOnlyList<KeyValuePair<string, string>> errors)
+        {
+            return errors.Select(x => $"{x.Key}: {x.Value}").JoinString("\n");
         }
 
         /// <summary>
