@@ -1,0 +1,36 @@
+﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Impworks.Utils.Format
+@model ContactsFactModel
+
+<tr class="fact">
+    <th class="fact-title">@Model.ShortTitle</th>
+</tr>
+<tr class="fact">
+    <td class="fact-value big-icons">
+        @foreach (var item in Model.Values)
+        {
+            <a class="big-icon" href="@item.GetLink()" target="_blank" title="@item.Type.GetEnumDescription()">
+                <span class="fa @(GetIcon(item.Type))"></span>
+            </a>
+        }
+    </td>
+</tr>
+
+@functions {
+    string GetIcon(ContactType type)
+    {
+        return type switch
+        {
+            ContactType.Facebook => "fa-facebook-square",
+            ContactType.Twitter => "fa-twitter-square",
+            ContactType.Github => "fa-github",
+            ContactType.Youtube => "fa-youtube-play",
+            ContactType.Telegram => "fa-telegram",
+            ContactType.Odnoklassniki => "fa-odnoklassniki-square",
+            ContactType.Vkontakte => "fa-vk",
+            ContactType.Email => "fa-envelope",
+            ContactType.Phone => "fa-phone-square",
+            _ => null
+        };
+    }
+}

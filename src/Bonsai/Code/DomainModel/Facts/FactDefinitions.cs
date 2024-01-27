@@ -60,7 +60,7 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Meta",
                         "Прочее",
                         false,
-                        new FactDefinition<SocialProfilesFactModel>("SocialProfiles", "Соцсети")
+                        new FactDefinition<ContactsFactModel>("SocialProfiles", "Контакты")
                     )
                 },
 

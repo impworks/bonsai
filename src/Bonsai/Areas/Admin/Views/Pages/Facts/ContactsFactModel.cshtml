@@ -1,6 +1,6 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
 @using Impworks.Utils.Format
-<script type="text/x-template" data-kind="fact-template" id="SocialProfilesFactModel">
+<script type="text/x-template" data-kind="fact-template" id="ContactsFactModel">
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
@@ -15,7 +15,7 @@
                         <div class="form-group col-sm-4">
                             <label>Тип</label>
                             <select v-model="row.Type" class="form-control form-control-sm mr-2">
-                                @foreach (var prof in EnumHelper.GetEnumDescriptions<SocialProfileType>())
+                                @foreach (var prof in EnumHelper.GetEnumDescriptions<ContactType>())
                                 {
                                     <option value="@prof.Key">@prof.Value</option>
                                 }
@@ -26,7 +26,7 @@
                                 <i class="fa fa-remove"></i>
                             </button>
                             <label>Ссылка</label>
-                            <input type="text" v-model="row.Value" class="form-control form-control-sm mr-2" />
+                            <input type="text" v-model="row.Value" :placeholder="contactPlaceholder(row.Type)" class="form-control form-control-sm mr-2" />
                         </div>
                     </div>
                 </div>

@@ -157,6 +157,15 @@
                 getList: function() {
                     var root = this.data[this.def.key] || {};
                     return root['Values'] || [];
+                },
+                contactPlaceholder: function (type) {
+                    if (type === 'Email')
+                        return 'mailbox@example.com';
+                    if (type === 'Phone')
+                        return '+79251234567';
+                    if (type === 'Telegram' || type === 'Twitter')
+                        return '@username';
+                    return 'https://';
                 }
             }
         });
