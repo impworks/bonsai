@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data;
 using Bonsai.Data.Models;
@@ -134,12 +136,27 @@ namespace Bonsai.Code.Config
                     var pages = await db.Pages.Include(x => x.Aliases).ToListAsync();
                     foreach (var page in pages)
                         await search.AddPageAsync(page);
-                });
+                }
+            );
             
             startupService.AddTask(
                 "BuildPageReferences",
                 "Обнаружение ссылок между страницами",
                 () => BuildPageReferences(sp)
+            );
+
+            startupService.AddTask(
+                "InitTree",
+                "Построение дерева",
+                async () =>
+                {
+                    var db = sp.GetService<AppDbContext>();
+                    if (await db.TreeLayouts.AnyAsync())
+                        return;
+
+                    var jobs = sp.GetService<IBackgroundJobService>();
+                    await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+                }
             );
 
             startupService.AddTask("CheckMissingMedia", "", () => CheckMissingMediaAsync(sp));
@@ -157,7 +174,7 @@ namespace Bonsai.Code.Config
             var db = sp.GetService<AppDbContext>();
             var env = sp.GetService<IWebHostEnvironment>();
             
-            if (!(await db.Media.AnyAsync()))
+            if (await db.Media.AnyAsync() == false)
                 return;
 
             var path = Path.Combine(env.WebRootPath, "media");
