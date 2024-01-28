@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Bonsai.Code.Infrastructure;
+﻿using Bonsai.Code.Infrastructure;
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,10 +18,7 @@ namespace Bonsai.Code.Config
             };
 
             foreach (var map in RuntimeHelper.GetAllInstances<IMapped>())
-            {
-                Debug.WriteLine(map.GetType().FullName);
                 map.Configure(config);
-            }
 
             config.Compile();
             var mapper = new Mapper(config);
