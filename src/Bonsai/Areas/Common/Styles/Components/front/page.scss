@@ -2,13 +2,22 @@
 
 .content {
     .content-header {
-        h1, .dropdown {
-            float: left;
+        margin-top: 10px;
+        margin-bottom: 24px;
+        clear: both;
+
+        h1 {
+            display: inline;
         }
 
         .dropdown {
             margin-top: 30px;
             margin-left: 10px;
+
+           button.btn {
+                height: 26px;
+                margin-top: -11px;
+           }
         }
 
         &::after {
