@@ -4,7 +4,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
 
-
 ## Ранние годы
 
 [[media:IudAHOc84EmQ3YyDpnU8Dw|align:right|size:large|«Фото — это супир!» (Джейсон Стэтхэм)]]
@@ -19,7 +18,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Поступил в школу 1337 в 1997 году. В 2007 году окончил ее со средним баллом 4.3.
 
-[[media:IudAHOc84EmQ3YyDpnU8Dw|align:left|size:ssmall|Ошибка]]
+[[media:IudAHOc84EmQ3YyDpnU8Dw|align:left|size:ssmall|Фото с ошибкой]]
 
 После поступил в Московский Институт Авиастроения (МАИ) по специальности "Аналитика", но вылетел на втором курсе из-за неуспеваемости.
 Позже пытался поступать в МИФИ.
@@ -30,6 +29,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ## Семья
 
-[[media:IudAHOc84EmQ3YyDpnU8Dw|align:right|size:small|Свадьба — это супир!]]
+[[media:IudAHOc84EmQ3YyDpnU8Dw|align:right|size:small|Свадьба]]
 
-В 2009 году познакомился с [[Семенова Анна Николаевна|Анной Семеновой]]. Они поженились в 2010 году. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
+В 2009 году познакомился с [[Семенова Анна Николаевна|Анной Семеновой]]. Они поженились в 2010 году. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.

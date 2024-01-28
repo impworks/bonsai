@@ -40,7 +40,7 @@ namespace Bonsai.Data.Utils.Seed
             var c2 = ctx.AddPage("Семенова Екатерина Ивановна", false, "2013.04.01");
             var w1f = ctx.AddPage("Семенов Николай Вадимович", true, "1965.05.06");
             var w1m = ctx.AddPage("Семенова Ирина Алексеевна", false, "1967.06.07");
-            var wed = ctx.AddPage("Свадьба Петра Иванова и Анны Семеновой", type: PageType.Event, descrSource: "Свадьба состоялась 5 мая 2010 года.");
+            var wed = ctx.AddPage("Свадьба Ивана Иванова и Анны Семеновой", type: PageType.Event, descrSource: "Свадьба состоялась 5 мая 2010 года.");
 
             ctx.AddRelation(root, RelationType.Spouse, w1, "2010.05.05-", wed);
             ctx.AddRelations(root, RelationType.Child, c1, c2);
