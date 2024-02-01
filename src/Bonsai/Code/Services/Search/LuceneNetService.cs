@@ -50,6 +50,9 @@ namespace Bonsai.Code.Services.Search
         /// </summary>
         public Task AddPageAsync(Page page)
         {
+            var query = new TermQuery(new Term("Id", page.Id.ToString()));
+            _writer.DeleteDocuments(query);
+            
             var luceneDoc = new LuceneDocument(page);
             _writer.AddDocument(luceneDoc.Fields);
             _writer.Commit();
