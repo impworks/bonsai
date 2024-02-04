@@ -18,14 +18,16 @@
 
 #### Публичные страницы:
 
-<a href="https://user-images.githubusercontent.com/604496/46574247-037d4f00-c9a9-11e8-8585-0d574dda2600.png"><img src="https://user-images.githubusercontent.com/604496/46574252-1859e280-c9a9-11e8-821f-daeaaac7de3f.png" /></a>
-<a href="https://user-images.githubusercontent.com/604496/46574259-2c054900-c9a9-11e8-8ecc-ca542053f665.png"><img src="https://user-images.githubusercontent.com/604496/46574288-9a4a0b80-c9a9-11e8-8373-2a7d3e00289c.png" /></a>
-<a href="https://user-images.githubusercontent.com/604496/46574262-31629380-c9a9-11e8-9ea6-18fbe63f239f.png"><img src="https://user-images.githubusercontent.com/604496/46574291-9f0ebf80-c9a9-11e8-8656-8a54dd2f2be7.png" /></a>
+<a href="https://github.com/impworks/bonsai/assets/604496/151719f8-3396-4d6a-b24a-ba0a525cf04b"><img src="https://github.com/impworks/bonsai/assets/604496/921baf97-ad71-4c7f-b9b5-2d0c9d8f069f" /></a>
+<a href="https://github.com/impworks/bonsai/assets/604496/da6794b1-a8ca-4128-939b-7b55ea60e5b1"><img src="https://github.com/impworks/bonsai/assets/604496/93defa8b-c1e3-4e57-a59f-492643da54b4" /></a>
+<a href="https://github.com/impworks/bonsai/assets/604496/56b90464-9055-4028-a060-84f490015894"><img src="https://github.com/impworks/bonsai/assets/604496/cc45cdd2-0fdb-42c2-96ba-14d7fbaf637f" /></a>
+<a href="https://github.com/impworks/bonsai/assets/604496/631f4ab8-cde5-4359-b0f5-3bc47edb3856"><img src="https://github.com/impworks/bonsai/assets/604496/0b31dd07-c604-46da-a2d0-9c0b8cc57260" /></a>
 
 #### Панель администратора:
 
-<a href="https://user-images.githubusercontent.com/604496/46574266-3f181900-c9a9-11e8-828d-9d9a5db25acb.png"><img src="https://user-images.githubusercontent.com/604496/46574292-a209b000-c9a9-11e8-8193-cd99fc1f5f91.png" /></a>
-<a href="https://user-images.githubusercontent.com/604496/46574268-43443680-c9a9-11e8-974f-f8a60fbeaa74.png"><img src="https://user-images.githubusercontent.com/604496/46574297-a504a080-c9a9-11e8-8612-d3e5cd1592a4.png" /></a>
+<a href="https://github.com/impworks/bonsai/assets/604496/dad5420d-14bc-4fa9-93f4-75b530d8ee69"><img src="https://github.com/impworks/bonsai/assets/604496/0d337339-8116-4b4a-9640-33d66778e827" /></a>
+<a href="https://github.com/impworks/bonsai/assets/604496/8423d10f-79fd-45bf-8cd5-bcc69cd11607"><img src="https://github.com/impworks/bonsai/assets/604496/6dce3e19-0f58-422e-a4d7-a1ddc423ba1d" /></a>
+<a href="https://github.com/impworks/bonsai/assets/604496/9b7e8166-38f9-48fc-a529-4bd99a1a2a35"><img src="https://github.com/impworks/bonsai/assets/604496/29ded387-8b30-48c9-9f31-0d3a2151f3c9" /></a>
 
 ## Установка с помощью Docker
 1. Скачайте файл [docker-compose.lite.yml](docker-compose.lite.yml).
