@@ -3,6 +3,7 @@
     position: absolute;
     border: 1px #d4d4d4 solid;
     border-radius: 4px;
+    background: #ffffff;
     z-index: 100;
 
     .eac-popup-item {
@@ -17,6 +18,12 @@
 
         &:not(:last-child) {
             border-bottom: 1px #aaa solid;
+        }
+        
+        .eac-popup-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
         }
     }
 

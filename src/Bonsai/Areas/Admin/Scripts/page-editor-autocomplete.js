@@ -154,10 +154,12 @@
 
         function renderElem(idx) {
             var isActive = idx === resultIdx;
-            var text = results[idx].title;
+            var elem = results[idx];
 
-            var $elem = $('<div>').addClass('eac-popup-item clickable')
-                                  .text(text);
+            var $elem = $('<div>').addClass('eac-popup-item clickable');
+            if(elem.mainPhotoPath)
+                $elem.append($('<img>').prop('src', elem.mainPhotoPath).addClass('eac-popup-icon'));
+            $elem.append($('<span>').text(elem.title));
 
             if (isActive)
                 $elem.addClass('active');
