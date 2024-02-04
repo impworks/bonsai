@@ -587,6 +587,7 @@ namespace Bonsai.Areas.Admin.Logic
                     Page = page,
                     Key = PageHelper.EncodeTitle(x).ToLowerInvariant(),
                     Title = x,
+                    NormalizedTitle = PageHelper.NormalizeTitle(x),
                     Order = idx
                 }
             );

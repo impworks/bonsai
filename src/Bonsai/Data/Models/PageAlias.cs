@@ -19,6 +19,11 @@ namespace Bonsai.Data.Models
         [Required]
         [StringLength(200)]
         public string Title { get; set; }
+        
+        /// <summary>
+        /// Case-insensitive title of the page for search purposes.
+        /// </summary>
+        public string NormalizedTitle { get; set; }
 
         /// <summary>
         /// Page key (for URL mapping).

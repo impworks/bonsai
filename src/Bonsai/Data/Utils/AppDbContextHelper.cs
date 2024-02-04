@@ -95,6 +95,15 @@ namespace Bonsai.Data.Utils
 
                 await db.SaveChangesAsync();
             }
+
+            var aliases = await db.PageAliases.Where(x => x.NormalizedTitle == null).ToListAsync();
+            if (aliases.Any())
+            {
+                foreach (var a in aliases)
+                    a.NormalizedTitle = PageHelper.NormalizeTitle(a.Title);
+
+                await db.SaveChangesAsync();
+            }
         }
     }
 }

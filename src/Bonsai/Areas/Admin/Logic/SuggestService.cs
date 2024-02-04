@@ -106,8 +106,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (!string.IsNullOrEmpty(request.Query))
             {
-                var queryLower = request.Query.ToLower();
-                q = q.Where(x => x.Aliases.Any(y => y.Title.ToLower().Contains(queryLower)));
+                var queryNormalized = PageHelper.NormalizeTitle(request.Query);
+                q = q.Where(x => x.Aliases.Any(y => y.NormalizedTitle.Contains(queryNormalized)));
             }
 
             if (request.Types?.Length > 0)
@@ -137,8 +137,8 @@ namespace Bonsai.Areas.Admin.Logic
 
             if (!string.IsNullOrEmpty(request.Query))
             {
-                var queryLower = request.Query.ToLower();
-                q = q.Where(x => x.Title.ToLower().Contains(queryLower));
+                var queryNormalized = PageHelper.NormalizeTitle(request.Query);
+                q = q.Where(x => x.NormalizedTitle.Contains(queryNormalized));
             }
 
             if (request.Types?.Length > 0)

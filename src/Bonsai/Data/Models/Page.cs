@@ -29,7 +29,7 @@ namespace Bonsai.Data.Models
         public string Key { get; set; }
 
         /// <summary>
-        /// Case-insensitive title of the media for search purposes.
+        /// Case-insensitive title of the page for search purposes.
         /// </summary>
         public string NormalizedTitle { get; set; }
 
