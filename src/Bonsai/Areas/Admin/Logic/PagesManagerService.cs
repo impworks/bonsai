@@ -638,7 +638,7 @@ namespace Bonsai.Areas.Admin.Logic
             {
                 var names = json["Main.Name"]?["Values"];
 
-                overview.MaidenName = names?.FirstOrDefault() is { } oldestName
+                overview.MaidenName = names?.Count() > 1 && names.FirstOrDefault() is { } oldestName
                     ? oldestName["LastName"]?.Value<string>()
                     : null;
 
