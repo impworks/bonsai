@@ -155,12 +155,17 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
         {
-            return await _db.Pages
-                            .Where(x => !x.IsDeleted)
-                            .OrderByDescending(x => x.LastUpdateDate)
-                            .Take(count)
-                            .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
-                            .ToListAsync();
+            var list = await _db.Pages
+                                .Where(x => !x.IsDeleted)
+                                .OrderByDescending(x => x.LastUpdateDate)
+                                .Take(count)
+                                .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
+                                .ToListAsync();
+
+            foreach (var elem in list)
+                elem.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(elem.MainPhotoPath, MediaSize.Small);
+
+            return list;
         }
 
         #endregion
