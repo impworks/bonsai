@@ -8,17 +8,19 @@
 </div>
 <div class="calendar-events-content">
 
-    <div class="card">
-        @if(Model.Events.Any())
+    @if (Model.Events.Any())
+    {
+        @foreach (var evt in Model.Events)
         {
-            <div class="list-group list-group-flush">
-                @foreach(var evt in Model.Events)
-                {
-                    var url = evt.RelatedPage.Key != null
+            <div class="card mb-1">
+                <div class="list-group list-group-flush">
+                    @{
+                        var url = evt.RelatedPage.Key != null
                         ? Url.Action("Description", "Page", new { key = evt.RelatedPage.Key })
                         : null;
 
-                    var hasNested = evt.OtherPages?.Count > 0;
+                        var hasNested = evt.OtherPages?.Count > 0;
+                    }
 
                     <a href="@url" class="calendar-events-item list-group-item @(url != null ? "selectable" : "non-selectable") @(hasNested ? "has-nested" : "")">
                         <div class="media">
@@ -32,11 +34,11 @@
                         </div>
                     </a>
 
-                    if (evt.OtherPages != null)
+                    @if (evt.OtherPages != null)
                     {
                         foreach (var p in evt.OtherPages)
                         {
-                            <a href="@Url.Action("Description", "Page", new { key = p.Key })" class="calendar-events-item nested list-group-item selectable">
+                            <a href="@Url.Action("Description", "Page", new {key = p.Key})" class="calendar-events-item nested list-group-item selectable">
                                 <div class="media">
                                     <div class="calendar-events-item-icon mr-3">
                                         <page-image image="@p.MainPhotoPath" type="p.Type" />
@@ -48,13 +50,14 @@
                             </a>
                         }
                     }
-                }
+                </div>
             </div>
         }
-        else
-        {
+    }
+    else
+    {
+        <div class="card">
             <p>В этот день ничего не произошло.</p>
-        }
-    </div>
-
+        </div>
+    }
 </div>

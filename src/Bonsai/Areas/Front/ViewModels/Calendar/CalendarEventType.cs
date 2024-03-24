@@ -9,6 +9,7 @@
         Death,
         Wedding,
         PetAdoption,
-        ChildAdoption
+        ChildAdoption,
+        Event
     }
 }

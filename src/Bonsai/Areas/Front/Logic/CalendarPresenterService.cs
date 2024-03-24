@@ -10,6 +10,8 @@ using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Strings;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace Bonsai.Areas.Front.Logic
 {
@@ -30,12 +32,8 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<CalendarMonthVM> GetMonthEventsAsync(int year, int month)
         {
-            var context = await RelationContext.LoadContextAsync(_db);
-
             var range = GetDisplayedRange(year, month);
-            var events = GetPageEvents(year, month, context)
-                         .Concat(GetRelationEvents(year, month, context))
-                         .ToList();
+            var events = await GetMonthEventsInternalAsync(year, month);
 
             return new CalendarMonthVM
             {
@@ -52,22 +50,32 @@ namespace Bonsai.Areas.Front.Logic
         /// </summary>
         public async Task<CalendarDayVM> GetDayEventsAsync(int year, int month, int? day)
         {
-            var context = await RelationContext.LoadContextAsync(_db);
-            var events = GetPageEvents(year, month, context)
-                         .Concat(GetRelationEvents(year, month, context))
-                         .Where(x => x.Day == day)
-                         .ToList();
+            var events = await GetMonthEventsInternalAsync(year, month);
 
             return new CalendarDayVM
             {
                 IsActive = true,
                 Day = day,
                 Date = new FuzzyDate(year, month, day),
-                Events = events
+                Events = events.Where(x => x.Day == day).ToList()
             };
         }
 
         #region Private helpers
+
+        /// <summary>
+        /// Returns all the events that happened in the specified month.
+        /// </summary>
+        private async Task<IReadOnlyList<CalendarEventVM>> GetMonthEventsInternalAsync(int year, int month)
+        {
+            var context = await RelationContext.LoadContextAsync(_db);
+
+            var events = GetPageEvents(year, month, context).ToList();
+            events.AddRange(GetRelationEvents(year, month, context));
+            events.AddRange(await GetOneTimeEventsAsync(year, month));
+
+            return events;
+        }
 
         /// <summary>
         /// Infers page-related events for the current month.
@@ -306,6 +314,49 @@ namespace Bonsai.Areas.Front.Logic
                 Type = page.Type,
                 MainPhotoPath = MediaPresenterService.GetSizedMediaPath(page.MainPhotoPath, MediaSize.Small)
             };
+        }
+
+        /// <summary>
+        /// Returns the list of events that happened in the current month.
+        /// </summary>
+        private async Task<IReadOnlyList<CalendarEventVM>> GetOneTimeEventsAsync(int year, int month)
+        {
+            var result = new List<CalendarEventVM>();
+            var evtPages = await _db.Pages
+                                    .Where(x => x.Type == PageType.Event
+                                                && x.IsDeleted == false
+                                                && x.Facts.Contains("Main.Date"))
+                                    .Select(x => new {x.Id, x.Title, x.Key, MainPhotoPath = x.MainPhoto.FilePath, x.Facts})
+                                    .ToListAsync();
+
+            foreach (var evtPage in evtPages)
+            {
+                var facts = JObject.Parse(evtPage.Facts);
+                var rawDate = facts["Main.Date"]?["Value"]?.ToString();
+                var date = FuzzyDate.TryParse(rawDate);
+                if(date is not { } d)
+                    continue;
+
+                if (d.Year == year && d.Month == month)
+                {
+                    result.Add(new CalendarEventVM
+                    {
+                        Type = CalendarEventType.Event,
+                        Title = "Событие",
+                        Day = d.Day,
+                        RelatedPage = new PageTitleExtendedVM
+                        {
+                            Type = PageType.Event,
+                            Key = evtPage.Key,
+                            Id = evtPage.Id,
+                            Title = evtPage.Title,
+                            MainPhotoPath = MediaPresenterService.GetSizedMediaPath(evtPage.MainPhotoPath, MediaSize.Small)
+                        }
+                    });
+                }
+            }
+
+            return result;
         }
 
         #endregion
