@@ -1,11 +1,12 @@
 ﻿@using Bonsai.Areas.Front.Components
 @using Bonsai.Code.Utils.Helpers
+@using Bonsai.Localization
 @using Humanizer
 @addTagHelper *, Bonsai
 @model Bonsai.Areas.Front.ViewModels.Home.HomeVM
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
-    ViewBag.Title = "Главная страница";
+    ViewBag.Title = Texts.Front_Home_Title;
 }
 
 <div class="calendar-wrapper">
@@ -20,7 +21,7 @@
         @if (Model.LastUpdatedPages.Any())
         {
             <div class="col-md-6">
-                <h5>Обновленные страницы</h5>
+                <h5>@Texts.Front_Home_UpdatedPages</h5>
                 <ul class="home-pages-list">
                     @foreach (var p in Model.LastUpdatedPages)
                     {
@@ -44,7 +45,7 @@
         @if (Model.LastUploadedMedia.Any())
         {
             <div class="col-md-6">
-                <h5>Новые медиа-файлы</h5>
+                <h5>@Texts.Front_Home_UpdatedMedia</h5>
                 <ul class="list-inline">
                     @foreach (var m in Model.LastUploadedMedia)
                     {

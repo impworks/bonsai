@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Bonsai.Localization
 @model DeathDateFactModel
 @{
     var facts = (IList<FactModelBase>)ViewBag.Facts;
@@ -11,7 +12,7 @@
     <td class="fact-value">
         @if(Model.Value == null)
         {
-            <span>Неизвестно</span>
+            <span>@Texts.Front_Facts_DeathDate_Unknown</span>
         }
         else
         {

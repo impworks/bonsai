@@ -1,8 +1,9 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Front.ViewModels.Auth
+@using Bonsai.Localization
 @model Bonsai.Areas.Front.ViewModels.Auth.RegisterUserVM
 @{
-    ViewBag.Title = "Регистрация";
+    ViewBag.Title = Texts.Front_Register_Title;
     ViewBag.DisableSearch = true;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 
@@ -10,18 +11,17 @@
 }
 
 <div class="content text">
-    <h1>Регистрация</h1>
+    <h1>@Texts.Front_Register_Title</h1>
 
-    <p>Для создания учетной записи, пожалуйста, введите необходимую информацию. <br/>
+    <p>
+        @Texts.Front_Register_Subtitle <br />
         @if (data.IsFirstUser)
         {
-            <text>Ваша учетная запись получит права администратора.</text>
+            <text>@Texts.Front_Register_FirstUserHint</text>
         }
         else
         {
-            <text>Проверьте, что ввели актуальные данные - на русском языке и без ошибок. <br/>
-                Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.
-            </text>
+            <text>@Html.Raw(Texts.Front_Register_Hint)</text>
         }
     </p>
 
@@ -29,38 +29,38 @@
         <div class="col-md-7 col-sm-12">
             <form asp-action="Register" method="post" style="margin-top: 32px">
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label form-label-required">Фамилия</label>
+                    <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_LastName</label>
                     <div class="col-sm-9">
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label form-label-required">Имя</label>
+                    <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_FirstName</label>
                     <div class="col-sm-9">
                         <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label form-label-required">Отчество</label>
+                    <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_MiddleName</label>
                     <div class="col-sm-9">
                         <input asp-for="MiddleName" class="form-control" />
                         <span asp-validation-for="MiddleName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label form-label-required">Дата рождения</label>
+                    <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_Birthday</label>
                     <div class="col-sm-6">
-                        <input asp-for="Birthday" class="form-control datepicker datepicker-strict" placeholder="ГГГГ.ММ.ДД" />
+                        <input asp-for="Birthday" class="form-control datepicker datepicker-strict" placeholder="@Texts.Datepicker_Placeholder" />
                         <span asp-validation-for="Birthday" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label form-label-required">E-mail</label>
+                    <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_Email</label>
                     <div class="col-sm-9">
                         <input asp-for="Email" class="form-control" />
-                        <div class="small text-muted">Будет использоваться в качестве логина</div>
+                        <div class="small text-muted">@Texts.Front_Register_Email_Hint</div>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
@@ -68,16 +68,16 @@
                 @if (data.UsePasswordAuth)
                 {
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label form-label-required">Пароль</label>
+                        <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_Password</label>
                         <div class="col-sm-9">
                             <input asp-for="Password" class="form-control" type="password" />
-                            <div class="small text-muted">Минимум 6 символов</div>
+                            <div class="small text-muted">@Texts.Front_Register_Password_Hint</div>
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label form-label-required">Повтор пароля</label>
+                        <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_Password_Repeat</label>
                         <div class="col-sm-9">
                             <input asp-for="PasswordCopy" class="form-control" type="password" />
                             <span asp-validation-for="PasswordCopy" class="text-danger"></span>
@@ -88,11 +88,11 @@
                 @if (data.IsFirstUser)
                 {
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label form-label-required">Опции</label>
+                        <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_Options</label>
                         <div class="col-sm-9">
                             <div class="form-check">
                                 <input asp-for="CreatePersonalPage" class="form-check-input" />
-                                <label asp-for="CreatePersonalPage" class="form-check-label">Создать личную страницу</label>
+                                <label asp-for="CreatePersonalPage" class="form-check-label">@Texts.Front_Register_CreatePersonalPage</label>
                                 <span asp-validation-for="CreatePersonalPage" class="text-danger"></span>
                             </div>
                         </div>
@@ -102,13 +102,13 @@
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="alert alert-danger" role="alert">
-                        <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.
+                        @Html.Raw(Texts.Front_Register_Error)
                     </div>
                 }
 
                 <div class="form-group row">
                     <div class="offset-sm-3 col-sm-6">
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        <button type="submit" class="btn btn-primary">@Texts.Front_Register_Submit</button>
                     </div>
                 </div>
             </form>

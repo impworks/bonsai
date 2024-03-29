@@ -116,6 +116,21 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Update="Localization\Texts.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Texts.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Localization\Texts.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
       <None Update="External\ffmpeg\avcodec-58.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

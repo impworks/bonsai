@@ -1,7 +1,8 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Bonsai.Localization
 @model GenderFactModel
 
 <tr class="fact">
     <th class="fact-title">@Model.ShortTitle</th>
-    <td class="fact-value">@(Model.IsMale ? "Мужской" : "Женский")</td>
+    <td class="fact-value">@(Model.IsMale ? Texts.Front_Facts_Gender_Male : Texts.Front_Facts_Gender_Female)</td>
 </tr>

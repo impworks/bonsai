@@ -1,12 +1,13 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Impworks.Utils.Format
 @model PageVM<PageTreeVM>
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
 
     ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Body.Title + " — Фамильное древо";
+    ViewBag.Title = string.Format(Texts.Front_Page_Tree_Title, Model.Body.Title);
 
     string GetTreeUrl(TreeKind? kind = null)
     {
@@ -27,11 +28,11 @@
             }
         </div>
         <div class="float-right btn-group">
-            <a class="btn btn-sm btn-outline-primary cmd-fullscreen" href="#" title="Во весь экран">
-                <span class="fa fa-arrows-alt"></span> Во весь экран
+            <a class="btn btn-sm btn-outline-primary cmd-fullscreen" href="#" title="@Texts.Front_Page_Tree_Fullscreen">
+                <span class="fa fa-arrows-alt"></span> @Texts.Front_Page_Tree_Fullscreen
             </a>
-            <a class="btn btn-sm btn-outline-primary cmd-new-window" href="@GetTreeUrl()" target="_blank" title="В новом окне">
-                <span class="fa fa-window-maximize"></span> В новом окне
+            <a class="btn btn-sm btn-outline-primary cmd-new-window" href="@GetTreeUrl()" target="_blank" title="@Texts.Front_Page_Tree_NewWindow">
+                <span class="fa fa-window-maximize"></span> @Texts.Front_Page_Tree_NewWindow
             </a>
         </div>
         <div class="clearfix"></div>
