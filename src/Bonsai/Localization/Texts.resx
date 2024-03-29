@@ -117,6 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AuthProvider_Google" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="AuthProvider_Vkontakte" xml:space="preserve">
+    <value>ВКонтакте</value>
+  </data>
+  <data name="AuthProvider_Yandex" xml:space="preserve">
+    <value>Яндекс</value>
+  </data>
+  <data name="AuthService_Error_EmailAlreadyExists" xml:space="preserve">
+    <value>Адрес электронной почты уже зарегистрирован.</value>
+  </data>
+  <data name="AuthService_Error_InvalidBirthday" xml:space="preserve">
+    <value>Дата рождения указана неверно.</value>
+  </data>
+  <data name="AuthService_Error_PasswordDoesNotMatch" xml:space="preserve">
+    <value>Пароли не совпадают.</value>
+  </data>
+  <data name="AuthService_Error_PasswordTooShort" xml:space="preserve">
+    <value>Пароль должен содержать как минимум 6 символов.</value>
+  </data>
   <data name="DatePicker_Format" xml:space="preserve">
     <value />
   </data>
@@ -420,5 +441,170 @@
   </data>
   <data name="Global_UserHeader_Page" xml:space="preserve">
     <value>Страница</value>
+  </data>
+  <data name="Relations_ChildChild" xml:space="preserve">
+    <value>Внук|Внучка|Внук</value>
+  </data>
+  <data name="Relations_ChildChild_Mult" xml:space="preserve">
+    <value>Внуки</value>
+  </data>
+  <data name="Relations_ChildFSpouseM" xml:space="preserve">
+    <value>Зять</value>
+  </data>
+  <data name="Relations_ChildFSpouseM_Mult" xml:space="preserve">
+    <value>Зяти</value>
+  </data>
+  <data name="Relations_ChildMSpouseF" xml:space="preserve">
+    <value>Невестка</value>
+  </data>
+  <data name="Relations_ChildMSpouseF_Mult" xml:space="preserve">
+    <value>Невестки</value>
+  </data>
+  <data name="Relations_Colleague" xml:space="preserve">
+    <value>Коллега</value>
+  </data>
+  <data name="Relations_Colleague_Mult" xml:space="preserve">
+    <value>Коллеги</value>
+  </data>
+  <data name="Relations_Event" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="Relations_EventVisitor" xml:space="preserve">
+    <value>Участник|Участница|Участник</value>
+  </data>
+  <data name="Relations_EventVisitor_Mult" xml:space="preserve">
+    <value>Участники</value>
+  </data>
+  <data name="Relations_Event_Mult" xml:space="preserve">
+    <value>События</value>
+  </data>
+  <data name="Relations_Friend" xml:space="preserve">
+    <value>Друг|Подруга|Друг</value>
+  </data>
+  <data name="Relations_Friend_Mult" xml:space="preserve">
+    <value>Друзья</value>
+  </data>
+  <data name="Relations_Group_Pages" xml:space="preserve">
+    <value>Страницы</value>
+  </data>
+  <data name="Relations_Group_People" xml:space="preserve">
+    <value>Люди</value>
+  </data>
+  <data name="Relations_Group_Relatives" xml:space="preserve">
+    <value>Родственники</value>
+  </data>
+  <data name="Relations_Location" xml:space="preserve">
+    <value>Место</value>
+  </data>
+  <data name="Relations_LocationInhabitant" xml:space="preserve">
+    <value>Житель|Жительница|Житель</value>
+  </data>
+  <data name="Relations_LocationInhabitant_Mult" xml:space="preserve">
+    <value>Жители</value>
+  </data>
+  <data name="Relations_Location_Mult" xml:space="preserve">
+    <value>Места</value>
+  </data>
+  <data name="Relations_Owner" xml:space="preserve">
+    <value>Владелец|Владелица|Владелец</value>
+  </data>
+  <data name="Relations_Owner_Mult" xml:space="preserve">
+    <value>Владельцы</value>
+  </data>
+  <data name="Relations_Parent" xml:space="preserve">
+    <value>Родитель</value>
+  </data>
+  <data name="Relations_ParentChildF" xml:space="preserve">
+    <value>Сестра</value>
+  </data>
+  <data name="Relations_ParentChildF_Mult" xml:space="preserve">
+    <value>Сестры</value>
+  </data>
+  <data name="Relations_ParentChildM" xml:space="preserve">
+    <value>Брат</value>
+  </data>
+  <data name="Relations_ParentChildM_Mult" xml:space="preserve">
+    <value>Братья</value>
+  </data>
+  <data name="Relations_ParentF" xml:space="preserve">
+    <value>Мать</value>
+  </data>
+  <data name="Relations_ParentM" xml:space="preserve">
+    <value>Отец</value>
+  </data>
+  <data name="Relations_ParentParentF" xml:space="preserve">
+    <value>Бабушка</value>
+  </data>
+  <data name="Relations_ParentParentF_Mult" xml:space="preserve">
+    <value>Бабушки</value>
+  </data>
+  <data name="Relations_ParentParentM" xml:space="preserve">
+    <value>Дедушка</value>
+  </data>
+  <data name="Relations_ParentParentM_Mult" xml:space="preserve">
+    <value>Дедушки</value>
+  </data>
+  <data name="Relations_Parent_Mult" xml:space="preserve">
+    <value>Родители</value>
+  </data>
+  <data name="Relations_Pet" xml:space="preserve">
+    <value>Питомец</value>
+  </data>
+  <data name="Relations_Pet_Mult" xml:space="preserve">
+    <value>Питомцы</value>
+  </data>
+  <data name="Relations_SpouseChild" xml:space="preserve">
+    <value>Сын|Дочь|Ребенок</value>
+  </data>
+  <data name="Relations_SpouseChild_Mult" xml:space="preserve">
+    <value>Дети</value>
+  </data>
+  <data name="Relations_SpouseF" xml:space="preserve">
+    <value>Жена</value>
+  </data>
+  <data name="Relations_SpouseFParentChildF" xml:space="preserve">
+    <value>Свояченица</value>
+  </data>
+  <data name="Relations_SpouseFParentChildF_Mult" xml:space="preserve">
+    <value>Свояченицы</value>
+  </data>
+  <data name="Relations_SpouseFParentChildM" xml:space="preserve">
+    <value>Шурин</value>
+  </data>
+  <data name="Relations_SpouseFParentChildM_Mult" xml:space="preserve">
+    <value>Шурины</value>
+  </data>
+  <data name="Relations_SpouseFParentF" xml:space="preserve">
+    <value>Теща</value>
+  </data>
+  <data name="Relations_SpouseFParentM" xml:space="preserve">
+    <value>Тесть</value>
+  </data>
+  <data name="Relations_SpouseM" xml:space="preserve">
+    <value>Муж</value>
+  </data>
+  <data name="Relations_SpouseMParentChildF" xml:space="preserve">
+    <value>Золовка</value>
+  </data>
+  <data name="Relations_SpouseMParentChildF_Mult" xml:space="preserve">
+    <value>Золовки</value>
+  </data>
+  <data name="Relations_SpouseMParentChildM" xml:space="preserve">
+    <value>Деверь</value>
+  </data>
+  <data name="Relations_SpouseMParentChildM_Mult" xml:space="preserve">
+    <value>Девери</value>
+  </data>
+  <data name="Relations_SpouseMParentF" xml:space="preserve">
+    <value>Свекровь</value>
+  </data>
+  <data name="Relations_SpouseMParentM" xml:space="preserve">
+    <value>Свекр</value>
+  </data>
+  <data name="Relations_SpouseOtherChild" xml:space="preserve">
+    <value>Сын|Дочь|Ребенок</value>
+  </data>
+  <data name="Relations_SpouseOtherChild_Mult" xml:space="preserve">
+    <value>Дети</value>
   </data>
 </root>

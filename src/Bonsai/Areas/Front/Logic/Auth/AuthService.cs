@@ -8,6 +8,7 @@ using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -201,19 +202,19 @@ namespace Bonsai.Areas.Front.Logic.Auth
             var val = new Validator();
 
             if (FuzzyDate.TryParse(vm.Birthday) == null)
-                val.Add(nameof(vm.Birthday), "Дата рождения указана неверно.");
+                val.Add(nameof(vm.Birthday), Texts.AuthService_Error_InvalidBirthday);
 
             var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email);
             if (emailExists)
-                val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
+                val.Add(nameof(vm.Email), Texts.AuthService_Error_EmailAlreadyExists);
 
             if (usePasswordAuth)
             {
                 if (vm.Password == null || vm.Password.Length < 6)
-                    val.Add(nameof(vm.Password), "Пароль должен содержать как минимум 6 символов.");
+                    val.Add(nameof(vm.Password), Texts.AuthService_Error_PasswordTooShort);
 
                 if (vm.Password != vm.PasswordCopy)
-                    val.Add(nameof(vm.PasswordCopy), "Пароли не совпадают.");
+                    val.Add(nameof(vm.PasswordCopy), Texts.AuthService_Error_PasswordDoesNotMatch);
             }
 
             val.ThrowIfInvalid();
