@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Bonsai.Areas.Front.ViewModels.Auth;
 using Bonsai.Code.Services.Config;
+using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             new AuthProviderVM
             {
                 Key = "Vkontakte",
-                Caption = "ВКонтакте",
+                Caption = Texts.AuthProvider_Vkontakte,
                 IconClass = "fa fa-vk",
                 TryActivate = (cfg, auth) =>
                 {
@@ -50,7 +51,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             new AuthProviderVM
             {
                 Key = "Yandex",
-                Caption = "Яндекс",
+                Caption = Texts.AuthProvider_Yandex,
                 IconClass = "fa fa-yahoo", // the closest one that has an Y :)
                 TryActivate = (cfg, auth) =>
                 {
@@ -78,7 +79,7 @@ namespace Bonsai.Areas.Front.Logic.Auth
             new AuthProviderVM
             {
                 Key = "Google",
-                Caption = "Google",
+                Caption = Texts.AuthProvider_Google,
                 IconClass = "fa fa-google-plus-square",
                 TryActivate = (cfg, auth) =>
                 {

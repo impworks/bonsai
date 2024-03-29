@@ -61,6 +61,69 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Google.
+        /// </summary>
+        public static string AuthProvider_Google {
+            get {
+                return ResourceManager.GetString("AuthProvider_Google", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ВКонтакте.
+        /// </summary>
+        public static string AuthProvider_Vkontakte {
+            get {
+                return ResourceManager.GetString("AuthProvider_Vkontakte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Яндекс.
+        /// </summary>
+        public static string AuthProvider_Yandex {
+            get {
+                return ResourceManager.GetString("AuthProvider_Yandex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Адрес электронной почты уже зарегистрирован..
+        /// </summary>
+        public static string AuthService_Error_EmailAlreadyExists {
+            get {
+                return ResourceManager.GetString("AuthService_Error_EmailAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата рождения указана неверно..
+        /// </summary>
+        public static string AuthService_Error_InvalidBirthday {
+            get {
+                return ResourceManager.GetString("AuthService_Error_InvalidBirthday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароли не совпадают..
+        /// </summary>
+        public static string AuthService_Error_PasswordDoesNotMatch {
+            get {
+                return ResourceManager.GetString("AuthService_Error_PasswordDoesNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароль должен содержать как минимум 6 символов..
+        /// </summary>
+        public static string AuthService_Error_PasswordTooShort {
+            get {
+                return ResourceManager.GetString("AuthService_Error_PasswordTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         public static string DatePicker_Format {
@@ -966,6 +1029,501 @@ namespace Bonsai.Localization {
         public static string Global_UserHeader_Page {
             get {
                 return ResourceManager.GetString("Global_UserHeader_Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Внук|Внучка|Внук.
+        /// </summary>
+        public static string Relations_ChildChild {
+            get {
+                return ResourceManager.GetString("Relations_ChildChild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Внуки.
+        /// </summary>
+        public static string Relations_ChildChild_Mult {
+            get {
+                return ResourceManager.GetString("Relations_ChildChild_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Зять.
+        /// </summary>
+        public static string Relations_ChildFSpouseM {
+            get {
+                return ResourceManager.GetString("Relations_ChildFSpouseM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Зяти.
+        /// </summary>
+        public static string Relations_ChildFSpouseM_Mult {
+            get {
+                return ResourceManager.GetString("Relations_ChildFSpouseM_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Невестка.
+        /// </summary>
+        public static string Relations_ChildMSpouseF {
+            get {
+                return ResourceManager.GetString("Relations_ChildMSpouseF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Невестки.
+        /// </summary>
+        public static string Relations_ChildMSpouseF_Mult {
+            get {
+                return ResourceManager.GetString("Relations_ChildMSpouseF_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Коллега.
+        /// </summary>
+        public static string Relations_Colleague {
+            get {
+                return ResourceManager.GetString("Relations_Colleague", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Коллеги.
+        /// </summary>
+        public static string Relations_Colleague_Mult {
+            get {
+                return ResourceManager.GetString("Relations_Colleague_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string Relations_Event {
+            get {
+                return ResourceManager.GetString("Relations_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to События.
+        /// </summary>
+        public static string Relations_Event_Mult {
+            get {
+                return ResourceManager.GetString("Relations_Event_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Участник|Участница|Участник.
+        /// </summary>
+        public static string Relations_EventVisitor {
+            get {
+                return ResourceManager.GetString("Relations_EventVisitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Участники.
+        /// </summary>
+        public static string Relations_EventVisitor_Mult {
+            get {
+                return ResourceManager.GetString("Relations_EventVisitor_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Друг|Подруга|Друг.
+        /// </summary>
+        public static string Relations_Friend {
+            get {
+                return ResourceManager.GetString("Relations_Friend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Друзья.
+        /// </summary>
+        public static string Relations_Friend_Mult {
+            get {
+                return ResourceManager.GetString("Relations_Friend_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страницы.
+        /// </summary>
+        public static string Relations_Group_Pages {
+            get {
+                return ResourceManager.GetString("Relations_Group_Pages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Люди.
+        /// </summary>
+        public static string Relations_Group_People {
+            get {
+                return ResourceManager.GetString("Relations_Group_People", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Родственники.
+        /// </summary>
+        public static string Relations_Group_Relatives {
+            get {
+                return ResourceManager.GetString("Relations_Group_Relatives", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место.
+        /// </summary>
+        public static string Relations_Location {
+            get {
+                return ResourceManager.GetString("Relations_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Места.
+        /// </summary>
+        public static string Relations_Location_Mult {
+            get {
+                return ResourceManager.GetString("Relations_Location_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Житель|Жительница|Житель.
+        /// </summary>
+        public static string Relations_LocationInhabitant {
+            get {
+                return ResourceManager.GetString("Relations_LocationInhabitant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Жители.
+        /// </summary>
+        public static string Relations_LocationInhabitant_Mult {
+            get {
+                return ResourceManager.GetString("Relations_LocationInhabitant_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Владелец|Владелица|Владелец.
+        /// </summary>
+        public static string Relations_Owner {
+            get {
+                return ResourceManager.GetString("Relations_Owner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Владельцы.
+        /// </summary>
+        public static string Relations_Owner_Mult {
+            get {
+                return ResourceManager.GetString("Relations_Owner_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Родитель.
+        /// </summary>
+        public static string Relations_Parent {
+            get {
+                return ResourceManager.GetString("Relations_Parent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Родители.
+        /// </summary>
+        public static string Relations_Parent_Mult {
+            get {
+                return ResourceManager.GetString("Relations_Parent_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сестра.
+        /// </summary>
+        public static string Relations_ParentChildF {
+            get {
+                return ResourceManager.GetString("Relations_ParentChildF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сестры.
+        /// </summary>
+        public static string Relations_ParentChildF_Mult {
+            get {
+                return ResourceManager.GetString("Relations_ParentChildF_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Брат.
+        /// </summary>
+        public static string Relations_ParentChildM {
+            get {
+                return ResourceManager.GetString("Relations_ParentChildM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Братья.
+        /// </summary>
+        public static string Relations_ParentChildM_Mult {
+            get {
+                return ResourceManager.GetString("Relations_ParentChildM_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Мать.
+        /// </summary>
+        public static string Relations_ParentF {
+            get {
+                return ResourceManager.GetString("Relations_ParentF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отец.
+        /// </summary>
+        public static string Relations_ParentM {
+            get {
+                return ResourceManager.GetString("Relations_ParentM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Бабушка.
+        /// </summary>
+        public static string Relations_ParentParentF {
+            get {
+                return ResourceManager.GetString("Relations_ParentParentF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Бабушки.
+        /// </summary>
+        public static string Relations_ParentParentF_Mult {
+            get {
+                return ResourceManager.GetString("Relations_ParentParentF_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дедушка.
+        /// </summary>
+        public static string Relations_ParentParentM {
+            get {
+                return ResourceManager.GetString("Relations_ParentParentM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дедушки.
+        /// </summary>
+        public static string Relations_ParentParentM_Mult {
+            get {
+                return ResourceManager.GetString("Relations_ParentParentM_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Питомец.
+        /// </summary>
+        public static string Relations_Pet {
+            get {
+                return ResourceManager.GetString("Relations_Pet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Питомцы.
+        /// </summary>
+        public static string Relations_Pet_Mult {
+            get {
+                return ResourceManager.GetString("Relations_Pet_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сын|Дочь|Ребенок.
+        /// </summary>
+        public static string Relations_SpouseChild {
+            get {
+                return ResourceManager.GetString("Relations_SpouseChild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дети.
+        /// </summary>
+        public static string Relations_SpouseChild_Mult {
+            get {
+                return ResourceManager.GetString("Relations_SpouseChild_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Жена.
+        /// </summary>
+        public static string Relations_SpouseF {
+            get {
+                return ResourceManager.GetString("Relations_SpouseF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Свояченица.
+        /// </summary>
+        public static string Relations_SpouseFParentChildF {
+            get {
+                return ResourceManager.GetString("Relations_SpouseFParentChildF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Свояченицы.
+        /// </summary>
+        public static string Relations_SpouseFParentChildF_Mult {
+            get {
+                return ResourceManager.GetString("Relations_SpouseFParentChildF_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Шурин.
+        /// </summary>
+        public static string Relations_SpouseFParentChildM {
+            get {
+                return ResourceManager.GetString("Relations_SpouseFParentChildM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Шурины.
+        /// </summary>
+        public static string Relations_SpouseFParentChildM_Mult {
+            get {
+                return ResourceManager.GetString("Relations_SpouseFParentChildM_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Теща.
+        /// </summary>
+        public static string Relations_SpouseFParentF {
+            get {
+                return ResourceManager.GetString("Relations_SpouseFParentF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тесть.
+        /// </summary>
+        public static string Relations_SpouseFParentM {
+            get {
+                return ResourceManager.GetString("Relations_SpouseFParentM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Муж.
+        /// </summary>
+        public static string Relations_SpouseM {
+            get {
+                return ResourceManager.GetString("Relations_SpouseM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Золовка.
+        /// </summary>
+        public static string Relations_SpouseMParentChildF {
+            get {
+                return ResourceManager.GetString("Relations_SpouseMParentChildF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Золовки.
+        /// </summary>
+        public static string Relations_SpouseMParentChildF_Mult {
+            get {
+                return ResourceManager.GetString("Relations_SpouseMParentChildF_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Деверь.
+        /// </summary>
+        public static string Relations_SpouseMParentChildM {
+            get {
+                return ResourceManager.GetString("Relations_SpouseMParentChildM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Девери.
+        /// </summary>
+        public static string Relations_SpouseMParentChildM_Mult {
+            get {
+                return ResourceManager.GetString("Relations_SpouseMParentChildM_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Свекровь.
+        /// </summary>
+        public static string Relations_SpouseMParentF {
+            get {
+                return ResourceManager.GetString("Relations_SpouseMParentF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Свекр.
+        /// </summary>
+        public static string Relations_SpouseMParentM {
+            get {
+                return ResourceManager.GetString("Relations_SpouseMParentM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сын|Дочь|Ребенок.
+        /// </summary>
+        public static string Relations_SpouseOtherChild {
+            get {
+                return ResourceManager.GetString("Relations_SpouseOtherChild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дети.
+        /// </summary>
+        public static string Relations_SpouseOtherChild_Mult {
+            get {
+                return ResourceManager.GetString("Relations_SpouseOtherChild_Mult", resourceCulture);
             }
         }
     }

@@ -9,6 +9,7 @@ using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 
 namespace Bonsai.Areas.Front.Logic.Relations
@@ -32,13 +33,13 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         public static RelationDefinition[] ParentRelations =
         {
-            new RelationDefinition("Parent:m", "Отец"),
-            new RelationDefinition("Parent:f", "Мать"),
-            new RelationDefinition("Parent-Parent:m-Parent:f", "Родитель", "Родители"),
-            new RelationDefinition("Parent Child:m", "Брат", "Братья"),
-            new RelationDefinition("Parent Child:f", "Сестра", "Сестры"),
-            new RelationDefinition("Parent Parent:m", "Дедушка", "Дедушки"),
-            new RelationDefinition("Parent Parent:f", "Бабушка", "Бабушки")
+            new RelationDefinition("Parent:m", Texts.Relations_ParentM), // отец
+            new RelationDefinition("Parent:f", Texts.Relations_ParentF), // мать
+            new RelationDefinition("Parent-Parent:m-Parent:f", Texts.Relations_Parent, Texts.Relations_Parent_Mult), // родители
+            new RelationDefinition("Parent Child:m", Texts.Relations_ParentChildM, Texts.Relations_ParentChildM_Mult), // брат
+            new RelationDefinition("Parent Child:f", Texts.Relations_ParentChildF, Texts.Relations_ParentChildF_Mult), // сестра
+            new RelationDefinition("Parent Parent:m", Texts.Relations_ParentParentM, Texts.Relations_ParentParentM_Mult), // бабушка
+            new RelationDefinition("Parent Parent:f", Texts.Relations_ParentParentF, Texts.Relations_ParentParentF_Mult) // дедушка
         };
 
         /// <summary>
@@ -46,17 +47,17 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         public static RelationDefinition[] SpouseDefinitions =
         {
-            new RelationDefinition("!Spouse:m", "Муж", null, RelationDurationDisplayMode.RelationRange),
-            new RelationDefinition("!Spouse:f", "Жена", null, RelationDurationDisplayMode.RelationRange),
-            new RelationDefinition("!Spouse Child+Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
-            new RelationDefinition("!Spouse:m Parent:m", "Свекр"),
-            new RelationDefinition("!Spouse:m Parent:f", "Свекровь"),
-            new RelationDefinition("!Spouse:f Parent:m", "Тесть"),
-            new RelationDefinition("!Spouse:f Parent:f", "Теща"),
-            new RelationDefinition("!Spouse:m Parent Child:m", "Деверь", "Девери"),
-            new RelationDefinition("!Spouse:m Parent Child:f", "Золовка", "Золовки"),
-            new RelationDefinition("!Spouse:f Parent Child:m", "Шурин", "Шурины"),
-            new RelationDefinition("!Spouse:f Parent Child:f", "Свояченица", "Свояченицы")
+            new RelationDefinition("!Spouse:m", Texts.Relations_SpouseM, null, RelationDurationDisplayMode.RelationRange), // муж
+            new RelationDefinition("!Spouse:f", Texts.Relations_SpouseF, null, RelationDurationDisplayMode.RelationRange), // жена
+            new RelationDefinition("!Spouse Child+Child", Texts.Relations_SpouseChild, Texts.Relations_SpouseChild_Mult, RelationDurationDisplayMode.Birth), // родной ребенок с супругом
+            new RelationDefinition("!Spouse:m Parent:m", Texts.Relations_SpouseMParentM), // свекр
+            new RelationDefinition("!Spouse:m Parent:f", Texts.Relations_SpouseMParentF), // свекровь
+            new RelationDefinition("!Spouse:f Parent:m", Texts.Relations_SpouseFParentM), // тесть
+            new RelationDefinition("!Spouse:f Parent:f", Texts.Relations_SpouseFParentF), // теща
+            new RelationDefinition("!Spouse:m Parent Child:m", Texts.Relations_SpouseMParentChildM, Texts.Relations_SpouseMParentChildM_Mult), // деверь
+            new RelationDefinition("!Spouse:m Parent Child:f", Texts.Relations_SpouseMParentChildF, Texts.Relations_SpouseMParentChildF_Mult), // золовка
+            new RelationDefinition("!Spouse:f Parent Child:m", Texts.Relations_SpouseFParentChildM, Texts.Relations_SpouseFParentChildM_Mult), // шурин
+            new RelationDefinition("!Spouse:f Parent Child:f", Texts.Relations_SpouseFParentChildF, Texts.Relations_SpouseFParentChildF_Mult) // свояченица
         };
 
         /// <summary>
@@ -64,11 +65,11 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         public static RelationDefinition[] OtherRelativeRelations =
         {
-            new RelationDefinition("Child-Spouse Child", "Сын|Дочь|Ребенок", "Дети", RelationDurationDisplayMode.Birth),
-            new RelationDefinition("Child Child", "Внук|Внучка|Внук", "Внуки", RelationDurationDisplayMode.Birth),
-            new RelationDefinition("Child:f Spouse:m", "Зять", "Зяти"),
-            new RelationDefinition("Child:m Spouse:f", "Невестка", "Невестки"),
-            new RelationDefinition("Pet", "Питомец", "Питомцы"),
+            new RelationDefinition("Child-Spouse Child", Texts.Relations_SpouseOtherChild, Texts.Relations_SpouseOtherChild_Mult, RelationDurationDisplayMode.Birth), // ребенок не от супруга
+            new RelationDefinition("Child Child", Texts.Relations_ChildChild, Texts.Relations_ChildChild_Mult, RelationDurationDisplayMode.Birth), // внук
+            new RelationDefinition("Child:f Spouse:m", Texts.Relations_ChildFSpouseM, Texts.Relations_ChildFSpouseM_Mult), // зять
+            new RelationDefinition("Child:m Spouse:f", Texts.Relations_ChildMSpouseF, Texts.Relations_ChildMSpouseF_Mult), // невестка
+            new RelationDefinition("Pet", Texts.Relations_Pet, Texts.Relations_Pet_Mult), // питомец
         };
 
         /// <summary>
@@ -76,11 +77,11 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         private static RelationDefinition[] NonRelativeRelations =
         {
-            new RelationDefinition("Friend", "Друг|Подруга|Друг", "Друзья"),
-            new RelationDefinition("Colleague", "Коллега", "Коллеги"),
-            new RelationDefinition("Owner", "Владелец|Владелица|Владелец", "Владельцы", RelationDurationDisplayMode.RelationRange),
-            new RelationDefinition("EventVisitor", "Участник|Участница|Участник", "Участники"),
-            new RelationDefinition("LocationInhabitant", "Житель|Жительница|Житель", "Жители"),
+            new RelationDefinition("Friend", Texts.Relations_Friend, Texts.Relations_Friend_Mult), // друг
+            new RelationDefinition("Colleague", Texts.Relations_Colleague, Texts.Relations_Colleague_Mult), // коллега
+            new RelationDefinition("Owner", Texts.Relations_Owner, Texts.Relations_Owner_Mult, RelationDurationDisplayMode.RelationRange), // владелец
+            new RelationDefinition("EventVisitor", Texts.Relations_EventVisitor, Texts.Relations_EventVisitor_Mult), // участник
+            new RelationDefinition("LocationInhabitant", Texts.Relations_LocationInhabitant, Texts.Relations_LocationInhabitant_Mult), // житель
         };
 
         /// <summary>
@@ -88,8 +89,8 @@ namespace Bonsai.Areas.Front.Logic.Relations
         /// </summary>
         private static RelationDefinition[] NonHumanRelations =
         {
-            new RelationDefinition("Location", "Место", "Места"),
-            new RelationDefinition("Event", "Событие", "События"),
+            new RelationDefinition("Location", Texts.Relations_Location, Texts.Relations_Location_Mult), // место
+            new RelationDefinition("Event", Texts.Relations_Event, Texts.Relations_Event_Mult), // событие
         };
 
         #endregion
@@ -107,7 +108,7 @@ namespace Bonsai.Areas.Front.Logic.Relations
             {
                 new RelationCategoryVM
                 {
-                    Title = "Родственники",
+                    Title = Texts.Relations_Group_Relatives,
                     IsMain = true,
                     Groups = GetGroups(ctx, pageId, ParentRelations)
                         .Concat(GetSpouseGroups(ctx, pageId))
@@ -116,12 +117,12 @@ namespace Bonsai.Areas.Front.Logic.Relations
                 },
                 new RelationCategoryVM
                 {
-                    Title = "Люди",
+                    Title = Texts.Relations_Group_People,
                     Groups = GetGroups(ctx, pageId, NonRelativeRelations).ToList(),
                 },
                 new RelationCategoryVM
                 {
-                    Title = "Страницы",
+                    Title = Texts.Relations_Group_Pages,
                     Groups = GetGroups(ctx, pageId, NonHumanRelations).ToList(),
                 }
             };
