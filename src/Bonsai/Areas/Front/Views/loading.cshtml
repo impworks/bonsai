@@ -1,10 +1,11 @@
+@using Bonsai.Localization
 @model IEnumerable<Bonsai.Code.Services.StartupTask>
 
 @{
     Layout = "Layout.cshtml";
     ViewBag.DisableSearch = true;
     ViewBag.StartupMode = true;
-    ViewBag.Title = "Загрузка";
+    ViewBag.Title = Texts.Front_Loading_Title;
 
     var hasFailed = Model.Any(x => x.IsFailed);
     var isAfterFailed = false;
@@ -20,14 +21,11 @@
 <div class="content text">
     @if (hasFailed)
     {
-        <p>
-            При загрузке Bonsai произошла ошибка.<br/>
-            Подробная информация об ошибке записана в логи.
-        </p>
+        <p>@Html.Raw(Texts.Front_Loading_Error)</p>
     }
     else
     {
-        <p>Bonsai загружается...</p>
+        <p>@Texts.Front_Loading_InProgress1</p>
     }
     
     @foreach (var task in Model)
@@ -66,6 +64,6 @@
     
     @if (!hasFailed)
     {
-        <p>Откиньтесь на спинку кресла и отдохните - это займет не более минуты :)</p>
+        <p>@Texts.Front_Loading_InProgress2</p>
     }
 </div>

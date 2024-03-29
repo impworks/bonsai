@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Code.Utils.Helpers
+@using Bonsai.Localization
 @model Bonsai.Areas.Front.ViewModels.Auth.UserVM
 <div class="account d-flex align-items-center">
     @if (Model != null)
@@ -15,7 +16,7 @@
     else
     {
         <div class="account-text">
-            <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">Войти</a>
+            <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">@Texts.Global_UserHeader_Login</a>
         </div>
     }
     
@@ -24,19 +25,19 @@
         {
             <a class="user-popover-link" href="@Url.Action("Description", "Page", new {key = Model.PageKey, area = "Front"})">
                 <i class="fa fa-user-circle-o"></i>
-                <span>Страница</span>
+                <span>@Texts.Global_UserHeader_Page</span>
             </a>
         }
         @if (Model?.IsAdministrator == true)
         {
             <a class="user-popover-link" href="@Url.Action("Index", "Dashboard", new {area = "Admin"})">
                 <i class="fa fa-cogs"></i>
-                <span>Управление</span>
+                <span>@Texts.Global_UserHeader_Administration</span>
             </a>
         }
         <a class="user-popover-link" href="@Url.Action("Logout", "Auth", new {area = "Front"})">
             <i class="fa fa-sign-out"></i>
-            <span>Выйти</span>
+            <span>@Texts.Global_UserHeader_Logout</span>
         </a>
     </div>
 </div>

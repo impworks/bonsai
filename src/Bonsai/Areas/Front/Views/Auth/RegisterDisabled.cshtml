@@ -1,11 +1,12 @@
-﻿@{
-    ViewBag.Title = "Регистрация отклонена";
+﻿@using Bonsai.Localization
+@{
+    ViewBag.Title = Texts.Front_RegisterDisabled_Title;
     ViewBag.DisableSearch = true;
     Layout = "~/Areas/Front/Views/Layout.cshtml";
 }
 
 <div class="content text">
-    <h1>Регистрация отклонена</h1>
+    <h1>@Texts.Front_RegisterDisabled_Title</h1>
 
-    <p>Учетная запись не может быть создана, потому что регистрация новых пользователей запрещена администратором.</p>
+    <p>@Texts.Front_RegisterDisabled_Description</p>
 </div>

@@ -1,11 +1,12 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
 @using Bonsai.Code.Utils.Helpers
+@using Bonsai.Localization
 @model PageVM<PageMediaVM>
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
     
     ViewBag.PageModel = Model;
-    ViewBag.Title = Model.Body.Title + " — Медиа";
+    ViewBag.Title = string.Format(Texts.Front_Page_Media_DateUnknown, Model.Body.Title);
 
     var groups = Model.Body.Media
                       .GroupBy(x => x.Date?.ReadableYear)
@@ -16,7 +17,7 @@
 {
     foreach (var group in groups)
     {
-        var key = group.Key ?? "Давно";
+        var key = group.Key ?? Texts.Front_Page_Media_LongAgo;
         <div class="media-thumb-group">
             <h3 id="@key">@key</h3>
             <ul class="list-inline">
@@ -25,7 +26,7 @@
                     <li class="list-inline-item">
                         <div class="media-thumb-wrapper">
                             <a href="@Url.Action("ViewMedia", "Media", new {key = elem.Key})" class="media-thumb-link" data-media="@elem.Key">
-                                <div class="media-thumb-square" style="background-image: url('@Url.MediaUrl(elem)')" title="@Model.Body.Title (@(elem.Date?.ShortReadableDate ?? "Дата неизвестна"))"></div>
+                                <div class="media-thumb-square" style="background-image: url('@Url.MediaUrl(elem)')" title="@Model.Body.Title (@(elem.Date?.ShortReadableDate ?? Texts.Front_Page_Media_DateUnknown))"></div>
                             </a>
                         </div>
                     </li>
@@ -36,5 +37,5 @@
 }
 else
 {
-    <div class="text-muted">Медиа-файлов нет.</div>
+    <div class="text-muted">@Texts.Front_Page_Media_Empty</div>
 }

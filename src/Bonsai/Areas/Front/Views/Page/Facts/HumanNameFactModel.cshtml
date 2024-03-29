@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Bonsai.Localization
 @model HumanNameFactModel
 
 @{
@@ -10,7 +11,7 @@
 }
 
 <tr class="fact">
-    <th class="fact-title">@(onlyLastNames ? "Фамилии" : Model.ShortTitle)</th>
+    <th class="fact-title">@(onlyLastNames ? Texts.Front_Facts_HumanName_LastNames : Model.ShortTitle)</th>
     <td class="fact-value">
         @foreach(var item in Model.Values)
         {
@@ -22,7 +23,7 @@
                     }
                     else
                     {
-                        <text>@item.LastName @item.FirstName @item.MiddleName</text>
+                        <text>@string.Format(Texts.Front_Facts_HumanName_FullFormat, item.FirstName, item.MiddleName, item.LastName)</text>
                     }
                 </span>
                 @if (item.Duration != null && !isSingle)

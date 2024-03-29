@@ -3,6 +3,7 @@
 @using Bonsai.Areas.Front.ViewModels.Page.InfoBlock
 @using Bonsai.Code.Services.Config
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @inject BonsaiConfigService ConfigService
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
@@ -31,16 +32,16 @@
                     </button>
                     <span class="dropdown-menu">
                         <a class="dropdown-item" href="@Url.Action("Update", "Pages", new {area = "Admin", id = pageVm.Id})">
-                            <i class="fa fa-fw fa-file-text-o"></i> Текст и факты
+                            <i class="fa fa-fw fa-file-text-o"></i> @Texts.Front_Page_AdminLinks_TextAndFacts
                         </a>
                         <a class="dropdown-item" href="@Url.Action("Index", "Relations", new {area = "Admin", entityId = pageVm.Id})">
-                            <i class="fa fa-fw fa-retweet"></i> Связи
+                            <i class="fa fa-fw fa-retweet"></i> @Texts.Front_Page_AdminLinks_Relations
                         </a>
                         <a class="dropdown-item" href="@Url.Action("Index", "Media", new {area = "Admin", entityId = pageVm.Id})">
-                            <i class="fa fa-fw fa-picture-o"></i> Медиа
+                            <i class="fa fa-fw fa-picture-o"></i> @Texts.Front_Page_AdminLinks_Media
                         </a>
                         <a class="dropdown-item" href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = pageVm.Id})">
-                            <i class="fa fa-fw fa-database"></i> Правки
+                            <i class="fa fa-fw fa-database"></i> @Texts.Front_Page_AdminLinks_Changes
                         </a>
                     </span>
                 </span>
@@ -51,25 +52,25 @@
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link @(pageVm is PageDescriptionVM ? "active" : "")" href="@Url.Action("Description", new {key = pageVm.Key})">
-                        <i class="fa fa-user"></i> Описание
+                        <i class="fa fa-user"></i> @Texts.Front_Page_Tabs_Description
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @(pageVm is PageMediaVM ? "active" : "")" href="@Url.Action("Media", new {key = pageVm.Key})">
-                        <i class="fa fa-image"></i> Медиа
+                        <i class="fa fa-image"></i> @Texts.Front_Page_Tabs_Media
                     </a>
                 </li>
                 @if (showTree)
                 {
                     <li class="nav-item">
                         <a class="nav-link @(pageVm is PageTreeVM ? "active" : "")" href="@Url.Action("Tree", new {key = pageVm.Key})">
-                            <i class="fa fa-sitemap"></i> Дерево
+                            <i class="fa fa-sitemap"></i> @Texts.Front_Page_Tabs_Tree
                         </a>
                     </li>
                 }
                 <li class="nav-item">
                     <a class="nav-link @(pageVm is PageReferencesVM ? "active" : "")" href="@Url.Action("References", new {key = pageVm.Key})">
-                        <i class="fa fa-random"></i> Ссылки
+                        <i class="fa fa-random"></i> @Texts.Front_Page_Tabs_References
                     </a>
                 </li>
             </ul>

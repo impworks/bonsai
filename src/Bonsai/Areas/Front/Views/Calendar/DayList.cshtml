@@ -1,5 +1,7 @@
-﻿@using Bonsai.Areas.Front.ViewModels.Calendar
+﻿@using Bonsai.Areas.Front.Components
+@using Bonsai.Areas.Front.ViewModels.Calendar
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @addTagHelper *, Bonsai
 @model CalendarDayVM
 
@@ -57,7 +59,7 @@
     else
     {
         <div class="card">
-            <p>В этот день ничего не произошло.</p>
+            <p>@Texts.Front_Calendar_NothingHappened</p>
         </div>
     }
 </div>

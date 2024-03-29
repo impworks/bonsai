@@ -1,11 +1,12 @@
 @using Bonsai.Areas.Front.ViewModels.Page
 @using Bonsai.Code.Services.Config
+@using Bonsai.Localization
 @inject BonsaiConfigService ConfigService
 @model PageTreeVM
 @{
     Layout = "TreeLayout";
-    
-    ViewBag.Title = Model.Title + " — Фамильное древо";
+
+    ViewBag.Title = string.Format(Texts.Front_Tree_Title, Model.Title);
 
     var cfg = ConfigService.GetDynamicConfig();
 }
@@ -19,12 +20,12 @@
     </div>
     <div class="tree-preloader">
         <h4>
-            Загрузка...
+            @Texts.Front_Tree_Loading
             <img src="@Url.Content("~/assets/img/loading.gif")" alt="Loading"/>
         </h4>
     </div>
     <div class="tree-error">
-        <h4>Не удалось загрузить дерево.</h4>
+        <h4>@Texts.Front_Tree_LoadFailed</h4>
     </div>
 </div>
 

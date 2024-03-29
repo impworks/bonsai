@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DatePicker_Format" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Datepicker_Placeholder" xml:space="preserve">
+    <value>ГГГГ.ММ.ДД</value>
+  </data>
+  <data name="Front_AuthFailed_Description" xml:space="preserve">
+    <value>Не удалось авторизоваться через выбранного провайдера.&lt;br/&gt;Попробуйте еще раз, или обратитесь к администратору Bonsai.</value>
+  </data>
+  <data name="Front_AuthFailed_GoBack" xml:space="preserve">
+    <value>Назад на страницу авторизации</value>
+  </data>
+  <data name="Front_AuthFailed_Title" xml:space="preserve">
+    <value>Ошибка авторизации</value>
+  </data>
+  <data name="Front_Calendar_NothingHappened" xml:space="preserve">
+    <value>В этот день ничего не произошло.</value>
+  </data>
+  <data name="Front_Calendar_WeekdaysShort" xml:space="preserve">
+    <value>Пн, Вт, Ср, Чт, Пт, Сб, Вс</value>
+  </data>
+  <data name="Front_Error_NotFound_AddPage" xml:space="preserve">
+    <value>Добавить страницу</value>
+  </data>
+  <data name="Front_Error_NotFound_Description" xml:space="preserve">
+    <value>Увы и ах! Такая страница не существует. &lt;br/&gt;Возможно, она еще не создана, или вы перешли по ссылке с ошибкой.</value>
+  </data>
+  <data name="Front_Error_NotFound_Error" xml:space="preserve">
+    <value>Ошибка 404</value>
+  </data>
+  <data name="Front_Error_NotFound_MainLink" xml:space="preserve">
+    <value>На главную</value>
+  </data>
+  <data name="Front_Error_NotFound_Title" xml:space="preserve">
+    <value>Страница не найдена</value>
+  </data>
+  <data name="Front_Facts_DeathDate_Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="Front_Facts_Gender_Female" xml:space="preserve">
+    <value>Женский</value>
+  </data>
+  <data name="Front_Facts_Gender_Male" xml:space="preserve">
+    <value>Мужской</value>
+  </data>
+  <data name="Front_Facts_HumanName_FullFormat" xml:space="preserve">
+    <value>{2} {0} {1}</value>
+    <comment>0 = First, 1 = Middle, 2 = Last</comment>
+  </data>
+  <data name="Front_Facts_HumanName_LastNames" xml:space="preserve">
+    <value>Фамилии</value>
+  </data>
+  <data name="Front_Home_Title" xml:space="preserve">
+    <value>Главная страница</value>
+  </data>
+  <data name="Front_Home_UpdatedMedia" xml:space="preserve">
+    <value>Новые медиа-файлы</value>
+  </data>
+  <data name="Front_Home_UpdatedPages" xml:space="preserve">
+    <value>Обновленные страницы</value>
+  </data>
+  <data name="Front_Loading_Error" xml:space="preserve">
+    <value>При загрузке Bonsai произошла ошибка.&lt;br/&gt;Подробная информация записана в логи.</value>
+  </data>
+  <data name="Front_Loading_InProgress1" xml:space="preserve">
+    <value>Bonsai загружается...</value>
+  </data>
+  <data name="Front_Loading_InProgress2" xml:space="preserve">
+    <value>Откиньтесь на спинку кресла и отдохните - это займет не более минуты :)</value>
+  </data>
+  <data name="Front_Loading_Title" xml:space="preserve">
+    <value>Загрузка</value>
+  </data>
+  <data name="Front_Login_DemoAccount" xml:space="preserve">
+    <value>Демонстрационный аккаунт администратора:</value>
+  </data>
+  <data name="Front_Login_EnterPassword" xml:space="preserve">
+    <value>Или введите логин и пароль, полученные от администратора:</value>
+  </data>
+  <data name="Front_Login_ExternalAuth" xml:space="preserve">
+    <value>Вход через {0}</value>
+  </data>
+  <data name="Front_Login_Login" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Front_Login_OnlyForRegistered" xml:space="preserve">
+    <value>Страница доступна только для зарегистрированных пользователей.</value>
+  </data>
+  <data name="Front_Login_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Front_Login_PasswordAuth" xml:space="preserve">
+    <value>Вход по логину и паролю</value>
+  </data>
+  <data name="Front_Login_PleaseAuthorize" xml:space="preserve">
+    <value>Пожалуйста, авторизуйтесь с помощью одного из доступных сервисов:</value>
+  </data>
+  <data name="Front_Login_Register" xml:space="preserve">
+    <value>Вы также можете &lt;a href="{0}"&gt;зарегистрировать новую запись&lt;/a&gt;, или ввести логин и пароль, полученные от администратора:</value>
+  </data>
+  <data name="Front_Login_StatusFailed" xml:space="preserve">
+    <value>&lt;b&gt;Ошибка:&lt;/b&gt; Не удалось авторизоваться.&lt;br /&gt;Возможно, вы ввели некорректный пароль? Попробуйте снова.</value>
+  </data>
+  <data name="Front_Login_StatusLockedOut" xml:space="preserve">
+    <value>&lt;b&gt;Ошибка:&lt;/b&gt;Ваша учетная запись заблокирована.</value>
+  </data>
+  <data name="Front_Login_StatusUnvalidated" xml:space="preserve">
+    <value>Ваша учетная запись еще не была проверена администратором.&lt;br/&gt;Пожалуйста, дождитесь проверки - тогда вы сможете пользоваться системой.</value>
+  </data>
+  <data name="Front_Login_Title" xml:space="preserve">
+    <value>Авторизация</value>
+  </data>
+  <data name="Front_Login_Username" xml:space="preserve">
+    <value>Логин</value>
+  </data>
+  <data name="Front_Media_Actions" xml:space="preserve">
+    <value>Действия</value>
+  </data>
+  <data name="Front_Media_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Front_Media_Depicted" xml:space="preserve">
+    <value>Изображены</value>
+  </data>
+  <data name="Front_Media_Download" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="Front_Media_Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Front_Media_Event" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="Front_Media_Location" xml:space="preserve">
+    <value>Место</value>
+  </data>
+  <data name="Front_Media_Original" xml:space="preserve">
+    <value>Оригинал</value>
+  </data>
+  <data name="Front_Media_Video_BrowserUnsupported" xml:space="preserve">
+    <value>Ваш браузер не поддерживает просмотр видео.</value>
+  </data>
+  <data name="Front_Media_Video_Processing" xml:space="preserve">
+    <value>Видео обрабатывается...</value>
+  </data>
+  <data name="Front_Media_Video_TryRefreshing" xml:space="preserve">
+    <value>Видео будет доступно после обработки. Попробуйте перезагрузить страницу.</value>
+  </data>
+  <data name="Front_Page_AdminLinks_Changes" xml:space="preserve">
+    <value>Правки</value>
+  </data>
+  <data name="Front_Page_AdminLinks_Media" xml:space="preserve">
+    <value>Медиа</value>
+  </data>
+  <data name="Front_Page_AdminLinks_Relations" xml:space="preserve">
+    <value>Связи</value>
+  </data>
+  <data name="Front_Page_AdminLinks_TextAndFacts" xml:space="preserve">
+    <value>Текст и факты</value>
+  </data>
+  <data name="Front_Page_Description_Empty" xml:space="preserve">
+    <value>Ничего не известно.</value>
+  </data>
+  <data name="Front_Page_Media_DateUnknown" xml:space="preserve">
+    <value>Дата неизвестна</value>
+  </data>
+  <data name="Front_Page_Media_Empty" xml:space="preserve">
+    <value>Медиа-файлов нет.</value>
+  </data>
+  <data name="Front_Page_Media_LongAgo" xml:space="preserve">
+    <value>Давно</value>
+  </data>
+  <data name="Front_Page_Media_Title" xml:space="preserve">
+    <value>{0}  — Медиа</value>
+  </data>
+  <data name="Front_Page_References_Empty" xml:space="preserve">
+    <value>Ссылок на данную страницу нет.</value>
+  </data>
+  <data name="Front_Page_References_Hint" xml:space="preserve">
+    <value>На данную страницу ссылаются следующие страницы:</value>
+  </data>
+  <data name="Front_Page_Tabs_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Front_Page_Tabs_Media" xml:space="preserve">
+    <value>Медиа</value>
+  </data>
+  <data name="Front_Page_Tabs_References" xml:space="preserve">
+    <value>Ссылки</value>
+  </data>
+  <data name="Front_Page_Tabs_Tree" xml:space="preserve">
+    <value>Дерево</value>
+  </data>
+  <data name="Front_Page_Tree_Fullscreen" xml:space="preserve">
+    <value>Во весь экран</value>
+  </data>
+  <data name="Front_Page_Tree_NewWindow" xml:space="preserve">
+    <value>В новом окне</value>
+  </data>
+  <data name="Front_Page_Tree_Title" xml:space="preserve">
+    <value>{0} — Фамильное древо</value>
+  </data>
+  <data name="Front_RegisterDisabled_Description" xml:space="preserve">
+    <value>Учетная запись не может быть создана, потому что регистрация новых пользователей запрещена администратором.</value>
+  </data>
+  <data name="Front_RegisterDisabled_Title" xml:space="preserve">
+    <value>Регистрация отклонена</value>
+  </data>
+  <data name="Front_RegisterSuccess_GoMain" xml:space="preserve">
+    <value>На главную страницу</value>
+  </data>
+  <data name="Front_RegisterSuccess_ReviewPending" xml:space="preserve">
+    <value>Ваша учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.</value>
+  </data>
+  <data name="Front_RegisterSuccess_Success" xml:space="preserve">
+    <value>Вы успешно зарегистрированы!</value>
+  </data>
+  <data name="Front_RegisterSuccess_Title" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="Front_Register_Birthday" xml:space="preserve">
+    <value>Дата рождения</value>
+  </data>
+  <data name="Front_Register_CreatePersonalPage" xml:space="preserve">
+    <value>Создать личную страницу</value>
+  </data>
+  <data name="Front_Register_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Front_Register_Email_Hint" xml:space="preserve">
+    <value>Будет использоваться в качестве логина</value>
+  </data>
+  <data name="Front_Register_Error" xml:space="preserve">
+    <value>&lt;b&gt;Ошибка:&lt;/b&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
+  </data>
+  <data name="Front_Register_FirstName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Front_Register_FirstUserHint" xml:space="preserve">
+    <value>Ваша учетная запись получит права администратора.</value>
+  </data>
+  <data name="Front_Register_Hint" xml:space="preserve">
+    <value>Проверьте, что ввели актуальные данные - на русском языке и без ошибок. &lt;br/&gt;Учетная запись будет проверена администратором, после чего вы сможете авторизоваться и пользоваться системой.</value>
+  </data>
+  <data name="Front_Register_LastName" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="Front_Register_MiddleName" xml:space="preserve">
+    <value>Отчество</value>
+  </data>
+  <data name="Front_Register_Options" xml:space="preserve">
+    <value>Опции</value>
+  </data>
+  <data name="Front_Register_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Front_Register_Password_Hint" xml:space="preserve">
+    <value>Минимум 6 символов</value>
+  </data>
+  <data name="Front_Register_Password_Repeat" xml:space="preserve">
+    <value>Повтор пароля</value>
+  </data>
+  <data name="Front_Register_Submit" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Front_Register_Subtitle" xml:space="preserve">
+    <value>Для создания учетной записи, пожалуйста, введите необходимую информацию.</value>
+  </data>
+  <data name="Front_Register_Title" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="Front_Search_NothingFound" xml:space="preserve">
+    <value>По вашему запросу ничего не найдено.</value>
+  </data>
+  <data name="Front_Search_QueryTooShort" xml:space="preserve">
+    <value>Запрос слишком короткий. Введите как минимум три символа.</value>
+  </data>
+  <data name="Front_Search_Results" xml:space="preserve">
+    <value>Результаты поиска</value>
+  </data>
+  <data name="Front_Search_Title" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Front_Tree_LoadFailed" xml:space="preserve">
+    <value>Не удалось загрузить дерево.</value>
+  </data>
+  <data name="Front_Tree_Loading" xml:space="preserve">
+    <value>Загрузка...</value>
+  </data>
+  <data name="Front_Tree_Title" xml:space="preserve">
+    <value>{0} — Фамильное древо</value>
+  </data>
+  <data name="Global_UserHeader_Administration" xml:space="preserve">
+    <value>Управление</value>
+  </data>
+  <data name="Global_UserHeader_Login" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Global_UserHeader_Logout" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="Global_UserHeader_Page" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+</root>
