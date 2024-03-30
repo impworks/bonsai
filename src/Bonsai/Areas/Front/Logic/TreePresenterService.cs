@@ -5,6 +5,7 @@ using Bonsai.Code.Utils;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -45,7 +46,7 @@ namespace Bonsai.Areas.Front.Logic
             var page = await _db.Pages
                                 .AsNoTracking()
                                 .Include(x => x.TreeLayout)
-                                .GetAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false, "Страница не найдена");
+                                .GetAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false, Texts.Global_Error_PageNotFound);
 
             var result = new TreeVM {RootId = page.Id};
             var json = await GetLayoutJsonAsync();
@@ -72,7 +73,7 @@ namespace Bonsai.Areas.Front.Logic
 
                 var layout = await _db.TreeLayouts
                                       .FirstOrDefaultAsync(x => x.Kind == kind && x.PageId == page.Id);
-                return layout?.LayoutJson ?? throw new OperationException("Страница не найдена");
+                return layout?.LayoutJson ?? throw new OperationException(Texts.Global_Error_PageNotFound);
             }
         }
 

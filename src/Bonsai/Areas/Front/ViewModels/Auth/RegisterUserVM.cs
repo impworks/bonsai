@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Mapster;
 
 namespace Bonsai.Areas.Front.ViewModels.Auth
@@ -15,37 +16,36 @@ namespace Bonsai.Areas.Front.ViewModels.Auth
         /// The email address.
         /// </summary>
         [StringLength(255)]
-        [Required(ErrorMessage = "Введите адрес электронной почты.")]
-        [EmailAddress(ErrorMessage = "Введите валидный адрес электронной почты.")]
+        [Required(ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Front_Register_Validation_EmailEmpty")]
+        [EmailAddress(ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Front_Register_Validation_EmailInvalid")]
         public string Email { get; set; }
 
         /// <summary>
         /// First name.
         /// </summary>
         [StringLength(256)]
-        [Required(ErrorMessage = "Введите ваше имя.")]
+        [Required(ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Front_Register_Validation_FirstNameEmpty")]
         public string FirstName { get; set; }
 
         /// <summary>
         /// Last name.
         /// </summary>
         [StringLength(256)]
-        [Required(ErrorMessage = "Введите вашу фамилию.")]
+        [Required(ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Front_Register_Validation_LastNameEmpty")]
         public string LastName { get; set; }
 
         /// <summary>
         /// Middle name.
         /// </summary>
         [StringLength(256)]
-        [Required(ErrorMessage = "Введите ваше отчество.")]
         public string MiddleName { get; set; }
 
         /// <summary>
         /// Birthday.
         /// </summary>
         [StringLength(10)]
-        [Required(ErrorMessage = "Введите дату вашего рождения.")]
-        [RegularExpression("[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}", ErrorMessage = "Введите дату в формате ГГГГ.ММ.ДД")]
+        [Required(ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Front_Register_Validation_BirthdayEmpty")]
+        [RegularExpression("[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}", ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Front_Register_Validation_BirthdayInvalid")]
         public string Birthday { get; set; }
 
         /// <summary>

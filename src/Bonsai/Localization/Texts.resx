@@ -138,11 +138,155 @@
   <data name="AuthService_Error_PasswordTooShort" xml:space="preserve">
     <value>Пароль должен содержать как минимум 6 символов.</value>
   </data>
+  <data name="CalendarPresenter_Birthday_Anniversary" xml:space="preserve">
+    <value>День рождения</value>
+  </data>
+  <data name="CalendarPresenter_Birthday_Day" xml:space="preserve">
+    <value>Дата рождения</value>
+  </data>
+  <data name="CalendarPresenter_Birthday_PreciseAnniversary" xml:space="preserve">
+    <value>День рождения ({0})</value>
+  </data>
+  <data name="CalendarPresenter_ChildAdoptionF" xml:space="preserve">
+    <value>Удочерение</value>
+  </data>
+  <data name="CalendarPresenter_ChildAdoptionM" xml:space="preserve">
+    <value>Усыновление</value>
+  </data>
+  <data name="CalendarPresenter_Death_Anniversary" xml:space="preserve">
+    <value>Годовщина смерти</value>
+  </data>
+  <data name="CalendarPresenter_Death_Day" xml:space="preserve">
+    <value>Дата смерти</value>
+  </data>
+  <data name="CalendarPresenter_Death_PreciseAnniversary" xml:space="preserve">
+    <value>{0}-ая годовщина смерти</value>
+  </data>
+  <data name="CalendarPresenter_Event_Title" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="CalendarPresenter_PetAdoption_Title" xml:space="preserve">
+    <value>Появление питомца</value>
+  </data>
+  <data name="CalendarPresenter_Wedding_Anniversary" xml:space="preserve">
+    <value>Годовщина </value>
+  </data>
+  <data name="CalendarPresenter_Wedding_Day" xml:space="preserve">
+    <value>День свадьбы</value>
+  </data>
+  <data name="CalendarPresenter_Wedding_PreciseAnniversary" xml:space="preserve">
+    <value>{0}-ая годовщина</value>
+  </data>
+  <data name="CalendarPresenter_Wedding_Title" xml:space="preserve">
+    <value>Свадьба</value>
+  </data>
   <data name="DatePicker_Format" xml:space="preserve">
     <value />
   </data>
   <data name="Datepicker_Placeholder" xml:space="preserve">
     <value>ГГГГ.ММ.ДД</value>
+  </data>
+  <data name="Facts_Group_Bio" xml:space="preserve">
+    <value>Биология</value>
+  </data>
+  <data name="Facts_Group_Birth" xml:space="preserve">
+    <value>Рождение</value>
+  </data>
+  <data name="Facts_Group_Death" xml:space="preserve">
+    <value>Смерть</value>
+  </data>
+  <data name="Facts_Group_Main" xml:space="preserve">
+    <value>Основное</value>
+  </data>
+  <data name="Facts_Group_Meta" xml:space="preserve">
+    <value>Прочее</value>
+  </data>
+  <data name="Facts_Group_Person" xml:space="preserve">
+    <value>Личность</value>
+  </data>
+  <data name="Facts_Birth_Day" xml:space="preserve">
+    <value>Дата рождения</value>
+  </data>
+  <data name="Facts_Birth_DayS" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Facts_Birth_Place" xml:space="preserve">
+    <value>Место рождения</value>
+  </data>
+  <data name="Facts_Birth_PlaceS" xml:space="preserve">
+    <value>Место</value>
+  </data>
+  <data name="Facts_Person_BloodType" xml:space="preserve">
+    <value>Группа крови</value>
+  </data>
+  <data name="Facts_Person_BloodTypeS" xml:space="preserve">
+    <value>Гр. крови</value>
+  </data>
+  <data name="Facts_Death_Burial" xml:space="preserve">
+    <value>Место захоронения</value>
+  </data>
+  <data name="Facts_Death_BurialS" xml:space="preserve">
+    <value>Захоронение</value>
+  </data>
+  <data name="Facts_Death_Cause" xml:space="preserve">
+    <value>Причина смерти</value>
+  </data>
+  <data name="Facts_Death_CauseS" xml:space="preserve">
+    <value>Причина</value>
+  </data>
+  <data name="Facts_Death_Date" xml:space="preserve">
+    <value>Дата смерти</value>
+  </data>
+  <data name="Facts_Death_DateS" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Facts_Death_Place" xml:space="preserve">
+    <value>Место смерти</value>
+  </data>
+  <data name="Facts_Death_PlaceS" xml:space="preserve">
+    <value>Место</value>
+  </data>
+  <data name="Facts_Person_EyeColor" xml:space="preserve">
+    <value>Цвет глаз</value>
+  </data>
+  <data name="Facts_Person_EyeColorS" xml:space="preserve">
+    <value>Глаза</value>
+  </data>
+  <data name="Facts_Person_Gender" xml:space="preserve">
+    <value>Пол</value>
+  </data>
+  <data name="Facts_Person_HairColor" xml:space="preserve">
+    <value>Цвет волос</value>
+  </data>
+  <data name="Facts_Person_HairColorS" xml:space="preserve">
+    <value>Волосы</value>
+  </data>
+  <data name="Facts_Person_Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Facts_Person_LanguageS" xml:space="preserve">
+    <value>Язык|Языки</value>
+  </data>
+  <data name="Facts_Person_Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Facts_Person_NameS" xml:space="preserve">
+    <value>Имя|Имена</value>
+  </data>
+  <data name="Facts_Person_Profession" xml:space="preserve">
+    <value>Профессия</value>
+  </data>
+  <data name="Facts_Person_ProfessionS" xml:space="preserve">
+    <value>Профессия|Профессии</value>
+  </data>
+  <data name="Facts_Person_Religion" xml:space="preserve">
+    <value>Религия</value>
+  </data>
+  <data name="Facts_Person_ReligionS" xml:space="preserve">
+    <value>Религия|Религии</value>
+  </data>
+  <data name="Facts_Person_Skill" xml:space="preserve">
+    <value>Хобби</value>
   </data>
   <data name="Front_AuthFailed_Description" xml:space="preserve">
     <value>Не удалось авторизоваться через выбранного провайдера.&lt;br/&gt;Попробуйте еще раз, или обратитесь к администратору Bonsai.</value>
@@ -409,6 +553,24 @@
   <data name="Front_Register_Title" xml:space="preserve">
     <value>Регистрация</value>
   </data>
+  <data name="Front_Register_Validation_BirthdayEmpty" xml:space="preserve">
+    <value>Введите дату вашего рождения.</value>
+  </data>
+  <data name="Front_Register_Validation_BirthdayInvalid" xml:space="preserve">
+    <value>Введите дату в формате ГГГГ.ММ.ДД.</value>
+  </data>
+  <data name="Front_Register_Validation_EmailEmpty" xml:space="preserve">
+    <value>Введите адрес электронной почты.</value>
+  </data>
+  <data name="Front_Register_Validation_EmailInvalid" xml:space="preserve">
+    <value>Введите валидный адрес электронной почты.</value>
+  </data>
+  <data name="Front_Register_Validation_FirstNameEmpty" xml:space="preserve">
+    <value>Введите ваше имя.</value>
+  </data>
+  <data name="Front_Register_Validation_LastNameEmpty" xml:space="preserve">
+    <value>Введите вашу фамилию.</value>
+  </data>
   <data name="Front_Search_NothingFound" xml:space="preserve">
     <value>По вашему запросу ничего не найдено.</value>
   </data>
@@ -429,6 +591,9 @@
   </data>
   <data name="Front_Tree_Title" xml:space="preserve">
     <value>{0} — Фамильное древо</value>
+  </data>
+  <data name="Global_Error_PageNotFound" xml:space="preserve">
+    <value>Страница не найдена.</value>
   </data>
   <data name="Global_UserHeader_Administration" xml:space="preserve">
     <value>Управление</value>
@@ -606,5 +771,59 @@
   </data>
   <data name="Relations_SpouseOtherChild_Mult" xml:space="preserve">
     <value>Дети</value>
+  </data>
+  <data name="Facts_Person_SocialProfiles" xml:space="preserve">
+    <value>Контакты</value>
+  </data>
+  <data name="Facts_Event_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Facts_Location_Address" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="Facts_Location_Opening" xml:space="preserve">
+    <value>Приобретение</value>
+  </data>
+  <data name="Facts_Location_Shutdown" xml:space="preserve">
+    <value>Продажа</value>
+  </data>
+  <data name="Facts_Pet_Breed" xml:space="preserve">
+    <value>Порода</value>
+  </data>
+  <data name="Facts_Pet_Color" xml:space="preserve">
+    <value>Окрас</value>
+  </data>
+  <data name="Facts_Pet_Gender" xml:space="preserve">
+    <value>Пол</value>
+  </data>
+  <data name="Facts_Pet_Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Facts_Pet_Species" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="Global_Error_UserNotFound" xml:space="preserve">
+    <value>Пользователь не найден.</value>
+  </data>
+  <data name="MarkdownService_AlignmentAmbiguous" xml:space="preserve">
+    <value>Расположение указано более одного раза.</value>
+  </data>
+  <data name="MarkdownService_AlignmentUnknown" xml:space="preserve">
+    <value>Неизвестное расположение медиа-файла.</value>
+  </data>
+  <data name="MarkdownService_DescriptionAmbiguous" xml:space="preserve">
+    <value>Описание указано более одного раза.</value>
+  </data>
+  <data name="MarkdownService_MediaNotFound" xml:space="preserve">
+    <value>Медиа-файл {0} не найден.</value>
+  </data>
+  <data name="MarkdownService_PageNotFound" xml:space="preserve">
+    <value>Страница не найдена: {0}.</value>
+  </data>
+  <data name="MarkdownService_SizeAmbiguous" xml:space="preserve">
+    <value>Размер указан более одного раза.</value>
+  </data>
+  <data name="MarkdownService_SizeUnknown" xml:space="preserve">
+    <value>Неизвестный размер медиа-файла.</value>
   </data>
 </root>

@@ -6,7 +6,7 @@
     public class StringFactModel: FactModelBase
     {
         /// <summary>
-        /// Arbitraty value.
+        /// Arbitrary value.
         /// </summary>
         public string Value { get; set; }
     }

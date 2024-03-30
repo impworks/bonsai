@@ -9,6 +9,7 @@ using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -95,10 +96,10 @@ namespace Bonsai.Areas.Front.Logic
                     if (showBirth)
                     {
                         var title = (year == birth.Year && !birth.IsDecade)
-                            ? "Дата рождения"
+                            ? Texts.CalendarPresenter_Birthday_Day
                             : (birth.Year == null || birth.IsDecade)
-                                ? "День рождения"
-                                : $"День рождения ({year - birth.Year.Value})";
+                                ? Texts.CalendarPresenter_Birthday_Anniversary
+                                : string.Format(Texts.CalendarPresenter_Birthday_PreciseAnniversary, year - birth.Year.Value);
 
                         yield return new CalendarEventVM
                         {
@@ -118,10 +119,10 @@ namespace Bonsai.Areas.Front.Logic
                     if (showDeath)
                     {
                         var title = (year == death.Year && !death.IsDecade)
-                            ? "Дата смерти"
+                            ? Texts.CalendarPresenter_Death_Day
                             : (death.Year == null || death.IsDecade)
-                                ? "Годовщина смерти"
-                                : (year - death.Year.Value) + "-ая годовщина смерти";
+                                ? Texts.CalendarPresenter_Death_Anniversary
+                                : string.Format(Texts.CalendarPresenter_Death_PreciseAnniversary, year - death.Year.Value);
 
                         yield return new CalendarEventVM
                         {
@@ -182,17 +183,17 @@ namespace Bonsai.Areas.Front.Logic
             CalendarEventVM GetWeddingEvent(RelationContext.RelationExcerpt rel, FuzzyDate start)
             {
                 var title = (year == start.Year && !start.IsDecade)
-                    ? "День свадьбы"
+                    ? Texts.CalendarPresenter_Wedding_Day
                     : (start.Year == null || start.IsDecade)
-                        ? "Годовщина"
-                        : (year - start.Year.Value) + "-ая годовщина";
+                        ? Texts.CalendarPresenter_Wedding_Anniversary
+                        : string.Format(Texts.CalendarPresenter_Wedding_PreciseAnniversary, year - start.Year.Value);
 
                 return new CalendarEventVM
                 {
                     Title = title,
                     Type = CalendarEventType.Wedding,
                     RelatedPage = rel.EventId == null
-                        ? new PageTitleExtendedVM { Title = "Свадьба" }
+                        ? new PageTitleExtendedVM { Title = Texts.CalendarPresenter_Wedding_Title }
                         : Map(context.Pages[rel.EventId.Value]),
                 };
             }
@@ -204,9 +205,9 @@ namespace Bonsai.Areas.Front.Logic
 
                 return new CalendarEventVM
                 {
-                    Title = "Появление питомца",
+                    Title = Texts.CalendarPresenter_PetAdoption_Title,
                     Type = CalendarEventType.PetAdoption,
-                    RelatedPage = new PageTitleExtendedVM { Title = "Событие" }
+                    RelatedPage = new PageTitleExtendedVM { Title = Texts.CalendarPresenter_Event_Title }
                 };
             }
 
@@ -222,14 +223,14 @@ namespace Bonsai.Areas.Front.Logic
                 ];
 
                 var title = child.Gender == false
-                    ? "Удочерение"
-                    : "Усыновление";
+                    ? Texts.CalendarPresenter_ChildAdoptionF
+                    : Texts.CalendarPresenter_ChildAdoptionM;
 
                 return new CalendarEventVM
                 {
                     Title = title,
                     Type = CalendarEventType.ChildAdoption,
-                    RelatedPage = new PageTitleExtendedVM { Title = "Событие" }
+                    RelatedPage = new PageTitleExtendedVM { Title = Texts.CalendarPresenter_Event_Title }
                 };
             }
         }

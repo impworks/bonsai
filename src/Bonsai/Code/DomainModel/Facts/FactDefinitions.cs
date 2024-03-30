@@ -2,6 +2,7 @@
 using System.Linq;
 using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 
 namespace Bonsai.Code.DomainModel.Facts
 {
@@ -18,49 +19,49 @@ namespace Bonsai.Code.DomainModel.Facts
                 {
                     new FactDefinitionGroup(
                         "Main",
-                        "Основное",
+                        Texts.Facts_Group_Main,
                         true,
-                        new FactDefinition<HumanNameFactModel>("Name", "Имя", "Имя|Имена")
+                        new FactDefinition<HumanNameFactModel>("Name", Texts.Facts_Person_Name, Texts.Facts_Person_NameS)
                     ),
                     new FactDefinitionGroup(
                         "Birth",
-                        "Рождение",
+                        Texts.Facts_Group_Birth,
                         true,
-                        new FactDefinition<BirthDateFactModel>("Date", "Дата рождения", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
+                        new FactDefinition<BirthDateFactModel>("Date", Texts.Facts_Birth_Day, Texts.Facts_Birth_DayS),
+                        new FactDefinition<StringFactModel>("Place", Texts.Facts_Birth_Place, Texts.Facts_Birth_PlaceS)
                     ),
                     new FactDefinitionGroup(
                         "Death",
-                        "Смерть",
+                        Texts.Facts_Group_Death,
                         true,
-                        new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
-                        new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
-                        new FactDefinition<StringFactModel>("Burial", "Место захоронения", "Захоронение")
+                        new FactDefinition<DeathDateFactModel>("Date", Texts.Facts_Death_Date, Texts.Facts_Death_DateS),
+                        new FactDefinition<StringFactModel>("Place", Texts.Facts_Death_Place, Texts.Facts_Death_PlaceS),
+                        new FactDefinition<StringFactModel>("Cause", Texts.Facts_Death_Cause, Texts.Facts_Death_CauseS),
+                        new FactDefinition<StringFactModel>("Burial", Texts.Facts_Death_Burial, Texts.Facts_Death_BurialS)
                     ),
                     new FactDefinitionGroup(
                         "Bio",
-                        "Биология",
+                        Texts.Facts_Group_Bio,
                         false,
-                        new FactDefinition<GenderFactModel>("Gender", "Пол"),
-                        new FactDefinition<BloodTypeFactModel>("Blood", "Группа крови", "Гр. крови"),
-                        new FactDefinition<StringFactModel>("Eyes", "Цвет глаз", "Глаза"),
-                        new FactDefinition<StringFactModel>("Hair", "Цвет волос", "Волосы")
+                        new FactDefinition<GenderFactModel>("Gender", Texts.Facts_Person_Gender),
+                        new FactDefinition<BloodTypeFactModel>("Blood", Texts.Facts_Person_BloodType, Texts.Facts_Person_BloodTypeS),
+                        new FactDefinition<StringFactModel>("Eyes", Texts.Facts_Person_EyeColor, Texts.Facts_Person_EyeColorS),
+                        new FactDefinition<StringFactModel>("Hair", Texts.Facts_Person_HairColor, Texts.Facts_Person_HairColorS)
                     ),
                     new FactDefinitionGroup(
                         "Person",
-                        "Личность",
+                        Texts.Facts_Group_Person,
                         false,
-                        new FactDefinition<LanguageFactModel>("Language", "Язык", "Язык|Языки"),
-                        new FactDefinition<SkillFactModel>("Skill", "Хобби"),
-                        new FactDefinition<StringListFactModel>("Profession", "Профессия", "Профессия|Профессии"),
-                        new FactDefinition<StringListFactModel>("Religion", "Религия", "Религия|Религии")
+                        new FactDefinition<LanguageFactModel>("Language", Texts.Facts_Person_Language, Texts.Facts_Person_LanguageS),
+                        new FactDefinition<SkillFactModel>("Skill", Texts.Facts_Person_Skill),
+                        new FactDefinition<StringListFactModel>("Profession", Texts.Facts_Person_Profession, Texts.Facts_Person_ProfessionS),
+                        new FactDefinition<StringListFactModel>("Religion", Texts.Facts_Person_Religion, Texts.Facts_Person_ReligionS)
                     ),
                     new FactDefinitionGroup(
                         "Meta",
-                        "Прочее",
+                        Texts.Facts_Group_Meta,
                         false,
-                        new FactDefinition<ContactsFactModel>("SocialProfiles", "Контакты")
+                        new FactDefinition<ContactsFactModel>("SocialProfiles", Texts.Facts_Person_SocialProfiles)
                     )
                 },
 
@@ -68,34 +69,34 @@ namespace Bonsai.Code.DomainModel.Facts
                 {
                     new FactDefinitionGroup(
                         "Main",
-                        "Основное",
+                        Texts.Facts_Group_Main,
                         true,
                         new FactDefinition<NameFactModel>("Name", "Имя")
                     ),
                     new FactDefinitionGroup(
                         "Birth",
-                        "Рождение",
+                        Texts.Facts_Group_Birth,
                         true,
-                        new FactDefinition<BirthDateFactModel>("Date", "Дата рождения", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место рождения", "Место")
+                        new FactDefinition<BirthDateFactModel>("Date", Texts.Facts_Birth_Day, Texts.Facts_Birth_DayS),
+                        new FactDefinition<StringFactModel>("Place", Texts.Facts_Birth_Place, Texts.Facts_Birth_PlaceS)
                     ),
                     new FactDefinitionGroup(
                         "Death",
-                        "Смерть",
+                        Texts.Facts_Group_Death,
                         true,
-                        new FactDefinition<DeathDateFactModel>("Date", "Дата смерти", "Дата"),
-                        new FactDefinition<StringFactModel>("Place", "Место смерти", "Место"),
-                        new FactDefinition<StringFactModel>("Cause", "Причина смерти", "Причина"),
-                        new FactDefinition<StringFactModel>("Burial", "Место захоронения", "Захоронение")
+                        new FactDefinition<DeathDateFactModel>("Date", Texts.Facts_Death_Date, Texts.Facts_Death_DateS),
+                        new FactDefinition<StringFactModel>("Place", Texts.Facts_Death_Place, Texts.Facts_Death_PlaceS),
+                        new FactDefinition<StringFactModel>("Cause", Texts.Facts_Death_Cause, Texts.Facts_Death_CauseS),
+                        new FactDefinition<StringFactModel>("Burial", Texts.Facts_Death_Burial, Texts.Facts_Death_BurialS)
                     ),
                     new FactDefinitionGroup(
                         "Bio",
-                        "Биология",
+                        Texts.Facts_Group_Bio,
                         true,
-                        new FactDefinition<GenderFactModel>("Gender", "Пол"),
-                        new FactDefinition<StringFactModel>("Species", "Вид"),
-                        new FactDefinition<StringFactModel>("Breed", "Порода"),
-                        new FactDefinition<StringFactModel>("Color", "Окрас")
+                        new FactDefinition<GenderFactModel>("Gender", Texts.Facts_Pet_Gender),
+                        new FactDefinition<StringFactModel>("Species", Texts.Facts_Pet_Species),
+                        new FactDefinition<StringFactModel>("Breed",  Texts.Facts_Pet_Breed),
+                        new FactDefinition<StringFactModel>("Color",  Texts.Facts_Pet_Color)
                     )
                 },
 
@@ -103,11 +104,11 @@ namespace Bonsai.Code.DomainModel.Facts
                 {
                     new FactDefinitionGroup(
                         "Main",
-                        "Основное",
+                        Texts.Facts_Group_Main,
                         true,
-                        new FactDefinition<AddressFactModel>("Location", "Адрес"),
-                        new FactDefinition<DateFactModel>("Opening", "Приобретение"),
-                        new FactDefinition<DateFactModel>("Shutdown", "Продажа")
+                        new FactDefinition<AddressFactModel>("Location", Texts.Facts_Location_Address),
+                        new FactDefinition<DateFactModel>("Opening", Texts.Facts_Location_Opening),
+                        new FactDefinition<DateFactModel>("Shutdown", Texts.Facts_Location_Shutdown)
                     )
                 },
 
@@ -115,9 +116,9 @@ namespace Bonsai.Code.DomainModel.Facts
                 {
                     new FactDefinitionGroup(
                         "Main",
-                        "Основное",
+                        Texts.Facts_Group_Main,
                         true,
-                        new FactDefinition<DateFactModel>("Date", "Дата")
+                        new FactDefinition<DateFactModel>("Date", Texts.Facts_Event_Date)
                     )
                 },
 
