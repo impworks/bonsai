@@ -21,7 +21,7 @@
         public bool IsAdministrator { get; set; }
 
         /// <summary>
-        /// Flag indicating that the current user has been validated by administators.
+        /// Flag indicating that the current user has been validated by administrators.
         /// </summary>
         public bool IsValidated { get; set; }
 

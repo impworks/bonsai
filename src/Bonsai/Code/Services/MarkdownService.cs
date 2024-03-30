@@ -6,6 +6,7 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 using JetBrains.Annotations;
 using Markdig;
@@ -112,7 +113,7 @@ namespace Bonsai.Code.Services
                 var details = GetMediaDetails(args);
 
                 if (!existingMedia.TryGetValue(key, out var rawPath))
-                    return Wrapper(details.Classes + " error", $"<p class='caption'>Медиа-файл <span class='break-word'>'{key}'</span> не найден.</p>");
+                    return Wrapper(details.Classes + " error", $"<p>{string.Format(Texts.MarkdownService_MediaNotFound, $"<span class='break-word'>{key}</span>")}</p>");
 
                 if(details.Error)
                     return Wrapper("right error", $"<p class='caption'>{details.Descr}</p>");
@@ -158,7 +159,7 @@ namespace Bonsai.Code.Services
                 if (existingPages.TryGetValue(lowerKey, out var canonKey))
                     return $@"<a href=""{_url.Action("Description", "Page", new { area = "Front", key = canonKey })}"" class=""link"">{title}</a>";
 
-                return $@"<span class=""link-missing"" title=""Страница не найдена: {rawKey}"">{title}</span>";
+                return $@"<span class=""link-missing"" title=""{string.Format(Texts.MarkdownService_PageNotFound, rawKey)}"">{title}</span>";
             });
         }
 
@@ -181,10 +182,10 @@ namespace Bonsai.Code.Services
                     {
                         var size = item.Substring("size:".Length);
                         if (!MediaSizeClasses.Contains(size))
-                            return Error("Неизвестный размер медиа-файла.");
+                            return Error(Texts.MarkdownService_SizeUnknown);
 
                         if (sizeClass != null)
-                            return Error("Размер указан более одного раза.");
+                            return Error(Texts.MarkdownService_SizeAmbiguous);
 
                         sizeClass = size;
                         continue;
@@ -194,17 +195,17 @@ namespace Bonsai.Code.Services
                     {
                         var align = item.Substring("align:".Length);
                         if (!MediaAlignmentClasses.Contains(align))
-                            return Error("Неизвестное расположение медиа-файла.");
+                            return Error(Texts.MarkdownService_AlignmentUnknown);
 
                         if (alignClass != null)
-                            return Error("Расположение указано более одного раза.");
+                            return Error(Texts.MarkdownService_AlignmentAmbiguous);
 
                         alignClass = align;
                         continue;
                     }
 
                     if (descr != null)
-                        return Error("Описание указано более одного раза.");
+                        return Error(Texts.MarkdownService_DescriptionAmbiguous);
 
                     descr = item;
                 }

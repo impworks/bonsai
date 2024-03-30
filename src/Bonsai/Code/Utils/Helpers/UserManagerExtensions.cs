@@ -1,7 +1,7 @@
-﻿using System.Data;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Code.Utils.Helpers
@@ -27,7 +27,7 @@ namespace Bonsai.Code.Utils.Helpers
         public static async Task<bool> IsInRoleAsync(this UserManager<AppUser> userMgr, ClaimsPrincipal principal, UserRole role)
         {
             var user = await userMgr.GetUserAsync(principal)
-                ?? throw new OperationException("Пользователь не найден");
+                ?? throw new OperationException(Texts.Global_Error_UserNotFound);
 
             return await userMgr.IsInRoleAsync(user, role.ToString());
         }

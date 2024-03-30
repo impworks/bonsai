@@ -124,6 +124,132 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to День рождения.
+        /// </summary>
+        public static string CalendarPresenter_Birthday_Anniversary {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Birthday_Anniversary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата рождения.
+        /// </summary>
+        public static string CalendarPresenter_Birthday_Day {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Birthday_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to День рождения ({0}).
+        /// </summary>
+        public static string CalendarPresenter_Birthday_PreciseAnniversary {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Birthday_PreciseAnniversary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удочерение.
+        /// </summary>
+        public static string CalendarPresenter_ChildAdoptionF {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_ChildAdoptionF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Усыновление.
+        /// </summary>
+        public static string CalendarPresenter_ChildAdoptionM {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_ChildAdoptionM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Годовщина смерти.
+        /// </summary>
+        public static string CalendarPresenter_Death_Anniversary {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Death_Anniversary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата смерти.
+        /// </summary>
+        public static string CalendarPresenter_Death_Day {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Death_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}-ая годовщина смерти.
+        /// </summary>
+        public static string CalendarPresenter_Death_PreciseAnniversary {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Death_PreciseAnniversary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string CalendarPresenter_Event_Title {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Event_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Появление питомца.
+        /// </summary>
+        public static string CalendarPresenter_PetAdoption_Title {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_PetAdoption_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Годовщина .
+        /// </summary>
+        public static string CalendarPresenter_Wedding_Anniversary {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Wedding_Anniversary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to День свадьбы.
+        /// </summary>
+        public static string CalendarPresenter_Wedding_Day {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Wedding_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}-ая годовщина.
+        /// </summary>
+        public static string CalendarPresenter_Wedding_PreciseAnniversary {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Wedding_PreciseAnniversary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Свадьба.
+        /// </summary>
+        public static string CalendarPresenter_Wedding_Title {
+            get {
+                return ResourceManager.GetString("CalendarPresenter_Wedding_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         public static string DatePicker_Format {
@@ -138,6 +264,402 @@ namespace Bonsai.Localization {
         public static string Datepicker_Placeholder {
             get {
                 return ResourceManager.GetString("Datepicker_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата рождения.
+        /// </summary>
+        public static string Facts_Birth_Day {
+            get {
+                return ResourceManager.GetString("Facts_Birth_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Facts_Birth_DayS {
+            get {
+                return ResourceManager.GetString("Facts_Birth_DayS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место рождения.
+        /// </summary>
+        public static string Facts_Birth_Place {
+            get {
+                return ResourceManager.GetString("Facts_Birth_Place", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место.
+        /// </summary>
+        public static string Facts_Birth_PlaceS {
+            get {
+                return ResourceManager.GetString("Facts_Birth_PlaceS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место захоронения.
+        /// </summary>
+        public static string Facts_Death_Burial {
+            get {
+                return ResourceManager.GetString("Facts_Death_Burial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Захоронение.
+        /// </summary>
+        public static string Facts_Death_BurialS {
+            get {
+                return ResourceManager.GetString("Facts_Death_BurialS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Причина смерти.
+        /// </summary>
+        public static string Facts_Death_Cause {
+            get {
+                return ResourceManager.GetString("Facts_Death_Cause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Причина.
+        /// </summary>
+        public static string Facts_Death_CauseS {
+            get {
+                return ResourceManager.GetString("Facts_Death_CauseS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата смерти.
+        /// </summary>
+        public static string Facts_Death_Date {
+            get {
+                return ResourceManager.GetString("Facts_Death_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Facts_Death_DateS {
+            get {
+                return ResourceManager.GetString("Facts_Death_DateS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место смерти.
+        /// </summary>
+        public static string Facts_Death_Place {
+            get {
+                return ResourceManager.GetString("Facts_Death_Place", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место.
+        /// </summary>
+        public static string Facts_Death_PlaceS {
+            get {
+                return ResourceManager.GetString("Facts_Death_PlaceS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Facts_Event_Date {
+            get {
+                return ResourceManager.GetString("Facts_Event_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Биология.
+        /// </summary>
+        public static string Facts_Group_Bio {
+            get {
+                return ResourceManager.GetString("Facts_Group_Bio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Рождение.
+        /// </summary>
+        public static string Facts_Group_Birth {
+            get {
+                return ResourceManager.GetString("Facts_Group_Birth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Смерть.
+        /// </summary>
+        public static string Facts_Group_Death {
+            get {
+                return ResourceManager.GetString("Facts_Group_Death", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Основное.
+        /// </summary>
+        public static string Facts_Group_Main {
+            get {
+                return ResourceManager.GetString("Facts_Group_Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прочее.
+        /// </summary>
+        public static string Facts_Group_Meta {
+            get {
+                return ResourceManager.GetString("Facts_Group_Meta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Личность.
+        /// </summary>
+        public static string Facts_Group_Person {
+            get {
+                return ResourceManager.GetString("Facts_Group_Person", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Адрес.
+        /// </summary>
+        public static string Facts_Location_Address {
+            get {
+                return ResourceManager.GetString("Facts_Location_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Приобретение.
+        /// </summary>
+        public static string Facts_Location_Opening {
+            get {
+                return ResourceManager.GetString("Facts_Location_Opening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Продажа.
+        /// </summary>
+        public static string Facts_Location_Shutdown {
+            get {
+                return ResourceManager.GetString("Facts_Location_Shutdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Группа крови.
+        /// </summary>
+        public static string Facts_Person_BloodType {
+            get {
+                return ResourceManager.GetString("Facts_Person_BloodType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Гр. крови.
+        /// </summary>
+        public static string Facts_Person_BloodTypeS {
+            get {
+                return ResourceManager.GetString("Facts_Person_BloodTypeS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Цвет глаз.
+        /// </summary>
+        public static string Facts_Person_EyeColor {
+            get {
+                return ResourceManager.GetString("Facts_Person_EyeColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Глаза.
+        /// </summary>
+        public static string Facts_Person_EyeColorS {
+            get {
+                return ResourceManager.GetString("Facts_Person_EyeColorS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пол.
+        /// </summary>
+        public static string Facts_Person_Gender {
+            get {
+                return ResourceManager.GetString("Facts_Person_Gender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Цвет волос.
+        /// </summary>
+        public static string Facts_Person_HairColor {
+            get {
+                return ResourceManager.GetString("Facts_Person_HairColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Волосы.
+        /// </summary>
+        public static string Facts_Person_HairColorS {
+            get {
+                return ResourceManager.GetString("Facts_Person_HairColorS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Язык.
+        /// </summary>
+        public static string Facts_Person_Language {
+            get {
+                return ResourceManager.GetString("Facts_Person_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Язык|Языки.
+        /// </summary>
+        public static string Facts_Person_LanguageS {
+            get {
+                return ResourceManager.GetString("Facts_Person_LanguageS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя.
+        /// </summary>
+        public static string Facts_Person_Name {
+            get {
+                return ResourceManager.GetString("Facts_Person_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя|Имена.
+        /// </summary>
+        public static string Facts_Person_NameS {
+            get {
+                return ResourceManager.GetString("Facts_Person_NameS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Профессия.
+        /// </summary>
+        public static string Facts_Person_Profession {
+            get {
+                return ResourceManager.GetString("Facts_Person_Profession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Профессия|Профессии.
+        /// </summary>
+        public static string Facts_Person_ProfessionS {
+            get {
+                return ResourceManager.GetString("Facts_Person_ProfessionS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Религия.
+        /// </summary>
+        public static string Facts_Person_Religion {
+            get {
+                return ResourceManager.GetString("Facts_Person_Religion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Религия|Религии.
+        /// </summary>
+        public static string Facts_Person_ReligionS {
+            get {
+                return ResourceManager.GetString("Facts_Person_ReligionS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Хобби.
+        /// </summary>
+        public static string Facts_Person_Skill {
+            get {
+                return ResourceManager.GetString("Facts_Person_Skill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Контакты.
+        /// </summary>
+        public static string Facts_Person_SocialProfiles {
+            get {
+                return ResourceManager.GetString("Facts_Person_SocialProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Порода.
+        /// </summary>
+        public static string Facts_Pet_Breed {
+            get {
+                return ResourceManager.GetString("Facts_Pet_Breed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Окрас.
+        /// </summary>
+        public static string Facts_Pet_Color {
+            get {
+                return ResourceManager.GetString("Facts_Pet_Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пол.
+        /// </summary>
+        public static string Facts_Pet_Gender {
+            get {
+                return ResourceManager.GetString("Facts_Pet_Gender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя.
+        /// </summary>
+        public static string Facts_Pet_Name {
+            get {
+                return ResourceManager.GetString("Facts_Pet_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вид.
+        /// </summary>
+        public static string Facts_Pet_Species {
+            get {
+                return ResourceManager.GetString("Facts_Pet_Species", resourceCulture);
             }
         }
         
@@ -880,6 +1402,60 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Введите дату вашего рождения..
+        /// </summary>
+        public static string Front_Register_Validation_BirthdayEmpty {
+            get {
+                return ResourceManager.GetString("Front_Register_Validation_BirthdayEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите дату в формате ГГГГ.ММ.ДД..
+        /// </summary>
+        public static string Front_Register_Validation_BirthdayInvalid {
+            get {
+                return ResourceManager.GetString("Front_Register_Validation_BirthdayInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите адрес электронной почты..
+        /// </summary>
+        public static string Front_Register_Validation_EmailEmpty {
+            get {
+                return ResourceManager.GetString("Front_Register_Validation_EmailEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите валидный адрес электронной почты..
+        /// </summary>
+        public static string Front_Register_Validation_EmailInvalid {
+            get {
+                return ResourceManager.GetString("Front_Register_Validation_EmailInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите ваше имя..
+        /// </summary>
+        public static string Front_Register_Validation_FirstNameEmpty {
+            get {
+                return ResourceManager.GetString("Front_Register_Validation_FirstNameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите вашу фамилию..
+        /// </summary>
+        public static string Front_Register_Validation_LastNameEmpty {
+            get {
+                return ResourceManager.GetString("Front_Register_Validation_LastNameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Учетная запись не может быть создана, потому что регистрация новых пользователей запрещена администратором..
         /// </summary>
         public static string Front_RegisterDisabled_Description {
@@ -997,6 +1573,24 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Страница не найдена..
+        /// </summary>
+        public static string Global_Error_PageNotFound {
+            get {
+                return ResourceManager.GetString("Global_Error_PageNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь не найден..
+        /// </summary>
+        public static string Global_Error_UserNotFound {
+            get {
+                return ResourceManager.GetString("Global_Error_UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Управление.
         /// </summary>
         public static string Global_UserHeader_Administration {
@@ -1029,6 +1623,69 @@ namespace Bonsai.Localization {
         public static string Global_UserHeader_Page {
             get {
                 return ResourceManager.GetString("Global_UserHeader_Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Расположение указано более одного раза..
+        /// </summary>
+        public static string MarkdownService_AlignmentAmbiguous {
+            get {
+                return ResourceManager.GetString("MarkdownService_AlignmentAmbiguous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Неизвестное расположение медиа-файла..
+        /// </summary>
+        public static string MarkdownService_AlignmentUnknown {
+            get {
+                return ResourceManager.GetString("MarkdownService_AlignmentUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Описание указано более одного раза..
+        /// </summary>
+        public static string MarkdownService_DescriptionAmbiguous {
+            get {
+                return ResourceManager.GetString("MarkdownService_DescriptionAmbiguous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа-файл {0} не найден..
+        /// </summary>
+        public static string MarkdownService_MediaNotFound {
+            get {
+                return ResourceManager.GetString("MarkdownService_MediaNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница не найдена: {0}..
+        /// </summary>
+        public static string MarkdownService_PageNotFound {
+            get {
+                return ResourceManager.GetString("MarkdownService_PageNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Размер указан более одного раза..
+        /// </summary>
+        public static string MarkdownService_SizeAmbiguous {
+            get {
+                return ResourceManager.GetString("MarkdownService_SizeAmbiguous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Неизвестный размер медиа-файла..
+        /// </summary>
+        public static string MarkdownService_SizeUnknown {
+            get {
+                return ResourceManager.GetString("MarkdownService_SizeUnknown", resourceCulture);
             }
         }
         
