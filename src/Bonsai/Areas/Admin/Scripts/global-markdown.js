@@ -30,11 +30,11 @@
             bar.push({
                 name: 'image',
                 className: 'fa fa-picture-o',
-                title: 'Выбрать медиа-файл',
+                title: window.$bonsai.Js_Markdown_PickMedia,
                 action: function(editor) {
                     var cm = editor.codemirror;
                     pickMedia([], function(media) {
-                        var text = '[[media:' + media.key + '|align:left|size:medium|Описание]]';
+                        var text = '[[media:' + media.key + '|align:left|size:medium|' + window.$bonsai.Js_Markdown_Description + ']]';
                         cm.replaceSelection(text);
                         var cur = cm.getCursor();
                         cm.setSelection({ line: cur.line, ch: cur.ch - 2 }, { line: cur.line, ch: cur.ch - 10 });
@@ -47,7 +47,7 @@
         bar.push({
             name: 'page',
             className: 'fa fa-file',
-            title: 'Выбрать страницу',
+            title: window.$bonsai.Js_Markdown_PickPage,
             action: function (editor) {
                 var cm = editor.codemirror;
                 pickPage([], function (page) {
@@ -65,7 +65,7 @@
         bar.push({
             name: 'markdown',
             className: 'fa fa-question-circle',
-            title: 'Справка по форматированию',
+            title: window.$bonsai.Js_Markdown_FormatReference,
             action: function() {
                 window.open('/admin/help/markdown', 'bonsai_help', 'menubar=no,toolbar=no,personalbar=no,resizable=yes,width=800,height=600');
             }

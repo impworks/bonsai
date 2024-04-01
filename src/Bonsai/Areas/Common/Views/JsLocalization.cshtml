@@ -1,0 +1,22 @@
+﻿@using System.Collections
+@using System.Globalization
+@using System.Resources
+@using Bonsai.Localization
+@{
+    var rm = new ResourceManager(typeof(Texts));
+    var set = rm.GetResourceSet(CultureInfo.CurrentCulture, true, true);
+}
+
+<script>
+    window.$bonsai = {
+        @foreach (DictionaryEntry entry in set)
+        {
+            var key = entry.Key.ToString()!;
+            var value = entry.Value?.ToString();
+            if (key.StartsWith("Js_") && value != null)
+            {
+                <text>'@(key)': '@Html.Raw(value)',</text>
+            }
+        }
+    };
+</script>

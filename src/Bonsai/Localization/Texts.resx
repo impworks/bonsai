@@ -826,4 +826,82 @@
   <data name="MarkdownService_SizeUnknown" xml:space="preserve">
     <value>Неизвестный размер медиа-файла.</value>
   </data>
+  <data name="Js_Autocomplete_Empty" xml:space="preserve">
+    <value>Введите запрос для поиска</value>
+  </data>
+  <data name="Js_Autocomplete_NothingFound" xml:space="preserve">
+    <value>Ничего не найдено</value>
+  </data>
+  <data name="Js_Datepicker_InvalidDate" xml:space="preserve">
+    <value>Недопустимая дата.</value>
+  </data>
+  <data name="Js_Datepicker_Locale" xml:space="preserve">
+    <value>ru-ru</value>
+  </data>
+  <data name="Js_Draft_DateLocale" xml:space="preserve">
+    <value>ru-RU</value>
+  </data>
+  <data name="Js_Draft_DiscardConfirmation" xml:space="preserve">
+    <value>Все изменения для данной страницы будут сброшены.\n\nВы уверены?</value>
+  </data>
+  <data name="Js_Draft_SavedAt" xml:space="preserve">
+    <value>Черновик сохранен в {0}.</value>
+  </data>
+  <data name="Js_Facts_DefaultLanguage" xml:space="preserve">
+    <value>Русский</value>
+  </data>
+  <data name="Js_Facts_PhoneNumberPlaceholder" xml:space="preserve">
+    <value>+79251234567</value>
+  </data>
+  <data name="Js_Markdown_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Js_Markdown_FormatReference" xml:space="preserve">
+    <value>Справка по форматированию</value>
+  </data>
+  <data name="Js_Markdown_PickMedia" xml:space="preserve">
+    <value>Выбрать медиа-файл</value>
+  </data>
+  <data name="Js_Markdown_PickPage" xml:space="preserve">
+    <value>Выбрать страницу</value>
+  </data>
+  <data name="Js_MediaPopup_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Js_MediaPopup_CounterTemplate" xml:space="preserve">
+    <value>%curr% из %total%</value>
+  </data>
+  <data name="Js_MediaPopup_LoadFailed" xml:space="preserve">
+    <value>Не удалось загрузить данные.</value>
+  </data>
+  <data name="Js_PagePicker_PageOrName" xml:space="preserve">
+    <value>Страница или имя</value>
+  </data>
+  <data name="Js_PagePicker_WithoutLink" xml:space="preserve">
+    <value>(без ссылки)</value>
+  </data>
+  <data name="Js_Photo_UploadFailed" xml:space="preserve">
+    <value>Не удалось загрузить изображение!</value>
+  </data>
+  <data name="Js_Picker_MediaLoadFailed" xml:space="preserve">
+    <value>Не удалось загрузить медиа-файлы</value>
+  </data>
+  <data name="Js_Picker_PageLoadFailed" xml:space="preserve">
+    <value>Не удалось загрузить страницы</value>
+  </data>
+  <data name="Js_Relations_EnterPageTitle" xml:space="preserve">
+    <value>Введите название страницы</value>
+  </data>
+  <data name="Js_Tags_PageOrTitle" xml:space="preserve">
+    <value>Страница или название</value>
+  </data>
+  <data name="Js_Upload_FileTooBig" xml:space="preserve">
+    <value>Файл слишком большой!</value>
+  </data>
+  <data name="Js_Upload_UnknownError" xml:space="preserve">
+    <value>Неизвестная ошибка</value>
+  </data>
+  <data name="Js_User_EnterName" xml:space="preserve">
+    <value>Введите имя</value>
+  </data>
 </root>

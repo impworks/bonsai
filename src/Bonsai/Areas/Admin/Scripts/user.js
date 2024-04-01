@@ -1,6 +1,6 @@
 ﻿$(function () {
     setupPagePicker($('#PersonalPageId'), {
-        placeholder: 'Введите имя',
+        placeholder: window.$bonsai.Js_User_EnterName,
         types: [0]
     });
 });

@@ -28,16 +28,16 @@
         delegate: selector,
         key: 'media-popup',
         type: 'ajax',
-        tClose: 'Закрыть',
+        tClose: window.$bonsai.Js_MediaPopup_Close,
         ajax: {
-            tError: 'Не удалось загрузить данные.'
+            tError: window.$bonsai.Js_MediaPopup_LoadFailed
         },
         gallery: {
             enabled: true,
             preload: [2, 3],
             tPrev: 'Назад',
             tNext: 'Вперед',
-            tCounter: '<span class="mfp-counter">%curr% из %total%</span>'
+            tCounter: '<span class="mfp-counter">' + window.$bonsai.Js_MediaPopup_CounterTemplate + '</span>'
         },
         callbacks: {
             open: function() {

@@ -23,38 +23,38 @@
     @RenderSection("Head", false)
 </head>
 <body>
-    <div class="main-container d-flex flex-column">
-        <header class="main-header border-bottom shadow-sm">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a class="logotype d-flex" href="@rootUrl">
-                            <div class="logotype-image">
-                                <img src="/assets/img/logo.svg">
-                            </div>
-                            <div class="logotype-text">@appTitle</div>
-                        </a>
-                    </div>
-                    <div class="col search">
-                        @if (ViewBag.DisableSearch == null)
-                        {
-                            <form method="get" action="@Url.Action("Search", "Search")">
-                                <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
-                            </form>
-                        }
-                    </div>
-                    <div class="col-auto">
-                        @if (isStarted)
-                        {
-                            @await Component.InvokeAsync("UserHeaderComponent")
-                        }
-                    </div>
+<div class="main-container d-flex flex-column">
+    <header class="main-header border-bottom shadow-sm">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <a class="logotype d-flex" href="@rootUrl">
+                        <div class="logotype-image">
+                            <img src="/assets/img/logo.svg">
+                        </div>
+                        <div class="logotype-text">@appTitle</div>
+                    </a>
+                </div>
+                <div class="col search">
+                    @if (ViewBag.DisableSearch == null)
+                    {
+                        <form method="get" action="@Url.Action("Search", "Search")">
+                            <input type="text" name="query" id="search-query" placeholder="Поиск…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
+                        </form>
+                    }
+                </div>
+                <div class="col-auto">
+                    @if (isStarted)
+                    {
+                        @await Component.InvokeAsync("UserHeaderComponent")
+                    }
                 </div>
             </div>
-        </header>
-        @RenderBody()
-    </div>
-
+        </div>
+    </header>
+    @RenderBody()
+</div>
+    @await Html.PartialAsync("~/Areas/Common/Views/JsLocalization.cshtml")
     <script src="@Url.Content("~/assets/scripts/vendor-common.js")"></script>
     <script src="@Url.Content("~/assets/scripts/common.js")"></script>
     <script src="@Url.Content("~/assets/scripts/front.js")"></script>

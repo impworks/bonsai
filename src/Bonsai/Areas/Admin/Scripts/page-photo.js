@@ -39,7 +39,7 @@
             }
         },
         fail: function() {
-            toastr.error('Не удалось загрузить изображение!');
+            toastr.error(window.$bonsai.Js_Photo_UploadFailed);
         }
     });
 

@@ -173,7 +173,11 @@
 
         function renderEmptyMsg() {
             return $('<div>').addClass('eac-popup-empty')
-                             .text(query ? 'Ничего не найдено' : 'Введите запрос для поиска');
+                             .text(
+                                 query
+                                     ? window.$bonsai.Js_Autocomplete_NothingFound
+                                     : window.$bonsai.Js_Autocomplete_Empty
+                             );
         }
     }
 
