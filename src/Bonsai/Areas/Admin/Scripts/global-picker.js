@@ -3,14 +3,14 @@
         dialogSelector: '.media-picker',
         contentSelector: '.modal.media-picker .modal-content',
         url: '/admin/pick/media',
-        failMsg: 'Не удалось загрузить медиа-файлы'
+        failMsg: window.$bonsai.Js_Picker_MediaLoadFailed
     });
 
     window.pickPage = createPicker({
         dialogSelector: '.page-picker',
         contentSelector: '.modal.page-picker .modal-content',
         url: '/admin/pick/pages',
-        failMsg: 'Не удалось загрузить страницы'
+        failMsg: window.$bonsai.Js_Picker_PageLoadFailed
     });
 
     function createPicker(options) {

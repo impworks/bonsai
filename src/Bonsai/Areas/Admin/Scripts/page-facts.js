@@ -32,11 +32,11 @@
                 return;
             }
             var middle = nameFact.Values[0].MiddleName;
-            value.IsMale = /ич$/i.test(middle || '');
+            value.IsMale = /ич$/i.test(middle || ''); // todo: extract russian-specific heuristic
         },
         language: function (data, key, value) {
             if (data[key].Values.length === 0) {
-                value.Name = 'Русский';
+                value.Name = window.$bonsai.Js_Facts_DefaultLanguage;
                 value.Proficiency = 'Native';
             }
         }
@@ -162,7 +162,7 @@
                     if (type === 'Email')
                         return 'mailbox@example.com';
                     if (type === 'Phone')
-                        return '+79251234567';
+                        return window.$bonsai.Js_Facts_PhoneNumberPlaceholder;
                     if (type === 'Telegram' || type === 'Twitter')
                         return '@username';
                     return 'https://';

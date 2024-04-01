@@ -124,7 +124,7 @@
 
     function setupRelPagePicker($elem, typesDef) {
         setupPagePicker($elem, {
-            placeholder: 'Введите название страницы',
+            placeholder: window.$bonsai.Js_Relations_EnterPageTitle,
             urlFactory: function(query) {
                 return getQueryUrl(query, typesDef);
             }
@@ -133,7 +133,7 @@
 
     function setupDatePicker($elem, $prev, $next) {
         $elem.datepicker({
-            locale: 'ru-ru',
+            locale: window.$bonsai.Js_Datepicker_Locale,
             uiLibrary: 'bootstrap4',
             format: 'yyyy.mm.dd',
             minDate: function () {

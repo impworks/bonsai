@@ -35,8 +35,8 @@
             })
             .then(function (data) {
                 isModified = false;
-                var date = new Date(data.lastUpdateDate);
-                $draftInfo.text('Черновик сохранен в ' + date.toLocaleTimeString('ru-RU') + '.');
+                var date = new Date(data.lastUpdateDate).toLocaleTimeString(window.$bonsai.Js_Draft_DateLocale);
+                $draftInfo.text(window.$bonsai.Js_Draft_SavedAt.replace('{0}', date));
             });
     }
 
@@ -56,7 +56,7 @@
     }
 
     function discardDraft() {
-        var result = confirm('Все изменения для данной страницы будут сброшены.\n\nВы уверены?');
+        var result = confirm(window.$bonsai.Js_Draft_DiscardConfirmation);
         if (!result) {
             return;
         }

@@ -1627,6 +1627,240 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Введите запрос для поиска.
+        /// </summary>
+        public static string Js_Autocomplete_Empty {
+            get {
+                return ResourceManager.GetString("Js_Autocomplete_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ничего не найдено.
+        /// </summary>
+        public static string Js_Autocomplete_NothingFound {
+            get {
+                return ResourceManager.GetString("Js_Autocomplete_NothingFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Недопустимая дата..
+        /// </summary>
+        public static string Js_Datepicker_InvalidDate {
+            get {
+                return ResourceManager.GetString("Js_Datepicker_InvalidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ru-ru.
+        /// </summary>
+        public static string Js_Datepicker_Locale {
+            get {
+                return ResourceManager.GetString("Js_Datepicker_Locale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ru-RU.
+        /// </summary>
+        public static string Js_Draft_DateLocale {
+            get {
+                return ResourceManager.GetString("Js_Draft_DateLocale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Все изменения для данной страницы будут сброшены.\n\nВы уверены?.
+        /// </summary>
+        public static string Js_Draft_DiscardConfirmation {
+            get {
+                return ResourceManager.GetString("Js_Draft_DiscardConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Черновик сохранен в {0}..
+        /// </summary>
+        public static string Js_Draft_SavedAt {
+            get {
+                return ResourceManager.GetString("Js_Draft_SavedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Русский.
+        /// </summary>
+        public static string Js_Facts_DefaultLanguage {
+            get {
+                return ResourceManager.GetString("Js_Facts_DefaultLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to +79251234567.
+        /// </summary>
+        public static string Js_Facts_PhoneNumberPlaceholder {
+            get {
+                return ResourceManager.GetString("Js_Facts_PhoneNumberPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Описание.
+        /// </summary>
+        public static string Js_Markdown_Description {
+            get {
+                return ResourceManager.GetString("Js_Markdown_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Справка по форматированию.
+        /// </summary>
+        public static string Js_Markdown_FormatReference {
+            get {
+                return ResourceManager.GetString("Js_Markdown_FormatReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Выбрать медиа-файл.
+        /// </summary>
+        public static string Js_Markdown_PickMedia {
+            get {
+                return ResourceManager.GetString("Js_Markdown_PickMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Выбрать страницу.
+        /// </summary>
+        public static string Js_Markdown_PickPage {
+            get {
+                return ResourceManager.GetString("Js_Markdown_PickPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Закрыть.
+        /// </summary>
+        public static string Js_MediaPopup_Close {
+            get {
+                return ResourceManager.GetString("Js_MediaPopup_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to %curr% из %total%.
+        /// </summary>
+        public static string Js_MediaPopup_CounterTemplate {
+            get {
+                return ResourceManager.GetString("Js_MediaPopup_CounterTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить данные..
+        /// </summary>
+        public static string Js_MediaPopup_LoadFailed {
+            get {
+                return ResourceManager.GetString("Js_MediaPopup_LoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница или имя.
+        /// </summary>
+        public static string Js_PagePicker_PageOrName {
+            get {
+                return ResourceManager.GetString("Js_PagePicker_PageOrName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (без ссылки).
+        /// </summary>
+        public static string Js_PagePicker_WithoutLink {
+            get {
+                return ResourceManager.GetString("Js_PagePicker_WithoutLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить изображение!.
+        /// </summary>
+        public static string Js_Photo_UploadFailed {
+            get {
+                return ResourceManager.GetString("Js_Photo_UploadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить медиа-файлы.
+        /// </summary>
+        public static string Js_Picker_MediaLoadFailed {
+            get {
+                return ResourceManager.GetString("Js_Picker_MediaLoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить страницы.
+        /// </summary>
+        public static string Js_Picker_PageLoadFailed {
+            get {
+                return ResourceManager.GetString("Js_Picker_PageLoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите название страницы.
+        /// </summary>
+        public static string Js_Relations_EnterPageTitle {
+            get {
+                return ResourceManager.GetString("Js_Relations_EnterPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница или название.
+        /// </summary>
+        public static string Js_Tags_PageOrTitle {
+            get {
+                return ResourceManager.GetString("Js_Tags_PageOrTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Файл слишком большой!.
+        /// </summary>
+        public static string Js_Upload_FileTooBig {
+            get {
+                return ResourceManager.GetString("Js_Upload_FileTooBig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Неизвестная ошибка.
+        /// </summary>
+        public static string Js_Upload_UnknownError {
+            get {
+                return ResourceManager.GetString("Js_Upload_UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите имя.
+        /// </summary>
+        public static string Js_User_EnterName {
+            get {
+                return ResourceManager.GetString("Js_User_EnterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Расположение указано более одного раза..
         /// </summary>
         public static string MarkdownService_AlignmentAmbiguous {

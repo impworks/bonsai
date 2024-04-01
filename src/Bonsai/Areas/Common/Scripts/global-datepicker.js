@@ -2,7 +2,7 @@
     var allowFuzzy = !$d.is('.datepicker-strict');
 
     $d.datepicker({
-        locale: 'ru-ru',
+        locale: window.$bonsai.Js_Datepicker_Locale,
         uiLibrary: 'bootstrap4',
         format: 'yyyy.mm.dd',
         change: function(e) {
@@ -12,7 +12,7 @@
 
     $d.prop('autocomplete', 'off');
     $d.tooltip({
-        title: 'Недопустимая дата'
+        title: window.$bonsai.Js_Datepicker_InvalidDate
     });
 
     $d.on('click', function () {

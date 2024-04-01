@@ -9,13 +9,13 @@
     setupPagePicker($('#Location'), {
         create: true,
         types: [3],
-        placeholder: 'Страница или название'
+        placeholder: window.$bonsai.Js_Tags_PageOrTitle
     });
 
     setupPagePicker($('#Event'), {
         create: true,
         types: [2],
-        placeholder: 'Страница или название'
+        placeholder: window.$bonsai.Js_Tags_PageOrTitle
     });
 
     setupPagePicker($('#media-editor-tags-list'), {

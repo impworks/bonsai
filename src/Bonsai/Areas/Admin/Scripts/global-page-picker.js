@@ -17,7 +17,7 @@
         labelField: 'title',
         sortField: [{ field: 'index', direction: 'asc' }],
         searchField: 'title',
-        placeholder: opts.placeholder || 'Страница или имя',
+        placeholder: opts.placeholder || window.$bonsai.Js_PagePicker_PageOrName,
         preload: true,
         onChange: opts.onChange,
         load: function (query, callback) {
@@ -52,7 +52,7 @@
         },
         render: {
             option_create: function (data, escape) {
-                return '<div class="create">' + escape(data.input) + ' <i>(без ссылки)</i></div>';
+                return '<div class="create">' + escape(data.input) + ' <i>' + window.$bonsai.Js_PagePicker_WithoutLink + '</i></div>';
             }
         }
     });
