@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 
 namespace Bonsai.Code.Utils.Date
@@ -60,26 +61,25 @@ namespace Bonsai.Code.Utils.Date
                 var decadeEnd = RangeEnd?.IsDecade ?? false;
 
                 if (yearStart == yearEnd)
-                    return "в " + yearStart.Value + (decadeStart ? "-х" : "");
+                {
+                    return string.Format(
+                        decadeStart
+                            ? Texts.FuzzyRange_Short_SameDecade
+                            : Texts.FuzzyRange_Short_SameYear,
+                        yearStart!.Value
+                    );
+                }
 
                 var sb = new StringBuilder();
                 if (yearStart != null)
-                {
-                    sb.Append("c ");
-                    sb.Append(yearStart.Value);
-                    if (decadeStart)
-                        sb.Append("-х");
-                }
+                    sb.AppendFormat(decadeStart ? Texts.FuzzyRange_Short_SinceDecade : Texts.FuzzyRange_Short_SinceYear, yearStart.Value);
 
                 if (yearEnd != null)
                 {
                     if (yearStart != null)
                         sb.Append(" ");
-                     
-                    sb.Append("по ");
-                    sb.Append(yearEnd.Value);
-                    if (decadeEnd)
-                        sb.Append("-ые");
+
+                    sb.AppendFormat(decadeEnd ? Texts.FuzzyRange_Short_UntilDecade : Texts.FuzzyRange_Short_UntilYear, yearEnd.Value);
                 }
 
                 return sb.ToString();
@@ -97,12 +97,12 @@ namespace Bonsai.Code.Utils.Date
                     return null;
 
                 if (RangeEnd == null)
-                    return "с " + RangeStart.Value.ReadableDate;
+                    return string.Format(Texts.FuzzyRange_Full_Since, RangeStart!.Value.ReadableDate);
 
                 if (RangeStart == null)
-                    return "по " + RangeEnd.Value.ReadableDate;
+                    return string.Format(Texts.FuzzyRange_Full_Until, RangeEnd.Value.ReadableDate);
 
-                return RangeStart.Value.ReadableDate + " — " + RangeEnd.Value.ReadableDate;
+                return string.Format(Texts.FuzzyRange_Full_SinceUntil, RangeStart.Value.ReadableDate, RangeEnd.Value.ReadableDate);
             }
         }
 

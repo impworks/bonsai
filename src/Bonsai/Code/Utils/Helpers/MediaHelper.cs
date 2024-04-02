@@ -1,6 +1,7 @@
 ﻿using System;
+using Bonsai.Code.Services;
 using Bonsai.Data.Models;
-using Impworks.Utils.Format;
+using Bonsai.Localization;
 
 namespace Bonsai.Code.Utils.Helpers
 {
@@ -14,9 +15,9 @@ namespace Bonsai.Code.Utils.Helpers
         /// </summary>
         public static string GetMediaFallbackTitle(MediaType type, DateTimeOffset uploadDate)
         {
-            var typePart = type.GetEnumDescription();
-            var datePart = uploadDate.LocalDateTime.ToRussianShortDate();
-            return $"{typePart} от {datePart}";
+            var typePart = type.GetLocaleEnumDescription();
+            var datePart = uploadDate.LocalDateTime.ToLocalizedShortDate();
+            return string.Format(Texts.Global_MediaFallbackDescription, typePart, datePart);
         }
     }
 }

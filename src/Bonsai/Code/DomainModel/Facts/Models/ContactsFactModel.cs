@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data.Models;
@@ -80,31 +79,14 @@ namespace Bonsai.Code.DomainModel.Facts.Models
     /// </summary>
     public enum ContactType
     {
-        [Description("Facebook")]
         Facebook,
-
-        [Description("Twitter")]
         Twitter,
-
-        [Description("Одноклассники")]
         Odnoklassniki,
-
-        [Description("Вконтакте")]
         Vkontakte,
-
-        [Description("Telegram")]
         Telegram,
-
-        [Description("Youtube")]
         Youtube,
-
-        [Description("Github")]
         Github,
-
-        [Description("E-mail")]
         Email,
-
-        [Description("Телефон")]
         Phone,
     }
 }

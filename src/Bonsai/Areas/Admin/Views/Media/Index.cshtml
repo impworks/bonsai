@@ -81,7 +81,7 @@
                         </a>
                     </td>
                     <td><span>@(m.Date?.ReadableDate ?? "—")</span></td>
-                    <td><span title="@m.UploadDate.LocalDateTime.ToRussianFullDate()">@m.UploadDate.Humanize()</span></td>
+                    <td><span title="@m.UploadDate.LocalDateTime.ToLocalizedFullDate()">@m.UploadDate.Humanize()</span></td>
                     <td>@(m.MediaTagsCount == 0 ? "—" : m.MediaTagsCount.ToString())</td>
                     <td class="admin-row-actions">
                         <a href="@Url.Action("Remove", "Media", new {area = "Admin", id = m.Id})">

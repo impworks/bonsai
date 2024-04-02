@@ -250,11 +250,20 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to G.
         /// </summary>
-        public static string DatePicker_Format {
+        public static string DateFormat_Full {
             get {
-                return ResourceManager.GetString("DatePicker_Format", resourceCulture);
+                return ResourceManager.GetString("DateFormat_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dd MMMM yy.
+        /// </summary>
+        public static string DateFormat_Short {
+            get {
+                return ResourceManager.GetString("DateFormat_Short", resourceCulture);
             }
         }
         
@@ -264,6 +273,204 @@ namespace Bonsai.Localization {
         public static string Datepicker_Placeholder {
             get {
                 return ResourceManager.GetString("Datepicker_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A (II).
+        /// </summary>
+        public static string Enum_BloodType_A {
+            get {
+                return ResourceManager.GetString("Enum_BloodType_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AB (IV).
+        /// </summary>
+        public static string Enum_BloodType_AB {
+            get {
+                return ResourceManager.GetString("Enum_BloodType_AB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B (III).
+        /// </summary>
+        public static string Enum_BloodType_B {
+            get {
+                return ResourceManager.GetString("Enum_BloodType_B", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0 (I).
+        /// </summary>
+        public static string Enum_BloodType_O {
+            get {
+                return ResourceManager.GetString("Enum_BloodType_O", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail.
+        /// </summary>
+        public static string Enum_ContactType_Email {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Facebook.
+        /// </summary>
+        public static string Enum_ContactType_Facebook {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Facebook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Github.
+        /// </summary>
+        public static string Enum_ContactType_Github {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Github", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Одноклассники.
+        /// </summary>
+        public static string Enum_ContactType_Odnoklassniki {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Odnoklassniki", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Телефон.
+        /// </summary>
+        public static string Enum_ContactType_Phone {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telegram.
+        /// </summary>
+        public static string Enum_ContactType_Telegram {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Telegram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitter.
+        /// </summary>
+        public static string Enum_ContactType_Twitter {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Twitter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вконтакте.
+        /// </summary>
+        public static string Enum_ContactType_Vkontakte {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Vkontakte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Youtube.
+        /// </summary>
+        public static string Enum_ContactType_Youtube {
+            get {
+                return ResourceManager.GetString("Enum_ContactType_Youtube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Базовый.
+        /// </summary>
+        public static string Enum_LanguageProficiency_Beginner {
+            get {
+                return ResourceManager.GetString("Enum_LanguageProficiency_Beginner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Средний.
+        /// </summary>
+        public static string Enum_LanguageProficiency_Intermediate {
+            get {
+                return ResourceManager.GetString("Enum_LanguageProficiency_Intermediate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Родной.
+        /// </summary>
+        public static string Enum_LanguageProficiency_Native {
+            get {
+                return ResourceManager.GetString("Enum_LanguageProficiency_Native", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Свободный.
+        /// </summary>
+        public static string Enum_LanguageProficiency_Profound {
+            get {
+                return ResourceManager.GetString("Enum_LanguageProficiency_Profound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сохранить.
+        /// </summary>
+        public static string Enum_MediaEditorSaveAction_Save {
+            get {
+                return ResourceManager.GetString("Enum_MediaEditorSaveAction_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сохранить и открыть следующий.
+        /// </summary>
+        public static string Enum_MediaEditorSaveAction_SaveAndShowNext {
+            get {
+                return ResourceManager.GetString("Enum_MediaEditorSaveAction_SaveAndShowNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Новичок.
+        /// </summary>
+        public static string Enum_SkillProficiency_Beginner {
+            get {
+                return ResourceManager.GetString("Enum_SkillProficiency_Beginner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Любитель.
+        /// </summary>
+        public static string Enum_SkillProficiency_Intermediate {
+            get {
+                return ResourceManager.GetString("Enum_SkillProficiency_Intermediate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Эксперт.
+        /// </summary>
+        public static string Enum_SkillProficiency_Profound {
+            get {
+                return ResourceManager.GetString("Enum_SkillProficiency_Profound", resourceCulture);
             }
         }
         
@@ -1906,6 +2113,87 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to с {0}.
+        /// </summary>
+        public static string FuzzyRange_Full_Since {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Full_Since", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} — {1}.
+        /// </summary>
+        public static string FuzzyRange_Full_SinceUntil {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Full_SinceUntil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to по {0}.
+        /// </summary>
+        public static string FuzzyRange_Full_Until {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Full_Until", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to в {0}-х.
+        /// </summary>
+        public static string FuzzyRange_Short_SameDecade {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Short_SameDecade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to в {0}.
+        /// </summary>
+        public static string FuzzyRange_Short_SameYear {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Short_SameYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to с {0}-х.
+        /// </summary>
+        public static string FuzzyRange_Short_SinceDecade {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Short_SinceDecade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to с {0}.
+        /// </summary>
+        public static string FuzzyRange_Short_SinceYear {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Short_SinceYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to по {0}-ые.
+        /// </summary>
+        public static string FuzzyRange_Short_UntilDecade {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Short_UntilDecade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to по {0}.
+        /// </summary>
+        public static string FuzzyRange_Short_UntilYear {
+            get {
+                return ResourceManager.GetString("FuzzyRange_Short_UntilYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Страница не найдена..
         /// </summary>
         public static string Global_Error_PageNotFound {
@@ -1920,6 +2208,24 @@ namespace Bonsai.Localization {
         public static string Global_Error_UserNotFound {
             get {
                 return ResourceManager.GetString("Global_Error_UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} от {1}.
+        /// </summary>
+        public static string Global_MediaFallbackDescription {
+            get {
+                return ResourceManager.GetString("Global_MediaFallbackDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не выбрано.
+        /// </summary>
+        public static string Global_NotSelected {
+            get {
+                return ResourceManager.GetString("Global_NotSelected", resourceCulture);
             }
         }
         

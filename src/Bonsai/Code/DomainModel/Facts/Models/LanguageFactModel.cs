@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Bonsai.Code.DomainModel.Facts.Models
+﻿namespace Bonsai.Code.DomainModel.Facts.Models
 {
     /// <summary>
     /// The template for specifying known languages.
@@ -31,16 +29,9 @@ namespace Bonsai.Code.DomainModel.Facts.Models
     // ReSharper disable UnusedMember.Global
     public enum LanguageProficiency
     {
-        [Description("Базовый")]
         Beginner,
-
-        [Description("Средний")]
         Intermediate,
-
-        [Description("Свободный")]
         Profound,
-
-        [Description("Родной")]
         Native
     }
 }
