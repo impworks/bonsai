@@ -1519,6 +1519,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поиск….
+        /// </summary>
+        public static string Front_Search_Placeholder {
+            get {
+                return ResourceManager.GetString("Front_Search_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Запрос слишком короткий. Введите как минимум три символа..
         /// </summary>
         public static string Front_Search_QueryTooShort {
@@ -1569,6 +1578,330 @@ namespace Bonsai.Localization {
         public static string Front_Tree_Title {
             get {
                 return ResourceManager.GetString("Front_Tree_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1}.
+        /// </summary>
+        public static string FuzzyDate_Age_FullPreciseFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Age_FullPreciseFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}..{1} {2}.
+        /// </summary>
+        public static string FuzzyDate_Age_FullRangeFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Age_FullRangeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Меньше месяца.
+        /// </summary>
+        public static string FuzzyDate_Age_LessThanAMonth {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Age_LessThanAMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Меньше года.
+        /// </summary>
+        public static string FuzzyDate_Age_LessThanAYear {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Age_LessThanAYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1}.
+        /// </summary>
+        public static string FuzzyDate_Age_MonthsFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Age_MonthsFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1}.
+        /// </summary>
+        public static string FuzzyDate_Age_YearsFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Age_YearsFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to апрель.
+        /// </summary>
+        public static string FuzzyDate_April {
+            get {
+                return ResourceManager.GetString("FuzzyDate_April", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} апреля.
+        /// </summary>
+        public static string FuzzyDate_AprilPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_AprilPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to август.
+        /// </summary>
+        public static string FuzzyDate_August {
+            get {
+                return ResourceManager.GetString("FuzzyDate_August", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} августа.
+        /// </summary>
+        public static string FuzzyDate_AugustPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_AugustPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}-е.
+        /// </summary>
+        public static string FuzzyDate_DecadeFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_DecadeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to декабрь.
+        /// </summary>
+        public static string FuzzyDate_December {
+            get {
+                return ResourceManager.GetString("FuzzyDate_December", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} декабря.
+        /// </summary>
+        public static string FuzzyDate_DecemberPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_DecemberPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to февраль.
+        /// </summary>
+        public static string FuzzyDate_February {
+            get {
+                return ResourceManager.GetString("FuzzyDate_February", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} февраля.
+        /// </summary>
+        public static string FuzzyDate_FebruaryPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_FebruaryPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, {1}-е.
+        /// </summary>
+        public static string FuzzyDate_FullDecadeFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_FullDecadeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1}.
+        /// </summary>
+        public static string FuzzyDate_FullYearFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_FullYearFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to январь.
+        /// </summary>
+        public static string FuzzyDate_January {
+            get {
+                return ResourceManager.GetString("FuzzyDate_January", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} января.
+        /// </summary>
+        public static string FuzzyDate_JanuaryPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_JanuaryPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to июль.
+        /// </summary>
+        public static string FuzzyDate_July {
+            get {
+                return ResourceManager.GetString("FuzzyDate_July", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} июля.
+        /// </summary>
+        public static string FuzzyDate_JulyPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_JulyPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to июнь.
+        /// </summary>
+        public static string FuzzyDate_June {
+            get {
+                return ResourceManager.GetString("FuzzyDate_June", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} июня.
+        /// </summary>
+        public static string FuzzyDate_JunePrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_JunePrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to март.
+        /// </summary>
+        public static string FuzzyDate_March {
+            get {
+                return ResourceManager.GetString("FuzzyDate_March", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} марта.
+        /// </summary>
+        public static string FuzzyDate_MarchPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_MarchPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to май.
+        /// </summary>
+        public static string FuzzyDate_May {
+            get {
+                return ResourceManager.GetString("FuzzyDate_May", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} мая.
+        /// </summary>
+        public static string FuzzyDate_MayPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_MayPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to месяц|месяца|месяцев.
+        /// </summary>
+        public static string FuzzyDate_Months {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Months", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ноябрь.
+        /// </summary>
+        public static string FuzzyDate_November {
+            get {
+                return ResourceManager.GetString("FuzzyDate_November", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} ноября.
+        /// </summary>
+        public static string FuzzyDate_NovemberPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_NovemberPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to октябрь.
+        /// </summary>
+        public static string FuzzyDate_October {
+            get {
+                return ResourceManager.GetString("FuzzyDate_October", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} октября.
+        /// </summary>
+        public static string FuzzyDate_OctoberPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_OctoberPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to сентябрь.
+        /// </summary>
+        public static string FuzzyDate_September {
+            get {
+                return ResourceManager.GetString("FuzzyDate_September", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} сентября.
+        /// </summary>
+        public static string FuzzyDate_SeptemberPrecise {
+            get {
+                return ResourceManager.GetString("FuzzyDate_SeptemberPrecise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}.
+        /// </summary>
+        public static string FuzzyDate_YearFormat {
+            get {
+                return ResourceManager.GetString("FuzzyDate_YearFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to год|года|лет.
+        /// </summary>
+        public static string FuzzyDate_Years {
+            get {
+                return ResourceManager.GetString("FuzzyDate_Years", resourceCulture);
             }
         }
         

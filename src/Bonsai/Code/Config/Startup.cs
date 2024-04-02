@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Globalization;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +27,7 @@ namespace Bonsai.Code.Config
             Environment = env;
 
             ConfigValidator.EnsureValid(Configuration);
+            LocaleProvider.SetLocale(Configuration.Locale);
         }
 
         private StaticConfig Configuration { get; }
@@ -76,12 +75,12 @@ namespace Bonsai.Code.Config
             app.UseForwardedHeaders(GetforwardedHeadersOptions())
                .UseStatusCodePagesWithReExecute("/error/{0}")
                .UseStaticFiles()
+               .UseRequestLocalization(LocaleProvider.GetLocaleCode())
                .Use(startupService.RenderLoadingPage)
                .UseRouting()
                .UseAuthentication()
                .UseAuthorization()
                .UseSession()
-               .UseRequestLocalization(GetRequestLocalizationOptions())
                .UseCookiePolicy()
                .UseEndpoints(x =>
                {
@@ -102,20 +101,6 @@ namespace Bonsai.Code.Config
             opts.KnownProxies.Clear();
             opts.KnownNetworks.Clear();
             return opts;
-        }
-
-        /// <summary>
-        /// Configures the options for request localization.
-        /// </summary>
-        private RequestLocalizationOptions GetRequestLocalizationOptions()
-        {
-            var culture = CultureInfo.GetCultureInfo("ru-RU");
-            return new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture(culture),
-                SupportedCultures = new[] {culture},
-                SupportedUICultures = new[] {culture}
-            };
         }
     }
 }
