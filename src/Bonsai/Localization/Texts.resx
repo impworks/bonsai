@@ -904,4 +904,121 @@
   <data name="Js_User_EnterName" xml:space="preserve">
     <value>Введите имя</value>
   </data>
+  <data name="Front_Search_Placeholder" xml:space="preserve">
+    <value>Поиск…</value>
+  </data>
+  <data name="FuzzyDate_Age_FullPreciseFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = years, {1} = months</comment>
+  </data>
+  <data name="FuzzyDate_Age_FullRangeFormat" xml:space="preserve">
+    <value>{0}..{1} {2}</value>
+    <comment>{0} = min years, {1} = max years, {2} = years word</comment>
+  </data>
+  <data name="FuzzyDate_Age_LessThanAMonth" xml:space="preserve">
+    <value>Меньше месяца</value>
+  </data>
+  <data name="FuzzyDate_Age_LessThanAYear" xml:space="preserve">
+    <value>Меньше года</value>
+  </data>
+  <data name="FuzzyDate_Age_MonthsFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = number, {1} = months word</comment>
+  </data>
+  <data name="FuzzyDate_Age_YearsFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = number, {1} = years word</comment>
+  </data>
+  <data name="FuzzyDate_April" xml:space="preserve">
+    <value>апрель</value>
+  </data>
+  <data name="FuzzyDate_AprilPrecise" xml:space="preserve">
+    <value>{0} апреля</value>
+  </data>
+  <data name="FuzzyDate_August" xml:space="preserve">
+    <value>август</value>
+  </data>
+  <data name="FuzzyDate_AugustPrecise" xml:space="preserve">
+    <value>{0} августа</value>
+  </data>
+  <data name="FuzzyDate_DecadeFormat" xml:space="preserve">
+    <value>{0}-е</value>
+  </data>
+  <data name="FuzzyDate_December" xml:space="preserve">
+    <value>декабрь</value>
+  </data>
+  <data name="FuzzyDate_DecemberPrecise" xml:space="preserve">
+    <value>{0} декабря</value>
+  </data>
+  <data name="FuzzyDate_February" xml:space="preserve">
+    <value>февраль</value>
+  </data>
+  <data name="FuzzyDate_FebruaryPrecise" xml:space="preserve">
+    <value>{0} февраля</value>
+  </data>
+  <data name="FuzzyDate_FullDecadeFormat" xml:space="preserve">
+    <value>{0}, {1}-е</value>
+    <comment>{0} = date (e.g. May, or May 12), {1} = decade (e.g. 1950s)</comment>
+  </data>
+  <data name="FuzzyDate_FullYearFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = date (e.g. May, or May 12), {1} = year (e.g. 1951)</comment>
+  </data>
+  <data name="FuzzyDate_January" xml:space="preserve">
+    <value>январь</value>
+  </data>
+  <data name="FuzzyDate_JanuaryPrecise" xml:space="preserve">
+    <value>{0} января</value>
+  </data>
+  <data name="FuzzyDate_July" xml:space="preserve">
+    <value>июль</value>
+  </data>
+  <data name="FuzzyDate_JulyPrecise" xml:space="preserve">
+    <value>{0} июля</value>
+  </data>
+  <data name="FuzzyDate_June" xml:space="preserve">
+    <value>июнь</value>
+  </data>
+  <data name="FuzzyDate_JunePrecise" xml:space="preserve">
+    <value>{0} июня</value>
+  </data>
+  <data name="FuzzyDate_March" xml:space="preserve">
+    <value>март</value>
+  </data>
+  <data name="FuzzyDate_MarchPrecise" xml:space="preserve">
+    <value>{0} марта</value>
+  </data>
+  <data name="FuzzyDate_May" xml:space="preserve">
+    <value>май</value>
+  </data>
+  <data name="FuzzyDate_MayPrecise" xml:space="preserve">
+    <value>{0} мая</value>
+  </data>
+  <data name="FuzzyDate_Months" xml:space="preserve">
+    <value>месяц|месяца|месяцев</value>
+  </data>
+  <data name="FuzzyDate_November" xml:space="preserve">
+    <value>ноябрь</value>
+  </data>
+  <data name="FuzzyDate_NovemberPrecise" xml:space="preserve">
+    <value>{0} ноября</value>
+  </data>
+  <data name="FuzzyDate_October" xml:space="preserve">
+    <value>октябрь</value>
+  </data>
+  <data name="FuzzyDate_OctoberPrecise" xml:space="preserve">
+    <value>{0} октября</value>
+  </data>
+  <data name="FuzzyDate_September" xml:space="preserve">
+    <value>сентябрь</value>
+  </data>
+  <data name="FuzzyDate_SeptemberPrecise" xml:space="preserve">
+    <value>{0} сентября</value>
+  </data>
+  <data name="FuzzyDate_YearFormat" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="FuzzyDate_Years" xml:space="preserve">
+    <value>год|года|лет</value>
+  </data>
 </root>

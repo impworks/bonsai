@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Bonsai.Code.Services;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 
 namespace Bonsai.Code.Utils.Date
@@ -97,30 +99,12 @@ namespace Bonsai.Code.Utils.Date
         /// <summary>
         /// Readable year component of the date.
         /// </summary>
-        public string ReadableYear
-        {
-            get
-            {
-                if (Year == null)
-                    return null;
-
-                return Year + (IsDecade ? "-е" : "");
-            }
-        }
+        public string ReadableYear => Year == null ? null : string.Format(IsDecade ? Texts.FuzzyDate_YearFormat : Texts.FuzzyDate_DecadeFormat, Year);
 
         /// <summary>
         /// Returns the day and month if specified (for anniversaries).
         /// </summary>
-        public DateTime? AnniversaryDate
-        {
-            get
-            {
-                if (Day == null || Month == null)
-                    return null;
-
-                return new DateTime(Year ?? DateTime.Now.Year, Month.Value, Day.Value);
-            }
-        }
+        public DateTime? AnniversaryDate => Day == null || Month == null ? null : new DateTime(Year ?? DateTime.Now.Year, Month.Value, Day.Value);
 
         /// <summary>
         /// Gets the canonical string representation.
@@ -138,7 +122,7 @@ namespace Bonsai.Code.Utils.Date
         /// </summary>
         public string GetAge(FuzzyDate? relative = null)
         {
-            var now = relative ?? new FuzzyDate(DateTime.Now);
+            var now = relative ?? Now;
 
             if (!(this <= now) || Year == null || now.Year == null)
                 return null;
@@ -149,14 +133,14 @@ namespace Bonsai.Code.Utils.Date
             {
                 var min = Math.Max(years - 10, 1);
                 var max = IsDecade && now.IsDecade ? years + 10 : years + 1;
-                return $"{min}..{max} {YearsWord(max)}";
+                return string.Format(Texts.FuzzyDate_Age_FullRangeFormat, min, max, YearsWord(max));
             }
 
             if (Month == null || now.Month == null || Day == null || now.Day == null)
             {
                 var max = years + 1;
                 if (years < 0)
-                    return "Меньше года";
+                    return Texts.FuzzyDate_Age_LessThanAYear;
 
                 if (now.Month > Month)
                     return FullYears(max);
@@ -164,7 +148,7 @@ namespace Bonsai.Code.Utils.Date
                 if (now.Month < Month)
                     return FullYears(years);
 
-                return $"{years}..{max} {YearsWord(max)}";
+                return string.Format(Texts.FuzzyDate_Age_FullRangeFormat, years, max, YearsWord(max));
             }
 
             var months = now.Month > Month
@@ -185,35 +169,20 @@ namespace Bonsai.Code.Utils.Date
             }
 
             if (years == 0 && months == 0)
-                return "Меньше месяца";
+                return Texts.FuzzyDate_Age_LessThanAMonth;
 
             var yearsWord = years == 0 ? null : FullYears(years);
-            var monthsWord = months == 0 || years >= 3 ? null : $"{months} {MonthsWord(months)}";
+            var monthsWord = months == 0 || years >= 3 ? null : FullMonths(months);
 
             if (yearsWord != null && monthsWord != null)
-                return yearsWord + " " + monthsWord;
+                return string.Format(Texts.FuzzyDate_Age_FullPreciseFormat, yearsWord, monthsWord);
 
             return yearsWord ?? monthsWord;
 
-            string YearsWord(int count) => GetNumberWord(count, "год", "года", "лет");
-            string MonthsWord(int count) => GetNumberWord(count, "месяц", "месяца", "месяцев");
-            string FullYears(int count) => count + " " + YearsWord(count);
-            string GetNumberWord(int number, string one, string twoToFour, string other)
-            {
-                var ones = number % 10;
-                var tens = (number / 10) % 10;
-
-                if (tens != 1)
-                {
-                    if (ones == 1)
-                        return one;
-
-                    if (ones >= 2 && ones <= 4)
-                        return twoToFour;
-                }
-
-                return other;
-            }
+            string YearsWord(int count) => LocaleProvider.GetNumericWord(count, Texts.FuzzyDate_Years);
+            string MonthsWord(int count) => LocaleProvider.GetNumericWord(count, Texts.FuzzyDate_Months);
+            string FullYears(int count) => string.Format(Texts.FuzzyDate_Age_YearsFormat, count, YearsWord(count));
+            string FullMonths(int count) => string.Format(Texts.FuzzyDate_Age_MonthsFormat, count, MonthsWord(count));
         }
 
         #endregion
@@ -309,32 +278,14 @@ namespace Bonsai.Code.Utils.Date
         /// </summary>
         private string GetFullReadableDate()
         {
-            var sb = new StringBuilder();
+            if (Month == null && Day == null)
+                return ReadableYear;
 
-            if (Day != null)
-            {
-                sb.Append(Day);
-                sb.Append(" ");
-            }
+            var monthPart = Day == null
+                ? MonthNames[Month!.Value]
+                : string.Format(MonthPreciseNames[Month!.Value], Day.Value);
 
-            if (Month != null)
-            {
-                sb.Append(
-                    Day != null
-                        ? MonthNamesGenitive[Month.Value]
-                        : MonthNamesNominative[Month.Value]
-                );
-            }
-
-            if (Year != null)
-            {
-                if (Month != null)
-                    sb.Append(IsDecade ? ", " : " ");
-
-                sb.Append(ReadableYear);
-            }
-
-            return sb.ToString();
+            return string.Format(IsDecade ? Texts.FuzzyDate_FullDecadeFormat : Texts.FuzzyDate_FullYearFormat, monthPart);
         }
 
         /// <summary>
@@ -360,45 +311,39 @@ namespace Bonsai.Code.Utils.Date
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Month names in nominative case (for month + year format).
-        /// </summary>
-        private static string[] MonthNamesNominative =
-        {
+        private static string[] MonthNames =
+        [
             "",
-            "январь",
-            "февраль",
-            "март",
-            "апрель",
-            "май",
-            "июнь",
-            "июль",
-            "август",
-            "сентябрь",
-            "октябрь",
-            "ноябрь",
-            "декабрь"
-        };
+            Texts.FuzzyDate_January,
+            Texts.FuzzyDate_February,
+            Texts.FuzzyDate_March,
+            Texts.FuzzyDate_April,
+            Texts.FuzzyDate_May,
+            Texts.FuzzyDate_June,
+            Texts.FuzzyDate_July,
+            Texts.FuzzyDate_August,
+            Texts.FuzzyDate_September,
+            Texts.FuzzyDate_October,
+            Texts.FuzzyDate_November,
+            Texts.FuzzyDate_December
+        ];
 
-        /// <summary>
-        /// Month names in genitive case (for day + month format).
-        /// </summary>
-        private static string[] MonthNamesGenitive =
-        {
+        private static string[] MonthPreciseNames =
+        [
             "",
-            "января",
-            "февраля",
-            "марта",
-            "апреля",
-            "мая",
-            "июня",
-            "июля",
-            "августа",
-            "сентября",
-            "октября",
-            "ноября",
-            "декабря"
-        };
+            Texts.FuzzyDate_JanuaryPrecise,
+            Texts.FuzzyDate_FebruaryPrecise,
+            Texts.FuzzyDate_MarchPrecise,
+            Texts.FuzzyDate_AprilPrecise,
+            Texts.FuzzyDate_MayPrecise,
+            Texts.FuzzyDate_JunePrecise,
+            Texts.FuzzyDate_JulyPrecise,
+            Texts.FuzzyDate_AugustPrecise,
+            Texts.FuzzyDate_SeptemberPrecise,
+            Texts.FuzzyDate_OctoberPrecise,
+            Texts.FuzzyDate_NovemberPrecise,
+            Texts.FuzzyDate_DecemberPrecise
+        ];
 
         #endregion
 

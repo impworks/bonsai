@@ -1,4 +1,6 @@
-﻿using Bonsai.Code.Utils.Validation;
+﻿using System.Linq;
+using Bonsai.Code.Utils.Validation;
+using Impworks.Utils.Linq;
 
 namespace Bonsai.Code.Services.Config
 {
@@ -76,6 +78,12 @@ namespace Bonsai.Code.Services.Config
             else
             {
                 validator.Add(nameof(StaticConfig.ConnectionStrings), "Database connection strings configuration is missing. The 'ConnectionStrings__UseEmbeddedDatabase' flag and either 'ConnectionStrings__EmbeddedDatabase' or 'ConnectionStrings__Database' are required.");
+            }
+
+            if (config.Locale is { } loc)
+            {
+                if(!LocaleProvider.IsSupported(loc))
+                    validator.Add(nameof(StaticConfig.Locale), $"Locale {loc} is not supported.");
             }
 
             validator.ThrowIfInvalid("Bonsai configuration is invalid!");
