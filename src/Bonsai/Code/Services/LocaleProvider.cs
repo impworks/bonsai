@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Bonsai.Localization;
+using Impworks.Utils.Format;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Bonsai.Code.Services
 {
@@ -41,9 +46,20 @@ namespace Bonsai.Code.Services
         }
 
         /// <summary>
+        /// Returns the CultureInfo object for current locale.
+        /// </summary>
+        public static CultureInfo GetCulture()
+        {
+            if (CurrentLocale == null)
+                throw new Exception("Current locale is not set.");
+
+            return CultureInfo.GetCultureInfo(CurrentLocale.Code);
+        }
+
+        /// <summary>
         /// Returns the appropriate word form for the number (e.g. 1 - object, 2 - objects).
         /// </summary>
-        public static string GetNumericWord(int word, string forms)
+        public static string GetNumericWord(int num, string forms)
         {
             if (CurrentLocale == null)
                 throw new Exception("Current locale is not set.");
@@ -51,12 +67,33 @@ namespace Bonsai.Code.Services
             var formsArray = forms.Split('|');
             try
             {
-                return CurrentLocale.GetNumericWord(word, formsArray);
+                return CurrentLocale.GetNumericWord(num, formsArray);
             }
             catch (IndexOutOfRangeException)
             {
                 throw new FormatException($"Invalid pluralization form '{forms}' for locale {CurrentLocale.Code}!");
             }
+        }
+
+        /// <summary>
+        /// Returns enum descriptions localized to current language.
+        /// </summary>
+        public static IReadOnlyDictionary<T, string> GetLocaleEnumDescriptions<T>()
+            where T: struct, Enum
+        {
+            var values = EnumHelper.GetEnumValues<T>();
+            return values.ToDictionary(x => x, GetLocaleEnumDescription);
+        }
+
+        /// <summary>
+        /// Returns a single enum description localized to current language.
+        /// </summary>
+        public static string GetLocaleEnumDescription<T>(this T value)
+            where T : struct, Enum
+        {
+            var typeName = typeof(T).Name;
+            var key = $"Enum_{typeName}_{value}";
+            return Texts.ResourceManager.GetString(key) ?? value.ToString();
         }
 
         #region Locale implementations

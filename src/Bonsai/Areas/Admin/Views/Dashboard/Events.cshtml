@@ -37,7 +37,7 @@
     string GetChangeDate(DateTimeOffset date)
     {
         return date < DateTimeOffset.Now.AddDays(-14)
-            ? date.LocalDateTime.ToRussianShortDate()
+            ? date.LocalDateTime.ToLocalizedShortDate()
             : date.Humanize().Capitalize();
     }
 }
@@ -75,7 +75,7 @@
                         }
                     </h6>
                 </div>
-                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToRussianFullDate()">
+                <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToLocalizedFullDate()">
                     @GetChangeDate(evt.Date)
                 </div>
             </div>

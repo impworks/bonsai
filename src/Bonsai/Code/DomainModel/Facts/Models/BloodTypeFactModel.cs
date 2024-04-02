@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Bonsai.Code.DomainModel.Facts.Models
+﻿namespace Bonsai.Code.DomainModel.Facts.Models
 {
     /// <summary>
     /// The template for specifying blood type.
@@ -20,16 +18,9 @@ namespace Bonsai.Code.DomainModel.Facts.Models
 
     public enum BloodType
     {
-        [Description("0 (I)")]
         O,
-
-        [Description("A (II)")]
         A,
-
-        [Description("B (III)")]
         B,
-
-        [Description("AB (IV)")]
         AB
     }
 }

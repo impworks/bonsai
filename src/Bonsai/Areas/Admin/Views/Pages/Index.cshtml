@@ -71,8 +71,8 @@
                         @p.Title
                     </a>
                 </td>
-                <td><span title="@p.CreationDate.LocalDateTime.ToRussianFullDate()">@p.CreationDate.Humanize()</span></td>
-                <td><span title="@p.LastUpdateDate.LocalDateTime.ToRussianFullDate()">@p.LastUpdateDate.Humanize()</span></td>
+                <td><span title="@p.CreationDate.LocalDateTime.ToLocalizedFullDate()">@p.CreationDate.Humanize()</span></td>
+                <td><span title="@p.LastUpdateDate.LocalDateTime.ToLocalizedFullDate()">@p.LastUpdateDate.Humanize()</span></td>
                 <td class="popover-wrapper">
                     <span class="popover-handle">@p.CompletenessScore%</span>
                     <div class="popover-contents">

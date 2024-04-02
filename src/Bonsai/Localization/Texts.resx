@@ -180,9 +180,6 @@
   <data name="CalendarPresenter_Wedding_Title" xml:space="preserve">
     <value>Свадьба</value>
   </data>
-  <data name="DatePicker_Format" xml:space="preserve">
-    <value />
-  </data>
   <data name="Datepicker_Placeholder" xml:space="preserve">
     <value>ГГГГ.ММ.ДД</value>
   </data>
@@ -904,6 +901,78 @@
   <data name="Js_User_EnterName" xml:space="preserve">
     <value>Введите имя</value>
   </data>
+  <data name="DateFormat_Full" xml:space="preserve">
+    <value>G</value>
+  </data>
+  <data name="DateFormat_Short" xml:space="preserve">
+    <value>dd MMMM yy</value>
+  </data>
+  <data name="Enum_BloodType_A" xml:space="preserve">
+    <value>A (II)</value>
+  </data>
+  <data name="Enum_BloodType_AB" xml:space="preserve">
+    <value>AB (IV)</value>
+  </data>
+  <data name="Enum_BloodType_B" xml:space="preserve">
+    <value>B (III)</value>
+  </data>
+  <data name="Enum_BloodType_O" xml:space="preserve">
+    <value>0 (I)</value>
+  </data>
+  <data name="Enum_ContactType_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Enum_ContactType_Facebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="Enum_ContactType_Github" xml:space="preserve">
+    <value>Github</value>
+  </data>
+  <data name="Enum_ContactType_Odnoklassniki" xml:space="preserve">
+    <value>Одноклассники</value>
+  </data>
+  <data name="Enum_ContactType_Phone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="Enum_ContactType_Telegram" xml:space="preserve">
+    <value>Telegram</value>
+  </data>
+  <data name="Enum_ContactType_Twitter" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
+  <data name="Enum_ContactType_Vkontakte" xml:space="preserve">
+    <value>Вконтакте</value>
+  </data>
+  <data name="Enum_ContactType_Youtube" xml:space="preserve">
+    <value>Youtube</value>
+  </data>
+  <data name="Enum_LanguageProficiency_Beginner" xml:space="preserve">
+    <value>Базовый</value>
+  </data>
+  <data name="Enum_LanguageProficiency_Intermediate" xml:space="preserve">
+    <value>Средний</value>
+  </data>
+  <data name="Enum_LanguageProficiency_Native" xml:space="preserve">
+    <value>Родной</value>
+  </data>
+  <data name="Enum_LanguageProficiency_Profound" xml:space="preserve">
+    <value>Свободный</value>
+  </data>
+  <data name="Enum_MediaEditorSaveAction_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Enum_MediaEditorSaveAction_SaveAndShowNext" xml:space="preserve">
+    <value>Сохранить и открыть следующий</value>
+  </data>
+  <data name="Enum_SkillProficiency_Beginner" xml:space="preserve">
+    <value>Новичок</value>
+  </data>
+  <data name="Enum_SkillProficiency_Intermediate" xml:space="preserve">
+    <value>Любитель</value>
+  </data>
+  <data name="Enum_SkillProficiency_Profound" xml:space="preserve">
+    <value>Эксперт</value>
+  </data>
   <data name="Front_Search_Placeholder" xml:space="preserve">
     <value>Поиск…</value>
   </data>
@@ -1020,5 +1089,40 @@
   </data>
   <data name="FuzzyDate_Years" xml:space="preserve">
     <value>год|года|лет</value>
+  </data>
+  <data name="FuzzyRange_Full_Since" xml:space="preserve">
+    <value>с {0}</value>
+  </data>
+  <data name="FuzzyRange_Full_SinceUntil" xml:space="preserve">
+    <value>{0} — {1}</value>
+    <comment>{0} = from, {1} = to</comment>
+  </data>
+  <data name="FuzzyRange_Full_Until" xml:space="preserve">
+    <value>по {0}</value>
+  </data>
+  <data name="FuzzyRange_Short_SameDecade" xml:space="preserve">
+    <value>в {0}-х</value>
+  </data>
+  <data name="FuzzyRange_Short_SameYear" xml:space="preserve">
+    <value>в {0}</value>
+  </data>
+  <data name="FuzzyRange_Short_SinceDecade" xml:space="preserve">
+    <value>с {0}-х</value>
+  </data>
+  <data name="FuzzyRange_Short_SinceYear" xml:space="preserve">
+    <value>с {0}</value>
+  </data>
+  <data name="FuzzyRange_Short_UntilDecade" xml:space="preserve">
+    <value>по {0}-ые</value>
+  </data>
+  <data name="FuzzyRange_Short_UntilYear" xml:space="preserve">
+    <value>по {0}</value>
+  </data>
+  <data name="Global_MediaFallbackDescription" xml:space="preserve">
+    <value>{0} от {1}</value>
+    <comment>{0} = media type, {1} = date</comment>
+  </data>
+  <data name="Global_NotSelected" xml:space="preserve">
+    <value>Не выбрано</value>
   </data>
 </root>

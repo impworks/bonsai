@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Services;
 using Bonsai.Data.Models;
 using Impworks.Utils.Strings;
 
@@ -22,11 +23,6 @@ namespace Bonsai.Code.Utils.Helpers
         );
 
         /// <summary>
-        /// Russian culture cached.
-        /// </summary>
-        private static readonly CultureInfo RuCulture = CultureInfo.GetCultureInfo("ru-RU");
-
-        /// <summary>
         /// Returns the URL-friendly version of the page's title.
         /// </summary>
         public static string EncodeTitle(string title)
@@ -39,7 +35,7 @@ namespace Bonsai.Code.Utils.Helpers
         /// </summary>
         public static string NormalizeTitle(string title)
         {
-            return title?.ToLower(RuCulture);
+            return title?.ToLower(LocaleProvider.GetCulture());
         }
 
         /// <summary>

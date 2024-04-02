@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Bonsai.Code.Services;
+using Bonsai.Localization;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -22,7 +23,7 @@ namespace Bonsai.Code.Utils.Helpers
         {
             var list = new List<SelectListItem>();
             if(value == null && addEmpty)
-                list.Add(new SelectListItem { Text = "Не выбрано", Selected = true });
+                list.Add(new SelectListItem { Text = Texts.Global_NotSelected, Selected = true });
 
             foreach(var entry in EnumHelper.GetEnumDescriptions<T>())
             {
@@ -92,19 +93,17 @@ namespace Bonsai.Code.Utils.Helpers
         /// <summary>
         /// Renders the short-readable date.
         /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static string ToRussianShortDate(this DateTime date)
+        public static string ToLocalizedShortDate(this DateTime date)
         {
-            return date.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("ru-RU"));
+            return date.ToString(Texts.DateFormat_Short, LocaleProvider.GetCulture());
         }
 
         /// <summary>
         /// Renders the detailed date.
         /// </summary>
-        public static string ToRussianFullDate(this DateTime date)
+        public static string ToLocalizedFullDate(this DateTime date)
         {
-            return date.ToString("G", CultureInfo.GetCultureInfo("ru-RU"));
+            return date.ToString(Texts.DateFormat_Full, LocaleProvider.GetCulture());
         }
 
         #region Helpers
