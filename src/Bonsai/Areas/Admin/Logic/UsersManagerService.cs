@@ -11,6 +11,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Mapster;
 using MapsterMapper;
@@ -79,7 +80,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var user = await _db.Users
                                 .AsNoTracking()
-                                .GetAsync(x => x.Id == id, "Пользователь не найден");
+                                .GetAsync(x => x.Id == id, Texts.Admin_Users_NotFound);
 
             return _mapper.Map<UserTitleVM>(user);
         }
@@ -91,7 +92,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var user = await _db.Users
                                 .AsNoTracking()
-                                .GetAsync(x => x.Id == id, "Пользователь не найден");
+                                .GetAsync(x => x.Id == id, Texts.Admin_Users_NotFound);
 
             ValidateDemoModeRestrictions(user);
 
@@ -112,7 +113,7 @@ namespace Bonsai.Areas.Admin.Logic
             await ValidateUpdateRequestAsync(request);
 
             var user = await _db.Users
-                                .GetAsync(x => x.Id == request.Id, "Пользователь не найден");
+                                .GetAsync(x => x.Id == request.Id, Texts.Admin_Users_NotFound);
 
             ValidateDemoModeRestrictions(user);
 
@@ -144,7 +145,7 @@ namespace Bonsai.Areas.Admin.Logic
             var user = await _db.Users
                                 .AsNoTracking()
                                 .Include(x => x.Changes)
-                                .GetAsync(x => x.Id == id, "Пользователь не найден");
+                                .GetAsync(x => x.Id == id, Texts.Admin_Users_NotFound);
 
             ValidateDemoModeRestrictions(user);
 
@@ -163,21 +164,21 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveAsync(string id, ClaimsPrincipal currUser)
         {
             if(IsSelf(id, currUser))
-                throw new OperationException("Нельзя удалить собственную учетную запись");
+                throw new OperationException(Texts.Admin_Users_CannotRemoveSelfMessage);
 
             var user = await _db.Users
                                 .Include(x => x.Changes)
                                 .Include(x => x.Page)
-                                .GetAsync(x => x.Id == id, "Пользователь не найден");
+                                .GetAsync(x => x.Id == id, Texts.Admin_Users_NotFound);
 
             ValidateDemoModeRestrictions(user);
 
             if (user.Changes.Any())
-                throw new OperationException("Нельзя удалить эту учетную запись");
+                throw new OperationException(Texts.Admin_Users_CannotRemoveMessage);
 
             var result = await _userMgr.DeleteAsync(user);
             if(!result.Succeeded)
-                throw new OperationException("Не удалось удалить учетную запись!");
+                throw new OperationException(Texts.Admin_Users_RemoveFailedMessage);
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             ValidatePasswordForm(vm);
 
-            var user = await _db.Users.GetAsync(x => x.Id == vm.Id, "Пользователь не найден");
+            var user = await _db.Users.GetAsync(x => x.Id == vm.Id, Texts.Admin_Users_NotFound);
 
             ValidateDemoModeRestrictions(user);
 
@@ -214,7 +215,7 @@ namespace Bonsai.Areas.Admin.Logic
             var result = await _userMgr.ResetPasswordAsync(user, token, vm.Password);
 
             if(!result.Succeeded)
-                throw new OperationException("Не удалось сменить пароль, попробуйте еще раз.");
+                throw new OperationException(Texts.Admin_Users_PasswordChangeFailedMessage);
 
             await _userMgr.SetLockoutEndDateAsync(user, null);
         }
@@ -299,14 +300,14 @@ namespace Bonsai.Areas.Admin.Logic
                                      .AnyAsync(x => x.Id != request.Id && x.Email == request.Email);
 
             if (emailUsed)
-                val.Add(nameof(request.Email), "Адрес почты уже используется другим пользователем");
+                val.Add(nameof(request.Email), Texts.Admin_Validation_User_EmailExists);
 
             if (request.PersonalPageId != null)
             {
                 var exists = await _db.Pages
                                       .AnyAsync(x => x.Id == request.PersonalPageId);
                 if (!exists)
-                    val.Add(nameof(request.PersonalPageId), "Страница не существует");
+                    val.Add(nameof(request.PersonalPageId), Texts.Admin_Pages_NotFound);
             }
 
             val.ThrowIfInvalid();
@@ -320,10 +321,10 @@ namespace Bonsai.Areas.Admin.Logic
             var val = new Validator();
 
             if (form.Password == null || form.Password.Length < 6)
-                val.Add(nameof(form.Password), "Пароль должен содержать как минимум 6 символов.");
+                val.Add(nameof(form.Password), Texts.Admin_Validation_User_PasswordTooShort);
 
             if (form.Password != form.PasswordCopy)
-                val.Add(nameof(form.PasswordCopy), "Пароли не совпадают.");
+                val.Add(nameof(form.PasswordCopy), Texts.Admin_Validation_User_PasswordDoesNotMatch);
 
             val.ThrowIfInvalid();
         }
@@ -336,11 +337,11 @@ namespace Bonsai.Areas.Admin.Logic
             var val = new Validator();
 
             if (FuzzyDate.TryParse(vm.Birthday) == null)
-                val.Add(nameof(vm.Birthday), "Дата рождения указана неверно.");
+                val.Add(nameof(vm.Birthday), Texts.Admin_Validation_User_InvalidBirthday);
 
             var emailExists = await _db.Users.AnyAsync(x => x.Email == vm.Email);
             if (emailExists)
-                val.Add(nameof(vm.Email), "Адрес электронной почты уже зарегистрирован.");
+                val.Add(nameof(vm.Email), Texts.AuthService_Error_EmailAlreadyExists);
 
             val.ThrowIfInvalid();
         }
@@ -354,7 +355,7 @@ namespace Bonsai.Areas.Admin.Logic
                 return;
 
             if(user.Email == "admin@example.com" && _demoCfg.CreateDefaultAdmin)
-                throw new OperationException("Запрещено в демо-режиме");
+                throw new OperationException(Texts.Admin_ForbiddenInDemoMessage);
         }
 
         #endregion

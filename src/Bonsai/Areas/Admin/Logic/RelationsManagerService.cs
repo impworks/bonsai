@@ -15,6 +15,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Dictionary;
 using Impworks.Utils.Linq;
 using Mapster;
@@ -155,7 +156,7 @@ namespace Bonsai.Areas.Admin.Logic
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == id
                                               && x.IsComplementary == false
-                                              && x.IsDeleted == false, "Связь не найдена");
+                                              && x.IsDeleted == false, Texts.Admin_Relations_NotFound);
 
             return _mapper.Map<RelationEditorVM>(rel);
         }
@@ -171,7 +172,7 @@ namespace Bonsai.Areas.Admin.Logic
                                .GetAsync(x => x.Id == vm.Id
                                               && x.IsComplementary == false
                                               && (x.IsDeleted == false || revertedId != null),
-                                         "Связь не найдена");
+                                         Texts.Admin_Relations_NotFound);
 
             var compRel = await FindComplementaryRelationAsync(rel, revertedId != null);
 
@@ -199,7 +200,7 @@ namespace Bonsai.Areas.Admin.Logic
             var rel = await _db.Relations
                                .Where(x => x.IsDeleted == false && x.IsComplementary == false)
                                .ProjectToType<RelationTitleVM>(_mapper.Config)
-                               .GetAsync(x => x.Id == id, "Связь не найдена");
+                               .GetAsync(x => x.Id == id, Texts.Admin_Relations_NotFound);
 
             var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);
             
@@ -218,7 +219,7 @@ namespace Bonsai.Areas.Admin.Logic
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == id
                                               && x.IsComplementary == false
-                                              && x.IsDeleted == false, "Связь не найдена");
+                                              && x.IsDeleted == false, Texts.Admin_Relations_NotFound);
 
             var compRel = await FindComplementaryRelationAsync(rel);
 
@@ -238,12 +239,12 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveCompletelyAsync(Guid id, ClaimsPrincipal principal)
         {
             if (await _userMgr.IsInRoleAsync(principal, UserRole.Admin) == false)
-                throw new OperationException("Операция запрещена для данного пользователя!");
+                throw new OperationException(Texts.Admin_Users_Forbidden);
             
             var rel = await _db.Relations
                                .GetAsync(x => x.Id == id
                                    && x.IsComplementary == false
-                                   && x.IsDeleted == false, "Связь не найдена");
+                                   && x.IsDeleted == false, Texts.Admin_Relations_NotFound);
 
             var compRel = await FindComplementaryRelationAsync(rel);
             var compRelId = compRel?.Id ?? Guid.Empty;
@@ -318,35 +319,35 @@ namespace Bonsai.Areas.Admin.Logic
             var eventType = pages.TryGetNullableValue(vm.EventId ?? Guid.Empty);
 
             if(vm.SourceIds == null || vm.SourceIds.Length == 0)
-                val.Add(nameof(vm.SourceIds), "Выберите страницу");
+                val.Add(nameof(vm.SourceIds), Texts.Admin_Validation_Relation_PageNotSelected);
             else if (isNew == false && vm.SourceIds.Length > 1)
-                val.Add(nameof(vm.SourceIds), "При редактировании может быть указана только одна страница");
+                val.Add(nameof(vm.SourceIds), Texts.Admin_Validation_Relation_OnlyOneSource);
             else if (sourceTypes.Any(x => x == null))
-                val.Add(nameof(vm.SourceIds), "Страница не найдена");
+                val.Add(nameof(vm.SourceIds), Texts.Admin_Pages_NotFound);
 
             if(vm.DestinationId == null)
-                val.Add(nameof(vm.DestinationId), "Выберите страницу");
+                val.Add(nameof(vm.DestinationId), Texts.Admin_Validation_Relation_PageNotSelected);
             else if (destType == null)
-                val.Add(nameof(vm.DestinationId), "Страница не найдена");
+                val.Add(nameof(vm.DestinationId), Texts.Admin_Pages_NotFound);
 
             if (destType != null && sourceTypes.Any(x => x != null && !RelationHelper.IsRelationAllowed(x.Value, destType.Value, vm.Type)))
-                val.Add(nameof(vm.Type), "Тип связи недопустимм для данных страниц");
+                val.Add(nameof(vm.Type), Texts.Admin_Validation_Relation_RelationNotAllowedForPageTypes);
 
             if (vm.EventId != null)
             {
                 if(eventType == null)
-                    val.Add(nameof(vm.EventId), "Страница не найдена");
+                    val.Add(nameof(vm.EventId), Texts.Admin_Pages_NotFound);
                 else if(eventType != PageType.Event)
-                    val.Add(nameof(vm.EventId), "Требуется страница события");
+                    val.Add(nameof(vm.EventId), Texts.Admin_Validation_Relation_EventPageRequired);
                 else if(!RelationHelper.IsRelationEventReferenceAllowed(vm.Type))
-                    val.Add(nameof(vm.EventId), "Событие нельзя привязать к данному типу связи");
+                    val.Add(nameof(vm.EventId), Texts.Admin_Validation_Relation_EventPageNotAllowedForType);
             }
 
             if (!string.IsNullOrEmpty(vm.DurationStart) || !string.IsNullOrEmpty(vm.DurationEnd))
             {
                 if (!RelationHelper.IsRelationDurationAllowed(vm.Type))
                 {
-                    val.Add(nameof(vm.DurationStart), "Дату нельзя указать для данного типа связи");
+                    val.Add(nameof(vm.DurationStart), Texts.Admin_Validation_Relation_DateNotAllowedForType);
                 }
                 else
                 {
@@ -354,9 +355,9 @@ namespace Bonsai.Areas.Admin.Logic
                     var to = FuzzyDate.TryParse(vm.DurationEnd);
 
                     if (from > to)
-                        val.Add(nameof(vm.DurationStart), "Дата начала не может быть больше даты конца");
+                        val.Add(nameof(vm.DurationStart), Texts.Admin_Validation_Relation_StartAfterEnd);
                     else if (FuzzyRange.TryParse(FuzzyRange.TryCombine(vm.DurationStart, vm.DurationEnd)) == null)
-                        val.Add(nameof(vm.DurationStart), "Введите дату в корректном формате");
+                        val.Add(nameof(vm.DurationStart), Texts.Admin_Validation_IncorrectDate);
 
                 }
             }
@@ -369,7 +370,7 @@ namespace Bonsai.Areas.Admin.Logic
                                                            && x.IsDeleted == false);
 
             if (existingRelation)
-                val.Add(nameof(vm.DestinationId), "Такая связь уже существует!");
+                val.Add(nameof(vm.DestinationId), Texts.Admin_Validation_Relation_AlreadyExists);
 
             val.ThrowIfInvalid();
         }
@@ -454,7 +455,7 @@ namespace Bonsai.Areas.Admin.Logic
         private async Task<AppUser> GetUserAsync(ClaimsPrincipal principal)
         {
             var userId = _userMgr.GetUserId(principal);
-            return await _db.Users.GetAsync(x => x.Id == userId, "Пользователь не найден");
+            return await _db.Users.GetAsync(x => x.Id == userId, Texts.Admin_Users_NotFound);
         }
 
         #endregion

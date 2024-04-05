@@ -5,6 +5,7 @@ using Bonsai.Code.DomainModel.Relations;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 
 namespace Bonsai.Areas.Admin.Logic.Validation
 {
@@ -81,18 +82,18 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 var second = context.Pages[rel.DestinationId];
 
                 if (first.BirthDate >= second.DeathDate)
-                    Error($"Дата рождения одного супруга ({first.BirthDate.Value.ReadableDate}) не может быть позже даты смерти другого ({second.DeathDate.Value.ReadableDate})", first.Id, second.Id);
+                    Error(string.Format(Texts.Admin_Validation_Page_SpouseLifetimesNoOverlap, first.BirthDate.Value.ReadableDate, second.DeathDate.Value.ReadableDate), first.Id, second.Id);
 
                 if (second.BirthDate >= first.DeathDate)
-                    Error($"Дата рождения одного супруга ({second.BirthDate.Value.ReadableDate}) не может быть позже даты смерти другого ({first.DeathDate.Value.ReadableDate})", first.Id, second.Id);
+                    Error(string.Format(Texts.Admin_Validation_Page_SpouseLifetimesNoOverlap, second.BirthDate.Value.ReadableDate, first.DeathDate.Value.ReadableDate), first.Id, second.Id);
 
                 if (rel.Duration is FuzzyRange dur)
                 {
                     if(dur.RangeStart < first.BirthDate || dur.RangeEnd > first.DeathDate)
-                        Error($"Брак должен быть ограничен временем жизни супруга: {new FuzzyRange(first.BirthDate, first.DeathDate).ReadableRange}", first.Id);
+                        Error(string.Format(Texts.Admin_Validation_Page_MarriageExceedsLifetime, new FuzzyRange(first.BirthDate, first.DeathDate).ReadableRange), first.Id);
 
                     if(dur.RangeStart < second.BirthDate || dur.RangeEnd > second.DeathDate)
-                        Error($"Брак должен быть ограничен временем жизни супруга: {new FuzzyRange(second.BirthDate, second.DeathDate).ReadableRange}", second.Id);
+                        Error(string.Format(Texts.Admin_Validation_Page_MarriageExceedsLifetime, new FuzzyRange(second.BirthDate, second.DeathDate).ReadableRange), second.Id);
                 }
             }
         }
@@ -105,7 +106,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
             foreach (var page in context.Pages.Values)
             {
                 if(page.BirthDate > page.DeathDate)
-                    Error("Дата рождения не может быть позже даты смерти", page.Id);
+                    Error(Texts.Admin_Validation_Page_BirthAfterDeath, page.Id);
             }
         }
 
@@ -123,7 +124,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 var child = context.Pages[rel.DestinationId];
 
                 if(parent.BirthDate >= child.BirthDate)
-                    Error("Родитель не может быть младше ребенка", parent.Id, child.Id);
+                    Error(Texts.Admin_Validation_Page_ParentYoungerThanChild, parent.Id, child.Id);
             }
         }
 
@@ -154,7 +155,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                     if (visited[rel.DestinationId])
                     {
                         isLoopFound = true;
-                        Error("Два человека не могут быть родителями друг для друга", rel.DestinationId, pageId);
+                        Error(Texts.Admin_Validation_Page_ParentLoop, rel.DestinationId, pageId);
                         return;
                     }
 
@@ -177,7 +178,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                                   .ToList();
 
                 if(parents.Count > 2)
-                    Error("У человека не может быть более двух биологических родителей", page.Id);
+                    Error(Texts.Admin_Validation_Page_ManyBioParents, page.Id);
 
                 if (parents.Count == 2)
                 {
@@ -185,7 +186,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                     var p2 = context.Pages[parents[1].DestinationId];
 
                     if(p1.Gender == p2.Gender && p1.Gender != null)
-                        Error("Биологические родители не могут быть одного пола", p1.Id, p2.Id, page.Id);
+                        Error(Texts.Admin_Validation_Page_BioParentsSameGender, p1.Id, p2.Id, page.Id);
                 }
             }
         }

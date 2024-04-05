@@ -11,6 +11,7 @@ using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Jobs;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Jering.Javascript.NodeJS;
@@ -188,7 +189,7 @@ namespace Bonsai.Areas.Admin.Logic.Tree
                         persons.Add(fakeId, new TreePersonVM
                         {
                             Id = fakeId.ToString(),
-                            Name = "Неизвестно",
+                            Name = Texts.Admin_Tree_Unknown,
                             IsMale = fakeGender,
                             Photo = GetPhoto(null, fakeGender)
                         });

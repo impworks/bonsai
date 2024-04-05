@@ -9,6 +9,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -90,7 +91,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
             {
                 var def = FactDefinitions.TryGetDefinition(type, prop.Key);
                 if (def == null)
-                    throw new ValidationException(nameof(Page.Facts), $"Тип факта {prop.Key} не существует!");
+                    throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Validation_Page_UnknownFact, prop.Key));
 
                 try
                 {
@@ -99,7 +100,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 }
                 catch (Exception ex) when (!(ex is ValidationException))
                 {
-                    throw new ValidationException(nameof(Page.Facts), $"Некорректно заполнен факт {prop.Key}!");
+                    throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Validation_Page_IncorrectFact, prop.Key));
                 }
             }
 
@@ -114,7 +115,7 @@ namespace Bonsai.Areas.Admin.Logic.Validation
                 }
                 catch
                 {
-                    throw new ValidationException(nameof(Page.Facts), "Факты имеют некорректный формат!");
+                    throw new ValidationException(nameof(Page.Facts), Texts.Admin_Validation_Page_BadFactsFormat);
                 }
             }
         }
