@@ -67,7 +67,7 @@ namespace Bonsai.Areas.Admin.Components
                            .Where(x => x.GetCustomAttribute<ObsoleteAttribute>() == null)
                            .Select(x => new
                            {
-                               Description = LocaleProvider.GetLocaleEnumDescription(enumType, x.Name)
+                               Description = LocaleProvider.GetLocaleEnumDescription(enumType, x.Name),
                                Value = x.GetRawConstantValue()
                            })
                            .ToDictionary(

@@ -7,6 +7,7 @@ using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Jobs;
 using Bonsai.Data;
+using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,7 +64,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
             }
 
-            return RedirectToSuccess("Настройки сохранены");
+            return RedirectToSuccess(Texts.Admin_Config_SavedMessage);
 
             bool IsTreeConfigChanged()
             {

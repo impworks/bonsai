@@ -15,6 +15,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Dictionary;
 using Impworks.Utils.Strings;
@@ -50,11 +51,11 @@ namespace Bonsai.Areas.Admin.Controllers
         /// </summary>
         private static IDictionary<string, string> FieldCaptions = new Dictionary<string, string>
         {
-            [nameof(PageEditorVM.Title)] = "Заголовок",
-            [nameof(PageEditorVM.Description)] = "Текст",
-            [nameof(PageEditorVM.Facts)] = "Факты",
-            [nameof(PageEditorVM.Aliases)] = "Ссылки",
-            [nameof(PageEditorVM.MainPhotoKey)] = "Фото",
+            [nameof(PageEditorVM.Title)] = Texts.Admin_Pages_Caption_Title,
+            [nameof(PageEditorVM.Description)] = Texts.Admin_Pages_Caption_Description,
+            [nameof(PageEditorVM.Facts)] = Texts.Admin_Pages_Caption_Facts,
+            [nameof(PageEditorVM.Aliases)] = Texts.Admin_Pages_Caption_Aliases,
+            [nameof(PageEditorVM.MainPhotoKey)] = Texts.Admin_Pages_Caption_Photo,
         };
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _search.AddPageAsync(page);
                 await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-                return RedirectToSuccess("Страница создана");
+                return RedirectToSuccess(Texts.Admin_Pages_CreatedMessage);
             }
             catch (ValidationException ex)
             {
@@ -139,7 +140,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _search.AddPageAsync(page);
                 await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-                return RedirectToSuccess("Страница обновлена");
+                return RedirectToSuccess(Texts.Admin_Pages_UpdatedMessage);
             }
             catch (ValidationException ex)
             {
@@ -176,7 +177,7 @@ namespace Bonsai.Areas.Admin.Controllers
             await _search.RemovePageAsync(vm.Id);
             await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-            return RedirectToSuccess("Страница удалена");
+            return RedirectToSuccess(Texts.Admin_Pages_RemovedMessage);
         }
 
         #region Helpers

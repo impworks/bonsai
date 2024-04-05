@@ -11,6 +11,7 @@ using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -78,7 +79,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _db.SaveChangesAsync();
                 await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-                return RedirectToSuccess("Связь создана");
+                return RedirectToSuccess(Texts.Admin_Relations_CreatedMessage);
             }
             catch(ValidationException ex)
             {
@@ -114,7 +115,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _db.SaveChangesAsync();
                 await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-                return RedirectToSuccess("Связь обновлена");
+                return RedirectToSuccess(Texts.Admin_Relations_UpdatedMessage);
             }
             catch(ValidationException ex)
             {
@@ -149,7 +150,7 @@ namespace Bonsai.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
             await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-            return RedirectToSuccess("Связь удалена");
+            return RedirectToSuccess(Texts.Admin_Relations_RemovedMessage);
         }
 
         /// <summary>

@@ -1125,6 +1125,90 @@
   <data name="Global_NotSelected" xml:space="preserve">
     <value>Не выбрано</value>
   </data>
+  <data name="Admin_Changesets_CannotRevertMessage" xml:space="preserve">
+    <value>Эта правка не может быть отменена.</value>
+  </data>
+  <data name="Admin_Changesets_RevertedMessage" xml:space="preserve">
+    <value>Правка была отменена.</value>
+  </data>
+  <data name="Admin_Config_SavedMessage" xml:space="preserve">
+    <value>Настройки сохранены.</value>
+  </data>
+  <data name="Admin_Media_RemovedMessage" xml:space="preserve">
+    <value>Медиа-файл удален.</value>
+  </data>
+  <data name="Admin_Media_UpdatedMessage" xml:space="preserve">
+    <value>Медиа-файл обновлен.</value>
+  </data>
+  <data name="Admin_Menu_Changesets" xml:space="preserve">
+    <value>Правки</value>
+  </data>
+  <data name="Admin_Menu_Config" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Admin_Menu_Dashboard" xml:space="preserve">
+    <value>Главная</value>
+  </data>
+  <data name="Admin_Menu_Media" xml:space="preserve">
+    <value>Медиа</value>
+  </data>
+  <data name="Admin_Menu_Pages" xml:space="preserve">
+    <value>Страницы</value>
+  </data>
+  <data name="Admin_Menu_Relations" xml:space="preserve">
+    <value>Связи</value>
+  </data>
+  <data name="Admin_Menu_Users" xml:space="preserve">
+    <value>Доступ</value>
+  </data>
+  <data name="Admin_Pages_Caption_Aliases" xml:space="preserve">
+    <value>Ссылки</value>
+  </data>
+  <data name="Admin_Pages_Caption_Description" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="Admin_Pages_Caption_Facts" xml:space="preserve">
+    <value>Факты</value>
+  </data>
+  <data name="Admin_Pages_Caption_Photo" xml:space="preserve">
+    <value>Фото</value>
+  </data>
+  <data name="Admin_Pages_Caption_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="Admin_Pages_CreatedMessage" xml:space="preserve">
+    <value>Страница создана.</value>
+  </data>
+  <data name="Admin_Pages_RemovedMessage" xml:space="preserve">
+    <value>Страница удалена.</value>
+  </data>
+  <data name="Admin_Pages_UpdatedMessage" xml:space="preserve">
+    <value>Страница обновлена.</value>
+  </data>
+  <data name="Admin_Relations_CreatedMessage" xml:space="preserve">
+    <value>Связь создана.</value>
+  </data>
+  <data name="Admin_Relations_RemovedMessage" xml:space="preserve">
+    <value>Связь удалена.</value>
+  </data>
+  <data name="Admin_Relations_UpdatedMessage" xml:space="preserve">
+    <value>Связь обновлена.</value>
+  </data>
+  <data name="Admin_Users_CreatedMessage" xml:space="preserve">
+    <value>Пользователь создан.</value>
+  </data>
+  <data name="Admin_Users_PasswordAuthRestrictedMessage" xml:space="preserve">
+    <value>Авторизация по паролю запрещена настройками.</value>
+  </data>
+  <data name="Admin_Users_PasswordResetMessage" xml:space="preserve">
+    <value>Пароль изменен.</value>
+  </data>
+  <data name="Admin_Users_RemovedMessage" xml:space="preserve">
+    <value>Пользователь удален.</value>
+  </data>
+  <data name="Admin_Users_UpdatedMessage" xml:space="preserve">
+    <value>Пользователь обновлен.</value>
+  </data>
   <data name="Enum_ChangesetEntityType_Media" xml:space="preserve">
     <value>Медиа</value>
   </data>

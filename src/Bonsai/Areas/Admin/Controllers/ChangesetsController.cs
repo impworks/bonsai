@@ -4,6 +4,7 @@ using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
+using Bonsai.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
@@ -58,7 +59,7 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             var vm = await _changes.GetChangesetDetailsAsync(id);
             if (!vm.CanRevert)
-                throw new OperationException("Эта правка не может быть отменена");
+                throw new OperationException(Texts.Admin_Changesets_CannotRevertMessage);
 
             return View(vm);
         }
@@ -72,12 +73,12 @@ namespace Bonsai.Areas.Admin.Controllers
         {
             var editVm = await _changes.GetChangesetDetailsAsync(id);
             if (!editVm.CanRevert)
-                throw new OperationException("Эта правка не может быть отменена");
+                throw new OperationException(Texts.Admin_Changesets_CannotRevertMessage);
 
             await _changes.RevertChangeAsync(id, User);
             await _db.SaveChangesAsync();
 
-            return RedirectToSuccess("Правка была отменена");
+            return RedirectToSuccess(Texts.Admin_Changesets_RevertedMessage);
         }
 
         #endregion
