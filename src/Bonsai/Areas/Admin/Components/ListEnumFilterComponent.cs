@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Components;
+using Bonsai.Code.Services;
 using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,7 +67,7 @@ namespace Bonsai.Areas.Admin.Components
                            .Where(x => x.GetCustomAttribute<ObsoleteAttribute>() == null)
                            .Select(x => new
                            {
-                               Description = x.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                               Description = LocaleProvider.GetLocaleEnumDescription(enumType, x.Name)
                                Value = x.GetRawConstantValue()
                            })
                            .ToDictionary(

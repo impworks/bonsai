@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Bonsai.Code.Services;
 using Bonsai.Localization;
-using Impworks.Utils.Format;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bonsai.Code.Utils.Helpers
@@ -19,13 +18,13 @@ namespace Bonsai.Code.Utils.Helpers
         /// Returns the select list with current element selected.
         /// </summary>
         public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T? value, bool addEmpty = true, T[] except = null)
-            where T : struct, IConvertible, IComparable
+            where T : struct, Enum, IComparable
         {
             var list = new List<SelectListItem>();
             if(value == null && addEmpty)
                 list.Add(new SelectListItem { Text = Texts.Global_NotSelected, Selected = true });
 
-            foreach(var entry in EnumHelper.GetEnumDescriptions<T>())
+            foreach(var entry in LocaleProvider.GetLocaleEnumDescriptions<T>())
             {
                 if (except?.Contains(entry.Key) == true)
                     continue;
@@ -45,7 +44,7 @@ namespace Bonsai.Code.Utils.Helpers
         /// Returns the select list with current element selected.
         /// </summary>
         public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T value, T[] except = null)
-            where T : struct, IConvertible, IComparable
+            where T : struct, Enum, IComparable
         {
             return GetEnumSelectList(value, false, except);
         }

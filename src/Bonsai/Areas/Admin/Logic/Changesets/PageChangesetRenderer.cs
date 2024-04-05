@@ -11,7 +11,6 @@ using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
-using Impworks.Utils.Format;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -57,7 +56,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             Add(nameof(PageEditorVM.Title), "Название", data.Title);
             Add(nameof(PageEditorVM.MainPhotoKey), "Фото", photoUrl == null ? null : ViewHelper.RenderMediaThumbnail(photoUrl));
-            Add(nameof(PageEditorVM.Type), "Тип", isEmpty ? null :  data.Type.GetEnumDescription());
+            Add(nameof(PageEditorVM.Type), "Тип", isEmpty ? null :  data.Type.GetLocaleEnumDescription());
             Add(nameof(PageEditorVM.Description), "Текст", data.Description);
             Add(nameof(PageEditorVM.Aliases), "Псевдонимы", data.Aliases == null ? null : ViewHelper.RenderBulletList(_html, aliases));
             Add(nameof(PageEditorVM.Facts), "Факты", facts);

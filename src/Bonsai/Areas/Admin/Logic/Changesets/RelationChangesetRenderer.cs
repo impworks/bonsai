@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Relations;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Dictionary;
-using Impworks.Utils.Format;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +57,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                        .ToDictionaryAsync(x => x.Id, x => x.Title);
 
             Add(nameof(RelationEditorVM.DestinationId), "Основная страница", namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
-            Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetEnumDescription());
+            Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetLocaleEnumDescription());
 
             if (data.SourceIds.Length == 0)
             {

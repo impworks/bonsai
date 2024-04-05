@@ -16,7 +16,6 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Dictionary;
-using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Mapster;
 using MapsterMapper;
@@ -265,8 +264,8 @@ namespace Bonsai.Areas.Admin.Logic
         {
             return new RelationEditorPropertiesVM
             {
-                SourceName = RelationHelper.ComplementaryRelations[relType].GetEnumDescription(),
-                DestinationName = relType.GetEnumDescription(),
+                SourceName = RelationHelper.ComplementaryRelations[relType].GetLocaleEnumDescription(),
+                DestinationName = relType.GetLocaleEnumDescription(),
                 SourceTypes = RelationHelper.SuggestSourcePageTypes(relType),
                 DestinationTypes = RelationHelper.SuggestDestinationPageTypes(relType),
                 ShowDuration = RelationHelper.IsRelationDurationAllowed(relType),

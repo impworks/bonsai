@@ -6,6 +6,7 @@ using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Areas.Admin.ViewModels.Relations;
+using Bonsai.Code.Services;
 using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
@@ -186,7 +187,7 @@ namespace Bonsai.Areas.Admin.Controllers
                                           .Select(x => new SelectListItem
                                           {
                                               Value = x.ToString(),
-                                              Text = x.GetEnumDescription(),
+                                              Text = x.GetLocaleEnumDescription(),
                                               Selected = x == vm.Type
                                           })
             };
