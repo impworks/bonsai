@@ -9,10 +9,10 @@ using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.ViewModels.Media;
 using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Impworks.Utils.Format;
 using Impworks.Utils.Strings;
 using MapsterMapper;
 using Microsoft.AspNetCore.Hosting;
@@ -105,7 +105,7 @@ namespace Bonsai.Areas.Admin.Logic
                     var rel = chg.EditedRelation;
                     vm.MainLink = new LinkVM
                     {
-                        Title = chg.EditedRelation.Type.GetEnumDescription(),
+                        Title = chg.EditedRelation.Type.GetLocaleEnumDescription(),
                         Url = _url.Action("Update", "Relations", new { area = "Admin", id = rel.Id })
                     };
                     vm.ExtraLinks = new[] {GetLinkToPage(rel.Destination), GetLinkToPage(rel.Source)};

@@ -313,6 +313,69 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Медиа.
+        /// </summary>
+        public static string Enum_ChangesetEntityType_Media {
+            get {
+                return ResourceManager.GetString("Enum_ChangesetEntityType_Media", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница.
+        /// </summary>
+        public static string Enum_ChangesetEntityType_Page {
+            get {
+                return ResourceManager.GetString("Enum_ChangesetEntityType_Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связь.
+        /// </summary>
+        public static string Enum_ChangesetEntityType_Relation {
+            get {
+                return ResourceManager.GetString("Enum_ChangesetEntityType_Relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Создано.
+        /// </summary>
+        public static string Enum_ChangesetType_Created {
+            get {
+                return ResourceManager.GetString("Enum_ChangesetType_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалено.
+        /// </summary>
+        public static string Enum_ChangesetType_Removed {
+            get {
+                return ResourceManager.GetString("Enum_ChangesetType_Removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Восстановлено.
+        /// </summary>
+        public static string Enum_ChangesetType_Restored {
+            get {
+                return ResourceManager.GetString("Enum_ChangesetType_Restored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Изменено.
+        /// </summary>
+        public static string Enum_ChangesetType_Updated {
+            get {
+                return ResourceManager.GetString("Enum_ChangesetType_Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to E-mail.
         /// </summary>
         public static string Enum_ContactType_Email {
@@ -448,6 +511,213 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Документ.
+        /// </summary>
+        public static string Enum_MediaType_Document {
+            get {
+                return ResourceManager.GetString("Enum_MediaType_Document", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фото.
+        /// </summary>
+        public static string Enum_MediaType_Photo {
+            get {
+                return ResourceManager.GetString("Enum_MediaType_Photo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фотосфера.
+        /// </summary>
+        public static string Enum_MediaType_Photo360 {
+            get {
+                return ResourceManager.GetString("Enum_MediaType_Photo360", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Видео.
+        /// </summary>
+        public static string Enum_MediaType_Video {
+            get {
+                return ResourceManager.GetString("Enum_MediaType_Video", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string Enum_PageType_Event {
+            get {
+                return ResourceManager.GetString("Enum_PageType_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место.
+        /// </summary>
+        public static string Enum_PageType_Location {
+            get {
+                return ResourceManager.GetString("Enum_PageType_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прочее.
+        /// </summary>
+        public static string Enum_PageType_Other {
+            get {
+                return ResourceManager.GetString("Enum_PageType_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Человек.
+        /// </summary>
+        public static string Enum_PageType_Person {
+            get {
+                return ResourceManager.GetString("Enum_PageType_Person", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Питомец.
+        /// </summary>
+        public static string Enum_PageType_Pet {
+            get {
+                return ResourceManager.GetString("Enum_PageType_Pet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ребенок.
+        /// </summary>
+        public static string Enum_RelationType_Child {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Коллега.
+        /// </summary>
+        public static string Enum_RelationType_Colleague {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Colleague", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string Enum_RelationType_Event {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Участник.
+        /// </summary>
+        public static string Enum_RelationType_EventVisitor {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_EventVisitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Друг.
+        /// </summary>
+        public static string Enum_RelationType_Friend {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Friend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место.
+        /// </summary>
+        public static string Enum_RelationType_Location {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Житель.
+        /// </summary>
+        public static string Enum_RelationType_LocationInhabitant {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_LocationInhabitant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прочее.
+        /// </summary>
+        public static string Enum_RelationType_Other {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Хозяин.
+        /// </summary>
+        public static string Enum_RelationType_Owner {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Owner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Родитель.
+        /// </summary>
+        public static string Enum_RelationType_Parent {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Parent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Питомец.
+        /// </summary>
+        public static string Enum_RelationType_Pet {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Pet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Супруг.
+        /// </summary>
+        public static string Enum_RelationType_Spouse {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_Spouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Приемный ребенок.
+        /// </summary>
+        public static string Enum_RelationType_StepChild {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_StepChild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Приемный родитель.
+        /// </summary>
+        public static string Enum_RelationType_StepParent {
+            get {
+                return ResourceManager.GetString("Enum_RelationType_StepParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Новичок.
         /// </summary>
         public static string Enum_SkillProficiency_Beginner {
@@ -471,6 +741,78 @@ namespace Bonsai.Localization {
         public static string Enum_SkillProficiency_Profound {
             get {
                 return ResourceManager.GetString("Enum_SkillProficiency_Profound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Предки.
+        /// </summary>
+        public static string Enum_TreeKind_Ancestors {
+            get {
+                return ResourceManager.GetString("Enum_TreeKind_Ancestors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Семья.
+        /// </summary>
+        public static string Enum_TreeKind_CloseFamily {
+            get {
+                return ResourceManager.GetString("Enum_TreeKind_CloseFamily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Потомки.
+        /// </summary>
+        public static string Enum_TreeKind_Descendants {
+            get {
+                return ResourceManager.GetString("Enum_TreeKind_Descendants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Полное.
+        /// </summary>
+        public static string Enum_TreeKind_FullTree {
+            get {
+                return ResourceManager.GetString("Enum_TreeKind_FullTree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Администратор.
+        /// </summary>
+        public static string Enum_UserRole_Admin {
+            get {
+                return ResourceManager.GetString("Enum_UserRole_Admin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Редактор.
+        /// </summary>
+        public static string Enum_UserRole_Editor {
+            get {
+                return ResourceManager.GetString("Enum_UserRole_Editor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Новый.
+        /// </summary>
+        public static string Enum_UserRole_Unvalidated {
+            get {
+                return ResourceManager.GetString("Enum_UserRole_Unvalidated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь.
+        /// </summary>
+        public static string Enum_UserRole_User {
+            get {
+                return ResourceManager.GetString("Enum_UserRole_User", resourceCulture);
             }
         }
         

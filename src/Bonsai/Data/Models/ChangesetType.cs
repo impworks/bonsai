@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Bonsai.Data.Models
+﻿namespace Bonsai.Data.Models
 {
     /// <summary>
     /// Kind of the change.
@@ -10,25 +8,21 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// The entity has been created.
         /// </summary>
-        [Description("Создано")]
         Created,
 
         /// <summary>
         /// The entity has been updated.
         /// </summary>
-        [Description("Изменено")]
         Updated,
 
         /// <summary>
         /// The entity has been removed.
         /// </summary>
-        [Description("Удалено")]
         Removed,
 
         /// <summary>
         /// The previous changeset has been reverted.
         /// </summary>
-        [Description("Восстановлено")]
         Restored
     }
 }

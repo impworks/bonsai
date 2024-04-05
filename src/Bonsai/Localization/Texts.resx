@@ -1125,4 +1125,118 @@
   <data name="Global_NotSelected" xml:space="preserve">
     <value>Не выбрано</value>
   </data>
+  <data name="Enum_ChangesetEntityType_Media" xml:space="preserve">
+    <value>Медиа</value>
+  </data>
+  <data name="Enum_ChangesetEntityType_Page" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+  <data name="Enum_ChangesetEntityType_Relation" xml:space="preserve">
+    <value>Связь</value>
+  </data>
+  <data name="Enum_ChangesetType_Created" xml:space="preserve">
+    <value>Создано</value>
+  </data>
+  <data name="Enum_ChangesetType_Removed" xml:space="preserve">
+    <value>Удалено</value>
+  </data>
+  <data name="Enum_ChangesetType_Restored" xml:space="preserve">
+    <value>Восстановлено</value>
+  </data>
+  <data name="Enum_ChangesetType_Updated" xml:space="preserve">
+    <value>Изменено</value>
+  </data>
+  <data name="Enum_MediaType_Document" xml:space="preserve">
+    <value>Документ</value>
+  </data>
+  <data name="Enum_MediaType_Photo" xml:space="preserve">
+    <value>Фото</value>
+  </data>
+  <data name="Enum_MediaType_Photo360" xml:space="preserve">
+    <value>Фотосфера</value>
+  </data>
+  <data name="Enum_MediaType_Video" xml:space="preserve">
+    <value>Видео</value>
+  </data>
+  <data name="Enum_PageType_Event" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="Enum_PageType_Location" xml:space="preserve">
+    <value>Место</value>
+  </data>
+  <data name="Enum_PageType_Other" xml:space="preserve">
+    <value>Прочее</value>
+  </data>
+  <data name="Enum_PageType_Person" xml:space="preserve">
+    <value>Человек</value>
+  </data>
+  <data name="Enum_PageType_Pet" xml:space="preserve">
+    <value>Питомец</value>
+  </data>
+  <data name="Enum_RelationType_Child" xml:space="preserve">
+    <value>Ребенок</value>
+  </data>
+  <data name="Enum_RelationType_Colleague" xml:space="preserve">
+    <value>Коллега</value>
+  </data>
+  <data name="Enum_RelationType_Event" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="Enum_RelationType_EventVisitor" xml:space="preserve">
+    <value>Участник</value>
+  </data>
+  <data name="Enum_RelationType_Friend" xml:space="preserve">
+    <value>Друг</value>
+  </data>
+  <data name="Enum_RelationType_Location" xml:space="preserve">
+    <value>Место</value>
+  </data>
+  <data name="Enum_RelationType_LocationInhabitant" xml:space="preserve">
+    <value>Житель</value>
+  </data>
+  <data name="Enum_RelationType_Other" xml:space="preserve">
+    <value>Прочее</value>
+  </data>
+  <data name="Enum_RelationType_Owner" xml:space="preserve">
+    <value>Хозяин</value>
+  </data>
+  <data name="Enum_RelationType_Parent" xml:space="preserve">
+    <value>Родитель</value>
+  </data>
+  <data name="Enum_RelationType_Pet" xml:space="preserve">
+    <value>Питомец</value>
+  </data>
+  <data name="Enum_RelationType_Spouse" xml:space="preserve">
+    <value>Супруг</value>
+  </data>
+  <data name="Enum_RelationType_StepChild" xml:space="preserve">
+    <value>Приемный ребенок</value>
+  </data>
+  <data name="Enum_RelationType_StepParent" xml:space="preserve">
+    <value>Приемный родитель</value>
+  </data>
+  <data name="Enum_TreeKind_Ancestors" xml:space="preserve">
+    <value>Предки</value>
+  </data>
+  <data name="Enum_TreeKind_CloseFamily" xml:space="preserve">
+    <value>Семья</value>
+  </data>
+  <data name="Enum_TreeKind_Descendants" xml:space="preserve">
+    <value>Потомки</value>
+  </data>
+  <data name="Enum_TreeKind_FullTree" xml:space="preserve">
+    <value>Полное</value>
+  </data>
+  <data name="Enum_UserRole_Admin" xml:space="preserve">
+    <value>Администратор</value>
+  </data>
+  <data name="Enum_UserRole_Editor" xml:space="preserve">
+    <value>Редактор</value>
+  </data>
+  <data name="Enum_UserRole_Unvalidated" xml:space="preserve">
+    <value>Новый</value>
+  </data>
+  <data name="Enum_UserRole_User" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
 </root>

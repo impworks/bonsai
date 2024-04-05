@@ -10,11 +10,11 @@ using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Admin.ViewModels.Relations;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Code.DomainModel.Media;
+using Bonsai.Code.Services;
 using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
-using Impworks.Utils.Format;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Hosting;
@@ -273,7 +273,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 return StringHelper.Coalesce(m.Title, MediaHelper.GetMediaFallbackTitle(m.Type, m.UploadDate));
 
             var rel = chg.EditedRelation;
-            var relType = rel.Type.GetEnumDescription();
+            var relType = rel.Type.GetLocaleEnumDescription();
             return $"{relType} ({rel.Source.Title}, {rel.Destination.Title})";
         }
 
@@ -385,7 +385,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                  .Select(x => new { x.Type })
                                  .FirstOrDefaultAsync();
 
-                return rel?.Type.GetEnumDescription();
+                return rel?.Type.GetLocaleEnumDescription();
             }
         }
 

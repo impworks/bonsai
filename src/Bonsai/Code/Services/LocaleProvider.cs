@@ -91,9 +91,16 @@ namespace Bonsai.Code.Services
         public static string GetLocaleEnumDescription<T>(this T value)
             where T : struct, Enum
         {
-            var typeName = typeof(T).Name;
-            var key = $"Enum_{typeName}_{value}";
-            return Texts.ResourceManager.GetString(key) ?? value.ToString();
+            return GetLocaleEnumDescription(typeof(T), value.ToString());
+        }
+
+        /// <summary>
+        /// Returns a single enum description localized to current language.
+        /// </summary>
+        public static string GetLocaleEnumDescription(Type type, string name)
+        {
+            var key = $"Enum_{type.Name}_{name}";
+            return Texts.ResourceManager.GetString(key) ?? name;
         }
 
         #region Locale implementations

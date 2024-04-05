@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Bonsai.Data.Models
+﻿namespace Bonsai.Data.Models
 {
     /// <summary>
     /// Types of changesets.
@@ -8,21 +6,18 @@ namespace Bonsai.Data.Models
     public enum ChangesetEntityType
     {
         /// <summary>
-        /// A page has been changed
+        /// A page has been changed.
         /// </summary>
-        [Description("Страница")]
         Page,
 
         /// <summary>
-        /// A media file has been changed
+        /// A media file has been changed.
         /// </summary>
-        [Description("Медиа")]
         Media,
 
         /// <summary>
-        /// A relation has been changed
+        /// A relation has been changed.
         /// </summary>
-        [Description("Связь")]
         Relation
     }
 }

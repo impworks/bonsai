@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Bonsai.Data.Models
+﻿namespace Bonsai.Data.Models
 {
     /// <summary>
     /// Known account roles.
@@ -10,25 +8,21 @@ namespace Bonsai.Data.Models
         /// <summary>
         /// Newly registered user.
         /// </summary>
-        [Description("Новый")]
         Unvalidated,
 
         /// <summary>
-        /// Basic user.
+        /// Basic user with read-only rights.
         /// </summary>
-        [Description("Пользователь")]
         User,
 
         /// <summary>
-        /// Page editor.
+        /// User who can edit content, add pages or media.
         /// </summary>
-        [Description("Редактор")]
         Editor,
 
         /// <summary>
-        /// Almighty administator
+        /// Almighty administrator.
         /// </summary>
-        [Description("Администратор")]
         Admin
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace Bonsai.Data.Models
 {
@@ -8,17 +7,25 @@ namespace Bonsai.Data.Models
     /// </summary>
     public enum MediaType
     {
-        [Description("Фото")]
+        /// <summary>
+        /// Static photo.
+        /// </summary>
         Photo,
 
-        [Description("Фотосфера")]
+        /// <summary>
+        /// Photosphere.
+        /// </summary>
         [Obsolete("Not yet implemented")]
         Photo360,
 
-        [Description("Видео")]
+        /// <summary>
+        /// Video.
+        /// </summary>
         Video,
 
-        [Description("Документ")]
+        /// <summary>
+        /// PDF or other file.
+        /// </summary>
         Document
     }
 }
