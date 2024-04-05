@@ -1345,179 +1345,245 @@
     <comment>{0} = entity type</comment>
   </data>
   <data name="Admin_Changesets_Media_Date" xml:space="preserve">
-      <value>Дата</value>
+    <value>Дата</value>
   </data>
   <data name="Admin_Changesets_Media_Description" xml:space="preserve">
-      <value>Описание</value>
+    <value>Описание</value>
   </data>
   <data name="Admin_Changesets_Media_Location" xml:space="preserve">
-      <value>Место</value>
+    <value>Место</value>
   </data>
   <data name="Admin_Changesets_Media_Event" xml:space="preserve">
-      <value>Событие</value>
+    <value>Событие</value>
   </data>
   <data name="Admin_Changesets_Media_DepictedEntities" xml:space="preserve">
-      <value>Отметки</value>
+    <value>Отметки</value>
   </data>
   <data name="Admin_Changesets_Page_Title" xml:space="preserve">
-      <value>Название</value>
+    <value>Название</value>
   </data>
   <data name="Admin_Changesets_Page_Photo" xml:space="preserve">
-      <value>Фото</value>
+    <value>Фото</value>
   </data>
   <data name="Admin_Changesets_Page_Type" xml:space="preserve">
-      <value>Тип</value>
+    <value>Тип</value>
   </data>
   <data name="Admin_Changesets_Page_Text" xml:space="preserve">
-      <value>Текст</value>
+    <value>Текст</value>
   </data>
   <data name="Admin_Changesets_Page_Aliases" xml:space="preserve">
-      <value>Псевдонимы</value>
+    <value>Псевдонимы</value>
   </data>
   <data name="Admin_Changesets_Page_Facts" xml:space="preserve">
-      <value>Факты</value>
+    <value>Факты</value>
   </data>
   <data name="Admin_Changesets_Relation_Destination" xml:space="preserve">
-      <value>Основная страница</value>
+    <value>Основная страница</value>
   </data>
   <data name="Admin_Changesets_Relation_Type" xml:space="preserve">
-      <value>Тип связи</value>
+    <value>Тип связи</value>
   </data>
   <data name="Admin_Changesets_Relation_Source" xml:space="preserve">
-      <value>Связанная страница</value>
+    <value>Связанная страница</value>
   </data>
   <data name="Admin_Changesets_Relation_SourceM" xml:space="preserve">
-      <value>Связанные страницы</value>
+    <value>Связанные страницы</value>
   </data>
   <data name="Admin_Changesets_Relation_Event" xml:space="preserve">
-      <value>Событие</value>
+    <value>Событие</value>
   </data>
   <data name="Admin_Changesets_Relation_Start" xml:space="preserve">
-      <value>Начало</value>
+    <value>Начало</value>
   </data>
   <data name="Admin_Changesets_Relation_End" xml:space="preserve">
-      <value>Конец</value>
+    <value>Конец</value>
   </data>
   <data name="Admin_Tree_Unknown" xml:space="preserve">
-      <value>Неизвестно</value>
+    <value>Неизвестно</value>
   </data>
   <data name="Admin_Validation_Page_UnknownFact" xml:space="preserve">
-      <value>Тип факта {0} не существует!</value>
+    <value>Тип факта {0} не существует!</value>
   </data>
   <data name="Admin_Validation_Page_IncorrectFact" xml:space="preserve">
-      <value>Некорректно заполнен факт {0}!</value>
+    <value>Некорректно заполнен факт {0}!</value>
   </data>
   <data name="Admin_Validation_Page_BadFactsFormat" xml:space="preserve">
-      <value>Факты имеют некорректный формат!</value>
+    <value>Факты имеют некорректный формат!</value>
   </data>
   <data name="Admin_Validation_Page_SpouseLifetimesNoOverlap" xml:space="preserve">
-      <value>Дата рождения одного супруга ({0}) не может быть позже даты смерти другого ({1})</value>
-      <comment>{0} = birth date, {1} = death date</comment>
+    <value>Дата рождения одного супруга ({0}) не может быть позже даты смерти другого ({1})</value>
+    <comment>{0} = birth date, {1} = death date</comment>
   </data>
   <data name="Admin_Validation_Page_MarriageExceedsLifetime" xml:space="preserve">
-      <value>Брак должен быть ограничен временем жизни супруга: {0}</value>
-      <comment>{0} = life duration</comment>
+    <value>Брак должен быть ограничен временем жизни супруга: {0}</value>
+    <comment>{0} = life duration</comment>
   </data>
   <data name="Admin_Validation_Page_BirthAfterDeath" xml:space="preserve">
-      <value>Дата рождения не может быть позже даты смерти</value>
+    <value>Дата рождения не может быть позже даты смерти</value>
   </data>
   <data name="Admin_Validation_Page_ParentYoungerThanChild" xml:space="preserve">
-      <value>Родитель не может быть младше ребенка</value>
+    <value>Родитель не может быть младше ребенка</value>
   </data>
   <data name="Admin_Validation_Page_ParentLoop" xml:space="preserve">
-      <value>Два человека не могут быть родителями друг для друга</value>
+    <value>Два человека не могут быть родителями друг для друга</value>
   </data>
   <data name="Admin_Validation_Page_ManyBioParents" xml:space="preserve">
-      <value>У человека не может быть более двух биологических родителей</value>
+    <value>У человека не может быть более двух биологических родителей</value>
   </data>
   <data name="Admin_Validation_Page_BioParentsSameGender" xml:space="preserve">
-      <value>Биологические родители не могут быть одного пола</value>
+    <value>Биологические родители не могут быть одного пола</value>
   </data>
   <data name="Admin_Media_UnknownFileType" xml:space="preserve">
-      <value>Неизвестный тип файла!</value>
+    <value>Неизвестный тип файла!</value>
   </data>
   <data name="Admin_Users_NotFound" xml:space="preserve">
-      <value>Пользователь не найден</value>
+    <value>Пользователь не найден</value>
   </data>
   <data name="Admin_Media_NotFound" xml:space="preserve">
-      <value>Медиа-файл не найден</value>
+    <value>Медиа-файл не найден</value>
   </data>
   <data name="Admin_Users_Forbidden" xml:space="preserve">
-      <value>Операция запрещена для данного пользователя!</value>
+    <value>Операция запрещена для данного пользователя!</value>
   </data>
   <data name="Admin_Validation_IncorrectDate" xml:space="preserve">
-      <value>Введите корректную дату.</value>
+    <value>Введите корректную дату.</value>
   </data>
   <data name="Admin_Pages_NotFound" xml:space="preserve">
-      <value>Страница не существует!</value>
+    <value>Страница не существует!</value>
   </data>
   <data name="Admin_Validation_Page_TitleAlreadyExists" xml:space="preserve">
-      <value>Страница с таким названием уже существует.</value>
+    <value>Страница с таким названием уже существует.</value>
   </data>
   <data name="Admin_Validation_Page_InvalidAliases" xml:space="preserve">
-      <value>Ссылки указаны неверно!</value>
+    <value>Ссылки указаны неверно!</value>
   </data>
   <data name="Admin_Validation_Page_AliasesAlreadyExist" xml:space="preserve">
-      <value>Ссылки уже заняты другими страницами: {0}</value>
+    <value>Ссылки уже заняты другими страницами: {0}</value>
   </data>
   <data name="Admin_Validation_Page_PhotoNotFound" xml:space="preserve">
-      <value>Фотография не найдена!</value>
+    <value>Фотография не найдена!</value>
   </data>
   <data name="Admin_Validation_Page_InvalidPhoto" xml:space="preserve">
-      <value>Медиа-файл не является фотографией!</value>
+    <value>Медиа-файл не является фотографией!</value>
   </data>
   <data name="Admin_Relations_NotFound" xml:space="preserve">
-      <value>Связь не найдена</value>
+    <value>Связь не найдена</value>
   </data>
   <data name="Admin_Validation_Relation_PageNotSelected" xml:space="preserve">
-      <value>Выберите страницу</value>
+    <value>Выберите страницу</value>
   </data>
   <data name="Admin_Validation_Relation_OnlyOneSource" xml:space="preserve">
-      <value>При редактировании может быть указана только одна страница</value>
+    <value>При редактировании может быть указана только одна страница</value>
   </data>
   <data name="Admin_Validation_Relation_RelationNotAllowedForPageTypes" xml:space="preserve">
-      <value>Тип связи недопустимм для данных страниц</value>
+    <value>Тип связи недопустимм для данных страниц</value>
   </data>
   <data name="Admin_Validation_Relation_EventPageRequired" xml:space="preserve">
-      <value>Требуется страница события</value>
+    <value>Требуется страница события</value>
   </data>
   <data name="Admin_Validation_Relation_EventPageNotAllowedForType" xml:space="preserve">
-      <value>Событие нельзя привязать к данному типу связи</value>
+    <value>Событие нельзя привязать к данному типу связи</value>
   </data>
   <data name="Admin_Validation_Relation_DateNotAllowedForType" xml:space="preserve">
-      <value>Дату нельзя указать для данного типа связи</value>
+    <value>Дату нельзя указать для данного типа связи</value>
   </data>
   <data name="Admin_Validation_Relation_StartAfterEnd" xml:space="preserve">
-      <value>Дата начала не может быть больше даты конца</value>
+    <value>Дата начала не может быть больше даты конца</value>
   </data>
   <data name="Admin_Validation_Relation_AlreadyExists" xml:space="preserve">
-      <value>Такая связь уже существует!</value>
+    <value>Такая связь уже существует!</value>
   </data>
   <data name="Admin_Users_CannotRemoveSelfMessage" xml:space="preserve">
-      <value>Нельзя удалить собственную учетную запись</value>
+    <value>Нельзя удалить собственную учетную запись</value>
   </data>
   <data name="Admin_Users_CannotRemoveMessage" xml:space="preserve">
-      <value>Нельзя удалить эту учетную запись</value>
+    <value>Нельзя удалить эту учетную запись</value>
   </data>
   <data name="Admin_Users_RemoveFailedMessage" xml:space="preserve">
-      <value>Не удалось удалить учетную запись!</value>
+    <value>Не удалось удалить учетную запись!</value>
   </data>
   <data name="Admin_Users_PasswordChangeFailedMessage" xml:space="preserve">
-      <value>Не удалось сменить пароль, попробуйте еще раз.</value>
+    <value>Не удалось сменить пароль, попробуйте еще раз.</value>
   </data>
   <data name="Admin_Validation_User_EmailExists" xml:space="preserve">
-      <value>Адрес почты уже используется другим пользователем</value>
+    <value>Адрес почты уже используется другим пользователем</value>
   </data>
   <data name="Admin_Validation_User_PasswordTooShort" xml:space="preserve">
-      <value>Пароль должен содержать как минимум 6 символов.</value>
+    <value>Пароль должен содержать как минимум 6 символов.</value>
   </data>
   <data name="Admin_Validation_User_PasswordDoesNotMatch" xml:space="preserve">
-      <value>Пароли не совпадают.</value>
+    <value>Пароли не совпадают.</value>
   </data>
   <data name="Admin_Validation_User_InvalidBirthday" xml:space="preserve">
-      <value>Дата рождения указана неверно.</value>
+    <value>Дата рождения указана неверно.</value>
   </data>
   <data name="Admin_ForbiddenInDemoMessage" xml:space="preserve">
-      <value>Запрещено в демо-режиме</value>
+    <value>Запрещено в демо-режиме</value>
+  </data>
+  <data name="Admin_Changesets_Facts_Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="Admin_Changesets_Facts_GenderM" xml:space="preserve">
+    <value>мужской</value>
+  </data>
+  <data name="Admin_Changesets_Facts_GenderF" xml:space="preserve">
+    <value>женский</value>
+  </data>
+  <data name="Admin_Changesets_Details_Title" xml:space="preserve">
+    <value>Просмотр правки</value>
+  </data>
+  <data name="Admin_Changesets_Details_Main" xml:space="preserve">
+    <value>Основные данные</value>
+  </data>
+  <data name="Admin_Changesets_Details_Action" xml:space="preserve">
+    <value>Действие</value>
+  </data>
+  <data name="Admin_Changesets_Details_Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="Admin_Changesets_Details_Contents" xml:space="preserve">
+    <value>Содержание</value>
+  </data>
+  <data name="Admin_Changesets_Details_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Admin_Changesets_Details_Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Admin_Changesets_Details_Revert" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="Admin_Changesets_Details_ViewCurrent" xml:space="preserve">
+    <value>Текущая версия</value>
+  </data>
+  <data name="DateFormat_Changeset" xml:space="preserve">
+    <value>f</value>
+  </data>
+  <data name="Admin_Changesets_Index_Empty" xml:space="preserve">
+    <value>Не создано ни одной правки.</value>
+  </data>
+  <data name="Admin_Changesets_Index_NotFound" xml:space="preserve">
+    <value>По запросу не найдено ни одной правки.</value>
+  </data>
+  <data name="Admin_Changesets_Index_Title" xml:space="preserve">
+    <value>Список правок</value>
+  </data>
+  <data name="Admin_Global_ClearFilter" xml:space="preserve">
+    <value>Снять фильтр</value>
+  </data>
+  <data name="Admin_Global_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Admin_Global_Find" xml:space="preserve">
+    <value>Найти</value>
+  </data>
+  <data name="Admin_Global_Title" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Admin_Global_Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="Admin_Global_View" xml:space="preserve">
+    <value>Просмотреть</value>
   </data>
 </root>

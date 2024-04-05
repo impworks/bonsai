@@ -1,6 +1,8 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Changesets
+@using Bonsai.Code.Services
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Humanizer
 @using Impworks.Utils.Format
 @using Impworks.Utils.Strings
@@ -8,13 +10,13 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model ChangesetsListVM
 @{
-    ViewBag.Title = "Список правок";
+    ViewBag.Title = Texts.Admin_Changesets_Index_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Changesets", new { area = "Admin" });
 }
 
-<h1>Список правок</h1>
+<h1>@Texts.Admin_Changesets_Index_Title</h1>
 
 <div class="clearfix">
     <div class="float-right">
@@ -54,8 +56,8 @@
                 request = Model.Request,
                 propName = nameof(ChangesetsListRequestVM.EntityTypes)
             })
-            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(ChangesetsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Название" />
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(ChangesetsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="@Texts.Global_Title" />
+            <button class="btn btn-sm btn-outline-secondary" type="submit">@Texts.Global_Find</button>
         </form>
     </div>
 </div>
@@ -66,11 +68,11 @@
         <thead>
             <tr>
                 <th width="1px"></th>
-                <th width="30%">Название</th>
-                <th width="15%">Тип</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Date), title = "Дата" })</th>
-                <th width="15%">Действие</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Author), title = "Автор" })</th>
+                <th width="30%">@Texts.Admin_Global_Title</th>
+                <th width="15%">@Texts.Admin_Global_Type</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Date), title = Texts.Admin_Global_Date })</th>
+                <th width="15%">@Texts.Admin_Changesets_Details_Action</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(ChangesetTitleVM.Author), title = Texts.Admin_Changesets_Details_Author })</th>
                 <th width="1px"></th>
             </tr>
         </thead>
@@ -79,12 +81,12 @@
             {
                 <tr class="admin-row">
                     <td class="admin-full-image">
-                        <a href="@Url.Action("Details", "Changesets", new {area = "Admin", id = c.Id})" title="Просмотреть">
+                        <a href="@Url.Action("Details", "Changesets", new {area = "Admin", id = c.Id})" title="@Texts.Admin_Global_View">
                             <div class="image" style="background-image: url('@Url.Content(c.EntityThumbnailUrl)')"></div>
                         </a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Details", "Changesets", new {area = "Admin", id = c.Id})" title="Просмотреть">
+                        <a href="@Url.Action("Details", "Changesets", new {area = "Admin", id = c.Id})" title="@Texts.Admin_Global_View">
                             @(StringHelper.Coalesce(c.EntityTitle, "—"))
                         </a>
                     </td>
@@ -97,11 +99,11 @@
                                 ChangesetEntityType.Media => Url.Action("Update", "Media", new { area = "Admin", id = c.EntityId }),
                                 ChangesetEntityType.Relation => Url.Action("Update", "Relations", new { area = "Admin", id = c.EntityId }),
                             };
-                            <a href="@editUrl">@c.EntityType.GetEnumDescription()</a>
+                            <a href="@editUrl">@c.EntityType.GetLocaleEnumDescription()</a>
                         }
                         else
                         {
-                            <text>@c.EntityType.GetEnumDescription()</text>
+                            <text>@c.EntityType.GetLocaleEnumDescription()</text>
                         }
                     </td>
                     <td><span title="@c.Date.LocalDateTime.ToLocalizedFullDate()">@c.Date.Humanize()</span></td>
@@ -111,7 +113,7 @@
                         @if (c.CanRevert)
                         {
                             <a href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = c.Id})">
-                                <span class="fa fa-history" title="Восстановить"></span>
+                                <span class="fa fa-history" title="@Texts.Admin_Changesets_Details_Revert"></span>
                             </a>
                         }
                         @if (c.EntityExists)
@@ -126,7 +128,7 @@
                             if (outUrl != null)
                             {
                                 <a href="@outUrl" target="_blank">
-                                    <span class="fa fa-external-link-square" title="Просмотреть текущую версию"></span>
+                                    <span class="fa fa-external-link-square" title="@Texts.Admin_Changesets_Details_ViewCurrent"></span>
                                 </a>
                             }
                         }
@@ -140,15 +142,11 @@ else
 {
     if(Model.Request.IsEmpty())
     {
-        <div class="alert alert-info">
-            Не создано ни одной правки.
-        </div>
+        <div class="alert alert-info">@Texts.Admin_Changesets_Index_Empty</div>
     }
     else
     {
-        <div class="alert alert-info">
-            По запросу не найдено ни одной правки.
-        </div>
+        <div class="alert alert-info">@Texts.Admin_Changesets_Index_NotFound</div>
     }
 }
 
