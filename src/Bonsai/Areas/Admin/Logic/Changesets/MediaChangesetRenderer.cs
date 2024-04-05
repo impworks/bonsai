@@ -7,6 +7,7 @@ using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Dictionary;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -61,12 +62,12 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             var deps = depicted.Select(x => string.Format("{0} ({1})", namesLookup[x.PageId ?? Guid.Empty] ?? x.ObjectTitle, x.Coordinates));
 
-            Add(nameof(MediaEditorVM.Title), "Название", data.Title);
-            Add(nameof(MediaEditorVM.Date), "Дата", data.Date != null ? FuzzyDate.Parse(data.Date).ReadableDate : null);
-            Add(nameof(MediaEditorVM.Description), "Описание", data.Description);
-            Add(nameof(MediaEditorVM.Location), "Место", namesLookup.TryGetValue(locId) ?? data.Location);
-            Add(nameof(MediaEditorVM.Event), "Событие", namesLookup.TryGetValue(eventId) ?? data.Event);
-            Add(nameof(MediaEditorVM.DepictedEntities), "Отметки", depicted.Length == 0 ? null : ViewHelper.RenderBulletList(_html, deps));
+            Add(nameof(MediaEditorVM.Title), Texts.Admin_Changesets_Media_Title, data.Title);
+            Add(nameof(MediaEditorVM.Date), Texts.Admin_Changesets_Media_Date, data.Date != null ? FuzzyDate.Parse(data.Date).ReadableDate : null);
+            Add(nameof(MediaEditorVM.Description), Texts.Admin_Changesets_Media_Description, data.Description);
+            Add(nameof(MediaEditorVM.Location), Texts.Admin_Changesets_Media_Location, namesLookup.TryGetValue(locId) ?? data.Location);
+            Add(nameof(MediaEditorVM.Event), Texts.Admin_Changesets_Media_Event, namesLookup.TryGetValue(eventId) ?? data.Event);
+            Add(nameof(MediaEditorVM.DepictedEntities), Texts.Admin_Changesets_Media_DepictedEntities, depicted.Length == 0 ? null : ViewHelper.RenderBulletList(_html, deps));
 
             return result;
 

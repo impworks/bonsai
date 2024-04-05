@@ -8,6 +8,7 @@ using Bonsai.Code.Utils.Date;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Dictionary;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -56,17 +57,17 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                        .Where(x => pageIds.Contains(x.Id))
                                        .ToDictionaryAsync(x => x.Id, x => x.Title);
 
-            Add(nameof(RelationEditorVM.DestinationId), "Основная страница", namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
-            Add(nameof(RelationEditorVM.Type), "Тип связи", string.IsNullOrEmpty(json) ? null : data.Type.GetLocaleEnumDescription());
+            Add(nameof(RelationEditorVM.DestinationId), Texts.Admin_Changesets_Relation_Destination, namesLookup.TryGetValue(data.DestinationId ?? Guid.Empty));
+            Add(nameof(RelationEditorVM.Type), Texts.Admin_Changesets_Relation_Type, string.IsNullOrEmpty(json) ? null : data.Type.GetLocaleEnumDescription());
 
             if (data.SourceIds.Length == 0)
             {
-                Add(nameof(RelationEditorVM.SourceIds), "Связанная страница", null);
+                Add(nameof(RelationEditorVM.SourceIds), Texts.Admin_Changesets_Relation_Source, null);
             }
             else if (data.SourceIds.Length == 1)
             {
                 var name = namesLookup.TryGetValue(data.SourceIds[0]);
-                Add(nameof(RelationEditorVM.SourceIds), "Связанная страница", name);
+                Add(nameof(RelationEditorVM.SourceIds), Texts.Admin_Changesets_Relation_Source, name);
             }
             else
             {
@@ -74,12 +75,12 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                     .Select(x => namesLookup.TryGetValue(x))
                                     .Where(x => !string.IsNullOrEmpty(x));
 
-                Add(nameof(RelationEditorVM.SourceIds), "Связанные страницы", ViewHelper.RenderBulletList(_html, pageNames));
+                Add(nameof(RelationEditorVM.SourceIds), Texts.Admin_Changesets_Relation_SourceM, ViewHelper.RenderBulletList(_html, pageNames));
             }
 
-            Add(nameof(RelationEditorVM.EventId), "Событие", namesLookup.TryGetValue(data.EventId ?? Guid.Empty));
-            Add(nameof(RelationEditorVM.DurationStart), "Начало", FuzzyDate.TryParse(data.DurationStart)?.ReadableDate);
-            Add(nameof(RelationEditorVM.DurationEnd), "Конец", FuzzyDate.TryParse(data.DurationEnd)?.ReadableDate);
+            Add(nameof(RelationEditorVM.EventId), Texts.Admin_Changesets_Relation_Event, namesLookup.TryGetValue(data.EventId ?? Guid.Empty));
+            Add(nameof(RelationEditorVM.DurationStart), Texts.Admin_Changesets_Relation_Start, FuzzyDate.TryParse(data.DurationStart)?.ReadableDate);
+            Add(nameof(RelationEditorVM.DurationEnd), Texts.Admin_Changesets_Relation_End, FuzzyDate.TryParse(data.DurationEnd)?.ReadableDate);
             
             return result;
 

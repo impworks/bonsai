@@ -11,6 +11,7 @@ using Bonsai.Code.DomainModel.Media;
 using Bonsai.Code.Services;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -54,12 +55,12 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             var photoUrl = GetMediaThumbnailPath(data.MainPhotoKey);
             var facts = await RenderFactsAsync(data.Type, data.Facts);
 
-            Add(nameof(PageEditorVM.Title), "Название", data.Title);
-            Add(nameof(PageEditorVM.MainPhotoKey), "Фото", photoUrl == null ? null : ViewHelper.RenderMediaThumbnail(photoUrl));
-            Add(nameof(PageEditorVM.Type), "Тип", isEmpty ? null :  data.Type.GetLocaleEnumDescription());
-            Add(nameof(PageEditorVM.Description), "Текст", data.Description);
-            Add(nameof(PageEditorVM.Aliases), "Псевдонимы", data.Aliases == null ? null : ViewHelper.RenderBulletList(_html, aliases));
-            Add(nameof(PageEditorVM.Facts), "Факты", facts);
+            Add(nameof(PageEditorVM.Title), Texts.Admin_Changesets_Page_Title, data.Title);
+            Add(nameof(PageEditorVM.MainPhotoKey), Texts.Admin_Changesets_Page_Photo, photoUrl == null ? null : ViewHelper.RenderMediaThumbnail(photoUrl));
+            Add(nameof(PageEditorVM.Type), Texts.Admin_Changesets_Page_Type, isEmpty ? null :  data.Type.GetLocaleEnumDescription());
+            Add(nameof(PageEditorVM.Description), Texts.Admin_Changesets_Page_Text, data.Description);
+            Add(nameof(PageEditorVM.Aliases), Texts.Admin_Changesets_Page_Aliases, data.Aliases == null ? null : ViewHelper.RenderBulletList(_html, aliases));
+            Add(nameof(PageEditorVM.Facts), Texts.Admin_Changesets_Page_Facts, facts);
 
             return result;
 

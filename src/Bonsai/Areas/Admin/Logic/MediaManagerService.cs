@@ -24,6 +24,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Dictionary;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
@@ -125,9 +126,9 @@ namespace Bonsai.Areas.Admin.Logic
 
             var handler = _mediaHandlers.FirstOrDefault(x => x.SupportedMimeTypes.Contains(file.ContentType));
             if(handler == null)
-                throw new UploadException("Неизвестный тип файла!");
+                throw new UploadException(Texts.Admin_Media_UnknownFileType);
 
-            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
+            var user = await _userMgr.GetUserAsync(principal, Texts.Admin_Users_NotFound);
             var paths = await SaveUploadAsync(file, key, handler);
             var tags = await GetTagsForUploadedMedia(vm);
             var meta = await handler.ExtractMetadataAsync(paths.LocalPath, file.ContentType);
@@ -168,7 +169,7 @@ namespace Bonsai.Areas.Admin.Logic
                                  .AsNoTracking()
                                  .Include(x => x.Tags)
                                  .GetAsync(x => x.Id == id && (x.IsDeleted == false || includeDeleted),
-                                           "Медиа-файл не найден");
+                                           Texts.Admin_Media_NotFound);
 
             var taggedIds = media.Tags
                                  .Where(x => x.ObjectId != null)
@@ -211,7 +212,7 @@ namespace Bonsai.Areas.Admin.Logic
             var media = await _db.Media
                                  .Include(x => x.Tags)
                                  .GetAsync(x => x.Id == vm.Id && (x.IsDeleted == false || revertedId != null),
-                                           "Медиа-файл не найден");
+                                           Texts.Admin_Media_NotFound);
 
             var prevTags = media.Tags.ToList();
             var prevVm = media.IsDeleted ? null : await RequestUpdateAsync(vm.Id, revertedId != null);
@@ -241,7 +242,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var media = await _db.Media
                                  .AsNoTracking()
-                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, Texts.Admin_Media_NotFound);
 
             var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);
             
@@ -259,7 +260,7 @@ namespace Bonsai.Areas.Admin.Logic
         {
             var media = await _db.Media
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, "Медиа-файл не найден");
+                                 .GetAsync(x => x.Id == id && x.IsDeleted == false, Texts.Admin_Media_NotFound);
 
             var prevState = await RequestUpdateAsync(id);
             var changeset = await GetChangesetAsync(prevState, null, id, principal, null);
@@ -276,11 +277,11 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveCompletelyAsync(Guid id, ClaimsPrincipal principal)
         {
             if (await _userMgr.IsInRoleAsync(principal, UserRole.Admin) == false)
-                throw new OperationException("Операция запрещена для данного пользователя!");
+                throw new OperationException(Texts.Admin_Users_Forbidden);
             
             var media = await _db.Media
                                  .Include(x => x.Tags)
-                                 .GetAsync(x => x.Id == id, "Медиа-файл не найден");
+                                 .GetAsync(x => x.Id == id, Texts.Admin_Media_NotFound);
             
             _db.MediaTags.RemoveRange(media.Tags);
 
@@ -391,7 +392,7 @@ namespace Bonsai.Areas.Admin.Logic
             var val = new Validator();
 
             if (!string.IsNullOrEmpty(vm.Date) && FuzzyDate.TryParse(vm.Date) == null)
-                val.Add(nameof(vm.Date), "Введите корректную дату.");
+                val.Add(nameof(vm.Date), Texts.Admin_Validation_IncorrectDate);
 
             var depictedIds = JsonConvert.DeserializeObject<IEnumerable<MediaTagVM>>(vm.DepictedEntities ?? "[]")
                                          .Select(x => x.PageId)
@@ -411,13 +412,13 @@ namespace Bonsai.Areas.Admin.Logic
                                         .ToHashSetAsync(x => x.Id);
 
                 if (depictedIds.Any(x => x != null && !existing.Contains(x.Value)))
-                    val.Add(nameof(vm.DepictedEntities), "Страница не существует!");
+                    val.Add(nameof(vm.DepictedEntities), Texts.Admin_Pages_NotFound);
 
                 if (locId != null && !existing.Contains(locId.Value))
-                    val.Add(nameof(vm.Location), "Страница не существует!");
+                    val.Add(nameof(vm.Location), Texts.Admin_Pages_NotFound);
 
                 if (evtId != null && !existing.Contains(evtId.Value))
-                    val.Add(nameof(vm.Event), "Страница не существует!");
+                    val.Add(nameof(vm.Event), Texts.Admin_Pages_NotFound);
             }
 
             val.ThrowIfInvalid();
@@ -450,7 +451,7 @@ namespace Bonsai.Areas.Admin.Logic
             if(prev == null && next == null)
                 throw new ArgumentNullException();
 
-            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
+            var user = await _userMgr.GetUserAsync(principal, Texts.Admin_Users_NotFound);
 
             return new Changeset
             {

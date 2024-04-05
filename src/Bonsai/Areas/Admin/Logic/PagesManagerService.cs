@@ -17,6 +17,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Mapster;
 using MapsterMapper;
@@ -197,7 +198,7 @@ namespace Bonsai.Areas.Admin.Logic
                                 .AsNoTracking()
                                 .Include(x => x.MainPhoto)
                                 .Include(x => x.Aliases)
-                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, Texts.Admin_Pages_NotFound);
 
             return _mapper.Map<Page, PageEditorVM>(page);
         }
@@ -216,7 +217,7 @@ namespace Bonsai.Areas.Admin.Logic
                                 .Include(x => x.Aliases)
                                 .Include(x => x.MainPhoto)
                                 .Include(x => x.LivingBeingOverview)
-                                .GetAsync(x => x.Id == pageId, "Страница не найдена");
+                                .GetAsync(x => x.Id == pageId, Texts.Admin_Pages_NotFound);
 
             await _validator.ValidateAsync(page, vm.Facts);
 
@@ -261,7 +262,7 @@ namespace Bonsai.Areas.Admin.Logic
             // todo: figure out why ProjectToType<> does not work in this particular case
             // https://github.com/impworks/bonsai/issues/252
             var page = await _db.Pages
-                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, Texts.Admin_Pages_NotFound);
 
             var isAdmin = await _userMgr.IsInRoleAsync(principal, UserRole.Admin);
 
@@ -278,7 +279,7 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task<Page> RemoveAsync(Guid id, ClaimsPrincipal principal)
         {
             var page = await _db.Pages
-                                .GetAsync(x => x.Id == id && x.IsDeleted == false, "Страница не найдена");
+                                .GetAsync(x => x.Id == id && x.IsDeleted == false, Texts.Admin_Pages_NotFound);
 
             var prev = await RequestUpdateAsync(id, principal, force: true);
             var changeset = await GetChangesetAsync(prev, null, id, principal, null);
@@ -300,10 +301,10 @@ namespace Bonsai.Areas.Admin.Logic
         public async Task RemoveCompletelyAsync(Guid id, ClaimsPrincipal principal)
         {
             if (await _userMgr.IsInRoleAsync(principal, UserRole.Admin) == false)
-                throw new OperationException("Операция запрещена для данного пользователя!");
+                throw new OperationException(Texts.Admin_Users_Forbidden);
             
             var page = await _db.Pages
-                                .GetAsync(x => x.Id == id, "Страница не найдена");
+                                .GetAsync(x => x.Id == id, Texts.Admin_Pages_NotFound);
 
             // changesets
             await _db.Changes.RemoveWhereAsync(x => x.EditedPageId == id);
@@ -488,14 +489,14 @@ namespace Bonsai.Areas.Admin.Logic
                                                     && x.Page.Id != vm.Id);
 
             if (otherPage)
-                val.Add(nameof(PageEditorVM.Title), "Страница с таким названием уже существует.");
+                val.Add(nameof(PageEditorVM.Title), Texts.Admin_Validation_Page_TitleAlreadyExists);
 
             if (!string.IsNullOrEmpty(vm.Aliases))
             {
                 var aliases = TryDeserialize<List<string>>(vm.Aliases)?.Select(x => x.ToLowerInvariant());
                 if (aliases == null)
                 {
-                    val.Add(nameof(PageEditorVM.Aliases), "Ссылки указаны неверно!");
+                    val.Add(nameof(PageEditorVM.Aliases), Texts.Admin_Validation_Page_InvalidAliases);
                 }
                 else
                 {
@@ -505,7 +506,7 @@ namespace Bonsai.Areas.Admin.Logic
                                                 .ToListAsync();
 
                     if (otherAliases.Any())
-                        val.Add(nameof(PageEditorVM.Aliases), "Ссылки уже заняты другими страницами: " + otherAliases.JoinString(", "));
+                        val.Add(nameof(PageEditorVM.Aliases), string.Format(Texts.Admin_Validation_Page_AliasesAlreadyExist, otherAliases.JoinString(", ")));
                 }
             }
                 
@@ -521,7 +522,7 @@ namespace Bonsai.Areas.Admin.Logic
             if(prev == null && next == null)
                 throw new ArgumentNullException(nameof(next), "Either prev or next must be provided.");
 
-            var user = await _userMgr.GetUserAsync(principal, "Пользователь не найден");
+            var user = await _userMgr.GetUserAsync(principal, Texts.Admin_Users_NotFound);
 
             return new Changeset
             {
@@ -548,10 +549,10 @@ namespace Bonsai.Areas.Admin.Logic
                                  .FirstOrDefaultAsync(x => x.Key == key && x.IsDeleted == false);
 
             if(media == null)
-                throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), "Фотография не найдена!");
+                throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), Texts.Admin_Validation_Page_PhotoNotFound);
 
             if(media.Type != MediaType.Photo)
-                throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), "Медиа-файл не является фотографией!");
+                throw new ValidationException(nameof(PageEditorVM.MainPhotoKey), Texts.Admin_Validation_Page_InvalidPhoto);
 
             return media;
         }

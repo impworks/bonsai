@@ -15,6 +15,7 @@ using Bonsai.Code.Services.Search;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Hosting;
@@ -158,7 +159,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
             return new ChangesetDetailsVM
             {
                 Id = chg.Id,
-                Author = chg.Author.FirstName + " " + chg.Author.LastName,
+                Author = string.Format(Texts.Admin_Changesets_AuthorNameFormat, chg.Author.FirstName, chg.Author.LastName),
                 Date = chg.Date,
                 ChangeType = chg.ChangeType,
                 EntityType = chg.EntityType,
@@ -234,7 +235,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                 }
 
                 default:
-                    throw new ArgumentException($"Неизвестный тип сущности: {chg.EntityType}!");
+                    throw new ArgumentException(string.Format(Texts.Admin_Changesets_UnknownEntityMessage, chg.EntityType));
             }
         }
 
@@ -274,7 +275,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
             var rel = chg.EditedRelation;
             var relType = rel.Type.GetLocaleEnumDescription();
-            return $"{relType} ({rel.Source.Title}, {rel.Destination.Title})";
+            return string.Format(Texts.Admin_Changesets_RelationTitleFormat, relType, rel.Source.Title, rel.Destination.Title);
         }
 
         /// <summary>
@@ -341,7 +342,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
                                     .FirstOrDefaultAsync();
 
                 if (user != null)
-                    data.UserTitle = user.FirstName + " " + user.LastName;
+                    data.UserTitle = string.Format(Texts.Admin_Changesets_AuthorNameFormat, user.FirstName, user.LastName);
                 else
                     request.UserId = null;
             }
@@ -375,7 +376,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
 
                 return media == null
                     ? null
-                    : StringHelper.Coalesce(media.Title, "Медиа");
+                    : StringHelper.Coalesce(media.Title, Texts.Admin_Changesets_MediaFallback);
             }
 
             async Task<string> GetRelationTitleAsync()
@@ -414,7 +415,7 @@ namespace Bonsai.Areas.Admin.Logic.Changesets
         {
             config ??= x => x;
             
-            var chg = await config(_db.Changes).GetAsync(x => x.Id == id, "Правка не найдена");
+            var chg = await config(_db.Changes).GetAsync(x => x.Id == id, Texts.Admin_Changesets_NotFound);
             
             var prevQuery = config(_db.Changes);
             if (chg.EditedMediaId != null)

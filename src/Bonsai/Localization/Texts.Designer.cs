@@ -61,11 +61,218 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} {1}.
+        /// </summary>
+        public static string Admin_Changesets_AuthorNameFormat {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_AuthorNameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Эта правка не может быть отменена..
         /// </summary>
         public static string Admin_Changesets_CannotRevertMessage {
             get {
                 return ResourceManager.GetString("Admin_Changesets_CannotRevertMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Admin_Changesets_Media_Date {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Media_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отметки.
+        /// </summary>
+        public static string Admin_Changesets_Media_DepictedEntities {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Media_DepictedEntities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Описание.
+        /// </summary>
+        public static string Admin_Changesets_Media_Description {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Media_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string Admin_Changesets_Media_Event {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Media_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место.
+        /// </summary>
+        public static string Admin_Changesets_Media_Location {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Media_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Admin_Changesets_Media_Title {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Media_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа.
+        /// </summary>
+        public static string Admin_Changesets_MediaFallback {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_MediaFallback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Правка не найдена..
+        /// </summary>
+        public static string Admin_Changesets_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Псевдонимы.
+        /// </summary>
+        public static string Admin_Changesets_Page_Aliases {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Page_Aliases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Факты.
+        /// </summary>
+        public static string Admin_Changesets_Page_Facts {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Page_Facts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фото.
+        /// </summary>
+        public static string Admin_Changesets_Page_Photo {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Page_Photo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Текст.
+        /// </summary>
+        public static string Admin_Changesets_Page_Text {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Page_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Название.
+        /// </summary>
+        public static string Admin_Changesets_Page_Title {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип.
+        /// </summary>
+        public static string Admin_Changesets_Page_Type {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Page_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Основная страница.
+        /// </summary>
+        public static string Admin_Changesets_Relation_Destination {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Relation_Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Конец.
+        /// </summary>
+        public static string Admin_Changesets_Relation_End {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Relation_End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string Admin_Changesets_Relation_Event {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Relation_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связанная страница.
+        /// </summary>
+        public static string Admin_Changesets_Relation_Source {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Relation_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связанные страницы.
+        /// </summary>
+        public static string Admin_Changesets_Relation_SourceM {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Relation_SourceM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Начало.
+        /// </summary>
+        public static string Admin_Changesets_Relation_Start {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Relation_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип связи.
+        /// </summary>
+        public static string Admin_Changesets_Relation_Type {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Relation_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} ({1}, {2}).
+        /// </summary>
+        public static string Admin_Changesets_RelationTitleFormat {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_RelationTitleFormat", resourceCulture);
             }
         }
         
@@ -79,6 +286,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Неизвестный тип сущности: {0}!.
+        /// </summary>
+        public static string Admin_Changesets_UnknownEntityMessage {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_UnknownEntityMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Настройки сохранены..
         /// </summary>
         public static string Admin_Config_SavedMessage {
@@ -88,11 +304,38 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Запрещено в демо-режиме.
+        /// </summary>
+        public static string Admin_ForbiddenInDemoMessage {
+            get {
+                return ResourceManager.GetString("Admin_ForbiddenInDemoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа-файл не найден.
+        /// </summary>
+        public static string Admin_Media_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Media_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Медиа-файл удален..
         /// </summary>
         public static string Admin_Media_RemovedMessage {
             get {
                 return ResourceManager.GetString("Admin_Media_RemovedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Неизвестный тип файла!.
+        /// </summary>
+        public static string Admin_Media_UnknownFileType {
+            get {
+                return ResourceManager.GetString("Admin_Media_UnknownFileType", resourceCulture);
             }
         }
         
@@ -223,6 +466,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Страница не существует!.
+        /// </summary>
+        public static string Admin_Pages_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Pages_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Страница удалена..
         /// </summary>
         public static string Admin_Pages_RemovedMessage {
@@ -250,6 +502,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Связь не найдена.
+        /// </summary>
+        public static string Admin_Relations_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Relations_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Связь удалена..
         /// </summary>
         public static string Admin_Relations_RemovedMessage {
@@ -268,6 +529,33 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Неизвестно.
+        /// </summary>
+        public static string Admin_Tree_Unknown {
+            get {
+                return ResourceManager.GetString("Admin_Tree_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нельзя удалить эту учетную запись.
+        /// </summary>
+        public static string Admin_Users_CannotRemoveMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_CannotRemoveMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нельзя удалить собственную учетную запись.
+        /// </summary>
+        public static string Admin_Users_CannotRemoveSelfMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_CannotRemoveSelfMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Пользователь создан..
         /// </summary>
         public static string Admin_Users_CreatedMessage {
@@ -277,11 +565,38 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Операция запрещена для данного пользователя!.
+        /// </summary>
+        public static string Admin_Users_Forbidden {
+            get {
+                return ResourceManager.GetString("Admin_Users_Forbidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь не найден.
+        /// </summary>
+        public static string Admin_Users_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Users_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Авторизация по паролю запрещена настройками..
         /// </summary>
         public static string Admin_Users_PasswordAuthRestrictedMessage {
             get {
                 return ResourceManager.GetString("Admin_Users_PasswordAuthRestrictedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось сменить пароль, попробуйте еще раз..
+        /// </summary>
+        public static string Admin_Users_PasswordChangeFailedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_PasswordChangeFailedMessage", resourceCulture);
             }
         }
         
@@ -304,11 +619,272 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось удалить учетную запись!.
+        /// </summary>
+        public static string Admin_Users_RemoveFailedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_RemoveFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Пользователь обновлен..
         /// </summary>
         public static string Admin_Users_UpdatedMessage {
             get {
                 return ResourceManager.GetString("Admin_Users_UpdatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите корректную дату..
+        /// </summary>
+        public static string Admin_Validation_IncorrectDate {
+            get {
+                return ResourceManager.GetString("Admin_Validation_IncorrectDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ссылки уже заняты другими страницами: {0}.
+        /// </summary>
+        public static string Admin_Validation_Page_AliasesAlreadyExist {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_AliasesAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Факты имеют некорректный формат!.
+        /// </summary>
+        public static string Admin_Validation_Page_BadFactsFormat {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_BadFactsFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Биологические родители не могут быть одного пола.
+        /// </summary>
+        public static string Admin_Validation_Page_BioParentsSameGender {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_BioParentsSameGender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата рождения не может быть позже даты смерти.
+        /// </summary>
+        public static string Admin_Validation_Page_BirthAfterDeath {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_BirthAfterDeath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Некорректно заполнен факт {0}!.
+        /// </summary>
+        public static string Admin_Validation_Page_IncorrectFact {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_IncorrectFact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ссылки указаны неверно!.
+        /// </summary>
+        public static string Admin_Validation_Page_InvalidAliases {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_InvalidAliases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа-файл не является фотографией!.
+        /// </summary>
+        public static string Admin_Validation_Page_InvalidPhoto {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_InvalidPhoto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to У человека не может быть более двух биологических родителей.
+        /// </summary>
+        public static string Admin_Validation_Page_ManyBioParents {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_ManyBioParents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Брак должен быть ограничен временем жизни супруга: {0}.
+        /// </summary>
+        public static string Admin_Validation_Page_MarriageExceedsLifetime {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_MarriageExceedsLifetime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Два человека не могут быть родителями друг для друга.
+        /// </summary>
+        public static string Admin_Validation_Page_ParentLoop {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_ParentLoop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Родитель не может быть младше ребенка.
+        /// </summary>
+        public static string Admin_Validation_Page_ParentYoungerThanChild {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_ParentYoungerThanChild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фотография не найдена!.
+        /// </summary>
+        public static string Admin_Validation_Page_PhotoNotFound {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_PhotoNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата рождения одного супруга ({0}) не может быть позже даты смерти другого ({1}).
+        /// </summary>
+        public static string Admin_Validation_Page_SpouseLifetimesNoOverlap {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_SpouseLifetimesNoOverlap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница с таким названием уже существует..
+        /// </summary>
+        public static string Admin_Validation_Page_TitleAlreadyExists {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_TitleAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип факта {0} не существует!.
+        /// </summary>
+        public static string Admin_Validation_Page_UnknownFact {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Page_UnknownFact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Такая связь уже существует!.
+        /// </summary>
+        public static string Admin_Validation_Relation_AlreadyExists {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_AlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дату нельзя указать для данного типа связи.
+        /// </summary>
+        public static string Admin_Validation_Relation_DateNotAllowedForType {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_DateNotAllowedForType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие нельзя привязать к данному типу связи.
+        /// </summary>
+        public static string Admin_Validation_Relation_EventPageNotAllowedForType {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_EventPageNotAllowedForType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Требуется страница события.
+        /// </summary>
+        public static string Admin_Validation_Relation_EventPageRequired {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_EventPageRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to При редактировании может быть указана только одна страница.
+        /// </summary>
+        public static string Admin_Validation_Relation_OnlyOneSource {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_OnlyOneSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Выберите страницу.
+        /// </summary>
+        public static string Admin_Validation_Relation_PageNotSelected {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_PageNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип связи недопустимм для данных страниц.
+        /// </summary>
+        public static string Admin_Validation_Relation_RelationNotAllowedForPageTypes {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_RelationNotAllowedForPageTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата начала не может быть больше даты конца.
+        /// </summary>
+        public static string Admin_Validation_Relation_StartAfterEnd {
+            get {
+                return ResourceManager.GetString("Admin_Validation_Relation_StartAfterEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Адрес почты уже используется другим пользователем.
+        /// </summary>
+        public static string Admin_Validation_User_EmailExists {
+            get {
+                return ResourceManager.GetString("Admin_Validation_User_EmailExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата рождения указана неверно..
+        /// </summary>
+        public static string Admin_Validation_User_InvalidBirthday {
+            get {
+                return ResourceManager.GetString("Admin_Validation_User_InvalidBirthday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароли не совпадают..
+        /// </summary>
+        public static string Admin_Validation_User_PasswordDoesNotMatch {
+            get {
+                return ResourceManager.GetString("Admin_Validation_User_PasswordDoesNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароль должен содержать как минимум 6 символов..
+        /// </summary>
+        public static string Admin_Validation_User_PasswordTooShort {
+            get {
+                return ResourceManager.GetString("Admin_Validation_User_PasswordTooShort", resourceCulture);
             }
         }
         
