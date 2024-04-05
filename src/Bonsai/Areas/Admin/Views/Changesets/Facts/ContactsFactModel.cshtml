@@ -1,11 +1,11 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
-@using Impworks.Utils.Format
+@using Bonsai.Code.Services
 @model ContactsFactModel
 
 @Model.ShortTitle:
 <ul>
     @foreach (var item in Model.Values)
     {
-        <li>@item.Type.GetEnumDescription(): @item.Value</li>
+        <li>@item.Type.GetLocaleEnumDescription(): @item.Value</li>
     }
 </ul>

@@ -79,6 +79,141 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Действие.
+        /// </summary>
+        public static string Admin_Changesets_Details_Action {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Автор.
+        /// </summary>
+        public static string Admin_Changesets_Details_Author {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Содержание.
+        /// </summary>
+        public static string Admin_Changesets_Details_Contents {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Contents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Admin_Changesets_Details_Date {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Редактировать.
+        /// </summary>
+        public static string Admin_Changesets_Details_Edit {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Основные данные.
+        /// </summary>
+        public static string Admin_Changesets_Details_Main {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Восстановить.
+        /// </summary>
+        public static string Admin_Changesets_Details_Revert {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Revert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Просмотр правки.
+        /// </summary>
+        public static string Admin_Changesets_Details_Title {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Текущая версия.
+        /// </summary>
+        public static string Admin_Changesets_Details_ViewCurrent {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Details_ViewCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to женский.
+        /// </summary>
+        public static string Admin_Changesets_Facts_GenderF {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Facts_GenderF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to мужской.
+        /// </summary>
+        public static string Admin_Changesets_Facts_GenderM {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Facts_GenderM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Неизвестно.
+        /// </summary>
+        public static string Admin_Changesets_Facts_Unknown {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Facts_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не создано ни одной правки..
+        /// </summary>
+        public static string Admin_Changesets_Index_Empty {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Index_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to По запросу не найдено ни одной правки..
+        /// </summary>
+        public static string Admin_Changesets_Index_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Index_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Список правок.
+        /// </summary>
+        public static string Admin_Changesets_Index_Title {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Index_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Дата.
         /// </summary>
         public static string Admin_Changesets_Media_Date {
@@ -309,6 +444,60 @@ namespace Bonsai.Localization {
         public static string Admin_ForbiddenInDemoMessage {
             get {
                 return ResourceManager.GetString("Admin_ForbiddenInDemoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Снять фильтр.
+        /// </summary>
+        public static string Admin_Global_ClearFilter {
+            get {
+                return ResourceManager.GetString("Admin_Global_ClearFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Admin_Global_Date {
+            get {
+                return ResourceManager.GetString("Admin_Global_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Найти.
+        /// </summary>
+        public static string Admin_Global_Find {
+            get {
+                return ResourceManager.GetString("Admin_Global_Find", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Название.
+        /// </summary>
+        public static string Admin_Global_Title {
+            get {
+                return ResourceManager.GetString("Admin_Global_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип.
+        /// </summary>
+        public static string Admin_Global_Type {
+            get {
+                return ResourceManager.GetString("Admin_Global_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Просмотреть.
+        /// </summary>
+        public static string Admin_Global_View {
+            get {
+                return ResourceManager.GetString("Admin_Global_View", resourceCulture);
             }
         }
         
@@ -1074,6 +1263,15 @@ namespace Bonsai.Localization {
         public static string CalendarPresenter_Wedding_Title {
             get {
                 return ResourceManager.GetString("CalendarPresenter_Wedding_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to f.
+        /// </summary>
+        public static string DateFormat_Changeset {
+            get {
+                return ResourceManager.GetString("DateFormat_Changeset", resourceCulture);
             }
         }
         

@@ -1,4 +1,4 @@
-﻿@using Impworks.Utils.Format
+﻿@using Bonsai.Code.Services
 @model Bonsai.Code.DomainModel.Facts.Models.SkillFactModel
 @Model.ShortTitle:
 <ul>
@@ -8,7 +8,7 @@
             @skill.Name
             @if(skill.Proficiency != null)
             {
-                <span>(@skill.Proficiency.Value.GetEnumDescription())</span>
+                <span>(@skill.Proficiency.Value.GetLocaleEnumDescription())</span>
             }
             @if(skill.Duration != null)
             {

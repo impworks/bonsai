@@ -48,7 +48,7 @@
             <dd class="col-sm-10">@Model.Author</dd>
 
             <dt class="col-sm-2">Дата</dt>
-            <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f") (@Model.Date.ToLocalTime().Humanize())</dd>
+            <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString(Bonsai.Localization.Texts.DateFormat_Changeset) (@Model.Date.ToLocalTime().Humanize())</dd>
         </dl>
     </div>
 </div>

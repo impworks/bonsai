@@ -1,7 +1,7 @@
-﻿@using Impworks.Utils.Format
+﻿@using Bonsai.Code.Services
 @model Bonsai.Code.DomainModel.Facts.Models.BloodTypeFactModel
 <span>
-    @Model.ShortTitle: @Model.Type.GetEnumDescription()
+    @Model.ShortTitle: @Model.Type.GetLocaleEnumDescription()
     @if (Model.RhesusFactor != null)
     {
         <span>(R@(Model.RhesusFactor == true ? "+" : "-"))</span>

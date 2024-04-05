@@ -1,17 +1,17 @@
-﻿@using System.Globalization
+﻿@using Bonsai.Code.Services
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Humanizer
-@using Impworks.Utils.Format
 
 @model Bonsai.Areas.Admin.ViewModels.Changesets.ChangesetDetailsVM
 @{
-    ViewBag.Title = "Просмотр правки";
+    ViewBag.Title = Texts.Admin_Changesets_Details_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 }
 
 <div class="row">
     <div class="col-sm-9">
-        <h1>Основные данные</h1>
+        <h1>@Texts.Admin_Changesets_Details_Main</h1>
         
         @if(!string.IsNullOrEmpty(Model.ThumbnailUrl))
         {
@@ -23,19 +23,19 @@
         }
 
         <dl class="row">
-            <dt class="col-sm-2">Действие</dt>
-            <dd class="col-sm-10">@Model.ChangeType.GetEnumDescription()</dd>
+            <dt class="col-sm-2">@Texts.Admin_Changesets_Details_Action</dt>
+            <dd class="col-sm-10">@Model.ChangeType.GetLocaleEnumDescription()</dd>
 
-            <dt class="col-sm-2">Автор</dt>
+            <dt class="col-sm-2">@Texts.Admin_Changesets_Details_Author</dt>
             <dd class="col-sm-10">@Model.Author</dd>
 
-            <dt class="col-sm-2">Дата</dt>
-            <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString("f", CultureInfo.GetCultureInfo("ru-RU")) (@Model.Date.ToLocalTime().Humanize())</dd>
+            <dt class="col-sm-2">@Texts.Admin_Changesets_Details_Date</dt>
+            <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString(Texts.DateFormat_Changeset) (@Model.Date.ToLocalTime().Humanize())</dd>
         </dl>
 
         @if(Model.Changes.Any())
         {
-            <h1>Содержание</h1>
+            <h1>@Texts.Admin_Changesets_Details_Contents</h1>
 
             <dl class="row changeset">
                 @foreach(var change in Model.Changes)
@@ -50,7 +50,7 @@
 
 @if (Model.CanRevert)
 {
-    <a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = Model.Id})">Восстановить</a>
+    <a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = Model.Id})">@Texts.Admin_Changesets_Details_Revert</a>
 }
 
 @if (Model.EntityExists)
@@ -68,12 +68,12 @@
         _ => null
     };
 
-    <a class="btn btn-warning" href="@editUrl">Редактировать</a>
+    <a class="btn btn-warning" href="@editUrl">@Texts.Admin_Changesets_Details_Edit</a>
 
     if (outUrl != null)
     {
         <a class="ml-4" href="@outUrl" target="_blank">
-            <span class="fa fa-external-link-square"></span> Текущая версия
+            <span class="fa fa-external-link-square"></span> @Texts.Admin_Changesets_Details_ViewCurrent
         </a>
     }
 }

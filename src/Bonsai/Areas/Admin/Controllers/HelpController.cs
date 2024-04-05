@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bonsai.Code.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers
 {
@@ -14,7 +15,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("markdown")]
         public ActionResult Markdown()
         {
-            return View();
+            return View("Markdown" + LocaleProvider.GetLocaleCode());
         }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("guidelines")]
         public ActionResult Guidelines()
         {
-            return View();
+            return View("Guidelines" + LocaleProvider.GetLocaleCode());
         }
     }
 }
