@@ -11,6 +11,7 @@ using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -72,7 +73,7 @@ namespace Bonsai.Areas.Admin.Controllers
         public async Task<ActionResult> Remove(string id, bool confirm)
         {
             await _users.RemoveAsync(id, User);
-            return RedirectToSuccess("Пользователь удален");
+            return RedirectToSuccess(Texts.Admin_Users_RemovedMessage);
         }
 
         /// <summary>
@@ -158,7 +159,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _users.CreateAsync(vm);
                 await _db.SaveChangesAsync();
 
-                return RedirectToSuccess("Пользователь создан");
+                return RedirectToSuccess(Texts.Admin_Users_CreatedMessage);
             }
             catch (ValidationException ex)
             {
@@ -191,7 +192,7 @@ namespace Bonsai.Areas.Admin.Controllers
             try
             {
                 await _users.ResetPasswordAsync(vm);
-                return RedirectToSuccess("Пароль изменен");
+                return RedirectToSuccess(Texts.Admin_Users_PasswordResetMessage);
             }
             catch (ValidationException ex)
             {
@@ -272,7 +273,7 @@ namespace Bonsai.Areas.Admin.Controllers
         private void CheckPasswordAuth()
         {
             if (!_config.GetStaticConfig().Auth.AllowPasswordAuth)
-                throw new OperationException("Авторизация по паролю запрещена настройками.");
+                throw new OperationException(Texts.Admin_Users_PasswordAuthRestrictedMessage);
         }
 
         #endregion

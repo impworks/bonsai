@@ -13,6 +13,7 @@ using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
+using Bonsai.Localization;
 using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -138,7 +139,7 @@ namespace Bonsai.Areas.Admin.Controllers
                 await _media.UpdateAsync(vm, User);
                 await _db.SaveChangesAsync();
 
-                ShowMessage("Медиа-файл обновлен");
+                ShowMessage(Texts.Admin_Media_UpdatedMessage);
 
                 if (vm.SaveAction == MediaEditorSaveAction.SaveAndShowNext)
                 {
@@ -181,7 +182,7 @@ namespace Bonsai.Areas.Admin.Controllers
             
             await _db.SaveChangesAsync();
 
-            return RedirectToSuccess("Медиа-файл удален");
+            return RedirectToSuccess(Texts.Admin_Media_RemovedMessage);
         }
 
         #region Helpers

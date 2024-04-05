@@ -61,6 +61,258 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Эта правка не может быть отменена..
+        /// </summary>
+        public static string Admin_Changesets_CannotRevertMessage {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_CannotRevertMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Правка была отменена..
+        /// </summary>
+        public static string Admin_Changesets_RevertedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_RevertedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Настройки сохранены..
+        /// </summary>
+        public static string Admin_Config_SavedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Config_SavedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа-файл удален..
+        /// </summary>
+        public static string Admin_Media_RemovedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Media_RemovedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа-файл обновлен..
+        /// </summary>
+        public static string Admin_Media_UpdatedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Media_UpdatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Правки.
+        /// </summary>
+        public static string Admin_Menu_Changesets {
+            get {
+                return ResourceManager.GetString("Admin_Menu_Changesets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Настройки.
+        /// </summary>
+        public static string Admin_Menu_Config {
+            get {
+                return ResourceManager.GetString("Admin_Menu_Config", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Главная.
+        /// </summary>
+        public static string Admin_Menu_Dashboard {
+            get {
+                return ResourceManager.GetString("Admin_Menu_Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа.
+        /// </summary>
+        public static string Admin_Menu_Media {
+            get {
+                return ResourceManager.GetString("Admin_Menu_Media", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страницы.
+        /// </summary>
+        public static string Admin_Menu_Pages {
+            get {
+                return ResourceManager.GetString("Admin_Menu_Pages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связи.
+        /// </summary>
+        public static string Admin_Menu_Relations {
+            get {
+                return ResourceManager.GetString("Admin_Menu_Relations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Доступ.
+        /// </summary>
+        public static string Admin_Menu_Users {
+            get {
+                return ResourceManager.GetString("Admin_Menu_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ссылки.
+        /// </summary>
+        public static string Admin_Pages_Caption_Aliases {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Caption_Aliases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Текст.
+        /// </summary>
+        public static string Admin_Pages_Caption_Description {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Caption_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Факты.
+        /// </summary>
+        public static string Admin_Pages_Caption_Facts {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Caption_Facts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фото.
+        /// </summary>
+        public static string Admin_Pages_Caption_Photo {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Caption_Photo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заголовок.
+        /// </summary>
+        public static string Admin_Pages_Caption_Title {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Caption_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница создана..
+        /// </summary>
+        public static string Admin_Pages_CreatedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Pages_CreatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница удалена..
+        /// </summary>
+        public static string Admin_Pages_RemovedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Pages_RemovedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница обновлена..
+        /// </summary>
+        public static string Admin_Pages_UpdatedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Pages_UpdatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связь создана..
+        /// </summary>
+        public static string Admin_Relations_CreatedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Relations_CreatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связь удалена..
+        /// </summary>
+        public static string Admin_Relations_RemovedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Relations_RemovedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связь обновлена..
+        /// </summary>
+        public static string Admin_Relations_UpdatedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Relations_UpdatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь создан..
+        /// </summary>
+        public static string Admin_Users_CreatedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_CreatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Авторизация по паролю запрещена настройками..
+        /// </summary>
+        public static string Admin_Users_PasswordAuthRestrictedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_PasswordAuthRestrictedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароль изменен..
+        /// </summary>
+        public static string Admin_Users_PasswordResetMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_PasswordResetMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь удален..
+        /// </summary>
+        public static string Admin_Users_RemovedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_RemovedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь обновлен..
+        /// </summary>
+        public static string Admin_Users_UpdatedMessage {
+            get {
+                return ResourceManager.GetString("Admin_Users_UpdatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Google.
         /// </summary>
         public static string AuthProvider_Google {
