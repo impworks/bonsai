@@ -574,11 +574,254 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Доступ.
+        /// </summary>
+        public static string Admin_Config_Access {
+            get {
+                return ResourceManager.GetString("Admin_Config_Access", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Любой посетитель может читать.
+        /// </summary>
+        public static string Admin_Config_Access_AnyCanRead {
+            get {
+                return ResourceManager.GetString("Admin_Config_Access_AnyCanRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Только зарегистрированный может читать.
+        /// </summary>
+        public static string Admin_Config_Access_RegisteredCanRead {
+            get {
+                return ResourceManager.GetString("Admin_Config_Access_RegisteredCanRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Название.
+        /// </summary>
+        public static string Admin_Config_Caption {
+            get {
+                return ResourceManager.GetString("Admin_Config_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Показывается в заголовке сайта.
+        /// </summary>
+        public static string Admin_Config_CaptionDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_CaptionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Регистрация.
+        /// </summary>
+        public static string Admin_Config_Registration {
+            get {
+                return ResourceManager.GetString("Admin_Config_Registration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Запрещена.
+        /// </summary>
+        public static string Admin_Config_Registration_Disabled {
+            get {
+                return ResourceManager.GetString("Admin_Config_Registration_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Разрешена.
+        /// </summary>
+        public static string Admin_Config_Registration_Enabled {
+            get {
+                return ResourceManager.GetString("Admin_Config_Registration_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Настройки сохранены..
         /// </summary>
         public static string Admin_Config_SavedMessage {
             get {
                 return ResourceManager.GetString("Admin_Config_SavedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Настройки.
+        /// </summary>
+        public static string Admin_Config_Title {
+            get {
+                return ResourceManager.GetString("Admin_Config_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Внешний вид дерева.
+        /// </summary>
+        public static string Admin_Config_TreeDisplay {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Быстро и грубо.
+        /// </summary>
+        public static string Admin_Config_TreeDisplay_FastAndRough {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDisplay_FastAndRough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не показывать черную ленту на карточках умерших.
+        /// </summary>
+        public static string Admin_Config_TreeDisplay_HideBlackRibbon {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDisplay_HideBlackRibbon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Долго и тщательно.
+        /// </summary>
+        public static string Admin_Config_TreeDisplay_SlowAndThorough {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDisplay_SlowAndThorough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Типы деревьев.
+        /// </summary>
+        public static string Admin_Config_TreeKinds {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Предки.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_Ancestors {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_Ancestors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to все кровные родственники вверх.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_AncestorsDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_AncestorsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Близкие родственники.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_CloseFamily {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_CloseFamily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to на два уровня вокруг, от бабушек до внуков.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_CloseFamilyDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_CloseFamilyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Потомки.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_Descendants {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_Descendants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to все кровные родственники вниз и их родители.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_DescendantsDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_DescendantsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Полное дерево.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_FullTree {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_FullTree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to весь связанный граф родственников.
+        /// </summary>
+        public static string Admin_Config_TreeKinds_FullTreeDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeKinds_FullTreeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;b&gt;Ошибка:&lt;/b&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
+        /// </summary>
+        public static string Admin_Config_ValidationError {
+            get {
+                return ResourceManager.GetString("Admin_Config_ValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Версия.
+        /// </summary>
+        public static string Admin_Config_Version {
+            get {
+                return ResourceManager.GetString("Admin_Config_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сборка.
+        /// </summary>
+        public static string Admin_Config_Version_Build {
+            get {
+                return ResourceManager.GetString("Admin_Config_Version_Build", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Неизвестно.
+        /// </summary>
+        public static string Admin_Config_Version_BuildUnknown {
+            get {
+                return ResourceManager.GetString("Admin_Config_Version_BuildUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to База данных.
+        /// </summary>
+        public static string Admin_Config_Version_Database {
+            get {
+                return ResourceManager.GetString("Admin_Config_Version_Database", resourceCulture);
             }
         }
         
@@ -840,6 +1083,15 @@ namespace Bonsai.Localization {
         public static string Admin_Global_Pick {
             get {
                 return ResourceManager.GetString("Admin_Global_Pick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сохранить.
+        /// </summary>
+        public static string Admin_Global_Save {
+            get {
+                return ResourceManager.GetString("Admin_Global_Save", resourceCulture);
             }
         }
         

@@ -1,11 +1,12 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Code.Services.Config
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Impworks.Utils.Strings
 @inject BonsaiConfigService ConfigService
 @model Bonsai.Areas.Admin.ViewModels.DynamicConfig.UpdateDynamicConfigVM
 @{
-    ViewBag.Title = "Настройки";
+    ViewBag.Title = Texts.Admin_Config_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var config = ConfigService.GetStaticConfig();
@@ -18,64 +19,64 @@
         <form action="@Url.Action("Update")" method="post">
 
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Название</label>
+                <label class="col-sm-3 col-form-label">@Texts.Admin_Config_Caption</label>
                 <div class="col-sm-9">
                     <input asp-for="Title" class="form-control" />
-                    <span class="small text-muted">Показывается в заголовке сайта</span>
+                    <span class="small text-muted">@Texts.Admin_Config_CaptionDescription</span>
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3">Доступ</label>
+                <label class="col-sm-3">@Texts.Admin_Config_Access</label>
                 <div class="col-sm-9">
                     <div class="custom-control custom-radio">
                         <input type="radio" asp-for="AllowGuests" value="True" class="custom-control-input" id="AllowGuestsTrue" />
                         <label class="custom-control-label" for="AllowGuestsTrue">
-                            Любой посетитель может читать
+                            @Texts.Admin_Config_Access_AnyCanRead
                         </label>
                     </div>
                     <div class="custom-control custom-radio">
                         <input type="radio" asp-for="AllowGuests" value="False" class="custom-control-input" id="AllowGuestsFalse" />
                         <label class="custom-control-label" for="AllowGuestsFalse">
-                            Только зарегистрированный может читать
+                            @Texts.Admin_Config_Access_RegisteredCanRead
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3">Регистрация</label>
+                <label class="col-sm-3">@Texts.Admin_Config_Registration</label>
                 <div class="col-sm-9">
                     <div class="custom-control custom-radio">
                         <input type="radio" asp-for="AllowRegistration" value="True" class="custom-control-input" id="AllowRegistrationTrue" />
                         <label class="custom-control-label" for="AllowRegistrationTrue">
-                            Разрешена
+                            @Texts.Admin_Config_Registration_Enabled
                         </label>
                     </div>
                     <div class="custom-control custom-radio">
                         <input type="radio" asp-for="AllowRegistration" value="False" class="custom-control-input" id="AllowRegistrationFalse" />
                         <label class="custom-control-label" for="AllowRegistrationFalse">
-                            Запрещена
+                            @Texts.Admin_Config_Registration_Disabled
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3">Типы деревьев</label>
+                <label class="col-sm-3">@Texts.Admin_Config_TreeKinds</label>
                 <div class="col-sm-9">
-                    @{ TreeKindOption(TreeKind.FullTree, "Полное дерево", "весь связанный граф родственников"); }
-                    @{ TreeKindOption(TreeKind.CloseFamily, "Близкие родственники", "на два уровня вокруг, от бабушек до внуков"); }
-                    @{ TreeKindOption(TreeKind.Ancestors, "Предки", "все кровные родственники вверх"); }
-                    @{ TreeKindOption(TreeKind.Descendants, "Потомки", "все кровные родственники вниз и их родители"); }
+                    @{ TreeKindOption(TreeKind.FullTree, Texts.Admin_Config_TreeKinds_FullTree, Texts.Admin_Config_TreeKinds_FullTreeDescription); }
+                    @{ TreeKindOption(TreeKind.CloseFamily, Texts.Admin_Config_TreeKinds_CloseFamily, Texts.Admin_Config_TreeKinds_CloseFamilyDescription); }
+                    @{ TreeKindOption(TreeKind.Ancestors, Texts.Admin_Config_TreeKinds_Ancestors, Texts.Admin_Config_TreeKinds_AncestorsDescription); }
+                    @{ TreeKindOption(TreeKind.Descendants, Texts.Admin_Config_TreeKinds_Descendants, Texts.Admin_Config_TreeKinds_DescendantsDescription); }
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3">Внешний вид дерева</label>
+                <label class="col-sm-3">@Texts.Admin_Config_TreeDisplay</label>
                 <div class="col-sm-9">
                     <div class="mb-2">
                         <input asp-for="TreeRenderThoroughness" type="range" min="1" max="100" class="form-control"/>
                         <div class="small text-muted">
-                            <div class="pull-left">Быстро и грубо</div>
-                            <div class="pull-right">Долго и тщательно</div>
+                            <div class="pull-left">@Texts.Admin_Config_TreeDisplay_FastAndRough</div>
+                            <div class="pull-right">@Texts.Admin_Config_TreeDisplay_SlowAndThorough</div>
                             <div class="clearfix"></div>
                         </div>
                         <span asp-validation-for="TreeRenderThoroughness" class="text-danger"></span>
@@ -83,32 +84,30 @@
                     <div class="ml-4">
                         <input type="checkbox" asp-for="HideBlackRibbon" class="custom-control-input" id="HideBlackRibbon" />
                         <label class="custom-control-label" for="HideBlackRibbon">
-                            Не показывать черную ленту на карточках умерших
+                            @Texts.Admin_Config_TreeDisplay_HideBlackRibbon
                         </label>
                     </div>
                 </div>
             </div>
             
             <div class="form-group row">
-                <div class="col-sm-3">Версия</div>
+                <div class="col-sm-3">@Texts.Admin_Config_Version</div>
                 <div class="col-sm-9 text-muted">
                     <small>
-                        Сборка: @(StringHelper.Coalesce(config.BuildCommit, "Неизвестно"))<br />
-                        База данных: @(config.ConnectionStrings.UseEmbeddedDatabase ? "SQLite" : "PostgreSQL")
+                        @Texts.Admin_Config_Version_Build: @(StringHelper.Coalesce(config.BuildCommit, @Texts.Admin_Config_Version_BuildUnknown))<br />
+                        @Texts.Admin_Config_Version_Database: @(config.ConnectionStrings.UseEmbeddedDatabase ? "SQLite" : "PostgreSQL")
                     </small>
                 </div>
             </div>
 
             @if (!ViewData.ModelState.IsValid)
             {
-                <div class="alert alert-danger" role="alert">
-                    <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.
-                </div>
+                <div class="alert alert-danger" role="alert">@Html.Raw(Texts.Admin_Config_ValidationError)</div>
             }
 
             <div class="form-group row">
                 <div class="offset-sm-3 col-sm-6">
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-primary">@Texts.Admin_Global_Save</button>
                     <a href="@Url.Action("Index")"></a>
                 </div>
             </div>
