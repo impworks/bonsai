@@ -2,9 +2,10 @@
 @addTagHelper *, Bonsai
 
 @using Bonsai.Code.Utils.Helpers
+@using Bonsai.Localization
 
 @{
-    ViewBag.Title = "Панель администрации";
+    ViewBag.Title = Texts.Admin_Dashboard_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 }
 
@@ -13,14 +14,14 @@
         <div class="card">
             <a class="card-body" href="@Url.Action("Index", "Pages", new {area = "Admin"})">
                 <h2 class="card-title text-center">@Model.PagesCount</h2>
-                <p class="card-text text-center">@Model.PagesCount.DisplayNumeric("страница", "страницы", "страниц", false)</p>
+                <p class="card-text text-center">@Model.PagesCount.DisplayNumeric(Texts.Admin_Dashboard_Pages, false)</p>
             </a>
             @if (Model.PagesToImproveCount > 0)
             {
                 <div class="card-footer">
                     <small class="text-muted">
                         <a href="@Url.Action("Index", "Pages", new {area = "Admin", OrderBy = "CompletenessScore", OrderDescending = false})">
-                            @Model.PagesToImproveCount можно улучшить
+                            @string.Format(Texts.Admin_Dashboard_PagesToImproveFormat, Model.PagesToImproveCount)
                         </a>
                     </small>
                 </div>
@@ -30,13 +31,15 @@
         <div class="card">
             <a class="card-body" href="@Url.Action("Index", "Media", new { area = "Admin" })">
                 <h2 class="card-title text-center">@Model.MediaCount</h2>
-                <p class="card-text text-center">@Model.MediaCount.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов", false)</p>
+                <p class="card-text text-center">@Model.MediaCount.DisplayNumeric(Texts.Admin_Dashboard_MediaFiles, false)</p>
             </a>
             @if (Model.MediaToTagCount > 0)
             {
                 <div class="card-footer">
                     <small class="text-muted">
-                        <a href="@Url.Action("Index", "Media", new {area = "Admin", OrderBy = "Tags", OrderDescending = false})">@Model.MediaToTagCount без отметок</a>
+                        <a href="@Url.Action("Index", "Media", new {area = "Admin", OrderBy = "Tags", OrderDescending = false})">
+                            @string.Format(Texts.Admin_Dashboard_MediaWithoutTagsFormat, Model.MediaToTagCount)
+                        </a>
                     </small>
                 </div>
             }
@@ -45,7 +48,7 @@
         <div class="card">
             <a class="card-body" href="@Url.Action("Index", "Relations", new { area = "Admin" })">
                 <h2 class="card-title text-center">@Model.RelationsCount</h2>
-                <p class="card-text text-center">@Model.RelationsCount.DisplayNumeric("связь", "связи", "связей", false)</p>
+                <p class="card-text text-center">@Model.RelationsCount.DisplayNumeric(Texts.Admin_Dashboard_Relations, false)</p>
             </a>
         </div>
 
@@ -53,13 +56,13 @@
         <div class="card">
             <a class="card-body" href="@Url.Action("Index", "Users", new { area = "Admin" })">
                 <h2 class="card-title text-center">@Model.UsersCount</h2>
-                <p class="card-text text-center">@Model.UsersCount.DisplayNumeric("пользователь", "пользователя", "пользователей", false)</p>
+                <p class="card-text text-center">@Model.UsersCount.DisplayNumeric(Texts.Admin_Dashboard_Users, false)</p>
             </a>
             @if (Model.UsersPendingValidationCount > 0)
             {
                 <div class="card-footer">
                     <small class="text-muted">
-                        <a href="@Url.Action("Index", "Users", new {area = "Admin"})">@Model.UsersPendingValidationCount.DisplayNumeric("запрос", "запроса", "запросов") </a>
+                        <a href="@Url.Action("Index", "Users", new {area = "Admin"})">@Model.UsersPendingValidationCount.DisplayNumeric(Texts.Admin_Dashboard_Requests) </a>
                     </small>
                 </div>
             }
@@ -79,8 +82,7 @@
     else
     {
         <div class="alert alert-info">
-            Здесь будет показываться список последних действий.<br />
-            Вы можете создать <a href="@Url.Action("Index", "Pages", new { area = "Admin" } )">страницу</a> или <a href="@Url.Action("Upload", "Media", new { area = "Admin" })">загрузить медиа-файлы</a>.
+            @Html.Raw(string.Format(Texts.Admin_Dashboard_EmptyMessageFormat, Url.Action("Index", "Pages", new { area = "Admin" }), Url.Action("Upload", "Media", new { area = "Admin" })))
         </div>
     }
 </div>

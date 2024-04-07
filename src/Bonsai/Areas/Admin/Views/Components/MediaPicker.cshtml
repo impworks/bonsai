@@ -1,10 +1,11 @@
-﻿@using Bonsai.Data.Models
-@using Impworks.Utils.Format
+﻿@using Bonsai.Code.Services
+@using Bonsai.Data.Models
+@using Bonsai.Localization
 <div class="modal media-picker" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Выбор медиа</h5>
+                <h5 class="modal-title">@Texts.Admin_MediaPicker_Title</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
@@ -14,14 +15,14 @@
                     <div class="pull-right">
                         <div class="form-inline">
                             <div class="btn-group btn-group-sm mr-2" v-if="isTypeSelectionEnabled">
-                                @foreach (var mt in EnumHelper.GetEnumDescriptions<MediaType>())
+                                @foreach (var mt in LocaleProvider.GetLocaleEnumDescriptions<MediaType>())
                                 {
                                     var val = (int) mt.Key;
                                     <button type="button" class="btn btn-outline-secondary" v-on:click="toggleType(@val)" v-bind:class="{active: isTypeEnabled(@val)}">@mt.Value</button>
                                 }
                             </div>
-                            <input class="form-control form-control-sm mr-2" placeholder="Поиск" v-model="query" v-on:keydown.enter="search()" />
-                            <button type="button" class="btn btn-outline-secondary" title="Найти" v-on:click="search()">
+                            <input class="form-control form-control-sm mr-2" placeholder="@Texts.Admin_Global_Search" v-model="query" v-on:keydown.enter="search()" />
+                            <button type="button" class="btn btn-outline-secondary" title="@Texts.Admin_Global_Find" v-on:click="search()">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
@@ -29,10 +30,10 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="scrollable">
-                    <div class="alert alert-info" v-if="!items || !items.length">По вашему запросу ничего не найдено.</div>
+                    <div class="alert alert-info" v-if="!items || !items.length">@Texts.Admin_MediaPicker_NothingFound</div>
                     <ul class="list-inline" v-if="items && items.length">
                         <li v-for="m in items" class="list-inline-item">
-                            <div class="media-thumb-wrapper" title="Выбрать">
+                            <div class="media-thumb-wrapper" title="@Texts.Admin_Global_Pick">
                                 <div class="media-thumb-square clickable" v-bind:style="{ 'background-image': 'url(' + m.thumbnailUrl + ')' }" v-on:click="pick(m)" />
                             </div>
                         </li>

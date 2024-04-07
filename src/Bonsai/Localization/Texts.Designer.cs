@@ -259,7 +259,7 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Название.
         /// </summary>
         public static string Admin_Changesets_Media_Title {
             get {
@@ -412,6 +412,150 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Удалить.
+        /// </summary>
+        public static string Admin_Changesets_Remove {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Восстановить.
+        /// </summary>
+        public static string Admin_Changesets_Restore {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Restore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Изменение.
+        /// </summary>
+        public static string Admin_Changesets_Revert_Change {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите удалить медиа-файл?.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RemoveMediaConfirmation {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RemoveMediaConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удаление медиа.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RemoveMediaTitle {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RemoveMediaTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите удалить страницу?.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RemovePageConfirmation {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RemovePageConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удаление страницы.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RemovePageTitle {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RemovePageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите удалить связь?.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RemoveRelationConfirmation {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RemoveRelationConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удаление связи.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RemoveRelationTitle {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RemoveRelationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите восстановить предыдущее состояние медиа-файла?.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RestoreMediaConfirmation {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RestoreMediaConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Восстановление медиа.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RestoreMediaTitle {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RestoreMediaTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to При этом будет сброшено текущее изменение и все последующие, если они существуют..
+        /// </summary>
+        public static string Admin_Changesets_Revert_RestoreOverview {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RestoreOverview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите восстановить предыдущее состояние страницы?.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RestorePageConfirmation {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RestorePageConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Восстановление страницы.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RestorePageTitle {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RestorePageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите восстановить предыдущее состояние связи?.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RestoreRelationConfirmation {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RestoreRelationConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Восстановление связи.
+        /// </summary>
+        public static string Admin_Changesets_Revert_RestoreRelationTitle {
+            get {
+                return ResourceManager.GetString("Admin_Changesets_Revert_RestoreRelationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Правка была отменена..
         /// </summary>
         public static string Admin_Changesets_RevertedMessage {
@@ -439,11 +583,218 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} создала {1}.
+        /// </summary>
+        public static string Admin_Dashboard_CreatedFormatF {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_CreatedFormatF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} создал {1}.
+        /// </summary>
+        public static string Admin_Dashboard_CreatedFormatM {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_CreatedFormatM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Здесь будет показываться список последних действий. &lt;br/&gt; Вы можете создать &lt;a href=&quot;{0}&quot;&gt;страницу&lt;/a&gt; или &lt;a href=&quot;{1}&quot;&gt;загрузить медиа-файлы&lt;/a&gt;..
+        /// </summary>
+        public static string Admin_Dashboard_EmptyMessageFormat {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_EmptyMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to между страницами: {0} и {1}.
+        /// </summary>
+        public static string Admin_Dashboard_LinkBetweenPages {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_LinkBetweenPages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to медиа-файл|медиа-файла|медиа-файлов.
+        /// </summary>
+        public static string Admin_Dashboard_MediaFiles {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_MediaFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} без отметок.
+        /// </summary>
+        public static string Admin_Dashboard_MediaWithoutTagsFormat {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_MediaWithoutTagsFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to страницу.
+        /// </summary>
+        public static string Admin_Dashboard_Page {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to страница|страницы|страниц.
+        /// </summary>
+        public static string Admin_Dashboard_Pages {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_Pages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} можно улучшить.
+        /// </summary>
+        public static string Admin_Dashboard_PagesToImproveFormat {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_PagesToImproveFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to связь.
+        /// </summary>
+        public static string Admin_Dashboard_Relation {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_Relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to связь|связи|связей.
+        /// </summary>
+        public static string Admin_Dashboard_Relations {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_Relations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} удалила {1}.
+        /// </summary>
+        public static string Admin_Dashboard_RemovedFormatF {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_RemovedFormatF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} удалил {1}.
+        /// </summary>
+        public static string Admin_Dashboard_RemovedFormatM {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_RemovedFormatM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to запрос|запроса|запросов.
+        /// </summary>
+        public static string Admin_Dashboard_Requests {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_Requests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} восстановила {1}.
+        /// </summary>
+        public static string Admin_Dashboard_RestoredFormatF {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_RestoredFormatF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} восстановил {1}.
+        /// </summary>
+        public static string Admin_Dashboard_RestoredFormatM {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_RestoredFormatM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Панель управления.
+        /// </summary>
+        public static string Admin_Dashboard_Title {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} обновила {1}.
+        /// </summary>
+        public static string Admin_Dashboard_UpdatedFormatF {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_UpdatedFormatF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} обновил {1}.
+        /// </summary>
+        public static string Admin_Dashboard_UpdatedFormatM {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_UpdatedFormatM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} загрузила {1}.
+        /// </summary>
+        public static string Admin_Dashboard_UploadedFormatF {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_UploadedFormatF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} загрузил {1}.
+        /// </summary>
+        public static string Admin_Dashboard_UploadedFormatM {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_UploadedFormatM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to пользователь|пользователя|пользователей.
+        /// </summary>
+        public static string Admin_Dashboard_Users {
+            get {
+                return ResourceManager.GetString("Admin_Dashboard_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Запрещено в демо-режиме.
         /// </summary>
         public static string Admin_ForbiddenInDemoMessage {
             get {
                 return ResourceManager.GetString("Admin_ForbiddenInDemoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отмена.
+        /// </summary>
+        public static string Admin_Global_Cancel {
+            get {
+                return ResourceManager.GetString("Admin_Global_Cancel", resourceCulture);
             }
         }
         
@@ -471,6 +822,33 @@ namespace Bonsai.Localization {
         public static string Admin_Global_Find {
             get {
                 return ResourceManager.GetString("Admin_Global_Find", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to По вашему запросу ничего не найдено..
+        /// </summary>
+        public static string Admin_Global_NothingFound {
+            get {
+                return ResourceManager.GetString("Admin_Global_NothingFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Выбрать.
+        /// </summary>
+        public static string Admin_Global_Pick {
+            get {
+                return ResourceManager.GetString("Admin_Global_Pick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поиск.
+        /// </summary>
+        public static string Admin_Global_Search {
+            get {
+                return ResourceManager.GetString("Admin_Global_Search", resourceCulture);
             }
         }
         
@@ -538,6 +916,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Выбор медиа.
+        /// </summary>
+        public static string Admin_MediaPicker_Title {
+            get {
+                return ResourceManager.GetString("Admin_MediaPicker_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Правки.
         /// </summary>
         public static string Admin_Menu_Changesets {
@@ -597,6 +984,15 @@ namespace Bonsai.Localization {
         public static string Admin_Menu_Users {
             get {
                 return ResourceManager.GetString("Admin_Menu_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Выбор страницы.
+        /// </summary>
+        public static string Admin_PagePicker_Title {
+            get {
+                return ResourceManager.GetString("Admin_PagePicker_Title", resourceCulture);
             }
         }
         
