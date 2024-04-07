@@ -1331,7 +1331,7 @@
     <value>Медиа</value>
   </data>
   <data name="Admin_Changesets_Media_Title" xml:space="preserve">
-    <value />
+    <value>Название</value>
   </data>
   <data name="Admin_Changesets_NotFound" xml:space="preserve">
     <value>Правка не найдена.</value>
@@ -1585,5 +1585,151 @@
   </data>
   <data name="Admin_Global_View" xml:space="preserve">
     <value>Просмотреть</value>
+  </data>
+  <data name="Admin_Changesets_Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Admin_Changesets_Restore" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="Admin_Changesets_Revert_Change" xml:space="preserve">
+    <value>Изменение</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RemoveMediaConfirmation" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить медиа-файл?</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RemoveMediaTitle" xml:space="preserve">
+    <value>Удаление медиа</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RemovePageConfirmation" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить страницу?</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RemovePageTitle" xml:space="preserve">
+    <value>Удаление страницы</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RemoveRelationConfirmation" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить связь?</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RemoveRelationTitle" xml:space="preserve">
+    <value>Удаление связи</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RestoreMediaConfirmation" xml:space="preserve">
+    <value>Вы уверены, что хотите восстановить предыдущее состояние медиа-файла?</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RestoreMediaTitle" xml:space="preserve">
+    <value>Восстановление медиа</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RestoreOverview" xml:space="preserve">
+    <value>При этом будет сброшено текущее изменение и все последующие, если они существуют.</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RestorePageConfirmation" xml:space="preserve">
+    <value>Вы уверены, что хотите восстановить предыдущее состояние страницы?</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RestorePageTitle" xml:space="preserve">
+    <value>Восстановление страницы</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RestoreRelationConfirmation" xml:space="preserve">
+    <value>Вы уверены, что хотите восстановить предыдущее состояние связи?</value>
+  </data>
+  <data name="Admin_Changesets_Revert_RestoreRelationTitle" xml:space="preserve">
+    <value>Восстановление связи</value>
+  </data>
+  <data name="Admin_Dashboard_CreatedFormatF" xml:space="preserve">
+    <value>{0} создала {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_CreatedFormatM" xml:space="preserve">
+    <value>{0} создал {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_EmptyMessageFormat" xml:space="preserve">
+    <value>Здесь будет показываться список последних действий. &lt;br/&gt; Вы можете создать &lt;a href="{0}"&gt;страницу&lt;/a&gt; или &lt;a href="{1}"&gt;загрузить медиа-файлы&lt;/a&gt;.</value>
+    <comment>{0} = create page link, {1} = upload media link</comment>
+  </data>
+  <data name="Admin_Dashboard_LinkBetweenPages" xml:space="preserve">
+    <value>между страницами: {0} и {1}</value>
+    <comment>{0} = source, {1} = target</comment>
+  </data>
+  <data name="Admin_Dashboard_MediaFiles" xml:space="preserve">
+    <value>медиа-файл|медиа-файла|медиа-файлов</value>
+  </data>
+  <data name="Admin_Dashboard_MediaWithoutTagsFormat" xml:space="preserve">
+    <value>{0} без отметок</value>
+    <comment>{0} = count</comment>
+  </data>
+  <data name="Admin_Dashboard_Page" xml:space="preserve">
+    <value>страницу</value>
+  </data>
+  <data name="Admin_Dashboard_Pages" xml:space="preserve">
+    <value>страница|страницы|страниц</value>
+  </data>
+  <data name="Admin_Dashboard_PagesToImproveFormat" xml:space="preserve">
+    <value>{0} можно улучшить</value>
+  </data>
+  <data name="Admin_Dashboard_Relation" xml:space="preserve">
+    <value>связь</value>
+  </data>
+  <data name="Admin_Dashboard_Relations" xml:space="preserve">
+    <value>связь|связи|связей</value>
+  </data>
+  <data name="Admin_Dashboard_RemovedFormatF" xml:space="preserve">
+    <value>{0} удалила {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_RemovedFormatM" xml:space="preserve">
+    <value>{0} удалил {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_Requests" xml:space="preserve">
+    <value>запрос|запроса|запросов</value>
+  </data>
+  <data name="Admin_Dashboard_RestoredFormatF" xml:space="preserve">
+    <value>{0} восстановила {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_RestoredFormatM" xml:space="preserve">
+    <value>{0} восстановил {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_Title" xml:space="preserve">
+    <value>Панель управления</value>
+  </data>
+  <data name="Admin_Dashboard_UpdatedFormatF" xml:space="preserve">
+    <value>{0} обновила {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_UpdatedFormatM" xml:space="preserve">
+    <value>{0} обновил {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_UploadedFormatF" xml:space="preserve">
+    <value>{0} загрузила {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_UploadedFormatM" xml:space="preserve">
+    <value>{0} загрузил {1}</value>
+    <comment>{0} =user, {1} = subject</comment>
+  </data>
+  <data name="Admin_Dashboard_Users" xml:space="preserve">
+    <value>пользователь|пользователя|пользователей</value>
+    <comment>{0} = count</comment>
+  </data>
+  <data name="Admin_Global_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Admin_Global_NothingFound" xml:space="preserve">
+    <value>По вашему запросу ничего не найдено.</value>
+  </data>
+  <data name="Admin_Global_Pick" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="Admin_Global_Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Admin_MediaPicker_Title" xml:space="preserve">
+    <value>Выбор медиа</value>
+  </data>
+  <data name="Admin_PagePicker_Title" xml:space="preserve">
+    <value>Выбор страницы</value>
   </data>
 </root>

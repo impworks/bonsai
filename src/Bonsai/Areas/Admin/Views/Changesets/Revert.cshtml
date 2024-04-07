@@ -2,29 +2,17 @@
 @model Bonsai.Areas.Admin.ViewModels.Changesets.ChangesetDetailsVM
 
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Humanizer
 
 @{
-    string GetEntityType(bool dative = false)
-    {
-        switch (Model.EntityType)
-        {
-            case ChangesetEntityType.Media:
-                return dative ? "медиа-файл" : "медиа-файла";
-
-            case ChangesetEntityType.Page:
-                return dative ? "страницу" : "страницы";
-
-            case ChangesetEntityType.Relation:
-                return dative ? "отношение" : "отношения";
-        }
-
-        return null;
-    }
-
     var isRemoving = Model.ChangeType == ChangesetType.Created;
-
-    ViewBag.Title = (isRemoving ? "Удаление " : "Восстановление ") + GetEntityType();
+    ViewBag.Title = Model.EntityType switch
+    {
+        ChangesetEntityType.Page => isRemoving ? Texts.Admin_Changesets_Revert_RemovePageTitle : Texts.Admin_Changesets_Revert_RestorePageTitle,
+        ChangesetEntityType.Media => isRemoving ? Texts.Admin_Changesets_Revert_RemoveMediaTitle : Texts.Admin_Changesets_Revert_RestoreMediaTitle,
+        ChangesetEntityType.Relation => isRemoving ? Texts.Admin_Changesets_Revert_RemoveRelationTitle : Texts.Admin_Changesets_Revert_RestoreRelationTitle,
+    };
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 }
 
@@ -41,13 +29,13 @@
 
 <div class="row">
     <div class="col-sm-9">
-        <h3>Изменение</h3>
+        <h3>@Texts.Admin_Changesets_Revert_Change</h3>
 
         <dl class="row">
-            <dt class="col-sm-2">Автор</dt>
+            <dt class="col-sm-2">@Texts.Admin_Changesets_Details_Author</dt>
             <dd class="col-sm-10">@Model.Author</dd>
 
-            <dt class="col-sm-2">Дата</dt>
+            <dt class="col-sm-2">@Texts.Admin_Changesets_Details_Date</dt>
             <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString(Bonsai.Localization.Texts.DateFormat_Changeset) (@Model.Date.ToLocalTime().Humanize())</dd>
         </dl>
     </div>
@@ -56,20 +44,32 @@
 @if (isRemoving)
 {
     <p>
-        Вы уверены, что хотите удалить @GetEntityType(dative: true)?<br />
+        @(Model.EntityType switch
+        {
+            ChangesetEntityType.Page => Texts.Admin_Changesets_Revert_RemovePageConfirmation,
+            ChangesetEntityType.Media => Texts.Admin_Changesets_Revert_RemoveMediaConfirmation,
+            ChangesetEntityType.Relation => Texts.Admin_Changesets_Revert_RemoveRelationConfirmation
+        })
+        <br />
     </p>
 }
 else
 {
     <p>
-        Вы уверены, что хотите восстановить предыдущее состояние @GetEntityType()?<br />
-        При этом будет сброшена текущая правка и все последующие, если они существуют.
+        @(Model.EntityType switch
+        {
+            ChangesetEntityType.Page => Texts.Admin_Changesets_Revert_RestorePageConfirmation,
+            ChangesetEntityType.Media => Texts.Admin_Changesets_Revert_RestoreMediaConfirmation,
+            ChangesetEntityType.Relation => Texts.Admin_Changesets_Revert_RestoreRelationConfirmation
+        })
+        <br />
+        @Texts.Admin_Changesets_Revert_RestoreOverview
     </p>
 }
 
 <form action="@Url.Action("Revert", "Changesets", new {area = "Admin"})" method="POST">
     <input type="hidden" name="confirm" value="true" />
     <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger" type="submit">@(isRemoving ? "Удалить" : "Восстановить")</button>
-    <a href="@Url.Action("Index", "Changesets", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+    <button class="btn btn-danger" type="submit">@(isRemoving ? @Texts.Admin_Changesets_Remove : @Texts.Admin_Changesets_Restore)</button>
+    <a href="@Url.Action("Index", "Changesets", new {area = "Admin"})" class="btn btn-secondary">@Texts.Admin_Global_Cancel</a>
 </form>

@@ -1,31 +1,35 @@
 ﻿@model IReadOnlyList<Bonsai.Areas.Admin.ViewModels.Dashboard.ChangesetEventVM>
 
+@using Bonsai.Areas.Admin.ViewModels.Common
 @using Bonsai.Areas.Admin.ViewModels.Dashboard
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Humanizer
 @using Impworks.Utils.Strings
 
 @{
     string GetChangeDescription(ChangesetEventVM evt)
     {
-        var baseForm = evt.ChangeType switch {
-            ChangesetType.Created => evt.EntityType == ChangesetEntityType.Media
-                ? "загрузил"
-                : "создал",
-            ChangesetType.Removed => "удалил",
-            ChangesetType.Updated => "обновил",
-            ChangesetType.Restored => "восстановил"
-            };
-
-        return evt.User.IsMale == false ? baseForm + "а" : baseForm;
+        var isFemale = evt.User.IsMale == false;
+        var format = evt.ChangeType switch
+        {
+            ChangesetType.Created =>
+                evt.EntityType == ChangesetEntityType.Media
+                    ? (isFemale ? Texts.Admin_Dashboard_UploadedFormatF : Texts.Admin_Dashboard_UploadedFormatM)
+                    : (isFemale ? Texts.Admin_Dashboard_CreatedFormatF : Texts.Admin_Dashboard_CreatedFormatM),
+            ChangesetType.Removed => (isFemale ? Texts.Admin_Dashboard_RemovedFormatF : Texts.Admin_Dashboard_RemovedFormatM),
+            ChangesetType.Updated => (isFemale ? Texts.Admin_Dashboard_UpdatedFormatF : Texts.Admin_Dashboard_UpdatedFormatM),
+            ChangesetType.Restored => (isFemale ? Texts.Admin_Dashboard_RestoredFormatF : Texts.Admin_Dashboard_RestoredFormatM)
+        };
+        var entityType = evt.EntityType switch
+        {
+            ChangesetEntityType.Page => Texts.Admin_Dashboard_Page,
+            ChangesetEntityType.Media => evt.ElementCount.DisplayNumeric(Texts.Admin_Dashboard_MediaFiles),
+            ChangesetEntityType.Relation => Texts.Admin_Dashboard_Relation
+        };
+        return string.Format(format, evt.User.FullName, entityType);
     }
-
-    string GetEntityName(ChangesetEntityType entity) => entity switch {
-        ChangesetEntityType.Page => "cтраницу",
-        ChangesetEntityType.Media => "медиа-файл",
-        ChangesetEntityType.Relation => "связь"
-    };
 
     string GetChangeClass(ChangesetType type) => type switch {
         ChangesetType.Created => "plus",
@@ -39,6 +43,13 @@
         return date < DateTimeOffset.Now.AddDays(-14)
             ? date.LocalDateTime.ToLocalizedShortDate()
             : date.Humanize().Capitalize();
+    }
+
+    string GetLink(LinkVM link)
+    {
+        return string.IsNullOrEmpty(link.Url)
+            ? $"""<span>{link.Title}</span>"""
+            : $"""<a href="{link.Url}">{link.Title}</a>""";
     }
 }
 
@@ -57,23 +68,7 @@
         <div class="col p-0">
             <div class="row dashboard-event-header">
                 <div class="col dashboard-event-title">
-                    <h6>
-                        @evt.User.FullName 
-                        @if (evt.EntityType == ChangesetEntityType.Media)
-                        {
-                            <span>
-                                @GetChangeDescription(evt)
-                                @evt.ElementCount.DisplayNumeric("медиа-файл", "медиа-файла", "медиа-файлов")
-                            </span>
-                        }
-                        else
-                        {
-                            <span>
-                                @GetChangeDescription(evt)
-                                @GetEntityName(evt.EntityType)
-                            </span>
-                        }
-                    </h6>
+                    <h6>@GetChangeDescription(evt)</h6>
                 </div>
                 <div class="col-auto dashboard-event-date" title="@evt.Date.LocalDateTime.ToLocalizedFullDate()">
                     @GetChangeDate(evt.Date)
@@ -106,20 +101,11 @@
                 {
                     if (evt.MainLink != null)
                     {
-                        @if (!string.IsNullOrEmpty(evt.MainLink.Url))
-                        {
-                            <a href="@evt.MainLink.Url">@evt.MainLink.Title</a>
-                        }
-                        else
-                        {
-                            <span>@evt.MainLink.Title</span>
-                        }
+                        <text>@Html.Raw(GetLink(evt.MainLink))</text>
                     }
                     @if (evt.EntityType == ChangesetEntityType.Relation && evt.ExtraLinks != null)
                     {
-                        <span>
-                            между страницами: <a href="@evt.ExtraLinks[0].Url">@evt.ExtraLinks[0].Title</a> и <a href="@evt.ExtraLinks[1].Url">@evt.ExtraLinks[1].Title</a>
-                        </span>
+                        <text>@Html.Raw(string.Format(Texts.Admin_Dashboard_LinkBetweenPages, GetLink(evt.ExtraLinks[0]), GetLink(evt.ExtraLinks[1])))</text>
                     }
                 }
             </div>
