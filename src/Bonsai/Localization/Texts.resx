@@ -1634,6 +1634,87 @@
   <data name="Admin_Changesets_Revert_RestoreRelationTitle" xml:space="preserve">
     <value>Восстановление связи</value>
   </data>
+  <data name="Admin_Config_Access" xml:space="preserve">
+    <value>Доступ</value>
+  </data>
+  <data name="Admin_Config_Access_AnyCanRead" xml:space="preserve">
+    <value>Любой посетитель может читать</value>
+  </data>
+  <data name="Admin_Config_Access_RegisteredCanRead" xml:space="preserve">
+    <value>Только зарегистрированный может читать</value>
+  </data>
+  <data name="Admin_Config_Caption" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Admin_Config_CaptionDescription" xml:space="preserve">
+    <value>Показывается в заголовке сайта</value>
+  </data>
+  <data name="Admin_Config_Registration" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="Admin_Config_Registration_Disabled" xml:space="preserve">
+    <value>Запрещена</value>
+  </data>
+  <data name="Admin_Config_Registration_Enabled" xml:space="preserve">
+    <value>Разрешена</value>
+  </data>
+  <data name="Admin_Config_Title" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Admin_Config_TreeDisplay" xml:space="preserve">
+    <value>Внешний вид дерева</value>
+  </data>
+  <data name="Admin_Config_TreeDisplay_FastAndRough" xml:space="preserve">
+    <value>Быстро и грубо</value>
+  </data>
+  <data name="Admin_Config_TreeDisplay_HideBlackRibbon" xml:space="preserve">
+    <value>Не показывать черную ленту на карточках умерших</value>
+  </data>
+  <data name="Admin_Config_TreeDisplay_SlowAndThorough" xml:space="preserve">
+    <value>Долго и тщательно</value>
+  </data>
+  <data name="Admin_Config_TreeKinds" xml:space="preserve">
+    <value>Типы деревьев</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_Ancestors" xml:space="preserve">
+    <value>Предки</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_AncestorsDescription" xml:space="preserve">
+    <value>все кровные родственники вверх</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_CloseFamily" xml:space="preserve">
+    <value>Близкие родственники</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_CloseFamilyDescription" xml:space="preserve">
+    <value>на два уровня вокруг, от бабушек до внуков</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_Descendants" xml:space="preserve">
+    <value>Потомки</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_DescendantsDescription" xml:space="preserve">
+    <value>все кровные родственники вниз и их родители</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_FullTree" xml:space="preserve">
+    <value>Полное дерево</value>
+  </data>
+  <data name="Admin_Config_TreeKinds_FullTreeDescription" xml:space="preserve">
+    <value>весь связанный граф родственников</value>
+  </data>
+  <data name="Admin_Config_ValidationError" xml:space="preserve">
+    <value>&lt;b&gt;Ошибка:&lt;/b&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
+  </data>
+  <data name="Admin_Config_Version" xml:space="preserve">
+    <value>Версия</value>
+  </data>
+  <data name="Admin_Config_Version_Build" xml:space="preserve">
+    <value>Сборка</value>
+  </data>
+  <data name="Admin_Config_Version_BuildUnknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="Admin_Config_Version_Database" xml:space="preserve">
+    <value>База данных</value>
+  </data>
   <data name="Admin_Dashboard_CreatedFormatF" xml:space="preserve">
     <value>{0} создала {1}</value>
     <comment>{0} =user, {1} = subject</comment>
@@ -1722,6 +1803,9 @@
   </data>
   <data name="Admin_Global_Pick" xml:space="preserve">
     <value>Выбрать</value>
+  </data>
+  <data name="Admin_Global_Save" xml:space="preserve">
+    <value>Сохранить</value>
   </data>
   <data name="Admin_Global_Search" xml:space="preserve">
     <value>Поиск</value>
