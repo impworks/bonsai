@@ -1798,11 +1798,20 @@
   <data name="Admin_Global_Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="Admin_Global_Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Admin_Global_History" xml:space="preserve">
+    <value>История изменений</value>
+  </data>
   <data name="Admin_Global_NothingFound" xml:space="preserve">
     <value>По вашему запросу ничего не найдено.</value>
   </data>
   <data name="Admin_Global_Pick" xml:space="preserve">
     <value>Выбрать</value>
+  </data>
+  <data name="Admin_Global_Remove" xml:space="preserve">
+    <value>Удалить</value>
   </data>
   <data name="Admin_Global_Save" xml:space="preserve">
     <value>Сохранить</value>
@@ -1812,6 +1821,66 @@
   </data>
   <data name="Admin_MediaPicker_Title" xml:space="preserve">
     <value>Выбор медиа</value>
+  </data>
+  <data name="Admin_Media_Edit_AddTag" xml:space="preserve">
+    <value>Отметить</value>
+  </data>
+  <data name="Admin_Media_Edit_Caption" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="Admin_Media_Edit_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Admin_Media_Edit_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Admin_Media_Edit_Event" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="Admin_Media_Edit_Location" xml:space="preserve">
+    <value>Место</value>
+  </data>
+  <data name="Admin_Media_Edit_RemoveTag" xml:space="preserve">
+    <value>Удалить отметку</value>
+  </data>
+  <data name="Admin_Media_Edit_Title" xml:space="preserve">
+    <value>Редактирование медиа</value>
+  </data>
+  <data name="Admin_Media_Edit_VideoTags" xml:space="preserve">
+    <value>Отметки</value>
+  </data>
+  <data name="Admin_Media_List_Empty" xml:space="preserve">
+    <value>Не добавлено ни одного файла.</value>
+  </data>
+  <data name="Admin_Media_List_NotFound" xml:space="preserve">
+    <value>По запросу не найдено ни одного файла.</value>
+  </data>
+  <data name="Admin_Media_List_ShootDate" xml:space="preserve">
+    <value>Снято</value>
+  </data>
+  <data name="Admin_Media_List_Tags" xml:space="preserve">
+    <value>Теги</value>
+  </data>
+  <data name="Admin_Media_List_Title" xml:space="preserve">
+    <value>Список медиа</value>
+  </data>
+  <data name="Admin_Media_List_Upload" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="Admin_Media_List_UploadDate" xml:space="preserve">
+    <value>Загружено</value>
+  </data>
+  <data name="Admin_Media_List_UploadDescription" xml:space="preserve">
+    <value>Загрузить новый медиа-файл</value>
+  </data>
+  <data name="Admin_Media_Remove_CompletelyDescription" xml:space="preserve">
+    <value>Удалить окончательно (освободит место на диске, восстановление будет невозможно)</value>
+  </data>
+  <data name="Admin_Media_Remove_Confirmation" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить данный медиа-файл?</value>
+  </data>
+  <data name="Admin_Media_Remove_Title" xml:space="preserve">
+    <value>Удаление медиа</value>
   </data>
   <data name="Admin_PagePicker_Title" xml:space="preserve">
     <value>Выбор страницы</value>
