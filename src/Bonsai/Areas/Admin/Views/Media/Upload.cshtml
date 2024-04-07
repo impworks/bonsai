@@ -1,30 +1,23 @@
 ﻿@using Bonsai.Code.Services.Config
+@using Bonsai.Localization
 @inject BonsaiConfigService Config
 
 @{
     ViewBag.Title = "Загрузка медиа";
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
-    var maxSize = @Config.GetStaticConfig().WebServer.MaxUploadSize;
+    var maxSize = Config.GetStaticConfig().WebServer.MaxUploadSize;
 
     string RenderSize()
     {
         if (maxSize == null)
-        {
             return null;
-        }
         if (maxSize < 1024)
-        {
             return maxSize + " Б";
-        }
         if (maxSize < 1024 * 1024)
-        {
             return Math.Round(maxSize.Value / 1024M, 2) + " КБ";
-        }
         if (maxSize < 1024 * 1024 * 1024)
-        {
             return Math.Round(maxSize.Value / (1024M * 1024), 2) + " МБ";
-        }
         return Math.Round(maxSize.Value / (1024M * 1024 * 1024), 2) + " ГБ";
     }
 }
@@ -35,7 +28,7 @@
     <div class="form-row">
         <div class="form-group col-sm-4">
             <label for="Date">Дата</label>
-            <input type="text" id="Date" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
+            <input type="text" id="Date" class="form-control datepicker" placeholder="@Texts.Datepicker_Placeholder" />
         </div>
         <div class="form-group col-sm-4">
             <label for="Location">Место</label>

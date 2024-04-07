@@ -1,13 +1,15 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Common
+@using Bonsai.Localization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bonsai.Areas.Admin.ViewModels.Common.RemoveEntryRequestVM
 @{
-    ViewBag.Title = "Удаление медиа";
+    ViewBag.Title = Texts.Admin_Media_Remove_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
     var info = (RemoveEntryInfoVM<string>) ViewBag.Info;
 }
 
-<h1>Удаление медиа</h1>
+<h1>@Texts.Admin_Media_Remove_Title</h1>
 
 <div class="card d-inline-block">
     <div class="card-body">
@@ -15,7 +17,7 @@
     </div>
 </div>
 
-<p>Вы уверены, что хотите удалить данный медиа-файл?</p>
+<p>@Texts.Admin_Media_Remove_Confirmation</p>
 
 <form action="@Url.Action("Remove", "Media", new {area = "Admin"})" method="POST">
     <input type="hidden" asp-for="Id" />
@@ -25,12 +27,12 @@
         <div class="form-group">
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" asp-for="RemoveCompletely" id="RemoveCompletely" />
-                <label class="form-check-label" for="RemoveCompletely">Удалить окончательно (освободит место на диске, восстановление будет невозможно)</label>
+                <label class="form-check-label" for="RemoveCompletely">@Texts.Admin_Media_Remove_CompletelyDescription</label>
             </div>
         </div>
     }
     <div class="form-group">
-        <button class="btn btn-danger" type="submit">Удалить</button>
-        <a href="@Url.Action("Index", "Media", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+        <button class="btn btn-danger" type="submit">@Texts.Admin_Global_Remove</button>
+        <a href="@Url.Action("Index", "Media", new {area = "Admin"})" class="btn btn-secondary">@Texts.Admin_Global_Cancel</a>
     </div>
 </form>

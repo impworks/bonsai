@@ -1,16 +1,18 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Media
+@using Bonsai.Code.Services
 @using Bonsai.Data.Models
-@using Impworks.Utils.Format
+@using Bonsai.Localization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bonsai.Areas.Admin.ViewModels.Media.MediaEditorVM
 @{
-    ViewBag.Title = "Редактирование медиа";
+    ViewBag.Title = Texts.Admin_Media_Edit_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var data = (MediaEditorDataVM)ViewBag.Data;
 }
 
-<h1>Редактор медиа</h1>
+<h1>@Texts.Admin_Media_Edit_Title</h1>
 
 <form action="@Url.Action("Update", "Media", new {area = "Admin"})" method="POST" class="media-editor-form">
     <input type="hidden" asp-for="Id" />
@@ -31,7 +33,7 @@
                 </div>
             </div>
             <div class="form-group col-sm-4">
-                <label>Отметки</label>
+                <label>@Texts.Admin_Media_Edit_VideoTags</label>
                 <select id="media-editor-tags-list" asp-items="data.DepictedEntityItems" multiple="multiple"></select>
             </div>
         }
@@ -48,7 +50,7 @@
             </div>
             <div class="form-group col-sm-2">
                 <button type="button" class="btn btn-outline-secondary cmd-add-tag">
-                    <i class="fa fa-plus-circle"></i> Отметить
+                    <i class="fa fa-plus-circle"></i> @Texts.Admin_Media_Edit_AddTag
                 </button>
             </div>
         }
@@ -56,31 +58,31 @@
     
     <div class="form-row">
         <div class="form-group col-sm-5">
-            <label asp-for="Title">Заголовок</label>
+            <label asp-for="Title">@Texts.Admin_Media_Edit_Caption</label>
             <input type="text" asp-for="Title" class="form-control" />
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
         <div class="form-group col-sm-3">
-            <label asp-for="Date">Дата</label>
-            <input type="text" asp-for="Date" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
+            <label asp-for="Date">@Texts.Admin_Media_Edit_Date</label>
+            <input type="text" asp-for="Date" class="form-control datepicker" placeholder="@Texts.Datepicker_Placeholder" />
             <span asp-validation-for="Date" class="text-danger"></span>
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-sm-4">
-            <label asp-for="Location">Место</label>
+            <label asp-for="Location">@Texts.Admin_Media_Edit_Location</label>
             <select asp-for="Location" asp-items="data.LocationItem"></select>
             <span asp-validation-for="Location" class="text-danger"></span>
         </div>
         <div class="form-group col-sm-4">
-            <label asp-for="Event">Событие</label>
+            <label asp-for="Event">@Texts.Admin_Media_Edit_Event</label>
             <select asp-for="Event" asp-items="data.EventItem"></select>
             <span asp-validation-for="Event" class="text-danger"></span>
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-sm-8">
-            <label asp-for="Description">Описание</label>
+            <label asp-for="Description">@Texts.Admin_Media_Edit_Description</label>
             <textarea asp-for="Description" class="form-control md-editor"></textarea>
         </div>
     </div>
@@ -88,7 +90,7 @@
     <div class="form-group">
         <input type="hidden" asp-for="SaveAction" />
         <div class="btn-group">
-            <button type="submit" class="btn btn-primary" title="Ctrl + Enter">@Model.SaveAction.GetEnumDescription()</button>
+            <button type="submit" class="btn btn-primary" title="Ctrl + Enter">@Model.SaveAction.GetLocaleEnumDescription()</button>
             <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
             <div class="dropdown-menu">
                 @foreach (var act in data.SaveActions)
@@ -97,7 +99,7 @@
                 }
             </div>
         </div>
-        <a href="@Url.Action("Index", "Media", new {area = "Admin"})" class="btn btn-secondary">Отмена</a>
+        <a href="@Url.Action("Index", "Media", new {area = "Admin"})" class="btn btn-secondary">@Texts.Admin_Global_Cancel</a>
     </div>
 </form>
 
@@ -112,7 +114,7 @@
 <script type="text/template" id="media-tag-popup-template">
     <form class="media-tag-popup-form form-inline">
         <select class="form-control"></select>
-        <button type="button" class="btn btn-danger cmd-remove-tag" title="Удалить отметку">
+        <button type="button" class="btn btn-danger cmd-remove-tag" title="@Texts.Admin_Media_Edit_RemoveTag">
             <i class="fa fa-trash"></i>
         </button>
     </form> 

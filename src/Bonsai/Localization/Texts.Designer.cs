@@ -1060,11 +1060,29 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Редактировать.
+        /// </summary>
+        public static string Admin_Global_Edit {
+            get {
+                return ResourceManager.GetString("Admin_Global_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Найти.
         /// </summary>
         public static string Admin_Global_Find {
             get {
                 return ResourceManager.GetString("Admin_Global_Find", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to История изменений.
+        /// </summary>
+        public static string Admin_Global_History {
+            get {
+                return ResourceManager.GetString("Admin_Global_History", resourceCulture);
             }
         }
         
@@ -1083,6 +1101,15 @@ namespace Bonsai.Localization {
         public static string Admin_Global_Pick {
             get {
                 return ResourceManager.GetString("Admin_Global_Pick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить.
+        /// </summary>
+        public static string Admin_Global_Remove {
+            get {
+                return ResourceManager.GetString("Admin_Global_Remove", resourceCulture);
             }
         }
         
@@ -1132,11 +1159,191 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Отметить.
+        /// </summary>
+        public static string Admin_Media_Edit_AddTag {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_AddTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заголовок.
+        /// </summary>
+        public static string Admin_Media_Edit_Caption {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Admin_Media_Edit_Date {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Описание.
+        /// </summary>
+        public static string Admin_Media_Edit_Description {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string Admin_Media_Edit_Event {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место.
+        /// </summary>
+        public static string Admin_Media_Edit_Location {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить отметку.
+        /// </summary>
+        public static string Admin_Media_Edit_RemoveTag {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_RemoveTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Редактирование медиа.
+        /// </summary>
+        public static string Admin_Media_Edit_Title {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отметки.
+        /// </summary>
+        public static string Admin_Media_Edit_VideoTags {
+            get {
+                return ResourceManager.GetString("Admin_Media_Edit_VideoTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не добавлено ни одного файла..
+        /// </summary>
+        public static string Admin_Media_List_Empty {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to По запросу не найдено ни одного файла..
+        /// </summary>
+        public static string Admin_Media_List_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Снято.
+        /// </summary>
+        public static string Admin_Media_List_ShootDate {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_ShootDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Теги.
+        /// </summary>
+        public static string Admin_Media_List_Tags {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Список медиа.
+        /// </summary>
+        public static string Admin_Media_List_Title {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Загрузить.
+        /// </summary>
+        public static string Admin_Media_List_Upload {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_Upload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Загружено.
+        /// </summary>
+        public static string Admin_Media_List_UploadDate {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_UploadDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Загрузить новый медиа-файл.
+        /// </summary>
+        public static string Admin_Media_List_UploadDescription {
+            get {
+                return ResourceManager.GetString("Admin_Media_List_UploadDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Медиа-файл не найден.
         /// </summary>
         public static string Admin_Media_NotFound {
             get {
                 return ResourceManager.GetString("Admin_Media_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить окончательно (освободит место на диске, восстановление будет невозможно).
+        /// </summary>
+        public static string Admin_Media_Remove_CompletelyDescription {
+            get {
+                return ResourceManager.GetString("Admin_Media_Remove_CompletelyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите удалить данный медиа-файл?.
+        /// </summary>
+        public static string Admin_Media_Remove_Confirmation {
+            get {
+                return ResourceManager.GetString("Admin_Media_Remove_Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удаление медиа.
+        /// </summary>
+        public static string Admin_Media_Remove_Title {
+            get {
+                return ResourceManager.GetString("Admin_Media_Remove_Title", resourceCulture);
             }
         }
         
