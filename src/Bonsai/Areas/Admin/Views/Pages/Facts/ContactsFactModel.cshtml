@@ -1,10 +1,11 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Bonsai.Localization
 @using Impworks.Utils.Format
 <script type="text/x-template" data-kind="fact-template" id="ContactsFactModel">
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
-            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({Type: 'Facebook', Value: ''})" title="Указать ссылку">
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({Type: 'Facebook', Value: ''})" title="@Texts.Admin_Page_Facts_Add">
                 <i class="fa fa-plus"></i>
             </button>
         </h6>
@@ -13,7 +14,7 @@
                 <div class="col-sm-8 form form-fact fact-list-item">
                     <div class="form-row">
                         <div class="form-group col-sm-4">
-                            <label>Тип</label>
+                            <label>@Texts.Admin_Page_Facts_LinkType</label>
                             <select v-model="row.Type" class="form-control form-control-sm mr-2">
                                 @foreach (var prof in EnumHelper.GetEnumDescriptions<ContactType>())
                                 {
@@ -22,10 +23,10 @@
                             </select>
                         </div>
                         <div class="form-group col-sm-8">
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-fact" v-on:click="remove(row)" title="Удалить ссылку">
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-fact" v-on:click="remove(row)" title="@Texts.Admin_Page_Facts_Remove">
                                 <i class="fa fa-remove"></i>
                             </button>
-                            <label>Ссылка</label>
+                            <label>@Texts.Admin_Page_Facts_Link</label>
                             <input type="text" v-model="row.Value" :placeholder="contactPlaceholder(row.Type)" class="form-control form-control-sm mr-2" />
                         </div>
                     </div>

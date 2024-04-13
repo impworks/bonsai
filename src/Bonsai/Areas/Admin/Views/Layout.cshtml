@@ -1,4 +1,5 @@
 ﻿@using Bonsai.Code.Services.Config
+@using Bonsai.Localization
 @inject BonsaiConfigService ConfigService
 @{
     var cfg = ConfigService.GetDynamicConfig();
@@ -38,7 +39,7 @@
                 @if (demoCfg.Enabled)
                 {
                     <div class="alert alert-warning mt-1 mb-4">
-                        <small>Bonsai работает в демонстрационном режиме. Все данные периодически сбрасываются.</small>
+                        <small>@Texts.Admin_DemoMode_Banner</small>
                     </div>
                 }
                 <div class="row">

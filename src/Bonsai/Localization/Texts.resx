@@ -1885,4 +1885,97 @@
   <data name="Admin_PagePicker_Title" xml:space="preserve">
     <value>Выбор страницы</value>
   </data>
+  <data name="Admin_Media_Upload_Title" xml:space="preserve">
+    <value>Загрузка медиа</value>
+  </data>
+  <data name="Admin_Global_Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Admin_Media_Upload_Bytes" xml:space="preserve">
+    <value>{0} Б</value>
+  </data>
+  <data name="Admin_Media_Upload_ClickHereToUpload" xml:space="preserve">
+    <value>Нажмите сюда для загрузки нового файла</value>
+  </data>
+  <data name="Admin_Media_Upload_Gigabytes" xml:space="preserve">
+    <value>{0} ГБ</value>
+  </data>
+  <data name="Admin_Media_Upload_Kilobytes" xml:space="preserve">
+    <value>{0} КБ</value>
+  </data>
+  <data name="Admin_Media_Upload_Megabytes" xml:space="preserve">
+    <value>{0} МБ</value>
+  </data>
+  <data name="Admin_Media_Upload_SizeLimitFormat" xml:space="preserve">
+    <value>Не более {0}</value>
+  </data>
+  <data name="Admin_Media_Upload_UseFileNameAsCaption" xml:space="preserve">
+    <value>Брать название из имени файла</value>
+  </data>
+  <data name="Admin_Page_Facts_BloodType" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="Admin_Page_Facts_Add" xml:space="preserve">
+    <value>Указать факт</value>
+  </data>
+  <data name="Admin_Page_Facts_Link" xml:space="preserve">
+    <value>Ссылка</value>
+  </data>
+  <data name="Admin_Page_Facts_LinkType" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="Admin_Page_Facts_Remove" xml:space="preserve">
+    <value>Удалить факт</value>
+  </data>
+  <data name="Admin_Page_Facts_Rhesus" xml:space="preserve">
+    <value>Резус</value>
+  </data>
+  <data name="Admin_Page_Facts_RhesusNegative" xml:space="preserve">
+    <value>Отрицательный (R-)</value>
+  </data>
+  <data name="Admin_Page_Facts_RhesusPositive" xml:space="preserve">
+    <value>Положительный (R+)</value>
+  </data>
+  <data name="Admin_Page_Facts_RhesusUnknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="Admin_DemoMode_Banner" xml:space="preserve">
+    <value>Bonsai работает в демонстрационном режиме. Все данные периодически сбрасываются.</value>
+  </data>
+  <data name="Admin_Page_Facts_DateUnknown" xml:space="preserve">
+    <value>Дата неизвестна</value>
+  </data>
+  <data name="Admin_Page_Facts_FirstName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Admin_Page_Facts_GenderFemale" xml:space="preserve">
+    <value>Женский</value>
+  </data>
+  <data name="Admin_Page_Facts_GenderMale" xml:space="preserve">
+    <value>Мужской</value>
+  </data>
+  <data name="Admin_Page_Facts_Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Admin_Page_Facts_LanguageLevel" xml:space="preserve">
+    <value>Уровень</value>
+  </data>
+  <data name="Admin_Page_Facts_LastName" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="Admin_Page_Facts_MiddleName" xml:space="preserve">
+    <value>Отчество</value>
+  </data>
+  <data name="Admin_Page_Facts_Skill" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Admin_Page_Facts_SkillLevel" xml:space="preserve">
+    <value>Уровень</value>
+  </data>
+  <data name="Admin_Page_Facts_StringValue" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="Admin_Page_Facts_Unspecified" xml:space="preserve">
+    <value>Не указано</value>
+  </data>
 </root>

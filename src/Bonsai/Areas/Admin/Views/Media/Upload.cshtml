@@ -3,55 +3,66 @@
 @inject BonsaiConfigService Config
 
 @{
-    ViewBag.Title = "Загрузка медиа";
+    ViewBag.Title = Texts.Admin_Media_Upload_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
+    var sizeTexts = new[]
+    {
+        Texts.Admin_Media_Upload_Bytes,
+        Texts.Admin_Media_Upload_Kilobytes,
+        Texts.Admin_Media_Upload_Megabytes,
+        Texts.Admin_Media_Upload_Gigabytes
+    };
     var maxSize = Config.GetStaticConfig().WebServer.MaxUploadSize;
 
     string RenderSize()
     {
-        if (maxSize == null)
+        if (maxSize is null or 0)
             return null;
-        if (maxSize < 1024)
-            return maxSize + " Б";
-        if (maxSize < 1024 * 1024)
-            return Math.Round(maxSize.Value / 1024M, 2) + " КБ";
-        if (maxSize < 1024 * 1024 * 1024)
-            return Math.Round(maxSize.Value / (1024M * 1024), 2) + " МБ";
-        return Math.Round(maxSize.Value / (1024M * 1024 * 1024), 2) + " ГБ";
+
+        var threshold = 1M;
+        for (var i = 0; i < sizeTexts.Length; i++)
+        {
+            var size = Math.Round(maxSize.Value / threshold, 2);
+            threshold *= 1024;
+            if (maxSize < threshold || i == sizeTexts.Length - 1)
+                return string.Format(sizeTexts[i], size);
+        }
+
+        return null;
     }
 }
 
-<h1>Загрузка медиа</h1>
+<h1>@Texts.Admin_Media_Upload_Title</h1>
 
 <form>
     <div class="form-row">
         <div class="form-group col-sm-4">
-            <label for="Date">Дата</label>
+            <label for="Date">@Texts.Admin_Global_Date</label>
             <input type="text" id="Date" class="form-control datepicker" placeholder="@Texts.Datepicker_Placeholder" />
         </div>
         <div class="form-group col-sm-4">
-            <label for="Location">Место</label>
+            <label for="Location">@Texts.Admin_Media_Edit_Location</label>
             <select id="Location"></select>
         </div>
         <div class="form-group col-sm-4">
-            <label for="Event">Событие</label>
+            <label for="Event">@Texts.Admin_Media_Edit_Event</label>
             <select id="Event"></select>
         </div>
     </div>
     <div class="pl-4">
         <input type="checkbox" id="UseFileNameAsTitle" class="custom-control-input" checked="checked"/>
-        <label for="UseFileNameAsTitle" class="custom-control-label">Брать название из имени файла</label>
+        <label for="UseFileNameAsTitle" class="custom-control-label">@Texts.Admin_Media_Upload_UseFileNameAsCaption</label>
     </div>
 </form>
 
 <div class="card media-uploader" data-max-size="@maxSize">
     <div class="card-body">
-        <div>Нажмите сюда для загрузки нового файла</div>
+        <div>@Texts.Admin_Media_Upload_ClickHereToUpload</div>
             @if (maxSize != null)
             {
                 <div class="mt-2">
-                    <small class="text-muted">Не более @RenderSize()</small>
+                    <small class="text-muted">@string.Format(Texts.Admin_Media_Upload_SizeLimitFormat, RenderSize())</small>
                 </div>
             }
         <input type="file" name="file" multiple="multiple" />
@@ -71,10 +82,10 @@
                 <div class="progress">
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
                 </div>
-                <span class="error text-danger text-small" style="display: none">Ошибка</span>
+                <span class="error text-danger text-small" style="display: none">@Texts.Admin_Global_Error</span>
                 <a href="#" class="media-edit-link" target="_blank" style="display: none">
                     <span class="fa fa-pencil"></span>
-                    Редактировать
+                    @Texts.Admin_Global_Edit
                 </a>
             </div>
         </div>
