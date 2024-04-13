@@ -1024,6 +1024,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bonsai работает в демонстрационном режиме. Все данные периодически сбрасываются..
+        /// </summary>
+        public static string Admin_DemoMode_Banner {
+            get {
+                return ResourceManager.GetString("Admin_DemoMode_Banner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Запрещено в демо-режиме.
         /// </summary>
         public static string Admin_ForbiddenInDemoMessage {
@@ -1065,6 +1074,15 @@ namespace Bonsai.Localization {
         public static string Admin_Global_Edit {
             get {
                 return ResourceManager.GetString("Admin_Global_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ошибка.
+        /// </summary>
+        public static string Admin_Global_Error {
+            get {
+                return ResourceManager.GetString("Admin_Global_Error", resourceCulture);
             }
         }
         
@@ -1375,6 +1393,78 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Б.
+        /// </summary>
+        public static string Admin_Media_Upload_Bytes {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_Bytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нажмите сюда для загрузки нового файла.
+        /// </summary>
+        public static string Admin_Media_Upload_ClickHereToUpload {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_ClickHereToUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} ГБ.
+        /// </summary>
+        public static string Admin_Media_Upload_Gigabytes {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_Gigabytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} КБ.
+        /// </summary>
+        public static string Admin_Media_Upload_Kilobytes {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_Kilobytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} МБ.
+        /// </summary>
+        public static string Admin_Media_Upload_Megabytes {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_Megabytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не более {0}.
+        /// </summary>
+        public static string Admin_Media_Upload_SizeLimitFormat {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_SizeLimitFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Загрузка медиа.
+        /// </summary>
+        public static string Admin_Media_Upload_Title {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Брать название из имени файла.
+        /// </summary>
+        public static string Admin_Media_Upload_UseFileNameAsCaption {
+            get {
+                return ResourceManager.GetString("Admin_Media_Upload_UseFileNameAsCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Выбор медиа.
         /// </summary>
         public static string Admin_MediaPicker_Title {
@@ -1443,6 +1533,195 @@ namespace Bonsai.Localization {
         public static string Admin_Menu_Users {
             get {
                 return ResourceManager.GetString("Admin_Menu_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Указать факт.
+        /// </summary>
+        public static string Admin_Page_Facts_Add {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип.
+        /// </summary>
+        public static string Admin_Page_Facts_BloodType {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_BloodType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата неизвестна.
+        /// </summary>
+        public static string Admin_Page_Facts_DateUnknown {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_DateUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя.
+        /// </summary>
+        public static string Admin_Page_Facts_FirstName {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Женский.
+        /// </summary>
+        public static string Admin_Page_Facts_GenderFemale {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_GenderFemale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Мужской.
+        /// </summary>
+        public static string Admin_Page_Facts_GenderMale {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_GenderMale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Язык.
+        /// </summary>
+        public static string Admin_Page_Facts_Language {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Уровень.
+        /// </summary>
+        public static string Admin_Page_Facts_LanguageLevel {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_LanguageLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фамилия.
+        /// </summary>
+        public static string Admin_Page_Facts_LastName {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ссылка.
+        /// </summary>
+        public static string Admin_Page_Facts_Link {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип.
+        /// </summary>
+        public static string Admin_Page_Facts_LinkType {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_LinkType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отчество.
+        /// </summary>
+        public static string Admin_Page_Facts_MiddleName {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_MiddleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить факт.
+        /// </summary>
+        public static string Admin_Page_Facts_Remove {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Резус.
+        /// </summary>
+        public static string Admin_Page_Facts_Rhesus {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Rhesus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отрицательный (R-).
+        /// </summary>
+        public static string Admin_Page_Facts_RhesusNegative {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_RhesusNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Положительный (R+).
+        /// </summary>
+        public static string Admin_Page_Facts_RhesusPositive {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_RhesusPositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Неизвестно.
+        /// </summary>
+        public static string Admin_Page_Facts_RhesusUnknown {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_RhesusUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Название.
+        /// </summary>
+        public static string Admin_Page_Facts_Skill {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Skill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Уровень.
+        /// </summary>
+        public static string Admin_Page_Facts_SkillLevel {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_SkillLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Значение.
+        /// </summary>
+        public static string Admin_Page_Facts_StringValue {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_StringValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не указано.
+        /// </summary>
+        public static string Admin_Page_Facts_Unspecified {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Unspecified", resourceCulture);
             }
         }
         
