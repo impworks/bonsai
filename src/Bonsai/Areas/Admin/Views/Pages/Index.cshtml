@@ -5,30 +5,32 @@
 @using Bonsai.Areas.Admin.ViewModels.Pages
 @using Bonsai.Areas.Front.Components
 @using Bonsai.Code.DomainModel.Media
+@using Bonsai.Code.Services
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Humanizer
 @using Impworks.Utils.Format
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewBag.Title = "Список страниц";
+    ViewBag.Title = Texts.Admin_Pages_List_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Pages", new { area = "Admin" });
 }
 
-<h1>Список страниц</h1>
+<h1>@Texts.Admin_Pages_List_Title</h1>
 
 <div class="clearfix">
     <div class="float-left">
         <div class="dropdown">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="Создать новую страницу">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="@Texts.Admin_Pages_List_CreateNew">
                 <span class="fa fa-plus-circle"></span>
-                Создать
+                @Texts.Admin_Global_Create
             </button>
             <div class="dropdown-menu">
-                @foreach (var elem in EnumHelper.GetEnumDescriptions<PageType>())
+                @foreach (var elem in LocaleProvider.GetLocaleEnumDescriptions<PageType>())
                 {
                     <a href="@Url.Action("Create", "Pages", new {area = "Admin", type = elem.Key})" class="dropdown-item">@elem.Value</a>
                 }
@@ -43,8 +45,8 @@
                 request = Model.Request,
                 propName = nameof(PagesListRequestVM.Types)
             })
-            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(PagesListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Название"/>
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(PagesListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="@Texts.Admin_Global_Title"/>
+            <button class="btn btn-sm btn-outline-secondary" type="submit">@Texts.Admin_Global_Find</button>
         </form>
     </div>
 </div>
@@ -54,10 +56,10 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th width="50%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.Title), title = "Название" })</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.CreationDate), title = "Создана" })</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.LastUpdateDate), title = "Изменена" })</th>
-                <th width="10%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.CompletenessScore), title = "Ранг" })</th>
+                <th width="50%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.Title), title = Texts.Admin_Global_Title })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.CreationDate), title = Texts.Admin_Pages_List_Created })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.LastUpdateDate), title = Texts.Admin_Pages_List_Updated })</th>
+                <th width="10%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(PageScoredVM.CompletenessScore), title = Texts.Admin_Pages_List_Rank })</th>
                 <th width="1px"></th>
             </tr>
         </thead>
@@ -67,7 +69,7 @@
             <tr class="admin-row">
                 <td>
                     <page-image image="@p.MainPhotoPath" type="@p.Type" size="@MediaSize.Small"></page-image>
-                    <a href="@Url.Action("Update", "Pages", new {area = "Admin", id = p.Id})" title="Редактировать">
+                    <a href="@Url.Action("Update", "Pages", new {area = "Admin", id = p.Id})" title="@Texts.Admin_Global_Edit">
                         @p.Title
                     </a>
                 </td>
@@ -89,19 +91,19 @@
                 </td>
                 <td class="admin-row-actions">
                     <a href="@Url.Action("Remove", "Pages", new {area = "Admin", id = p.Id})">
-                        <span class="fa fa-remove" title="Удалить"></span>
+                        <span class="fa fa-remove" title="@Texts.Admin_Global_Remove"></span>
                     </a>
                     <a href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = p.Id})">
-                        <span class="fa fa-database" title="История изменений"></span>
+                        <span class="fa fa-database" title="@Texts.Admin_Global_ChangeHistory"></span>
                     </a>
                     <a href="@Url.Action("Index", "Relations", new {area = "Admin", entityId = p.Id})">
-                        <span class="fa fa-retweet" title="Связи"></span>
+                        <span class="fa fa-retweet" title="@Texts.Admin_Pages_List_Relations"></span>
                     </a>
                     <a href="@Url.Action("Index", "Media", new {area = "Admin", entityId = p.Id})">
-                        <span class="fa fa-picture-o" title="Медиа"></span>
+                        <span class="fa fa-picture-o" title="@Texts.Admin_Pages_List_Media"></span>
                     </a>
                     <a href="@Url.Action("Description", "Page", new {area = "Front", key = p.Key})" target="_blank">
-                        <span class="fa fa-external-link-square" title="Просмотреть"></span>
+                        <span class="fa fa-external-link-square" title="@Texts.Admin_Global_View"></span>
                     </a>
                 </td>
             </tr>
@@ -113,15 +115,11 @@ else
 {
     if(Model.Request.IsEmpty())
     {
-        <div class="alert alert-info">
-            Не добавлено ни одной страницы.
-        </div>
+        <div class="alert alert-info">@Texts.Admin_Pages_List_Empty</div>
     }
     else
     {
-        <div class="alert alert-info">
-            По запросу не найдено ни одной страницы.
-        </div>
+        <div class="alert alert-info">@Texts.Admin_Pages_List_NotFound</div>
     }
 }
 

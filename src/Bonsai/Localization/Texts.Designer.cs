@@ -1069,6 +1069,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to История изменений.
+        /// </summary>
+        public static string Admin_Global_ChangeHistory {
+            get {
+                return ResourceManager.GetString("Admin_Global_ChangeHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Снять фильтр.
         /// </summary>
         public static string Admin_Global_ClearFilter {
@@ -1083,6 +1092,15 @@ namespace Bonsai.Localization {
         public static string Admin_Global_ContradictingFacts {
             get {
                 return ResourceManager.GetString("Admin_Global_ContradictingFacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Создать.
+        /// </summary>
+        public static string Admin_Global_Create {
+            get {
+                return ResourceManager.GetString("Admin_Global_Create", resourceCulture);
             }
         }
         
@@ -1636,6 +1654,105 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Адрес.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Address {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя.
+        /// </summary>
+        public static string Admin_Pages_Criterion_AnimalName {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_AnimalName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to День рождения.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Birthday {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Birthday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Место рождения.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Birthplace {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Birthplace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Date {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пол.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Gender {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Gender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя.
+        /// </summary>
+        public static string Admin_Pages_Criterion_HumanName {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_HumanName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фото.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Photo {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Photo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связи.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Relations {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Relations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вид.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Species {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Species", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Текст.
+        /// </summary>
+        public static string Admin_Pages_Criterion_Text {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Criterion_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Добавить новую ссылку.
         /// </summary>
         public static string Admin_Pages_Editor_AddAlias {
@@ -1987,11 +2104,119 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Создана.
+        /// </summary>
+        public static string Admin_Pages_List_Created {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Создать новую страницу.
+        /// </summary>
+        public static string Admin_Pages_List_CreateNew {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_CreateNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не добавлено ни одной страницы..
+        /// </summary>
+        public static string Admin_Pages_List_Empty {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Медиа.
+        /// </summary>
+        public static string Admin_Pages_List_Media {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_Media", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to По запросу не найдено ни одной страницы..
+        /// </summary>
+        public static string Admin_Pages_List_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ранг.
+        /// </summary>
+        public static string Admin_Pages_List_Rank {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_Rank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связи.
+        /// </summary>
+        public static string Admin_Pages_List_Relations {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_Relations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Список страниц.
+        /// </summary>
+        public static string Admin_Pages_List_Title {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Изменена.
+        /// </summary>
+        public static string Admin_Pages_List_Updated {
+            get {
+                return ResourceManager.GetString("Admin_Pages_List_Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Страница не существует!.
         /// </summary>
         public static string Admin_Pages_NotFound {
             get {
                 return ResourceManager.GetString("Admin_Pages_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить страницу и все ее упоминания окончательно (восстановление будет невозможно).
+        /// </summary>
+        public static string Admin_Pages_Remove_Completely {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Remove_Completely", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите удалить страницу &lt;b&gt;{0}&lt;/b&gt;?.
+        /// </summary>
+        public static string Admin_Pages_Remove_ConfirmationFormat {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Remove_ConfirmationFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удаление страницы.
+        /// </summary>
+        public static string Admin_Pages_Remove_Title {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Remove_Title", resourceCulture);
             }
         }
         
