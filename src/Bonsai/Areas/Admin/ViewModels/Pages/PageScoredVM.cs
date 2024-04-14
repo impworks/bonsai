@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.Pages
@@ -67,36 +68,36 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         {
             get
             {
-                yield return GetCriterion("Текст", x => x.HasText);
+                yield return GetCriterion(Texts.Admin_Pages_Criterion_Text, x => x.HasText);
 
                 if (Type == PageType.Person)
                 {
-                    yield return GetCriterion("Имя", x => x.HasHumanName);
-                    yield return GetCriterion("День рождения", x => x.HasBirthday);
-                    yield return GetCriterion("Место рождения", x => x.HasBirthPlace);
-                    yield return GetCriterion("Пол", x => x.HasGender);
-                    yield return GetCriterion("Фото", x => x.HasPhoto);
-                    yield return GetCriterion("Связи", x => x.HasRelations);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_HumanName, x => x.HasHumanName);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Birthday, x => x.HasBirthday);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Birthplace, x => x.HasBirthPlace);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Gender, x => x.HasGender);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Photo, x => x.HasPhoto);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Relations, x => x.HasRelations);
                 }
 
                 if (Type == PageType.Pet)
                 {
-                    yield return GetCriterion("Имя", x => x.HasAnimalName);
-                    yield return GetCriterion("День рождения", x => x.HasBirthday);
-                    yield return GetCriterion("Вид", x => x.HasAnimalSpecies);
-                    yield return GetCriterion("Фото", x => x.HasPhoto);
-                    yield return GetCriterion("Связи", x => x.HasRelations);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_AnimalName, x => x.HasAnimalName);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Birthday, x => x.HasBirthday);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Species, x => x.HasAnimalSpecies);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Photo, x => x.HasPhoto);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Relations, x => x.HasRelations);
                 }
 
                 if (Type == PageType.Event)
                 {
-                    yield return GetCriterion("Дата", x => x.HasEventDate);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Date, x => x.HasEventDate);
                 }
 
                 if (Type == PageType.Location)
                 {
-                    yield return GetCriterion("Адрес", x => x.HasLocationAddress);
-                    yield return GetCriterion("Фото", x => x.HasPhoto);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Address, x => x.HasLocationAddress);
+                    yield return GetCriterion(Texts.Admin_Pages_Criterion_Photo, x => x.HasPhoto);
                 }
             }
         }

@@ -1984,8 +1984,14 @@
   <data name="Admin_Global_Back" xml:space="preserve">
     <value>Назад</value>
   </data>
+  <data name="Admin_Global_ChangeHistory" xml:space="preserve">
+    <value>История изменений</value>
+  </data>
   <data name="Admin_Global_ContradictingFacts" xml:space="preserve">
     <value>Противоречивые факты</value>
+  </data>
+  <data name="Admin_Global_Create" xml:space="preserve">
+    <value>Создать</value>
   </data>
   <data name="Admin_Global_Preview" xml:space="preserve">
     <value>Просмотр</value>
@@ -2049,10 +2055,80 @@
   <data name="Admin_Pages_Editor_Title" xml:space="preserve">
     <value>Заголовок</value>
   </data>
+  <data name="Admin_Pages_List_Created" xml:space="preserve">
+    <value>Создана</value>
+  </data>
+  <data name="Admin_Pages_List_CreateNew" xml:space="preserve">
+    <value>Создать новую страницу</value>
+  </data>
+  <data name="Admin_Pages_List_Empty" xml:space="preserve">
+    <value>Не добавлено ни одной страницы.</value>
+  </data>
+  <data name="Admin_Pages_List_Media" xml:space="preserve">
+    <value>Медиа</value>
+  </data>
+  <data name="Admin_Pages_List_NotFound" xml:space="preserve">
+    <value>По запросу не найдено ни одной страницы.</value>
+  </data>
+  <data name="Admin_Pages_List_Rank" xml:space="preserve">
+    <value>Ранг</value>
+  </data>
+  <data name="Admin_Pages_List_Relations" xml:space="preserve">
+    <value>Связи</value>
+  </data>
+  <data name="Admin_Pages_List_Title" xml:space="preserve">
+    <value>Список страниц</value>
+  </data>
+  <data name="Admin_Pages_List_Updated" xml:space="preserve">
+    <value>Изменена</value>
+  </data>
+  <data name="Admin_Pages_Remove_Completely" xml:space="preserve">
+    <value>Удалить страницу и все ее упоминания окончательно (восстановление будет невозможно)</value>
+  </data>
+  <data name="Admin_Pages_Remove_ConfirmationFormat" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить страницу &lt;b&gt;{0}&lt;/b&gt;?</value>
+    <comment>{0} = page title</comment>
+  </data>
+  <data name="Admin_Pages_Remove_Title" xml:space="preserve">
+    <value>Удаление страницы</value>
+  </data>
   <data name="Datepicker_From" xml:space="preserve">
     <value>От</value>
   </data>
   <data name="Datepicker_To" xml:space="preserve">
     <value>До</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Text" xml:space="preserve">
+      <value>Текст</value>
+  </data>
+  <data name="Admin_Pages_Criterion_HumanName" xml:space="preserve">
+      <value>Имя</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Birthday" xml:space="preserve">
+      <value>День рождения</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Birthplace" xml:space="preserve">
+      <value>Место рождения</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Gender" xml:space="preserve">
+      <value>Пол</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Photo" xml:space="preserve">
+      <value>Фото</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Relations" xml:space="preserve">
+      <value>Связи</value>
+  </data>
+  <data name="Admin_Pages_Criterion_AnimalName" xml:space="preserve">
+      <value>Имя</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Species" xml:space="preserve">
+      <value>Вид</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Date" xml:space="preserve">
+      <value>Дата</value>
+  </data>
+  <data name="Admin_Pages_Criterion_Address" xml:space="preserve">
+      <value>Адрес</value>
   </data>
 </root>
