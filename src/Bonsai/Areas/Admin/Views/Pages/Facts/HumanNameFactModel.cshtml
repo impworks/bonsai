@@ -3,7 +3,7 @@
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
-            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({}, 'name')" title="@Texts.Admin_Page_Facts_Add">
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({}, 'name')" title="@Texts.Admin_Pages_Facts_Add">
                 <i class="fa fa-plus"></i>
             </button>
         </h6>
@@ -12,19 +12,19 @@
                 <div class="col-sm-8 form form-fact fact-list-item">
                     <div class="form-row">
                         <div class="form-group col-sm-4">
-                            <label>@Texts.Admin_Page_Facts_LastName</label>
+                            <label>@Texts.Admin_Pages_Facts_LastName</label>
                             <input type="text" v-model="row.LastName" class="form-control form-control-sm mr-2" />
                         </div>
                         <div class="form-group col-sm-4">
-                            <label>@Texts.Admin_Page_Facts_FirstName</label>
-                            <input type="text" v-model="row.FirstName" class="form-control form-control-sm mr-2" placeholder="@Texts.Admin_Page_Facts_FirstName" />
+                            <label>@Texts.Admin_Pages_Facts_FirstName</label>
+                            <input type="text" v-model="row.FirstName" class="form-control form-control-sm mr-2" placeholder="@Texts.Admin_Pages_Facts_FirstName" />
                         </div>
                         <div class="form-group col-sm-4">
-                            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-fact" v-on:click="remove(row)" title="@Texts.Admin_Page_Facts_Add">
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-fact" v-on:click="remove(row)" title="@Texts.Admin_Pages_Facts_Add">
                                 <i class="fa fa-remove"></i>
                             </button>
-                            <label>@Texts.Admin_Page_Facts_MiddleName</label>
-                            <input type="text" v-model="row.MiddleName" class="form-control form-control-sm mr-2" placeholder="@Texts.Admin_Page_Facts_MiddleName" />
+                            <label>@Texts.Admin_Pages_Facts_MiddleName</label>
+                            <input type="text" v-model="row.MiddleName" class="form-control form-control-sm mr-2" placeholder="@Texts.Admin_Pages_Facts_MiddleName" />
                         </div>
                     </div>
                     <duration-picker v-model="row.Duration" size="sm" />

@@ -3,14 +3,14 @@
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
-            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({Value: ''})" title="@Texts.Admin_Page_Facts_Add">
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({Value: ''})" title="@Texts.Admin_Pages_Facts_Add">
                 <i class="fa fa-plus"></i>
             </button>
         </h6>
         <div v-if="!empty()">
             <div class="form-inline">
                 <date-picker v-model="data[def.key].Value" size="sm" margin="2"></date-picker>
-                <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="unset" title="@Texts.Admin_Page_Facts_Remove">
+                <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="unset" title="@Texts.Admin_Pages_Facts_Remove">
                     <i class="fa fa-remove"></i>
                 </button>
             </div>
