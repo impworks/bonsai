@@ -6,7 +6,7 @@
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
-            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({})" title="@Texts.Admin_Page_Facts_Add">
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="add({})" title="@Texts.Admin_Pages_Facts_Add">
                 <i class="fa fa-plus"></i>
             </button>
         </h6>
@@ -15,16 +15,16 @@
                 <div class="col-sm-8 form form-fact fact-list-item">
                     <div class="form-row">
                         <div class="form-group col-sm-8">
-                            <label>@Texts.Admin_Page_Facts_Skill</label>
+                            <label>@Texts.Admin_Pages_Facts_Skill</label>
                             <input type="text" v-model="row.Name" class="form-control form-control-sm mr-2" />
                         </div>
                         <div class="form-group col-sm-4">
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-fact" v-on:click="remove(row)" title="@Texts.Admin_Page_Facts_Remove">
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-fact" v-on:click="remove(row)" title="@Texts.Admin_Pages_Facts_Remove">
                                 <i class="fa fa-remove"></i>
                             </button>
-                            <label>@Texts.Admin_Page_Facts_SkillLevel</label>
+                            <label>@Texts.Admin_Pages_Facts_SkillLevel</label>
                             <select v-model="row.Proficiency" class="form-control form-control-sm mr-2">
-                                <option v-bind:value="null">@Texts.Admin_Page_Facts_Unspecified</option>
+                                <option v-bind:value="null">@Texts.Admin_Pages_Facts_Unspecified</option>
                                 @foreach(var prof in LocaleProvider.GetLocaleEnumDescriptions<SkillProficiency>())
                                 {
                                     <option value="@prof.Key">@prof.Value</option>

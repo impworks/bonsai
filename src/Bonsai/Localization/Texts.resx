@@ -1912,70 +1912,147 @@
   <data name="Admin_Media_Upload_UseFileNameAsCaption" xml:space="preserve">
     <value>Брать название из имени файла</value>
   </data>
-  <data name="Admin_Page_Facts_BloodType" xml:space="preserve">
+  <data name="Admin_Pages_Facts_BloodType" xml:space="preserve">
     <value>Тип</value>
   </data>
-  <data name="Admin_Page_Facts_Add" xml:space="preserve">
+  <data name="Admin_Pages_Facts_Add" xml:space="preserve">
     <value>Указать факт</value>
   </data>
-  <data name="Admin_Page_Facts_Link" xml:space="preserve">
+  <data name="Admin_Pages_Facts_Link" xml:space="preserve">
     <value>Ссылка</value>
   </data>
-  <data name="Admin_Page_Facts_LinkType" xml:space="preserve">
+  <data name="Admin_Pages_Facts_LinkType" xml:space="preserve">
     <value>Тип</value>
   </data>
-  <data name="Admin_Page_Facts_Remove" xml:space="preserve">
+  <data name="Admin_Pages_Facts_Remove" xml:space="preserve">
     <value>Удалить факт</value>
   </data>
-  <data name="Admin_Page_Facts_Rhesus" xml:space="preserve">
+  <data name="Admin_Pages_Facts_Rhesus" xml:space="preserve">
     <value>Резус</value>
   </data>
-  <data name="Admin_Page_Facts_RhesusNegative" xml:space="preserve">
+  <data name="Admin_Pages_Facts_RhesusNegative" xml:space="preserve">
     <value>Отрицательный (R-)</value>
   </data>
-  <data name="Admin_Page_Facts_RhesusPositive" xml:space="preserve">
+  <data name="Admin_Pages_Facts_RhesusPositive" xml:space="preserve">
     <value>Положительный (R+)</value>
   </data>
-  <data name="Admin_Page_Facts_RhesusUnknown" xml:space="preserve">
+  <data name="Admin_Pages_Facts_RhesusUnknown" xml:space="preserve">
     <value>Неизвестно</value>
   </data>
   <data name="Admin_DemoMode_Banner" xml:space="preserve">
     <value>Bonsai работает в демонстрационном режиме. Все данные периодически сбрасываются.</value>
   </data>
-  <data name="Admin_Page_Facts_DateUnknown" xml:space="preserve">
+  <data name="Admin_Pages_Facts_DateUnknown" xml:space="preserve">
     <value>Дата неизвестна</value>
   </data>
-  <data name="Admin_Page_Facts_FirstName" xml:space="preserve">
+  <data name="Admin_Pages_Facts_FirstName" xml:space="preserve">
     <value>Имя</value>
   </data>
-  <data name="Admin_Page_Facts_GenderFemale" xml:space="preserve">
+  <data name="Admin_Pages_Facts_GenderFemale" xml:space="preserve">
     <value>Женский</value>
   </data>
-  <data name="Admin_Page_Facts_GenderMale" xml:space="preserve">
+  <data name="Admin_Pages_Facts_GenderMale" xml:space="preserve">
     <value>Мужской</value>
   </data>
-  <data name="Admin_Page_Facts_Language" xml:space="preserve">
+  <data name="Admin_Pages_Facts_Language" xml:space="preserve">
     <value>Язык</value>
   </data>
-  <data name="Admin_Page_Facts_LanguageLevel" xml:space="preserve">
+  <data name="Admin_Pages_Facts_LanguageLevel" xml:space="preserve">
     <value>Уровень</value>
   </data>
-  <data name="Admin_Page_Facts_LastName" xml:space="preserve">
+  <data name="Admin_Pages_Facts_LastName" xml:space="preserve">
     <value>Фамилия</value>
   </data>
-  <data name="Admin_Page_Facts_MiddleName" xml:space="preserve">
+  <data name="Admin_Pages_Facts_MiddleName" xml:space="preserve">
     <value>Отчество</value>
   </data>
-  <data name="Admin_Page_Facts_Skill" xml:space="preserve">
+  <data name="Admin_Pages_Facts_Skill" xml:space="preserve">
     <value>Название</value>
   </data>
-  <data name="Admin_Page_Facts_SkillLevel" xml:space="preserve">
+  <data name="Admin_Pages_Facts_SkillLevel" xml:space="preserve">
     <value>Уровень</value>
   </data>
-  <data name="Admin_Page_Facts_StringValue" xml:space="preserve">
+  <data name="Admin_Pages_Facts_StringValue" xml:space="preserve">
     <value>Значение</value>
   </data>
-  <data name="Admin_Page_Facts_Unspecified" xml:space="preserve">
+  <data name="Admin_Pages_Facts_Unspecified" xml:space="preserve">
     <value>Не указано</value>
+  </data>
+  <data name="Admin_Global_Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Admin_Global_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Admin_Global_ContradictingFacts" xml:space="preserve">
+    <value>Противоречивые факты</value>
+  </data>
+  <data name="Admin_Global_Preview" xml:space="preserve">
+    <value>Просмотр</value>
+  </data>
+  <data name="Admin_Pages_Editor_AddAlias" xml:space="preserve">
+    <value>Добавить новую ссылку</value>
+  </data>
+  <data name="Admin_Pages_Editor_CreateTitle" xml:space="preserve">
+    <value>Создание страницы</value>
+  </data>
+  <data name="Admin_Pages_Editor_Description" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="Admin_Pages_Editor_DraftLoadedFormat" xml:space="preserve">
+    <value>Загружено из черновика от {0}.</value>
+    <comment>{0} = draft time</comment>
+  </data>
+  <data name="Admin_Pages_Editor_DraftOtherTypeWarning1" xml:space="preserve">
+    <value>Восстановлен черновик новой страницы типа "{0}".</value>
+    <comment>{0} = type of page</comment>
+  </data>
+  <data name="Admin_Pages_Editor_DraftOtherTypeWarning2" xml:space="preserve">
+    <value>Если вы хотите создать новую страницу типа "{0}", сохраните страницу или &lt;a href="#" class="cmd-discard-draft" data-page-type="{1}"&gt;удалите&lt;/a&gt; черновик.</value>
+    <comment>{0} = type of page, {1} = type of page as number</comment>
+  </data>
+  <data name="Admin_Pages_Editor_EditTitle" xml:space="preserve">
+    <value>Редактирование страницы</value>
+  </data>
+  <data name="Admin_Pages_Editor_ErrorFields" xml:space="preserve">
+    <value>Неверно заполнены поля: {0}</value>
+    <comment>{0} = list of fields as string</comment>
+  </data>
+  <data name="Admin_Pages_Editor_MainPhoto" xml:space="preserve">
+    <value>Фото</value>
+  </data>
+  <data name="Admin_Pages_Editor_MainPhotoPick" xml:space="preserve">
+    <value>Найти</value>
+  </data>
+  <data name="Admin_Pages_Editor_MainPhotoUpload" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="Admin_Pages_Editor_NoFactsAvailable" xml:space="preserve">
+    <value>Для данного типа страницы указание фактов недоступно.</value>
+  </data>
+  <data name="Admin_Pages_Editor_RecommendationsWarning" xml:space="preserve">
+    <value>Перед написанием статьи, пожалуйста, прочтите &lt;strong&gt;&lt;a href="#" class="cmd-show-popup" data-popup-url="{0}"&gt;рекомендации&lt;/a&gt;&lt;/strong&gt; по оформлению и стилю.</value>
+    <comment>{0} = popup link</comment>
+  </data>
+  <data name="Admin_Pages_Editor_RemoveDraft" xml:space="preserve">
+    <value>Удалить черновик</value>
+  </data>
+  <data name="Admin_Pages_Editor_Tab_Aliases" xml:space="preserve">
+    <value>Ссылки</value>
+  </data>
+  <data name="Admin_Pages_Editor_Tab_Facts" xml:space="preserve">
+    <value>Факты</value>
+  </data>
+  <data name="Admin_Pages_Editor_Tab_Main" xml:space="preserve">
+    <value>Главное</value>
+  </data>
+  <data name="Admin_Pages_Editor_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="Datepicker_From" xml:space="preserve">
+    <value>От</value>
+  </data>
+  <data name="Datepicker_To" xml:space="preserve">
+    <value>До</value>
   </data>
 </root>

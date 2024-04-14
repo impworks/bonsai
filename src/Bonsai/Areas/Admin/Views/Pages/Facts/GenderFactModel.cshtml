@@ -3,17 +3,17 @@
     <div class="fact-wrapper">
         <h6>
             {{def.title}}
-            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({}, 'gender')" title="@Texts.Admin_Page_Facts_Add">
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-if="empty()" v-on:click="set({}, 'gender')" title="@Texts.Admin_Pages_Facts_Add">
                 <i class="fa fa-plus"></i>
             </button>
         </h6>
         <div v-if="!empty()">
             <div class="form-inline">
                 <select v-model="data[def.key].IsMale" class="form-control form-control-sm fact-sized-input mr-2">
-                    <option v-bind:value="true">@Texts.Admin_Page_Facts_GenderMale</option>
-                    <option v-bind:value="false">@Texts.Admin_Page_Facts_GenderFemale</option>
+                    <option v-bind:value="true">@Texts.Admin_Pages_Facts_GenderMale</option>
+                    <option v-bind:value="false">@Texts.Admin_Pages_Facts_GenderFemale</option>
                 </select>
-                <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="unset" title="@Texts.Admin_Page_Facts_Remove">
+                <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="unset" title="@Texts.Admin_Pages_Facts_Remove">
                     <i class="fa fa-remove"></i>
                 </button>
             </div>

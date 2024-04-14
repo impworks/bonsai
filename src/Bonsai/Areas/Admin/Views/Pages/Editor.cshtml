@@ -3,14 +3,19 @@
 @model Bonsai.Areas.Admin.ViewModels.Pages.PageEditorVM
 
 @using System.Globalization
+@using Bonsai.Areas.Admin.Components
 @using Bonsai.Areas.Admin.Logic
+@using Bonsai.Areas.Admin.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Pages
+@using Bonsai.Code.Services
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Impworks.Utils.Format
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     var data = (PageEditorDataVM)ViewBag.Data;
-    ViewBag.Title = data.IsNew ? "Создание страницы" : "Редактирование страницы";
+    ViewBag.Title = data.IsNew ? Texts.Admin_Pages_Editor_CreateTitle : Texts.Admin_Pages_Editor_EditTitle;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var formAction = Url.Action(data.IsNew ? "Create" : "Update", "Pages", new { area = "Admin" });
@@ -23,7 +28,7 @@
 @if (!string.IsNullOrEmpty(data.ErrorFields))
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
-        Неверно заполнены поля: @data.ErrorFields
+        @string.Format(Texts.Admin_Pages_Editor_ErrorFields, data.ErrorFields)
         <button type="button" class="close" data-dismiss="alert">
             <span>&times;</span>
         </button>
@@ -33,13 +38,13 @@
 {
 <div class="alert alert-warning">
     <button type="button" class="close cmd-dismiss-notification">&times;</button>
-    Восстановлен черновик новой страницы типа "@(Model.Type.GetEnumDescription().ToLower())". <br />
-    Если вы хотите создать новую страницу типа "@(originalPageType.Value.GetEnumDescription().ToLower())", сохраните страницу или <a href="#" class="cmd-discard-draft" data-page-type="@originalPageType">удалите</a> черновик.
+    @string.Format(Texts.Admin_Pages_Editor_DraftOtherTypeWarning1, Model.Type.GetLocaleEnumDescription().ToLower()) <br/>
+    @Html.Raw(string.Format(Texts.Admin_Pages_Editor_DraftOtherTypeWarning2, originalPageType.Value.GetLocaleEnumDescription().ToLower(), originalPageType))
 </div>
 }
 
 <div class="alert alert-warning" notification-id="@NotificationsService.NOTE_USER_GUIDELINES">
-    Перед написанием статьи, пожалуйста, прочтите <strong><a href="#" class="cmd-show-popup" data-popup-url="@Url.Action("Guidelines", "Help")">рекомендации</a></strong> по оформлению и стилю.
+    @Html.Raw(string.Format(Texts.Admin_Pages_Editor_RecommendationsWarning, Url.Action("Guidelines", "Help")))
 </div>
 
 <form action="@formAction" method="post" class="page-editor">
@@ -49,16 +54,16 @@
 
     <nav>
         <div class="nav nav-tabs" role="tablist">
-            <a class="nav-item nav-link @(data.Tab == "main" ? "active" : "")" href="#tab-main" data-toggle="tab" data-tab-track="tab" data-tab-track-id="main" role="tab">Главное</a>
-            <a class="nav-item nav-link @(data.Tab == "facts" ? "active" : "")" href="#tab-facts" data-toggle="tab" data-tab-track="tab" data-tab-track-id="facts" role="tab">Факты</a>
-            <a class="nav-item nav-link @(data.Tab == "aliases" ? "active" : "")" href="#tab-aliases" data-toggle="tab" data-tab-track="tab" data-tab-track-id="aliases" role="tab">Ссылки</a>
+            <a class="nav-item nav-link @(data.Tab == "main" ? "active" : "")" href="#tab-main" data-toggle="tab" data-tab-track="tab" data-tab-track-id="main" role="tab">@Texts.Admin_Pages_Editor_Tab_Main</a>
+            <a class="nav-item nav-link @(data.Tab == "facts" ? "active" : "")" href="#tab-facts" data-toggle="tab" data-tab-track="tab" data-tab-track-id="facts" role="tab">@Texts.Admin_Pages_Editor_Tab_Facts</a>
+            <a class="nav-item nav-link @(data.Tab == "aliases" ? "active" : "")" href="#tab-aliases" data-toggle="tab" data-tab-track="tab" data-tab-track-id="aliases" role="tab">@Texts.Admin_Pages_Editor_Tab_Aliases</a>
         </div>
     </nav>
     <div class="tab-content">
         <div class="tab-pane show @(data.Tab == "main" ? "active" : "")" id="tab-main" role="tabpanel">
             <div class="form-row">
                 <div class="form-group col-md-12">
-                    <label asp-for="Title" class="form-label-required">Заголовок</label>
+                    <label asp-for="Title" class="form-label-required">@Texts.Admin_Pages_Editor_Title</label>
                     <input type="text" class="form-control" asp-for="Title" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
@@ -66,13 +71,13 @@
 
             <div class="form-row">
                 <div class="form-group col-md-9">
-                    <label asp-for="Description">Текст</label>
+                    <label asp-for="Description">@Texts.Admin_Pages_Editor_Description</label>
                     <textarea asp-for="Description" class="form-control md-editor" data-md-pick-media="true" rows="10"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <div class="form-group col-md-3">
-                    <label>Фото</label>
+                    <label>@Texts.Admin_Pages_Editor_MainPhoto</label>
                     <input type="hidden" asp-for="MainPhotoKey" />
                     <div id="editor-main-photo">
                         <div class="main-photo-wrapper">
@@ -84,14 +89,14 @@
                         <div class="btn-toolbar">
                             <div class="btn-group btn-group-sm mr-2">
                                 <button type="button" class="btn btn-outline-secondary cmd-upload">
-                                    <i class="fa fa-upload"></i> Загрузить
+                                    <i class="fa fa-upload"></i> @Texts.Admin_Pages_Editor_MainPhotoUpload
                                 </button>
                                 <button type="button" class="btn btn-outline-secondary cmd-pick">
-                                    <i class="fa fa-search"></i> Найти
+                                    <i class="fa fa-search"></i> @Texts.Admin_Pages_Editor_MainPhotoPick
                                 </button>
                             </div>
                             <div class="btn-group btn-group-sm">
-                                <button type="button" class="btn btn-outline-danger cmd-remove" style="display: @(hasPhoto ? "inline-block": "none")" title="Удалить">
+                                <button type="button" class="btn btn-outline-danger cmd-remove" style="display: @(hasPhoto ? "inline-block": "none")" title="@Texts.Admin_Global_Remove">
                                     <i class="fa fa-remove"></i>
                                 </button>
                             </div>
@@ -122,9 +127,9 @@
                 }
                 else
                 {
-                    <p>Для данного типа страницы указание фактов недоступно.</p>
+                    <p>@Texts.Admin_Pages_Editor_NoFactsAvailable</p>
                 }
-                <div validation-list-for="Facts" validation-list-caption="Противоречивые факты" class="text-danger"></div>
+                <div validation-list-for="Facts" validation-list-caption="@Texts.Admin_Global_ContradictingFacts" class="text-danger"></div>
             </div>
         </div>
 
@@ -137,7 +142,7 @@
                         <div class="input-group">
                             <input v-model="alias.value" class="form-control" :ref="'value'" v-on:change="refresh" />
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-danger" title="Удалить" v-on:click="removeAlias(idx)" :disabled="!canRemove">
+                                <button type="button" class="btn btn-outline-danger" title="@Texts.Admin_Global_Remove" v-on:click="removeAlias(idx)" :disabled="!canRemove">
                                     <i class="fa fa-remove"></i>
                                 </button>
                             </div>
@@ -145,8 +150,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-outline-secondary" title="Добавить новую ссылку" v-on:click="addAlias">
-                        <i class="fa fa-plus-circle"></i> Добавить
+                    <button type="button" class="btn btn-outline-secondary" title="@Texts.Admin_Pages_Editor_AddAlias" v-on:click="addAlias">
+                        <i class="fa fa-plus-circle"></i> @Texts.Admin_Global_Add
                     </button>
                 </div>
             </div>
@@ -157,22 +162,22 @@
 
     <div class="form-row">
         <div class="form-group col-md-5">
-            <button class="btn btn-primary" type="submit">Сохранить</button>
-            <button class="btn btn-warning cmd-preview" type="button">Просмотр</button>
-            <a class="btn btn-secondary" href="@Url.Action("Index", "Pages", new { area = "Admin" })">Назад</a>
+            <button class="btn btn-primary" type="submit">@Texts.Admin_Global_Save</button>
+            <button class="btn btn-warning cmd-preview" type="button">@Texts.Admin_Global_Preview</button>
+            <a class="btn btn-secondary" href="@Url.Action("Index", "Pages", new { area = "Admin" })">@Texts.Admin_Global_Back</a>
         </div>
         <div class="form-group col-md-4 editor-draft-info-wrapper">
             <span id="editor-draft-info">
                 @if (data.DraftLastUpdateDate is DateTimeOffset draftDate)
                 {
                     var today = draftDate.Date == DateTimeOffset.Now.Date;
-                    <text>Загружено из черновика от @data.DraftLastUpdateDate.Value.ToString(today ? "T" : "G", CultureInfo.GetCultureInfo("ru-RU")).</text>
+                    <text>@string.Format(@Texts.Admin_Pages_Editor_DraftLoadedFormat, data.DraftLastUpdateDate.Value.ToString(today ? "T" : "G", LocaleProvider.GetCulture()))</text>
                 }
             </span>
             @if (data.DraftDisplayNotification)
             {
                 <br />
-                <a href="#" class="cmd-discard-draft">Удалить черновик</a>
+                <a href="#" class="cmd-discard-draft">@Texts.Admin_Pages_Editor_RemoveDraft</a>
             }
         </div>
     </div>
@@ -189,16 +194,16 @@
 @await Html.PartialAsync("~/Areas/Admin/Views/Components/PagePicker.cshtml")
 
 <script type="text/x-template" id="date-picker-template">
-    <input type="text" class="form-control" placeholder="ГГГГ.ММ.ДД" />
+    <input type="text" class="form-control" placeholder="@Texts.Datepicker_Placeholder" />
 </script>
 <script type="text/x-template" id="duration-picker-template">
     <div class="form-row">
         <div class="form-group col-sm-4">
-            <label>От</label>
+            <label>@Texts.Datepicker_From</label>
             <date-picker v-model="start" v-bind:size="size"></date-picker>
         </div>
         <div class="form-group col-sm-4">
-            <label>До</label>
+            <label>@Texts.Datepicker_To</label>
             <date-picker v-model="end" v-bind:size="size"></date-picker>
         </div>
     </div>
