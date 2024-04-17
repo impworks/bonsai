@@ -2248,11 +2248,93 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Создание связи.
+        /// </summary>
+        public static string Admin_Relations_Editor_CreateTitle {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Editor_CreateTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Конец периода.
+        /// </summary>
+        public static string Admin_Relations_Editor_DurationEnd {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Editor_DurationEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Начало периода.
+        /// </summary>
+        public static string Admin_Relations_Editor_DurationStart {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Editor_DurationStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Редактирование связи.
+        /// </summary>
+        public static string Admin_Relations_Editor_EditTitle {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Editor_EditTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ссылка на событие.
+        /// </summary>
+        public static string Admin_Relations_Editor_Event {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Editor_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип связи.
+        /// </summary>
+        public static string Admin_Relations_Editor_Type {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Editor_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Связь не найдена.
         /// </summary>
         public static string Admin_Relations_NotFound {
             get {
                 return ResourceManager.GetString("Admin_Relations_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить окончательно (восстановление будет невозможно).
+        /// </summary>
+        public static string Admin_Relations_Remove_Completely {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Remove_Completely", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите удалить страницу связь &lt;b&gt;{0}&lt;/b&gt;
+        ///между страницами &lt;b&gt;{1}&lt;/b&gt; и &lt;b&gt;{2}&lt;/b&gt;?.
+        /// </summary>
+        public static string Admin_Relations_Remove_ConfirmationFormat {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Remove_ConfirmationFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удаление связи.
+        /// </summary>
+        public static string Admin_Relations_Remove_Title {
+            get {
+                return ResourceManager.GetString("Admin_Relations_Remove_Title", resourceCulture);
             }
         }
         

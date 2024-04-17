@@ -1,10 +1,13 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Bonsai
 @using Bonsai.Areas.Admin.ViewModels.Relations
+@using Bonsai.Localization
 @model RelationEditorVM
 @{
     var data = (RelationEditorDataVM)ViewBag.Data;
-    ViewBag.Title = data.IsNew ? "Создание связи" : "Редактирование связи";
+    ViewBag.Title = data.IsNew
+        ? Texts.Admin_Relations_Editor_CreateTitle
+        : Texts.Admin_Relations_Editor_EditTitle;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var formAction = Url.Action(data.IsNew ? "Create" : "Update", "Relations", new { area = "Admin" });
@@ -22,7 +25,7 @@
 
     <div class="form-row" data-tier="type">
         <div class="form-group col-md-8">
-            <label class="form-label-required" asp-for="Type">Тип связи</label>
+            <label class="form-label-required" asp-for="Type">@Texts.Admin_Relations_Editor_Type</label>
             <select asp-for="Type" asp-items="data.RelationTypes"></select>
             <span asp-validation-for="Type" class="text-danger"></span>
         </div>
@@ -39,27 +42,27 @@
         <div class="form-group col-md-8">
             <label class="form-label-required" asp-for="SourceIds">@data.Properties.SourceName</label>
             <select asp-for="SourceIds" asp-items="data.SourceItems" data-multiple="@data.IsNew.ToString()"></select>
-            <div validation-list-for="DestinationId" validation-list-caption="Противоречивые факты" class="text-danger validation-result"></div>
+            <div validation-list-for="DestinationId" validation-list-caption="@Texts.Admin_Global_ContradictingFacts" class="text-danger validation-result"></div>
         </div>
     </div>
 
     <div class="form-row" data-tier="duration" style="@ShowIf(data.Properties.ShowDuration)">
         <div class="form-group col-md-4">
-            <label asp-for="DurationStart">Начало периода</label>
-            <input type="text" class="form-control duration-start datepicker" asp-for="DurationStart" placeholder="ГГГГ.ММ.ДД" />
+            <label asp-for="DurationStart">@Texts.Admin_Relations_Editor_DurationStart</label>
+            <input type="text" class="form-control duration-start datepicker" asp-for="DurationStart" placeholder="@Texts.Datepicker_Placeholder" />
             <span asp-validation-for="DurationStart" class="text-danger"></span>
         </div>
 
         <div class="form-group col-md-4">
-            <label asp-for="DurationEnd">Конец периода</label>
-            <input type="text" class="form-control duration-end datepicker" asp-for="DurationEnd" placeholder="ГГГГ.ММ.ДД" />
+            <label asp-for="DurationEnd">@Texts.Admin_Relations_Editor_DurationEnd</label>
+            <input type="text" class="form-control duration-end datepicker" asp-for="DurationEnd" placeholder="@Texts.Datepicker_Placeholder" />
             <span asp-validation-for="DurationEnd" class="text-danger"></span>
         </div>
     </div>
 
     <div class="form-row" data-tier="event" style="@ShowIf(data.Properties.ShowEvent)">
         <div class="form-group col-md-8">
-            <label asp-for="EventId">Ссылка на событие</label>
+            <label asp-for="EventId">@Texts.Admin_Relations_Editor_Event</label>
             <select asp-for="EventId" asp-items="data.EventItem"></select>
             <span asp-validation-for="EventId" class="text-danger"></span>
         </div>
@@ -67,8 +70,8 @@
 
     <div class="form-row">
         <div class="form-group col-md-8">
-            <button class="btn btn-primary" type="submit">Сохранить</button>
-            <a class="btn btn-secondary" href="@Url.Action("Index", "Relations", new { area = "Admin" })">Назад</a>
+            <button class="btn btn-primary" type="submit">@Texts.Admin_Global_Save</button>
+            <a class="btn btn-secondary" href="@Url.Action("Index", "Relations", new { area = "Admin" })">@Texts.Admin_Global_Back</a>
         </div>
     </div>
 </form>

@@ -2099,36 +2099,65 @@
     <value>До</value>
   </data>
   <data name="Admin_Pages_Criterion_Text" xml:space="preserve">
-      <value>Текст</value>
+    <value>Текст</value>
   </data>
   <data name="Admin_Pages_Criterion_HumanName" xml:space="preserve">
-      <value>Имя</value>
+    <value>Имя</value>
   </data>
   <data name="Admin_Pages_Criterion_Birthday" xml:space="preserve">
-      <value>День рождения</value>
+    <value>День рождения</value>
   </data>
   <data name="Admin_Pages_Criterion_Birthplace" xml:space="preserve">
-      <value>Место рождения</value>
+    <value>Место рождения</value>
   </data>
   <data name="Admin_Pages_Criterion_Gender" xml:space="preserve">
-      <value>Пол</value>
+    <value>Пол</value>
   </data>
   <data name="Admin_Pages_Criterion_Photo" xml:space="preserve">
-      <value>Фото</value>
+    <value>Фото</value>
   </data>
   <data name="Admin_Pages_Criterion_Relations" xml:space="preserve">
-      <value>Связи</value>
+    <value>Связи</value>
   </data>
   <data name="Admin_Pages_Criterion_AnimalName" xml:space="preserve">
-      <value>Имя</value>
+    <value>Имя</value>
   </data>
   <data name="Admin_Pages_Criterion_Species" xml:space="preserve">
-      <value>Вид</value>
+    <value>Вид</value>
   </data>
   <data name="Admin_Pages_Criterion_Date" xml:space="preserve">
-      <value>Дата</value>
+    <value>Дата</value>
   </data>
   <data name="Admin_Pages_Criterion_Address" xml:space="preserve">
-      <value>Адрес</value>
+    <value>Адрес</value>
+  </data>
+  <data name="Admin_Relations_Editor_CreateTitle" xml:space="preserve">
+    <value>Создание связи</value>
+  </data>
+  <data name="Admin_Relations_Editor_EditTitle" xml:space="preserve">
+    <value>Редактирование связи</value>
+  </data>
+  <data name="Admin_Relations_Editor_DurationEnd" xml:space="preserve">
+    <value>Конец периода</value>
+  </data>
+  <data name="Admin_Relations_Editor_DurationStart" xml:space="preserve">
+    <value>Начало периода</value>
+  </data>
+  <data name="Admin_Relations_Editor_Event" xml:space="preserve">
+    <value>Ссылка на событие</value>
+  </data>
+  <data name="Admin_Relations_Editor_Type" xml:space="preserve">
+    <value>Тип связи</value>
+  </data>
+  <data name="Admin_Relations_Remove_Title" xml:space="preserve">
+    <value>Удаление связи</value>
+  </data>
+  <data name="Admin_Relations_Remove_Completely" xml:space="preserve">
+    <value>Удалить окончательно (восстановление будет невозможно)</value>
+  </data>
+  <data name="Admin_Relations_Remove_ConfirmationFormat" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить страницу связь &lt;b&gt;{0}&lt;/b&gt;
+между страницами &lt;b&gt;{1}&lt;/b&gt; и &lt;b&gt;{2}&lt;/b&gt;?</value>
+    <comment>{0} = relation type, {1} = destination page name, {2} = source page name</comment>
   </data>
 </root>
