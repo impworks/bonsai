@@ -1,23 +1,26 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Relations
+@using Bonsai.Areas.Front.Components
 @using Bonsai.Code.DomainModel.Media
-@using Impworks.Utils.Format
+@using Bonsai.Code.Services
+@using Bonsai.Localization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Bonsai
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model RelationsListVM
 @{
-    ViewBag.Title = "Список связей";
+    ViewBag.Title = Texts.Admin_Relations_List_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Relations", new { area = "Admin" });
 }
 
-<h1>Список связей</h1>
+<h1>@Texts.Admin_Relations_List_Title</h1>
 
 <div class="clearfix">
     <div class="float-left">
-        <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Create", "Relations", new {area = "Admin"})" title="Создать новую связь">
+        <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Create", "Relations", new {area = "Admin"})" title="@Texts.Admin_Relations_List_CreateNew">
             <span class="fa fa-plus-circle"></span>
-            Создать
+            @Texts.Admin_Global_Create
         </a>
     </div>
     <div class="float-right">
@@ -37,8 +40,8 @@
                     title = Model.EntityTitle
                 })
             }
-            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(RelationsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя страницы" />
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(RelationsListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="@Texts.Admin_Relations_List_PageTitle" />
+            <button class="btn btn-sm btn-outline-secondary" type="submit">@Texts.Admin_Global_Find</button>
         </form>
     </div>
 </div>
@@ -48,9 +51,9 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th width="42%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Destination), title = "Cтраница" })</th>
-                <th width="16%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Type), title = "Тип связи" })</th>
-                <th width="42%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Source), title = "Связанная страница" })</th>
+                <th width="42%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Destination), title = Texts.Admin_Relations_List_Page })</th>
+                <th width="16%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Type), title = Texts.Admin_Relations_List_RelationType })</th>
+                <th width="42%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(RelationTitleVM.Source), title = Texts.Admin_Relations_List_RelatedPage })</th>
                 <th width="1px"></th>
             </tr>
         </thead>
@@ -63,8 +66,8 @@
                     <span title="@r.Destination.Title">@r.Destination.Title</span>
                 </td>
                 <td>
-                    <a href="@Url.Action("Update", "Relations", new {area = "Admin", id = r.Id})" title="Редактировать">
-                        @r.Type.GetEnumDescription()
+                    <a href="@Url.Action("Update", "Relations", new {area = "Admin", id = r.Id})" title="@Texts.Admin_Global_Edit">
+                        @r.Type.GetLocaleEnumDescription()
                     </a>
                 </td>
                 <td class="hide-overflow">
@@ -73,10 +76,10 @@
                 </td>
                 <td class="admin-row-actions">
                     <a href="@Url.Action("Remove", "Relations", new {area = "Admin", id = r.Id})">
-                        <span class="fa fa-remove" title="Удалить"></span>
+                        <span class="fa fa-remove" title="@Texts.Admin_Global_Remove"></span>
                     </a>
                     <a href="@Url.Action("Index", "Changesets", new {area = "Admin", entityId = r.Id})">
-                        <span class="fa fa-database" title="История изменений"></span>
+                        <span class="fa fa-database" title="@Texts.Admin_Global_ChangeHistory"></span>
                     </a>
                 </td>
             </tr>
@@ -88,15 +91,11 @@ else
 {
     if(Model.Request.IsEmpty())
     {
-        <div class="alert alert-info">
-            Не добавлено ни одной связи. <br />
-        </div>
+        <div class="alert alert-info">@Texts.Admin_Relations_List_Empty</div>
     }
     else
     {
-        <div class="alert alert-info">
-            По запросу не найдено ни одной связи.
-        </div>
+        <div class="alert alert-info">@Texts.Admin_Relations_List_NotFound</div>
     }
 }
 

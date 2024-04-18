@@ -2160,4 +2160,7 @@
 между страницами &lt;b&gt;{1}&lt;/b&gt; и &lt;b&gt;{2}&lt;/b&gt;?</value>
     <comment>{0} = relation type, {1} = destination page name, {2} = source page name</comment>
   </data>
+  <data name="Admin_Relations_List_Title" xml:space="preserve">
+      <value>Список связей</value>
+  </data>
 </root>
