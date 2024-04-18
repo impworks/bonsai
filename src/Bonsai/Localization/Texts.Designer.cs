@@ -2302,6 +2302,78 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Создать новую связь.
+        /// </summary>
+        public static string Admin_Relations_List_CreateNew {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_CreateNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не добавлено ни одной связи..
+        /// </summary>
+        public static string Admin_Relations_List_Empty {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to По запросу не найдено ни одной связи..
+        /// </summary>
+        public static string Admin_Relations_List_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница.
+        /// </summary>
+        public static string Admin_Relations_List_Page {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя страницы.
+        /// </summary>
+        public static string Admin_Relations_List_PageTitle {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_PageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Связанная страница.
+        /// </summary>
+        public static string Admin_Relations_List_RelatedPage {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_RelatedPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тип связи.
+        /// </summary>
+        public static string Admin_Relations_List_RelationType {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_RelationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Список связей.
+        /// </summary>
+        public static string Admin_Relations_List_Title {
+            get {
+                return ResourceManager.GetString("Admin_Relations_List_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Связь не найдена.
         /// </summary>
         public static string Admin_Relations_NotFound {
