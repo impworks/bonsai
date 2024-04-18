@@ -2474,6 +2474,123 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Доступ.
+        /// </summary>
+        public static string Admin_Users_List_Access {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_Access", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Смена пароля.
+        /// </summary>
+        public static string Admin_Users_List_ChangePassword {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_ChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Создать новый профиль.
+        /// </summary>
+        public static string Admin_Users_List_CreateNew {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_CreateNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Учетную запись с паролем.
+        /// </summary>
+        public static string Admin_Users_List_CreatePasswordUser {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_CreatePasswordUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail.
+        /// </summary>
+        public static string Admin_Users_List_Email {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заблокирован.
+        /// </summary>
+        public static string Admin_Users_List_Locked {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_Locked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Блокировка навсегда.
+        /// </summary>
+        public static string Admin_Users_List_LockedForever {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_LockedForever", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Блокировка до {0}.
+        /// </summary>
+        public static string Admin_Users_List_LockedUntilFormat {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_LockedUntilFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя.
+        /// </summary>
+        public static string Admin_Users_List_Name {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Имя / E-mail.
+        /// </summary>
+        public static string Admin_Users_List_NameOrEmail {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_NameOrEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to По запросу не найдено ни одного пользователя..
+        /// </summary>
+        public static string Admin_Users_List_NotFound {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Авторизация по паролю.
+        /// </summary>
+        public static string Admin_Users_List_PasswordAuth {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_PasswordAuth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Список пользователей.
+        /// </summary>
+        public static string Admin_Users_List_Title {
+            get {
+                return ResourceManager.GetString("Admin_Users_List_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Пользователь не найден.
         /// </summary>
         public static string Admin_Users_NotFound {
@@ -2501,11 +2618,101 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
+        /// </summary>
+        public static string Admin_Users_PasswordReset_Error {
+            get {
+                return ResourceManager.GetString("Admin_Users_PasswordReset_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сохранить и разблокировать.
+        /// </summary>
+        public static string Admin_Users_PasswordReset_SaveAndUnlock {
+            get {
+                return ResourceManager.GetString("Admin_Users_PasswordReset_SaveAndUnlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Смена пароля.
+        /// </summary>
+        public static string Admin_Users_PasswordReset_Title {
+            get {
+                return ResourceManager.GetString("Admin_Users_PasswordReset_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь.
+        /// </summary>
+        public static string Admin_Users_PasswordReset_Username {
+            get {
+                return ResourceManager.GetString("Admin_Users_PasswordReset_Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Пароль изменен..
         /// </summary>
         public static string Admin_Users_PasswordResetMessage {
             get {
                 return ResourceManager.GetString("Admin_Users_PasswordResetMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы не можете удалить учетную запись пользователя, который вносил правки..
+        /// </summary>
+        public static string Admin_Users_Remove_CannotRemoveEditor1 {
+            get {
+                return ResourceManager.GetString("Admin_Users_Remove_CannotRemoveEditor1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вместо этого вы можете заблокировать ее, чтобы пользователь не мог войти..
+        /// </summary>
+        public static string Admin_Users_Remove_CannotRemoveEditor2 {
+            get {
+                return ResourceManager.GetString("Admin_Users_Remove_CannotRemoveEditor2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы не можете удалить собственную учетную запись..
+        /// </summary>
+        public static string Admin_Users_Remove_CannotRemoveSelf {
+            get {
+                return ResourceManager.GetString("Admin_Users_Remove_CannotRemoveSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отменить данную операцию будет невозможно..
+        /// </summary>
+        public static string Admin_Users_Remove_CannotRevert {
+            get {
+                return ResourceManager.GetString("Admin_Users_Remove_CannotRevert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите удалить пользователя &lt;b&gt;{0}&lt;/b&gt;?.
+        /// </summary>
+        public static string Admin_Users_Remove_ConfirmFormat {
+            get {
+                return ResourceManager.GetString("Admin_Users_Remove_ConfirmFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удаление пользователя.
+        /// </summary>
+        public static string Admin_Users_Remove_Title {
+            get {
+                return ResourceManager.GetString("Admin_Users_Remove_Title", resourceCulture);
             }
         }
         

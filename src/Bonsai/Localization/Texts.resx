@@ -2161,6 +2161,97 @@
     <comment>{0} = relation type, {1} = destination page name, {2} = source page name</comment>
   </data>
   <data name="Admin_Relations_List_Title" xml:space="preserve">
-      <value>Список связей</value>
+    <value>Список связей</value>
+  </data>
+  <data name="Admin_Relations_List_CreateNew" xml:space="preserve">
+    <value>Создать новую связь</value>
+  </data>
+  <data name="Admin_Relations_List_Empty" xml:space="preserve">
+    <value>Не добавлено ни одной связи.</value>
+  </data>
+  <data name="Admin_Relations_List_NotFound" xml:space="preserve">
+    <value>По запросу не найдено ни одной связи.</value>
+  </data>
+  <data name="Admin_Relations_List_Page" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+  <data name="Admin_Relations_List_PageTitle" xml:space="preserve">
+    <value>Имя страницы</value>
+  </data>
+  <data name="Admin_Relations_List_RelatedPage" xml:space="preserve">
+    <value>Связанная страница</value>
+  </data>
+  <data name="Admin_Relations_List_RelationType" xml:space="preserve">
+    <value>Тип связи</value>
+  </data>
+  <data name="Admin_Users_List_Title" xml:space="preserve">
+    <value>Список пользователей</value>
+  </data>
+  <data name="Admin_Users_Remove_CannotRemoveEditor1" xml:space="preserve">
+    <value>Вы не можете удалить учетную запись пользователя, который вносил правки.</value>
+  </data>
+  <data name="Admin_Users_Remove_CannotRemoveEditor2" xml:space="preserve">
+    <value>Вместо этого вы можете заблокировать ее, чтобы пользователь не мог войти.</value>
+  </data>
+  <data name="Admin_Users_List_Access" xml:space="preserve">
+    <value>Доступ</value>
+  </data>
+  <data name="Admin_Users_List_ChangePassword" xml:space="preserve">
+    <value>Смена пароля</value>
+  </data>
+  <data name="Admin_Users_List_CreateNew" xml:space="preserve">
+    <value>Создать новый профиль</value>
+  </data>
+  <data name="Admin_Users_List_CreatePasswordUser" xml:space="preserve">
+    <value>Учетную запись с паролем</value>
+  </data>
+  <data name="Admin_Users_List_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Admin_Users_List_Locked" xml:space="preserve">
+    <value>Заблокирован</value>
+  </data>
+  <data name="Admin_Users_List_LockedForever" xml:space="preserve">
+    <value>Блокировка навсегда</value>
+  </data>
+  <data name="Admin_Users_List_LockedUntilFormat" xml:space="preserve">
+    <value>Блокировка до {0}</value>
+  </data>
+  <data name="Admin_Users_List_Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Admin_Users_List_NameOrEmail" xml:space="preserve">
+    <value>Имя / E-mail</value>
+  </data>
+  <data name="Admin_Users_List_NotFound" xml:space="preserve">
+    <value>По запросу не найдено ни одного пользователя.</value>
+  </data>
+  <data name="Admin_Users_List_PasswordAuth" xml:space="preserve">
+    <value>Авторизация по паролю</value>
+  </data>
+  <data name="Admin_Users_Remove_CannotRemoveSelf" xml:space="preserve">
+    <value>Вы не можете удалить собственную учетную запись.</value>
+  </data>
+  <data name="Admin_Users_Remove_CannotRevert" xml:space="preserve">
+    <value>Отменить данную операцию будет невозможно.</value>
+  </data>
+  <data name="Admin_Users_Remove_ConfirmFormat" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить пользователя &lt;b&gt;{0}&lt;/b&gt;?</value>
+    <comment>{0} = user name</comment>
+  </data>
+  <data name="Admin_Users_Remove_Title" xml:space="preserve">
+    <value>Удаление пользователя</value>
+  </data>
+  <data name="Admin_Users_PasswordReset_Error" xml:space="preserve">
+    <value>&lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
+  </data>
+  <data name="Admin_Users_PasswordReset_SaveAndUnlock" xml:space="preserve">
+    <value>Сохранить и разблокировать</value>
+  </data>
+  <data name="Admin_Users_PasswordReset_Title" xml:space="preserve">
+    <value>Смена пароля</value>
+  </data>
+  <data name="Admin_Users_PasswordReset_Username" xml:space="preserve">
+    <value>Пользователь</value>
   </data>
 </root>

@@ -1,10 +1,12 @@
 ﻿@using Bonsai.Areas.Admin.ViewModels.Users
+@using Bonsai.Code.Services
 @using Bonsai.Code.Utils.Helpers
 @using Bonsai.Data.Models
+@using Bonsai.Localization
 @using Impworks.Utils.Format
 @model Bonsai.Areas.Admin.ViewModels.Users.UsersListVM
 @{
-    ViewBag.Title = "Список пользователей";
+    ViewBag.Title = Texts.Admin_Users_List_Title;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var baseUrl = Url.Action("Index", "Users", new { area = "Admin" });
@@ -17,19 +19,19 @@
     };
 }
 
-<h1>Список пользователей</h1>
+<h1>@Texts.Admin_Users_List_Title</h1>
 
 <div class="clearfix">
     @if (ViewBag.AllowPasswordAuth)
     {
         <div class="float-left">
             <div class="dropdown">
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="Создать новый профиль">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" title="@Texts.Admin_Users_List_CreateNew">
                     <span class="fa fa-plus-circle"></span>
-                    Создать
+                    @Texts.Admin_Global_Create
                 </button>
                 <div class="dropdown-menu">
-                    <a href="@Url.Action("Create", "Users", new {area = "Admin"})" class="dropdown-item">Учетную запись с паролем</a>
+                    <a href="@Url.Action("Create", "Users", new {area = "Admin"})" class="dropdown-item">@Texts.Admin_Users_List_CreatePasswordUser</a>
                 </div>
             </div>
         </div>
@@ -42,8 +44,8 @@
                 request = Model.Request,
                 propName = nameof(UsersListRequestVM.Roles)
             })
-            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(UsersListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="Имя / E-mail"/>
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Найти</button>
+            <input type="text" class="form-control form-control-sm mr-sm-2" name="@nameof(UsersListRequestVM.SearchQuery)" value="@Model.Request.SearchQuery" placeholder="@Texts.Admin_Users_List_NameOrEmail" />
+            <button class="btn btn-sm btn-outline-secondary" type="submit">@Texts.Admin_Global_Find</button>
         </form>
     </div>
 </div>
@@ -53,9 +55,9 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th width="65%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(UserTitleVM.FullName), title = "Имя" })</th>
-                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(UserTitleVM.Email), title = "E-mail" })</th>
-                <th width="15%">Доступ</th>
+                <th width="65%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(UserTitleVM.FullName), title = Texts.Admin_Users_List_Name })</th>
+                <th width="20%">@await Component.InvokeAsync("ListHeaderComponent", new { url = baseUrl, request = Model.Request, propName = nameof(UserTitleVM.Email), title = Texts.Admin_Users_List_Email })</th>
+                <th width="15%">@Texts.Admin_Users_List_Access</th>
                 <th width="1px"></th>
             </tr>
         </thead>
@@ -66,36 +68,38 @@
                 <tr class="admin-row">
                     <td>
                         <img src="@ViewHelper.GetGravatarUrl(user.Email)" />
-                        <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})" title="Редактировать">
+                        <a href="@Url.Action("Update", "Users", new {area = "Admin", id = user.Id})" title="@Texts.Admin_Global_Edit">
                             @user.FullName
                         </a>
                         @if (usesPassword)
                         {
-                            <span class="fa fa-key" title="Авторизация по паролю"></span>
+                            <span class="fa fa-key" title="@Texts.Admin_Users_List_PasswordAuth"></span>
                         }
                     </td>
                     <td>@user.Email</td>
                     <td>
                         @if (user.LockoutEnd == null)
                         {
-                            <span class="badge badge-@(badgeClassMap[user.Role])">@user.Role.GetEnumDescription()</span>
+                            <span class="badge badge-@(badgeClassMap[user.Role])">@user.Role.GetLocaleEnumDescription()</span>
                         }
                         else
                         {
-                            var block = user.LockoutEnd >= DateTimeOffset.MaxValue.AddDays(-1) ? "навсегда" : "до " + user.LockoutEnd.Value.LocalDateTime.ToInvariantString();
-                            <span class="badge badge-danger" title="Блокировка @(block)">Заблокирован</span>
+                            var block = user.LockoutEnd >= DateTimeOffset.MaxValue.AddDays(-1)
+                                ? Texts.Admin_Users_List_LockedForever
+                                : string.Format(Texts.Admin_Users_List_LockedUntilFormat, user.LockoutEnd.Value.LocalDateTime.ToInvariantString());
+                            <span class="badge badge-danger" title="@block">@Texts.Admin_Users_List_Locked</span>
                         }
                     </td>
                     <td class="admin-row-actions">
-                        <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = user.Id})" title="Удалить">
+                        <a href="@Url.Action("Remove", "Users", new {area = "Admin", id = user.Id})" title="@Texts.Admin_Global_Remove">
                             <span class="fa fa-remove"></span>
                         </a>
-                        <a href="@Url.Action("Index", "Changesets", new {area = "Admin", userId = user.Id})" title="История изменений">
+                        <a href="@Url.Action("Index", "Changesets", new {area = "Admin", userId = user.Id})" title="@Texts.Admin_Global_ChangeHistory">
                             <span class="fa fa-history"></span>
                         </a>
                         @if (usesPassword)
                         {
-                            <a href="@Url.Action("ResetPassword", "Users", new {area = "Admin", id = user.Id})" title="Смена пароля">
+                            <a href="@Url.Action("ResetPassword", "Users", new {area = "Admin", id = user.Id})" title="@Texts.Admin_Users_List_ChangePassword">
                                 <span class="fa fa-key"></span>
                             </a>
                         }
@@ -107,9 +111,7 @@
 }
 else
 {
-    <div class="alert alert-info">
-        По запросу не найдено ни одного пользователя.
-    </div>
+    <div class="alert alert-info">@Texts.Admin_Users_List_NotFound</div>
 }
 
 <div class="clearfix">
