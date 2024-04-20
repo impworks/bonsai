@@ -1,8 +1,11 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using Bonsai.Areas.Admin.ViewModels.Users
+@using Bonsai.Localization
 @model Bonsai.Areas.Admin.ViewModels.Users.UserEditorVM
 @{
-    ViewBag.Title = Model.IsValidated ? "Редактирование пользователя" : "Валидация пользователя";
+    ViewBag.Title = Model.IsValidated
+        ? Texts.Admin_Users_Editor_EditTitle
+        : Texts.Admin_Users_Editor_ValidateTitle;
     Layout = "~/Areas/Admin/Views/Layout.cshtml";
 
     var data = (UserEditorDataVM) ViewBag.Data;
@@ -17,35 +20,35 @@
             <input type="hidden" asp-for="Id" />
 
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label form-label-required" asp-for="LastName">Фамилия</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="LastName">@Texts.Front_Register_LastName</label>
                 <div class="col-sm-9">
                     <input asp-for="LastName" class="form-control" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label form-label-required" asp-for="FirstName">Имя</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="FirstName">@Texts.Front_Register_FirstName</label>
                 <div class="col-sm-9">
                     <input asp-for="FirstName" class="form-control" />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label form-label-required" asp-for="MiddleName">Отчество</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="MiddleName">@Texts.Front_Register_MiddleName</label>
                 <div class="col-sm-9">
                     <input asp-for="MiddleName" class="form-control" />
                     <span asp-validation-for="MiddleName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label form-label-required" asp-for="Birthday">Дата рождения</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="Birthday">@Texts.Front_Register_Birthday</label>
                 <div class="col-sm-6">
-                    <input asp-for="Birthday" class="form-control datepicker" placeholder="ГГГГ.ММ.ДД" />
+                    <input asp-for="Birthday" class="form-control datepicker" placeholder="@Texts.Datepicker_Placeholder" />
                     <span asp-validation-for="Birthday" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label form-label-required" asp-for="Email">E-mail</label>
+                <label class="col-sm-3 col-form-label form-label-required" asp-for="Email">@Texts.Front_Register_Email</label>
                 <div class="col-sm-9">
                     <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
@@ -55,7 +58,7 @@
             @if(!data.IsSelf)
             {
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label form-label-required" asp-for="Role">Доступ</label>
+                    <label class="col-sm-3 col-form-label form-label-required" asp-for="Role">@Texts.Admin_Users_Editor_Access</label>
                     <div class="col-sm-9">
                         <select asp-for="Role" asp-items="@data.UserRoleItems" class="form-control"></select>
                         <span asp-validation-for="Role" class="text-danger"></span>
@@ -63,18 +66,18 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label form-label-required" asp-for="Role">Блокировка</label>
+                    <label class="col-sm-3 col-form-label form-label-required" asp-for="Role">@Texts.Admin_Users_Editor_Lock</label>
                     <div class="col-sm-9">
                         <div class="custom-control custom-radio">
                             <input type="radio" asp-for="IsLocked" value="false" class="custom-control-input" id="IsLockedFalse" />
                             <label class="custom-control-label" for="IsLockedFalse">
-                                Активен
+                                @Texts.Admin_Users_Editor_Unlocked
                             </label>
                         </div>
                         <div class="custom-control custom-radio">
                             <input type="radio" asp-for="IsLocked" value="true" class="custom-control-input" id="IsLockedTrue" />
                             <label class="custom-control-label" for="IsLockedTrue">
-                                Заблокирован
+                                @Texts.Admin_Users_Editor_Locked
                             </label>
                         </div>
                     </div>
@@ -82,7 +85,7 @@
             }
 
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Страница</label>
+                <label class="col-sm-3 col-form-label">@Texts.Admin_Users_Editor_Page</label>
                 <div class="col-sm-9">
                     <div>
                         <select asp-for="PersonalPageId" asp-items="@data.PageItems"></select>
@@ -90,11 +93,11 @@
                     </div>
                     @if (data.CanCreatePersonalPage)
                     {
-                        <div>или</div>
+                        <div>@Texts.Admin_Users_Editor_Or</div>
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" asp-for="CreatePersonalPage" class="custom-control-input" id="CreatePersonalPage" />
                             <label class="custom-control-label" for="CreatePersonalPage">
-                                Создать новую
+                                @Texts.Admin_Users_Editor_CreateNewPage
                             </label>
                         </div>
                     }
@@ -103,20 +106,18 @@
 
             @if(!ViewData.ModelState.IsValid)
             {
-                <div class="alert alert-danger" role="alert">
-                    <strong>Ошибка:</strong> пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.
-                </div>
+                <div class="alert alert-danger" role="alert">@Html.Raw(Texts.Admin_Users_Editor_ValidationError)</div>
             }
 
             <div class="form-group row" style="margin-bottom: 140px">
                 <div class="offset-sm-3 col-sm-6">
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a class="btn btn-secondary" href="@Url.Action("Index")">Отмена</a>
+                    <button type="submit" class="btn btn-primary">@Texts.Admin_Global_Save</button>
+                    <a class="btn btn-secondary" href="@Url.Action("Index")">@Texts.Admin_Global_Cancel</a>
                 </div>
                 @if (!data.IsSelf)
                 {
                     <div class="float-right">
-                        <a class="btn btn-danger" href="@Url.Action("Remove", "Users", new {id = Model.Id})">Удалить</a>
+                        <a class="btn btn-danger" href="@Url.Action("Remove", "Users", new {id = Model.Id})">@Texts.Admin_Global_Remove</a>
                     </div>
                 }
             </div>
