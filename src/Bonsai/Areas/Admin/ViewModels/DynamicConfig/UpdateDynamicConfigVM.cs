@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Mapster;
 
 namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
@@ -15,8 +16,8 @@ namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
         /// <summary>
         /// The title of the website. Displayed in the top bar and browser title.
         /// </summary>
-        [Required(ErrorMessage = "Введите название для заголовка сайта")]
-        [StringLength(200, ErrorMessage = "Название не может превышать 200 символов")]
+        [Required(ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Admin_DynamicConfig_Validation_TitleEmpty")]
+        [StringLength(200, ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Admin_DynamicConfig_Validation_TitleTooLong")]
         public string Title { get; set; }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Bonsai.Areas.Admin.ViewModels.DynamicConfig
         /// <summary>
         /// Tree render thoroughness coefficient.
         /// </summary>
-        [Range(1, 100, ErrorMessage = "Значение должно быть в диапазоне от 1 до 100")]
+        [Range(1, 100, ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Admin_DynamicConfig_Validation_ThoroughnessRange")]
         public int TreeRenderThoroughness { get; set; }
 
         /// <summary>

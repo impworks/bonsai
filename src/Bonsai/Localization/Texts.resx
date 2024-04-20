@@ -2296,4 +2296,70 @@
   <data name="Admin_Users_Editor_ValidationError" xml:space="preserve">
     <value>&lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
   </data>
+  <data name="Admin_DynamicConfig_Validation_TitleEmpty" xml:space="preserve">
+      <value>Введите название для заголовка сайта</value>
+  </data>
+  <data name="Admin_DynamicConfig_Validation_TitleTooLong" xml:space="preserve">
+      <value>Название не может превышать 200 символов</value>
+  </data>
+  <data name="Admin_DynamicConfig_Validation_ThoroughnessRange" xml:space="preserve">
+      <value>Значение должно быть в диапазоне от 1 до 100</value>
+  </data>
+  <data name="Admin_Pages_Validation_TitleEmpty" xml:space="preserve">
+      <value>Необходимо ввести название страницы</value>
+  </data>
+  <data name="Admin_Pages_Validation_TitleTooLong" xml:space="preserve">
+      <value>Название не может превышать 200 символов</value>
+  </data>
+  <data name="Front_Calendar_Event" xml:space="preserve">
+      <value>Событие</value>
+  </data>
+  <data name="Startup_Task_DatabaseReplication" xml:space="preserve">
+      <value>Перенос базы</value>
+  </data>
+  <data name="Startup_Task_DatabaseMigration" xml:space="preserve">
+      <value>Подготовка базы</value>
+  </data>
+  <data name="Startup_Task_DatabaseCleanup" xml:space="preserve">
+      <value>Очистка базы данных</value>
+  </data>
+  <data name="Startup_Task_TestDataSeeding" xml:space="preserve">
+      <value>Подготовка тестовых данных</value>
+  </data>
+  <data name="Startup_Task_Configuration" xml:space="preserve">
+      <value>Настройка конфигурации</value>
+  </data>
+  <data name="Startup_Task_SearchIndexPreparation" xml:space="preserve">
+      <value>Подготовка поискового индекса</value>
+  </data>
+  <data name="Startup_Task_ReferenceDetection" xml:space="preserve">
+      <value>Обнаружение ссылок между страницами</value>
+  </data>
+  <data name="Startup_Task_TreeBuilding" xml:space="preserve">
+      <value>Построение дерева</value>
+  </data>
+  <data name="Admin_Page_Contacts_Validation_UnknownType" xml:space="preserve">
+      <value>Контакт #{0}: тип не указан</value>
+  </data>
+  <data name="Admin_Page_Contacts_Validation_UnknownValue" xml:space="preserve">
+      <value>Контакт #{0}: значение не указано</value>
+  </data>
+  <data name="Admin_Page_Contacts_Validation_InvalidEmail" xml:space="preserve">
+      <value>Контакт #{0}: адрес почты имеет некорректный формат</value>
+  </data>
+  <data name="Admin_Page_Contacts_Validation_InvalidPhone" xml:space="preserve">
+      <value>Контакт #{0}: телефон должен начинаться с + и содержать только цифры</value>
+  </data>
+  <data name="Admin_Page_Contacts_Validation_InvalidHandle" xml:space="preserve">
+      <value>Контакт #{0}: значение должно быть ссылкой, либо начинаться с @</value>
+  </data>
+  <data name="Admin_Page_Contacts_Validation_InvalidLink" xml:space="preserve">
+      <value>Контакт #{0}: ссылка должна начинаться с 'https://'</value>
+  </data>
+  <data name="Admin_Page_Facts_Validation_DeathDate" xml:space="preserve">
+      <value>Дата смерти не может быть указана, если она неизвестна.</value>
+  </data>
+  <data name="Front_Media_PhotoTitlePlaceholder" xml:space="preserve">
+      <value>Фото</value>
+  </data>
 </root>

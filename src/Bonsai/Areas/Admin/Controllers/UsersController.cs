@@ -112,7 +112,7 @@ namespace Bonsai.Areas.Admin.Controllers
 
                 await _db.SaveChangesAsync();
 
-                return RedirectToSuccess("Пользователь обновлен");
+                return RedirectToSuccess(Texts.Admin_Users_UpdatedMessage);
             }
             catch (ValidationException ex)
             {

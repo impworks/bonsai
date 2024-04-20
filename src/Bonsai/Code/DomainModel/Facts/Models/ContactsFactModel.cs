@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Bonsai.Code.Utils.Validation;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 
 namespace Bonsai.Code.DomainModel.Facts.Models
 {
@@ -16,29 +17,29 @@ namespace Bonsai.Code.DomainModel.Facts.Models
             {
                 var item = Values[i-1];
                 if (!Enum.IsDefined(item.Type))
-                    throw new ValidationException(nameof(Page.Facts), $"Контакт #{i}: тип не указан");
+                    throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Page_Contacts_Validation_UnknownType, i));
 
                 if(string.IsNullOrEmpty(item.Value))
-                    throw new ValidationException(nameof(Page.Facts), $"Контакт #{i}: значение не указано");
+                    throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Page_Contacts_Validation_UnknownValue, i));
 
                 if (item.Type == ContactType.Email)
                 {
                     if(!Regex.IsMatch(item.Value, ".+@.+\\..+"))
-                        throw new ValidationException(nameof(Page.Facts), $"Контакт #{i}: адрес почты имеет некорректный формат");
+                        throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Page_Contacts_Validation_InvalidEmail, i));
                 }
                 else if (item.Type == ContactType.Phone)
                 {
                     if (!Regex.IsMatch(item.Value, "\\+[0-9]+"))
-                        throw new ValidationException(nameof(Page.Facts), $"Контакт #{i}: телефон должен начинаться с + и содержать только цифры");
+                        throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Page_Contacts_Validation_InvalidPhone, i));
                 }
                 else if (item.Type == ContactType.Telegram || item.Type == ContactType.Twitter)
                 {
                     if(!item.Value.StartsWith("https://"))
                         if(!Regex.IsMatch(item.Value, "@[a-z0-9_-]+"))
-                            throw new ValidationException(nameof(Page.Facts), $"Контакт #{i}: значение должно быть ссылкой, либо начинаться с @");
+                            throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Page_Contacts_Validation_InvalidHandle, i));
                 }
                 else if (!item.Value.StartsWith("https://"))
-                    throw new ValidationException(nameof(Page.Facts), $"Контакт #{i}: ссылка должна начинаться с 'https://'");
+                    throw new ValidationException(nameof(Page.Facts), string.Format(Texts.Admin_Page_Contacts_Validation_InvalidLink, i));
             }
         }
     }

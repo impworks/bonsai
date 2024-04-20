@@ -11,6 +11,7 @@ using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Data.Utils;
 using Bonsai.Data.Utils.Seed;
+using Bonsai.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -65,7 +66,7 @@ namespace Bonsai.Code.Config
             {
                 startupService.AddTask(
                     "DatabaseReplicate",
-                    "Перенос базы",
+                    Texts.Startup_Task_DatabaseReplication,
                     () => DatabaseReplicator.ReplicateAsync(Configuration.ConnectionStrings)
                 );
             }
@@ -73,7 +74,7 @@ namespace Bonsai.Code.Config
             {
                 startupService.AddTask(
                     "DatabaseMigrate",
-                    "Подготовка базы",
+                    Texts.Startup_Task_DatabaseMigration,
                     async () =>
                     {
                         var db = sp.GetService<AppDbContext>();
@@ -88,7 +89,7 @@ namespace Bonsai.Code.Config
                 {
                     startupService.AddTask(
                         "DatabaseClear",
-                        "Очистка базы данных",
+                        Texts.Startup_Task_DatabaseCleanup,
                         () => SeedData.ClearPreviousDataAsync(sp.GetService<AppDbContext>())
                     );
                 }
@@ -97,7 +98,7 @@ namespace Bonsai.Code.Config
                 {
                     startupService.AddTask(
                         "DatabaseSeed",
-                        "Подготовка тестовых данных",
+                        Texts.Startup_Task_TestDataSeeding,
                         async () =>
                         {
                             if (demoCfg.CreateDefaultPages)
@@ -110,7 +111,7 @@ namespace Bonsai.Code.Config
 
                 startupService.AddTask(
                     "PrepareConfig",
-                    "Настройка конфигурации",
+                    Texts.Startup_Task_Configuration,
                     async () =>
                     {
                         var db = sp.GetRequiredService<AppDbContext>();
@@ -125,7 +126,7 @@ namespace Bonsai.Code.Config
 
             startupService.AddTask(
                 "FullTextIndexInit",
-                "Подготовка поискового индекса",
+                Texts.Startup_Task_SearchIndexPreparation,
                 async () =>
                 {
                     var search = sp.GetService<ISearchEngine>();
@@ -141,13 +142,13 @@ namespace Bonsai.Code.Config
             
             startupService.AddTask(
                 "BuildPageReferences",
-                "Обнаружение ссылок между страницами",
+                Texts.Startup_Task_ReferenceDetection,
                 () => BuildPageReferences(sp)
             );
 
             startupService.AddTask(
                 "InitTree",
-                "Построение дерева",
+                Texts.Startup_Task_TreeBuilding,
                 async () =>
                 {
                     var db = sp.GetService<AppDbContext>();

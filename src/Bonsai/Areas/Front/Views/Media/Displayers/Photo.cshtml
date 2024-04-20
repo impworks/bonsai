@@ -6,7 +6,7 @@
 }
 
 <div class="photo-wrapper">
-    <img src="@Url.MediaUrl(Model)" class="media-photo" alt="@(Model.Title ?? "Фото")" />
+    <img src="@Url.MediaUrl(Model)" class="media-photo" alt="@(Model.Title ?? Bonsai.Localization.Texts.Front_Media_PhotoTitlePlaceholder)" />
     @foreach (var tag in Model.Tags)
     {
         if (tag.Rect is RectangleF r)
