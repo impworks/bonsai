@@ -1033,6 +1033,33 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Значение должно быть в диапазоне от 1 до 100.
+        /// </summary>
+        public static string Admin_DynamicConfig_Validation_ThoroughnessRange {
+            get {
+                return ResourceManager.GetString("Admin_DynamicConfig_Validation_ThoroughnessRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите название для заголовка сайта.
+        /// </summary>
+        public static string Admin_DynamicConfig_Validation_TitleEmpty {
+            get {
+                return ResourceManager.GetString("Admin_DynamicConfig_Validation_TitleEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Название не может превышать 200 символов.
+        /// </summary>
+        public static string Admin_DynamicConfig_Validation_TitleTooLong {
+            get {
+                return ResourceManager.GetString("Admin_DynamicConfig_Validation_TitleTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Запрещено в демо-режиме.
         /// </summary>
         public static string Admin_ForbiddenInDemoMessage {
@@ -1587,6 +1614,69 @@ namespace Bonsai.Localization {
         public static string Admin_Menu_Users {
             get {
                 return ResourceManager.GetString("Admin_Menu_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Контакт #{0}: адрес почты имеет некорректный формат.
+        /// </summary>
+        public static string Admin_Page_Contacts_Validation_InvalidEmail {
+            get {
+                return ResourceManager.GetString("Admin_Page_Contacts_Validation_InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Контакт #{0}: значение должно быть ссылкой, либо начинаться с @.
+        /// </summary>
+        public static string Admin_Page_Contacts_Validation_InvalidHandle {
+            get {
+                return ResourceManager.GetString("Admin_Page_Contacts_Validation_InvalidHandle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Контакт #{0}: ссылка должна начинаться с &apos;https://&apos;.
+        /// </summary>
+        public static string Admin_Page_Contacts_Validation_InvalidLink {
+            get {
+                return ResourceManager.GetString("Admin_Page_Contacts_Validation_InvalidLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Контакт #{0}: телефон должен начинаться с + и содержать только цифры.
+        /// </summary>
+        public static string Admin_Page_Contacts_Validation_InvalidPhone {
+            get {
+                return ResourceManager.GetString("Admin_Page_Contacts_Validation_InvalidPhone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Контакт #{0}: тип не указан.
+        /// </summary>
+        public static string Admin_Page_Contacts_Validation_UnknownType {
+            get {
+                return ResourceManager.GetString("Admin_Page_Contacts_Validation_UnknownType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Контакт #{0}: значение не указано.
+        /// </summary>
+        public static string Admin_Page_Contacts_Validation_UnknownValue {
+            get {
+                return ResourceManager.GetString("Admin_Page_Contacts_Validation_UnknownValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата смерти не может быть указана, если она неизвестна..
+        /// </summary>
+        public static string Admin_Page_Facts_Validation_DeathDate {
+            get {
+                return ResourceManager.GetString("Admin_Page_Facts_Validation_DeathDate", resourceCulture);
             }
         }
         
@@ -2235,6 +2325,24 @@ namespace Bonsai.Localization {
         public static string Admin_Pages_UpdatedMessage {
             get {
                 return ResourceManager.GetString("Admin_Pages_UpdatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Необходимо ввести название страницы.
+        /// </summary>
+        public static string Admin_Pages_Validation_TitleEmpty {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Validation_TitleEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Название не может превышать 200 символов.
+        /// </summary>
+        public static string Admin_Pages_Validation_TitleTooLong {
+            get {
+                return ResourceManager.GetString("Admin_Pages_Validation_TitleTooLong", resourceCulture);
             }
         }
         
@@ -4328,6 +4436,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Событие.
+        /// </summary>
+        public static string Front_Calendar_Event {
+            get {
+                return ResourceManager.GetString("Front_Calendar_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to В этот день ничего не произошло..
         /// </summary>
         public static string Front_Calendar_NothingHappened {
@@ -4693,6 +4810,15 @@ namespace Bonsai.Localization {
         public static string Front_Media_Original {
             get {
                 return ResourceManager.GetString("Front_Media_Original", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фото.
+        /// </summary>
+        public static string Front_Media_PhotoTitlePlaceholder {
+            get {
+                return ResourceManager.GetString("Front_Media_PhotoTitlePlaceholder", resourceCulture);
             }
         }
         
@@ -6484,6 +6610,78 @@ namespace Bonsai.Localization {
         public static string Relations_SpouseOtherChild_Mult {
             get {
                 return ResourceManager.GetString("Relations_SpouseOtherChild_Mult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Настройка конфигурации.
+        /// </summary>
+        public static string Startup_Task_Configuration {
+            get {
+                return ResourceManager.GetString("Startup_Task_Configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Очистка базы данных.
+        /// </summary>
+        public static string Startup_Task_DatabaseCleanup {
+            get {
+                return ResourceManager.GetString("Startup_Task_DatabaseCleanup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подготовка базы.
+        /// </summary>
+        public static string Startup_Task_DatabaseMigration {
+            get {
+                return ResourceManager.GetString("Startup_Task_DatabaseMigration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Перенос базы.
+        /// </summary>
+        public static string Startup_Task_DatabaseReplication {
+            get {
+                return ResourceManager.GetString("Startup_Task_DatabaseReplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Обнаружение ссылок между страницами.
+        /// </summary>
+        public static string Startup_Task_ReferenceDetection {
+            get {
+                return ResourceManager.GetString("Startup_Task_ReferenceDetection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подготовка поискового индекса.
+        /// </summary>
+        public static string Startup_Task_SearchIndexPreparation {
+            get {
+                return ResourceManager.GetString("Startup_Task_SearchIndexPreparation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подготовка тестовых данных.
+        /// </summary>
+        public static string Startup_Task_TestDataSeeding {
+            get {
+                return ResourceManager.GetString("Startup_Task_TestDataSeeding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Построение дерева.
+        /// </summary>
+        public static string Startup_Task_TreeBuilding {
+            get {
+                return ResourceManager.GetString("Startup_Task_TreeBuilding", resourceCulture);
             }
         }
     }

@@ -343,7 +343,7 @@ namespace Bonsai.Areas.Front.Logic
                     result.Add(new CalendarEventVM
                     {
                         Type = CalendarEventType.Event,
-                        Title = "Событие",
+                        Title = Texts.Front_Calendar_Event,
                         Day = d.Day,
                         RelatedPage = new PageTitleExtendedVM
                         {

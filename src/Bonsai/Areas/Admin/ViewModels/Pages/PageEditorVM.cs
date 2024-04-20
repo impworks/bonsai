@@ -5,6 +5,7 @@ using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Code.Infrastructure;
 using Bonsai.Code.Utils.Helpers;
 using Bonsai.Data.Models;
+using Bonsai.Localization;
 using Mapster;
 using Newtonsoft.Json;
 
@@ -23,8 +24,8 @@ namespace Bonsai.Areas.Admin.ViewModels.Pages
         /// <summary>
         /// Page title.
         /// </summary>
-        [Required(ErrorMessage = "Необходимо ввести название страницы")]
-        [StringLength(200, ErrorMessage = "Название не может превышать 200 символов")]
+        [Required(ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Admin_Pages_Validation_TitleEmpty")]
+        [StringLength(200, ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Admin_Pages_Validation_TitleTooLong")]
         public string Title { get; set; }
 
         /// <summary>

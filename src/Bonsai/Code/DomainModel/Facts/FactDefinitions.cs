@@ -71,7 +71,7 @@ namespace Bonsai.Code.DomainModel.Facts
                         "Main",
                         Texts.Facts_Group_Main,
                         true,
-                        new FactDefinition<NameFactModel>("Name", "Имя")
+                        new FactDefinition<NameFactModel>("Name", Texts.Facts_Pet_Name)
                     ),
                     new FactDefinitionGroup(
                         "Birth",
