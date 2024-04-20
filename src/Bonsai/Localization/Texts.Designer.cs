@@ -2465,6 +2465,132 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Доступ.
+        /// </summary>
+        public static string Admin_Users_Editor_Access {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_Access", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Создать новую.
+        /// </summary>
+        public static string Admin_Users_Editor_CreateNewPage {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_CreateNewPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Создание профиля пользователя.
+        /// </summary>
+        public static string Admin_Users_Editor_CreateTitle {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_CreateTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Редактирование пользователя.
+        /// </summary>
+        public static string Admin_Users_Editor_EditTitle {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_EditTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Блокировка.
+        /// </summary>
+        public static string Admin_Users_Editor_Lock {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_Lock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заблокирован.
+        /// </summary>
+        public static string Admin_Users_Editor_Locked {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_Locked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to или.
+        /// </summary>
+        public static string Admin_Users_Editor_Or {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_Or", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страница.
+        /// </summary>
+        public static string Admin_Users_Editor_Page {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы создаете профиль с авторизацией по паролю..
+        /// </summary>
+        public static string Admin_Users_Editor_PasswordAuth1 {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_PasswordAuth1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Данный тип авторизации менее надежен и удобен, однако не требует учетной записи в соцсетях. Он подходит, например, для пожилых родственников, или для быстрой проверки функционала. .
+        /// </summary>
+        public static string Admin_Users_Editor_PasswordAuth2 {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_PasswordAuth2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Если пользователь забудет свой пароль, он не сможет восстановить его самостоятельно - это может сделать только администратор..
+        /// </summary>
+        public static string Admin_Users_Editor_PasswordAuth3 {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_PasswordAuth3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Активен.
+        /// </summary>
+        public static string Admin_Users_Editor_Unlocked {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_Unlocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Валидация пользователя.
+        /// </summary>
+        public static string Admin_Users_Editor_ValidateTitle {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_ValidateTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
+        /// </summary>
+        public static string Admin_Users_Editor_ValidationError {
+            get {
+                return ResourceManager.GetString("Admin_Users_Editor_ValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Операция запрещена для данного пользователя!.
         /// </summary>
         public static string Admin_Users_Forbidden {

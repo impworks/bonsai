@@ -2254,4 +2254,46 @@
   <data name="Admin_Users_PasswordReset_Username" xml:space="preserve">
     <value>Пользователь</value>
   </data>
+  <data name="Admin_Users_Editor_Access" xml:space="preserve">
+    <value>Доступ</value>
+  </data>
+  <data name="Admin_Users_Editor_CreateNewPage" xml:space="preserve">
+    <value>Создать новую</value>
+  </data>
+  <data name="Admin_Users_Editor_CreateTitle" xml:space="preserve">
+    <value>Создание профиля пользователя</value>
+  </data>
+  <data name="Admin_Users_Editor_EditTitle" xml:space="preserve">
+    <value>Редактирование пользователя</value>
+  </data>
+  <data name="Admin_Users_Editor_Lock" xml:space="preserve">
+    <value>Блокировка</value>
+  </data>
+  <data name="Admin_Users_Editor_Locked" xml:space="preserve">
+    <value>Заблокирован</value>
+  </data>
+  <data name="Admin_Users_Editor_Or" xml:space="preserve">
+    <value>или</value>
+  </data>
+  <data name="Admin_Users_Editor_Page" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+  <data name="Admin_Users_Editor_PasswordAuth1" xml:space="preserve">
+    <value>Вы создаете профиль с авторизацией по паролю.</value>
+  </data>
+  <data name="Admin_Users_Editor_PasswordAuth2" xml:space="preserve">
+    <value>Данный тип авторизации менее надежен и удобен, однако не требует учетной записи в соцсетях. Он подходит, например, для пожилых родственников, или для быстрой проверки функционала. </value>
+  </data>
+  <data name="Admin_Users_Editor_PasswordAuth3" xml:space="preserve">
+    <value>Если пользователь забудет свой пароль, он не сможет восстановить его самостоятельно - это может сделать только администратор.</value>
+  </data>
+  <data name="Admin_Users_Editor_Unlocked" xml:space="preserve">
+    <value>Активен</value>
+  </data>
+  <data name="Admin_Users_Editor_ValidateTitle" xml:space="preserve">
+    <value>Валидация пользователя</value>
+  </data>
+  <data name="Admin_Users_Editor_ValidationError" xml:space="preserve">
+    <value>&lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
+  </data>
 </root>
