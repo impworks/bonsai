@@ -1,0 +1,82 @@
+﻿@{
+    Layout = "HelpLayout.cshtml";
+    ViewBag.Title = "Markup";
+}
+
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link disabled" href="#">Markup</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Guidelines")">Style</a>
+    </li>
+</ul>
+
+<h3>Text formatting</h3>
+<p>Text decoration is done in the <b>Markdown</b> language. It allows using headers, links, images and other styles in plain text.</p>
+
+<h5>Headers</h5>
+<p>Use the <code>#</code> symbols to denote a header (more is smaller).</p>
+<pre>
+# Huge first level header
+## Second level header (a bit smaller)
+###### Smallest header
+</pre>
+
+<h5>Text styles</h5>
+<pre>
+_This line will be written in italics_
+**This one is bold**
+And naturally, _these can be **combined** freely_
+</pre>
+
+<h5>Lists</h5>
+<p>Unordered lists start with the <code>*</code> symbol. For nested lists use 4 space indentation.</p>
+<pre>
+* Element 1
+* Element 2
+    * Element 2.2
+</pre>
+<p>For ordered lists use the number and the dot.</p>
+<pre>
+1. Element 1
+    1. Element 1.1
+2. Element 2
+</pre>
+
+<h5>Links</h5>
+<p>The easiest way to create a link is to press <code>@@</code> and start typing the page name. A pop-up menu will appear where you can select the desired page with arrow keys or mouse.</p>
+<p>Extended search can be performed by clicking the "link" icon in the text editor toolbar. The list of options there is longer and can be filtered by type.</p>
+<p>Link to a page is written in double square brackets. First goes the full page ID, then a vertical pipe, then the link's text':</p>
+<pre>
+Link to [[John_Smith|John's]] page will be here.
+</pre>
+
+<h5>Images</h5>
+<p>Images can be added to the text using the same square brackets and the <code>media:</code> prefix.</p>
+<p>The easiest way is to click the "image" icon in the text editor toolbar and pick the image from it.</p>
+<p>The following options are available:</p>
+<ul>
+    <li>
+        <p>Size:</p>
+        <ul>
+            <li><code>size:small</code> - smallest size</li>
+            <li><code>size:medium</code> - average size</li>
+            <li><code>size:large</code> - biggest size</li>
+        </ul>
+    </li>
+    <li>
+        <p>Alignment:</p>
+        <ul>
+            <li><code>align:left</code> - goes left</li>
+            <li><code>align:center</code> - in the middle</li>
+            <li><code>align:right</code> - goes right</li>
+        </ul>
+    </li>
+</ul>
+
+<pre>
+[[media:12345]] - small image on the left side
+[[media:12345|align:right]] - medium image on the right side
+[[media:12345|align:center|size:large]] - a huge one right in the center
+</pre>
