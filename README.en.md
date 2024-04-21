@@ -1,6 +1,6 @@
 # Bonsai
 
-A family wiki and photoalbum engine (in Russian).
+A family wiki and photoalbum engine.
 
 ### [Live demo](https://bonsai.kirillorlov.pro)
 
@@ -30,7 +30,12 @@ A family wiki and photoalbum engine (in Russian).
 ## Installation via Docker
 1. Download the [docker-compose.lite.yml](docker-compose.lite.yml).
 
-2. _Optional_: 
+2. Set the locale to English:
+
+   Modify `docker-compose.lite.yml`:
+   Change `Locale=ru-RU` to `Locale=en-US`.
+
+3. _Optional_: 
 
     Configure your Bonsai instance to use HTTPS for better security.
 
@@ -38,20 +43,20 @@ A family wiki and photoalbum engine (in Russian).
 
     This requires a bit of work, so if you just want to give Bonsai a quick spin - feel free to skip or postpone this one and the next.
 
-3. _Optional_:
+4. _Optional_:
 
     Create a [Google Authorization app](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (or Yandex / VK.com).
 
     Modify `docker-compose.lite.yml`:
 
     * Save Google authorization credentials to `Auth__Google__ClientId` and `Auth__Google__ClientSecret` config properties
-    * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization    
+    * Set `Auth__AllowPasswordAuth=false` if you want to disable the less-secure password authorization
 
-4. Bring everything up using `docker compose`:
+5. Bring everything up using `docker compose`:
    ```
    docker-compose -f docker-compose.lite.yml up -d
    ```
-5. After everything is brought up Bonsai will listen on port `8080`.
+6. After everything is brought up Bonsai will listen on port `8080`.
 
 ## Development (on Windows)
 

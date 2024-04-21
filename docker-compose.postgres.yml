@@ -10,6 +10,7 @@ services:
     environment:
       - ConnectionStrings__Database=Server=postgres;Port=5432;Database=bonsai;User Id=bonsai;Password=test;Persist Security Info=true
       - Auth__AllowPasswordAuth=true
+      - Locale=ru-RU
       - ASPNETCORE_ENVIRONMENT=Production
     stop_signal: SIGKILL
     links:
