@@ -511,9 +511,6 @@
   <data name="Front_Register_Email_Hint" xml:space="preserve">
     <value>Будет использоваться в качестве логина</value>
   </data>
-  <data name="Front_Register_Error" xml:space="preserve">
-    <value>&lt;b&gt;Ошибка:&lt;/b&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
-  </data>
   <data name="Front_Register_FirstName" xml:space="preserve">
     <value>Имя</value>
   </data>
@@ -585,9 +582,6 @@
   </data>
   <data name="Front_Tree_Loading" xml:space="preserve">
     <value>Загрузка...</value>
-  </data>
-  <data name="Front_Tree_Title" xml:space="preserve">
-    <value>{0} — Фамильное древо</value>
   </data>
   <data name="Global_Error_PageNotFound" xml:space="preserve">
     <value>Страница не найдена.</value>
@@ -905,7 +899,7 @@
     <value>G</value>
   </data>
   <data name="DateFormat_Short" xml:space="preserve">
-    <value>dd MMMM yy</value>
+      <value>dd MMMM yyyy</value>
   </data>
   <data name="Enum_BloodType_A" xml:space="preserve">
     <value>A (II)</value>
@@ -1550,9 +1544,6 @@
   <data name="Admin_Changesets_Details_Edit" xml:space="preserve">
     <value>Редактировать</value>
   </data>
-  <data name="Admin_Changesets_Details_Revert" xml:space="preserve">
-    <value>Восстановить</value>
-  </data>
   <data name="Admin_Changesets_Details_ViewCurrent" xml:space="preserve">
     <value>Текущая версия</value>
   </data>
@@ -1586,10 +1577,7 @@
   <data name="Admin_Global_View" xml:space="preserve">
     <value>Просмотреть</value>
   </data>
-  <data name="Admin_Changesets_Remove" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
-  <data name="Admin_Changesets_Restore" xml:space="preserve">
+  <data name="Admin_Changesets_Revert" xml:space="preserve">
     <value>Восстановить</value>
   </data>
   <data name="Admin_Changesets_Revert_Change" xml:space="preserve">
@@ -1700,9 +1688,6 @@
   <data name="Admin_Config_TreeKinds_FullTreeDescription" xml:space="preserve">
     <value>весь связанный граф родственников</value>
   </data>
-  <data name="Admin_Config_ValidationError" xml:space="preserve">
-    <value>&lt;b&gt;Ошибка:&lt;/b&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
-  </data>
   <data name="Admin_Config_Version" xml:space="preserve">
     <value>Версия</value>
   </data>
@@ -1724,8 +1709,8 @@
     <comment>{0} =user, {1} = subject</comment>
   </data>
   <data name="Admin_Dashboard_EmptyMessageFormat" xml:space="preserve">
-    <value>Здесь будет показываться список последних действий. &lt;br/&gt; Вы можете создать &lt;a href="{0}"&gt;страницу&lt;/a&gt; или &lt;a href="{1}"&gt;загрузить медиа-файлы&lt;/a&gt;.</value>
-    <comment>{0} = create page link, {1} = upload media link</comment>
+      <value>Здесь будет показываться список последних действий. &lt;br/&gt; Вы можете &lt;a href="{0}"&gt;создать страницу&lt;/a&gt; или &lt;a href="{1}"&gt;загрузить медиа-файлы&lt;/a&gt;.</value>
+      <comment>{0} = create page link, {1} = upload media link</comment>
   </data>
   <data name="Admin_Dashboard_LinkBetweenPages" xml:space="preserve">
     <value>между страницами: {0} и {1}</value>
@@ -2242,7 +2227,7 @@
   <data name="Admin_Users_Remove_Title" xml:space="preserve">
     <value>Удаление пользователя</value>
   </data>
-  <data name="Admin_Users_PasswordReset_Error" xml:space="preserve">
+  <data name="Admin_Global_ValidationError" xml:space="preserve">
     <value>&lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
   </data>
   <data name="Admin_Users_PasswordReset_SaveAndUnlock" xml:space="preserve">
@@ -2292,9 +2277,6 @@
   </data>
   <data name="Admin_Users_Editor_ValidateTitle" xml:space="preserve">
     <value>Валидация пользователя</value>
-  </data>
-  <data name="Admin_Users_Editor_ValidationError" xml:space="preserve">
-    <value>&lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова.</value>
   </data>
   <data name="Admin_DynamicConfig_Validation_TitleEmpty" xml:space="preserve">
       <value>Введите название для заголовка сайта</value>

@@ -124,6 +124,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Update="Localization\Texts.en-us.resx">
+        <DependentUpon>Texts.resx</DependentUpon>
+      </EmbeddedResource>
       <EmbeddedResource Update="Localization\Texts.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Texts.Designer.cs</LastGenOutput>

@@ -70,6 +70,6 @@ else
 <form action="@Url.Action("Revert", "Changesets", new {area = "Admin"})" method="POST">
     <input type="hidden" name="confirm" value="true" />
     <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger" type="submit">@(isRemoving ? @Texts.Admin_Changesets_Remove : @Texts.Admin_Changesets_Restore)</button>
+    <button class="btn btn-danger" type="submit">@(isRemoving ? Texts.Admin_Global_Remove : Texts.Admin_Changesets_Revert)</button>
     <a href="@Url.Action("Index", "Changesets", new {area = "Admin"})" class="btn btn-secondary">@Texts.Admin_Global_Cancel</a>
 </form>

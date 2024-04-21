@@ -113,7 +113,7 @@
                         @if (c.CanRevert)
                         {
                             <a href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = c.Id})">
-                                <span class="fa fa-history" title="@Texts.Admin_Changesets_Details_Revert"></span>
+                                <span class="fa fa-history" title="@Texts.Admin_Changesets_Revert"></span>
                             </a>
                         }
                         @if (c.EntityExists)
