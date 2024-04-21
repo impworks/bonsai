@@ -12,6 +12,7 @@ services:
       - ConnectionStrings__Database=
       - ConnectionStrings__EmbeddedDatabase=Data Source=/app/App_Data/bonsai.db
       - ConnectionStrings__UseEmbeddedDatabase=true
+      - Locale=ru-RU
       - Auth__AllowPasswordAuth=true
       - ASPNETCORE_ENVIRONMENT=Production
     stop_signal: SIGKILL

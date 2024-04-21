@@ -39,6 +39,7 @@ services:
       - images:/app/wwwroot/media
     environment:
       - ConnectionStrings__Database=Server=postgres;Port=5432;Database=bonsai;User Id=bonsai;Password=test;Persist Security Info=true
+      - Locale=ru-RU
       - Auth__AllowPasswordAuth=true
       - Auth__Google__ClientId=
       - Auth__Google__ClientSecret=
