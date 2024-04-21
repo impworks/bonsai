@@ -133,15 +133,6 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Восстановить.
-        /// </summary>
-        public static string Admin_Changesets_Details_Revert {
-            get {
-                return ResourceManager.GetString("Admin_Changesets_Details_Revert", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Просмотр правки.
         /// </summary>
         public static string Admin_Changesets_Details_Title {
@@ -412,20 +403,11 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Удалить.
-        /// </summary>
-        public static string Admin_Changesets_Remove {
-            get {
-                return ResourceManager.GetString("Admin_Changesets_Remove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Восстановить.
         /// </summary>
-        public static string Admin_Changesets_Restore {
+        public static string Admin_Changesets_Revert {
             get {
-                return ResourceManager.GetString("Admin_Changesets_Restore", resourceCulture);
+                return ResourceManager.GetString("Admin_Changesets_Revert", resourceCulture);
             }
         }
         
@@ -781,15 +763,6 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;b&gt;Ошибка:&lt;/b&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
-        /// </summary>
-        public static string Admin_Config_ValidationError {
-            get {
-                return ResourceManager.GetString("Admin_Config_ValidationError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Версия.
         /// </summary>
         public static string Admin_Config_Version {
@@ -844,7 +817,7 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Здесь будет показываться список последних действий. &lt;br/&gt; Вы можете создать &lt;a href=&quot;{0}&quot;&gt;страницу&lt;/a&gt; или &lt;a href=&quot;{1}&quot;&gt;загрузить медиа-файлы&lt;/a&gt;..
+        ///   Looks up a localized string similar to Здесь будет показываться список последних действий. &lt;br/&gt; Вы можете &lt;a href=&quot;{0}&quot;&gt;создать страницу&lt;/a&gt; или &lt;a href=&quot;{1}&quot;&gt;загрузить медиа-файлы&lt;/a&gt;..
         /// </summary>
         public static string Admin_Dashboard_EmptyMessageFormat {
             get {
@@ -1245,6 +1218,15 @@ namespace Bonsai.Localization {
         public static string Admin_Global_Type {
             get {
                 return ResourceManager.GetString("Admin_Global_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
+        /// </summary>
+        public static string Admin_Global_ValidationError {
+            get {
+                return ResourceManager.GetString("Admin_Global_ValidationError", resourceCulture);
             }
         }
         
@@ -2690,15 +2672,6 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
-        /// </summary>
-        public static string Admin_Users_Editor_ValidationError {
-            get {
-                return ResourceManager.GetString("Admin_Users_Editor_ValidationError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Операция запрещена для данного пользователя!.
         /// </summary>
         public static string Admin_Users_Forbidden {
@@ -2848,15 +2821,6 @@ namespace Bonsai.Localization {
         public static string Admin_Users_PasswordChangeFailedMessage {
             get {
                 return ResourceManager.GetString("Admin_Users_PasswordChangeFailedMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;strong&gt;Ошибка:&lt;/strong&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
-        /// </summary>
-        public static string Admin_Users_PasswordReset_Error {
-            get {
-                return ResourceManager.GetString("Admin_Users_PasswordReset_Error", resourceCulture);
             }
         }
         
@@ -5048,15 +5012,6 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;b&gt;Ошибка:&lt;/b&gt; пожалуйста, убедитесь, что вы заполнили все поля корректно и попробуйте снова..
-        /// </summary>
-        public static string Front_Register_Error {
-            get {
-                return ResourceManager.GetString("Front_Register_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Имя.
         /// </summary>
         public static string Front_Register_FirstName {
@@ -5332,15 +5287,6 @@ namespace Bonsai.Localization {
         public static string Front_Tree_Loading {
             get {
                 return ResourceManager.GetString("Front_Tree_Loading", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} — Фамильное древо.
-        /// </summary>
-        public static string Front_Tree_Title {
-            get {
-                return ResourceManager.GetString("Front_Tree_Title", resourceCulture);
             }
         }
         

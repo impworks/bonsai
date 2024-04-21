@@ -50,7 +50,7 @@
 
 @if (Model.CanRevert)
 {
-    <a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = Model.Id})">@Texts.Admin_Changesets_Details_Revert</a>
+    <a class="btn btn-danger" href="@Url.Action("Revert", "Changesets", new {area = "Admin", id = Model.Id})">@Texts.Admin_Changesets_Revert</a>
 }
 
 @if (Model.EntityExists)

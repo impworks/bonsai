@@ -15,7 +15,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("markdown")]
         public ActionResult Markdown()
         {
-            return View("Markdown" + LocaleProvider.GetLocaleCode());
+            return View("Markdown." + LocaleProvider.GetLocaleCode());
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Bonsai.Areas.Admin.Controllers
         [Route("guidelines")]
         public ActionResult Guidelines()
         {
-            return View("Guidelines" + LocaleProvider.GetLocaleCode());
+            return View("Guidelines." + LocaleProvider.GetLocaleCode());
         }
     }
 }

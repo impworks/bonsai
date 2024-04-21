@@ -658,28 +658,6 @@ gj.picker.widget.prototype.destroy = function (type) {
     }
     return this;
 };
-gj.core.messages['bg-bg'] = {
-    monthNames: ['Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни', 'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'],
-    monthShortNames: ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'ОКт', 'Ное', 'Дек'],
-    weekDaysMin: ['Н', 'П', 'В', 'С', 'Ч', 'П', 'С'],
-    weekDaysShort: ['Нед', 'Пон', 'Вто', 'Сря', 'Чет', 'Пет', 'Съб'],
-    weekDays: ['Неделя', 'Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота'],
-    am: 'AM',
-    pm: 'PM',
-    ok: 'ОК',
-    cancel: 'Отказ'
-};
-gj.core.messages['fr-fr'] = {
-    monthNames: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
-    monthShortNames: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
-    weekDaysMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-    weekDaysShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
-    weekDays: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
-    am: 'AM',
-    pm: 'PM',
-    ok: 'OK',
-    cancel: 'Annuler'
-};
 gj.core.messages['de-de'] = {
     monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
     monthShortNames: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
@@ -691,17 +669,6 @@ gj.core.messages['de-de'] = {
     ok: 'OK',
     cancel: 'Abbrechen'
 };
-gj.core.messages['pt-br'] = {
-    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-    monthShortNames: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-    weekDaysMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-    weekDaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-    weekDays: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
-    am: 'AM',
-    pm: 'PM',
-    ok: 'OK',
-    cancel: 'Cancelar'
-};
 gj.core.messages['ru-ru'] = {
     monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
     monthShortNames: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
@@ -712,37 +679,4 @@ gj.core.messages['ru-ru'] = {
     pm: 'PM',
     ok: 'ОК',
     cancel: 'Отмена'
-};
-gj.core.messages['es-es'] = {
-    monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'setiembre', 'octubre', 'noviembre', 'diciembre'],
-    monthShortNames: ['ene.', 'feb.', 'mar', 'abr.', 'may', 'jun', 'jul.', 'ago', 'set.', 'oct.', 'nov.', 'dic.'],
-    weekDaysMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-    weekDaysShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
-    weekDays: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
-    am: 'AM',
-    pm: 'PM',
-    ok: 'OK',
-    cancel: 'Cancelar'
-};
-gj.core.messages['it-it'] = {
-    monthNames: ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'],
-    monthShortNames: ['gen.', 'feb.', 'mar.', 'apr.', 'mag.', 'giu.', 'lug.', 'ago.', 'set.', 'ott.', 'nov.', 'dic.'],
-    weekDaysMin: ['Do', 'Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa'],
-    weekDaysShort: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven','Sab'],
-    weekDays: ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'],
-    am: 'AM',
-    pm: 'PM',
-    ok: 'OK',
-    cancel: 'Annulla'
-};
-gj.core.messages['tr-tr'] = {
-    monthNames: ['ocak', 'şubat', 'mart', 'nisan', 'mayıs', 'haziran', 'temmuz', 'ağustos', 'eylül', 'ekim', 'kasım', 'aralık'],
-    monthShortNames: ['oca', 'şub', 'mar', 'nis', 'may', 'haz', 'tem', 'ağu', 'eyl', 'eki', 'kas', 'ara'],
-    weekDaysMin: ['P', 'S', 'Ç', 'P', 'C', 'C', 'P'],
-    weekDaysShort: ['pzt.', 'sl.', 'çar.', 'per.', 'cum.', 'cmt.', 'paz.'],
-    weekDays: ['pazartesi', 'salı', 'çarşamba', 'perşembe', 'cuma', 'cumartesi', 'pazar'],
-    am: 'AM',
-    pm: 'PM',
-    ok: 'Tamam',
-    cancel: 'İptal'
 };

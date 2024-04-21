@@ -1,0 +1,2206 @@
+﻿<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Admin_Changesets_CannotRevertMessage" xml:space="preserve">
+        <value>This change cannot be reverted.</value>
+    </data>
+    <data name="Admin_Changesets_Details_Action" xml:space="preserve">
+        <value>Action</value>
+    </data>
+    <data name="Admin_Changesets_Details_Author" xml:space="preserve">
+        <value>Author</value>
+    </data>
+    <data name="Admin_Changesets_Details_Contents" xml:space="preserve">
+        <value>Contents</value>
+    </data>
+    <data name="Admin_Changesets_Details_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Admin_Changesets_Details_Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Admin_Changesets_Details_Main" xml:space="preserve">
+        <value>Main data</value>
+    </data>
+    <data name="Admin_Changesets_Details_Title" xml:space="preserve">
+        <value>Changeset view</value>
+    </data>
+    <data name="Admin_Changesets_Details_ViewCurrent" xml:space="preserve">
+        <value>View current version</value>
+    </data>
+    <data name="Admin_Changesets_Facts_GenderF" xml:space="preserve">
+        <value>female</value>
+    </data>
+    <data name="Admin_Changesets_Facts_GenderM" xml:space="preserve">
+        <value>male</value>
+    </data>
+    <data name="Admin_Changesets_Facts_Unknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="Admin_Changesets_Index_Empty" xml:space="preserve">
+        <value>No changesets exist.</value>
+    </data>
+    <data name="Admin_Changesets_Index_NotFound" xml:space="preserve">
+        <value>No changesets were found.</value>
+    </data>
+    <data name="Admin_Changesets_Index_Title" xml:space="preserve">
+        <value>Changesets</value>
+    </data>
+    <data name="Admin_Changesets_MediaFallback" xml:space="preserve">
+        <value>Media</value>
+    </data>
+    <data name="Admin_Changesets_Media_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Admin_Changesets_Media_DepictedEntities" xml:space="preserve">
+        <value>Tags</value>
+    </data>
+    <data name="Admin_Changesets_Media_Description" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="Admin_Changesets_Media_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Admin_Changesets_Media_Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="Admin_Changesets_Media_Title" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="Admin_Changesets_NotFound" xml:space="preserve">
+        <value>Changeset not found.</value>
+    </data>
+    <data name="Admin_Changesets_Page_Aliases" xml:space="preserve">
+        <value>Aliases</value>
+    </data>
+    <data name="Admin_Changesets_Page_Facts" xml:space="preserve">
+        <value>Facts</value>
+    </data>
+    <data name="Admin_Changesets_Page_Photo" xml:space="preserve">
+        <value>Photo</value>
+    </data>
+    <data name="Admin_Changesets_Page_Text" xml:space="preserve">
+        <value>Text</value>
+    </data>
+    <data name="Admin_Changesets_Page_Title" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="Admin_Changesets_Page_Type" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="Admin_Changesets_RelationTitleFormat" xml:space="preserve">
+        <value>{0} ({1}, {2})</value>
+    </data>
+    <data name="Admin_Changesets_Relation_Destination" xml:space="preserve">
+        <value>Main page</value>
+    </data>
+    <data name="Admin_Changesets_Relation_End" xml:space="preserve">
+        <value>End</value>
+    </data>
+    <data name="Admin_Changesets_Relation_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Admin_Changesets_Relation_Source" xml:space="preserve">
+        <value>Related page</value>
+    </data>
+    <data name="Admin_Changesets_Relation_SourceM" xml:space="preserve">
+        <value>Related pages</value>
+    </data>
+    <data name="Admin_Changesets_Relation_Start" xml:space="preserve">
+        <value>Start</value>
+    </data>
+    <data name="Admin_Changesets_Relation_Type" xml:space="preserve">
+        <value>Relation type</value>
+    </data>
+    <data name="Admin_Changesets_Revert" xml:space="preserve">
+        <value>Restore</value>
+    </data>
+    <data name="Admin_Changesets_RevertedMessage" xml:space="preserve">
+        <value>Changeset was reverted.</value>
+    </data>
+    <data name="Admin_Changesets_Revert_Change" xml:space="preserve">
+        <value>Changeset</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RemoveMediaConfirmation" xml:space="preserve">
+        <value>Are you sure you want to remove the media?</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RemoveMediaTitle" xml:space="preserve">
+        <value>Remove media</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RemovePageConfirmation" xml:space="preserve">
+        <value>Are you sure you want to remove the page?</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RemovePageTitle" xml:space="preserve">
+        <value>Remove page</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RemoveRelationConfirmation" xml:space="preserve">
+        <value>Are you sure you want to remove the relation?</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RemoveRelationTitle" xml:space="preserve">
+        <value>Remove relation</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RestoreMediaConfirmation" xml:space="preserve">
+        <value>Are you sure you want to restore the media's previous state?</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RestoreMediaTitle" xml:space="preserve">
+        <value>Restore media</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RestoreOverview" xml:space="preserve">
+        <value>This and all newer changes (if any) will be discarded.</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RestorePageConfirmation" xml:space="preserve">
+        <value>Are you sure you want to restore the page's previous state?</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RestorePageTitle" xml:space="preserve">
+        <value>Restore page</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RestoreRelationConfirmation" xml:space="preserve">
+        <value>Are you sure you want to restore the relation's previous state?</value>
+    </data>
+    <data name="Admin_Changesets_Revert_RestoreRelationTitle" xml:space="preserve">
+        <value>Restore relation</value>
+    </data>
+    <data name="Admin_Changesets_UnknownEntityMessage" xml:space="preserve">
+        <value>Unknown entity type: {0}!</value>
+    </data>
+    <data name="Admin_Config_Access" xml:space="preserve">
+        <value>Access</value>
+    </data>
+    <data name="Admin_Config_Access_AnyCanRead" xml:space="preserve">
+        <value>Any visitor can read</value>
+    </data>
+    <data name="Admin_Config_Access_RegisteredCanRead" xml:space="preserve">
+        <value>Only registered can read</value>
+    </data>
+    <data name="Admin_Config_Caption" xml:space="preserve">
+        <value>Caption</value>
+    </data>
+    <data name="Admin_Config_CaptionDescription" xml:space="preserve">
+        <value>Displayed in the header</value>
+    </data>
+    <data name="Admin_Config_Registration" xml:space="preserve">
+        <value>Registration</value>
+    </data>
+    <data name="Admin_Config_Registration_Disabled" xml:space="preserve">
+        <value>Forbidden</value>
+    </data>
+    <data name="Admin_Config_Registration_Enabled" xml:space="preserve">
+        <value>Allowed</value>
+    </data>
+    <data name="Admin_Config_SavedMessage" xml:space="preserve">
+        <value>Settings saved.</value>
+    </data>
+    <data name="Admin_Config_Title" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="Admin_Config_TreeDisplay" xml:space="preserve">
+        <value>Tree display</value>
+    </data>
+    <data name="Admin_Config_TreeDisplay_FastAndRough" xml:space="preserve">
+        <value>Fast and rough</value>
+    </data>
+    <data name="Admin_Config_TreeDisplay_HideBlackRibbon" xml:space="preserve">
+        <value>Hide black ribbon on the cards of deceased people</value>
+    </data>
+    <data name="Admin_Config_TreeDisplay_SlowAndThorough" xml:space="preserve">
+        <value>Slow and thorough</value>
+    </data>
+    <data name="Admin_Config_TreeKinds" xml:space="preserve">
+        <value>Tree kinds</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_Ancestors" xml:space="preserve">
+        <value>Ancestors</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_AncestorsDescription" xml:space="preserve">
+        <value>all blood relatives upwards</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_CloseFamily" xml:space="preserve">
+        <value>Close relatives</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_CloseFamilyDescription" xml:space="preserve">
+        <value>two levels around, grandparents to grandchildren</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_Descendants" xml:space="preserve">
+        <value>Descendants</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_DescendantsDescription" xml:space="preserve">
+        <value>all blood relatives downwards, including other parents</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_FullTree" xml:space="preserve">
+        <value>Full tree</value>
+    </data>
+    <data name="Admin_Config_TreeKinds_FullTreeDescription" xml:space="preserve">
+        <value>the whole connected graph of relatives</value>
+    </data>
+    <data name="Admin_Config_Version" xml:space="preserve">
+        <value>Version</value>
+    </data>
+    <data name="Admin_Config_Version_Build" xml:space="preserve">
+        <value>Build</value>
+    </data>
+    <data name="Admin_Config_Version_BuildUnknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="Admin_Config_Version_Database" xml:space="preserve">
+        <value>Database</value>
+    </data>
+    <data name="Admin_Dashboard_CreatedFormatF" xml:space="preserve">
+        <value>{0} created {1}</value>
+    </data>
+    <data name="Admin_Dashboard_CreatedFormatM" xml:space="preserve">
+        <value>{0} created {1}</value>
+    </data>
+    <data name="Admin_Dashboard_EmptyMessageFormat" xml:space="preserve">
+        <value>The latest actions will be shown here.&lt;br/&gt;You can &lt;a href="{0}"&gt;create a page&lt;/a&gt; or &lt;a href="{1}"&gt;upload a media-file&lt;/a&gt;.</value>
+    </data>
+    <data name="Admin_Dashboard_LinkBetweenPages" xml:space="preserve">
+        <value>between pages: {0} and {1}</value>
+    </data>
+    <data name="Admin_Dashboard_MediaFiles" xml:space="preserve">
+        <value>media file|media files</value>
+    </data>
+    <data name="Admin_Dashboard_MediaWithoutTagsFormat" xml:space="preserve">
+        <value>{0} without tags</value>
+    </data>
+    <data name="Admin_Dashboard_Page" xml:space="preserve">
+        <value>page</value>
+    </data>
+    <data name="Admin_Dashboard_Pages" xml:space="preserve">
+        <value>page|pages</value>
+    </data>
+    <data name="Admin_Dashboard_PagesToImproveFormat" xml:space="preserve">
+        <value>{0} can be improved</value>
+    </data>
+    <data name="Admin_Dashboard_Relation" xml:space="preserve">
+        <value>relation</value>
+    </data>
+    <data name="Admin_Dashboard_Relations" xml:space="preserve">
+        <value>relation|relations</value>
+    </data>
+    <data name="Admin_Dashboard_RemovedFormatF" xml:space="preserve">
+        <value>{0} removed {1}</value>
+    </data>
+    <data name="Admin_Dashboard_RemovedFormatM" xml:space="preserve">
+        <value>{0} removed {1}</value>
+    </data>
+    <data name="Admin_Dashboard_Requests" xml:space="preserve">
+        <value>request|requests</value>
+    </data>
+    <data name="Admin_Dashboard_RestoredFormatF" xml:space="preserve">
+        <value>{0} restored {1}</value>
+    </data>
+    <data name="Admin_Dashboard_RestoredFormatM" xml:space="preserve">
+        <value>{0} restored {1}</value>
+    </data>
+    <data name="Admin_Dashboard_Title" xml:space="preserve">
+        <value>Dashboard</value>
+    </data>
+    <data name="Admin_Dashboard_UpdatedFormatF" xml:space="preserve">
+        <value>{0} updated {1}</value>
+    </data>
+    <data name="Admin_Dashboard_UpdatedFormatM" xml:space="preserve">
+        <value>{0} updated {1}</value>
+    </data>
+    <data name="Admin_Dashboard_UploadedFormatF" xml:space="preserve">
+        <value>{0} uploaded {1}
+</value>
+    </data>
+    <data name="Admin_Dashboard_UploadedFormatM" xml:space="preserve">
+        <value>{0} uploaded {1}
+</value>
+    </data>
+    <data name="Admin_Dashboard_Users" xml:space="preserve">
+        <value>user|users</value>
+    </data>
+    <data name="Admin_DemoMode_Banner" xml:space="preserve">
+        <value>Bonsai works in demo mode. All data is periodically reset.</value>
+    </data>
+    <data name="Admin_DynamicConfig_Validation_ThoroughnessRange" xml:space="preserve">
+        <value>Value must be between 1 and 100</value>
+    </data>
+    <data name="Admin_DynamicConfig_Validation_TitleEmpty" xml:space="preserve">
+        <value>Please enter the site's caption</value>
+    </data>
+    <data name="Admin_DynamicConfig_Validation_TitleTooLong" xml:space="preserve">
+        <value>Caption length cannot exceed 200 characters</value>
+    </data>
+    <data name="Admin_ForbiddenInDemoMessage" xml:space="preserve">
+        <value>Forbidden in demo mode</value>
+    </data>
+    <data name="Admin_Global_Add" xml:space="preserve">
+        <value>Add</value>
+    </data>
+    <data name="Admin_Global_Back" xml:space="preserve">
+        <value>Back</value>
+    </data>
+    <data name="Admin_Global_Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Admin_Global_ChangeHistory" xml:space="preserve">
+        <value>Changes</value>
+    </data>
+    <data name="Admin_Global_ClearFilter" xml:space="preserve">
+        <value>Clear filter</value>
+    </data>
+    <data name="Admin_Global_ContradictingFacts" xml:space="preserve">
+        <value>Contradicting facts</value>
+    </data>
+    <data name="Admin_Global_Create" xml:space="preserve">
+        <value>Create</value>
+    </data>
+    <data name="Admin_Global_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Admin_Global_Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Admin_Global_Error" xml:space="preserve">
+        <value>Error</value>
+    </data>
+    <data name="Admin_Global_Find" xml:space="preserve">
+        <value>Find</value>
+    </data>
+    <data name="Admin_Global_History" xml:space="preserve">
+        <value>Change history</value>
+    </data>
+    <data name="Admin_Global_NothingFound" xml:space="preserve">
+        <value>Nothing found for your request.</value>
+    </data>
+    <data name="Admin_Global_Pick" xml:space="preserve">
+        <value>Pick</value>
+    </data>
+    <data name="Admin_Global_Preview" xml:space="preserve">
+        <value>Preview</value>
+    </data>
+    <data name="Admin_Global_Remove" xml:space="preserve">
+        <value>Remove</value>
+    </data>
+    <data name="Admin_Global_Save" xml:space="preserve">
+        <value>Save</value>
+    </data>
+    <data name="Admin_Global_Search" xml:space="preserve">
+        <value>Search</value>
+    </data>
+    <data name="Admin_Global_Title" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="Admin_Global_Type" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="Admin_Global_View" xml:space="preserve">
+        <value>View</value>
+    </data>
+    <data name="Admin_MediaPicker_Title" xml:space="preserve">
+        <value>Pick media</value>
+    </data>
+    <data name="Admin_Media_Edit_AddTag" xml:space="preserve">
+        <value>Add tag</value>
+    </data>
+    <data name="Admin_Media_Edit_Caption" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="Admin_Media_Edit_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Admin_Media_Edit_Description" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="Admin_Media_Edit_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Admin_Media_Edit_Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="Admin_Media_Edit_RemoveTag" xml:space="preserve">
+        <value>Remove tag</value>
+    </data>
+    <data name="Admin_Media_Edit_Title" xml:space="preserve">
+        <value>Edit media</value>
+    </data>
+    <data name="Admin_Media_Edit_VideoTags" xml:space="preserve">
+        <value>Tags</value>
+    </data>
+    <data name="Admin_Media_List_Empty" xml:space="preserve">
+        <value>No files have been uploaded.</value>
+    </data>
+    <data name="Admin_Media_List_NotFound" xml:space="preserve">
+        <value>No files have been found for your request.</value>
+    </data>
+    <data name="Admin_Media_List_ShootDate" xml:space="preserve">
+        <value>Shot at</value>
+    </data>
+    <data name="Admin_Media_List_Tags" xml:space="preserve">
+        <value>Tags</value>
+    </data>
+    <data name="Admin_Media_List_Title" xml:space="preserve">
+        <value>Media index</value>
+    </data>
+    <data name="Admin_Media_List_Upload" xml:space="preserve">
+        <value>Upload</value>
+    </data>
+    <data name="Admin_Media_List_UploadDate" xml:space="preserve">
+        <value>Uploaded at</value>
+    </data>
+    <data name="Admin_Media_List_UploadDescription" xml:space="preserve">
+        <value>Upload a new media</value>
+    </data>
+    <data name="Admin_Media_NotFound" xml:space="preserve">
+        <value>Media not found</value>
+    </data>
+    <data name="Admin_Media_RemovedMessage" xml:space="preserve">
+        <value>Media removed.</value>
+    </data>
+    <data name="Admin_Media_Remove_CompletelyDescription" xml:space="preserve">
+        <value>Remove completely (releases disk space, cannot be reverted)</value>
+    </data>
+    <data name="Admin_Media_Remove_Confirmation" xml:space="preserve">
+        <value>Are you sure you want to remove this media file?</value>
+    </data>
+    <data name="Admin_Media_Remove_Title" xml:space="preserve">
+        <value>Remove media</value>
+    </data>
+    <data name="Admin_Media_UnknownFileType" xml:space="preserve">
+        <value>Unknown file type</value>
+    </data>
+    <data name="Admin_Media_UpdatedMessage" xml:space="preserve">
+        <value>Media updated.</value>
+    </data>
+    <data name="Admin_Media_Upload_Bytes" xml:space="preserve">
+        <value>{0} B</value>
+    </data>
+    <data name="Admin_Media_Upload_Gigabytes" xml:space="preserve">
+        <value>{0} GB</value>
+    </data>
+    <data name="Admin_Media_Upload_Kilobytes" xml:space="preserve">
+        <value>{0} KB</value>
+    </data>
+    <data name="Admin_Media_Upload_Megabytes" xml:space="preserve">
+        <value>{0} MB</value>
+    </data>
+    <data name="Admin_Media_Upload_ClickHereToUpload" xml:space="preserve">
+        <value>Click here to upload a new file</value>
+    </data>
+    <data name="Admin_Media_Upload_SizeLimitFormat" xml:space="preserve">
+        <value>Up to {1}</value>
+    </data>
+    <data name="Admin_Media_Upload_Title" xml:space="preserve">
+        <value>Media upload</value>
+    </data>
+    <data name="Admin_Media_Upload_UseFileNameAsCaption" xml:space="preserve">
+        <value>Use file name as title</value>
+    </data>
+    <data name="Admin_Menu_Changesets" xml:space="preserve">
+        <value>Changes</value>
+    </data>
+    <data name="Admin_Menu_Config" xml:space="preserve">
+        <value>Config</value>
+    </data>
+    <data name="Admin_Menu_Dashboard" xml:space="preserve">
+        <value>Dashboard</value>
+    </data>
+    <data name="Admin_Menu_Media" xml:space="preserve">
+        <value>Media</value>
+    </data>
+    <data name="Admin_Menu_Pages" xml:space="preserve">
+        <value>Pages</value>
+    </data>
+    <data name="Admin_Menu_Relations" xml:space="preserve">
+        <value>Relations</value>
+    </data>
+    <data name="Admin_Menu_Users" xml:space="preserve">
+        <value>Access</value>
+    </data>
+    <data name="Admin_PagePicker_Title" xml:space="preserve">
+        <value>Pick page</value>
+    </data>
+    <data name="Admin_Pages_Caption_Aliases" xml:space="preserve">
+        <value>Aliases</value>
+    </data>
+    <data name="Admin_Pages_Caption_Description" xml:space="preserve">
+        <value>Text</value>
+    </data>
+    <data name="Admin_Pages_Caption_Facts" xml:space="preserve">
+        <value>Facts</value>
+    </data>
+    <data name="Admin_Pages_Caption_Photo" xml:space="preserve">
+        <value>Photo</value>
+    </data>
+    <data name="Admin_Pages_Caption_Title" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="Admin_Pages_CreatedMessage" xml:space="preserve">
+        <value>Page created.</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Address" xml:space="preserve">
+        <value>Address</value>
+    </data>
+    <data name="Admin_Pages_Criterion_AnimalName" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Birthday" xml:space="preserve">
+        <value>Birthday</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Birthplace" xml:space="preserve">
+        <value>Birth place</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Gender" xml:space="preserve">
+        <value>Gender</value>
+    </data>
+    <data name="Admin_Pages_Criterion_HumanName" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Photo" xml:space="preserve">
+        <value>Photo</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Relations" xml:space="preserve">
+        <value>Relations</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Species" xml:space="preserve">
+        <value>Species</value>
+    </data>
+    <data name="Admin_Pages_Criterion_Text" xml:space="preserve">
+        <value>Text</value>
+    </data>
+    <data name="Admin_Pages_Editor_AddAlias" xml:space="preserve">
+        <value>Add new alias</value>
+    </data>
+    <data name="Admin_Pages_Editor_CreateTitle" xml:space="preserve">
+        <value>Create page</value>
+    </data>
+    <data name="Admin_Pages_Editor_Description" xml:space="preserve">
+        <value>Text</value>
+    </data>
+    <data name="Admin_Pages_Editor_DraftLoadedFormat" xml:space="preserve">
+        <value>Loaded from a draft from {0}.</value>
+    </data>
+    <data name="Admin_Pages_Editor_DraftOtherTypeWarning1" xml:space="preserve">
+        <value>Draft for a page of type "{0}" has been restored.</value>
+    </data>
+    <data name="Admin_Pages_Editor_DraftOtherTypeWarning2" xml:space="preserve">
+        <value>If you want to create a new page of type "{0}", save the current page or &lt;a href="#" class="cmd-discard-draft" data-page-type="{1}"&gt;remove&lt;/a&gt; the draft.</value>
+    </data>
+    <data name="Admin_Pages_Editor_EditTitle" xml:space="preserve">
+        <value>Edit page</value>
+    </data>
+    <data name="Admin_Pages_Editor_ErrorFields" xml:space="preserve">
+        <value>Incorrectly filled fields: {0}</value>
+    </data>
+    <data name="Admin_Pages_Editor_MainPhoto" xml:space="preserve">
+        <value>Photo</value>
+    </data>
+    <data name="Admin_Pages_Editor_MainPhotoPick" xml:space="preserve">
+        <value>Pick</value>
+    </data>
+    <data name="Admin_Pages_Editor_MainPhotoUpload" xml:space="preserve">
+        <value>Upload</value>
+    </data>
+    <data name="Admin_Pages_Editor_NoFactsAvailable" xml:space="preserve">
+        <value>Facts cannot be specified for this type of page.</value>
+    </data>
+    <data name="Admin_Pages_Editor_RemoveDraft" xml:space="preserve">
+        <value>Remove draft</value>
+    </data>
+    <data name="Admin_Pages_Editor_Tab_Aliases" xml:space="preserve">
+        <value>Aliases</value>
+    </data>
+    <data name="Admin_Pages_Editor_Tab_Facts" xml:space="preserve">
+        <value>Facts</value>
+    </data>
+    <data name="Admin_Pages_Editor_Tab_Main" xml:space="preserve">
+        <value>Main</value>
+    </data>
+    <data name="Admin_Pages_Editor_Title" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="Admin_Pages_Facts_Add" xml:space="preserve">
+        <value>Add fact</value>
+    </data>
+    <data name="Admin_Pages_Facts_BloodType" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="Admin_Pages_Facts_DateUnknown" xml:space="preserve">
+        <value>Date unknown</value>
+    </data>
+    <data name="Admin_Pages_Facts_FirstName" xml:space="preserve">
+        <value>First name</value>
+    </data>
+    <data name="Admin_Pages_Facts_GenderFemale" xml:space="preserve">
+        <value>Female</value>
+    </data>
+    <data name="Admin_Pages_Facts_GenderMale" xml:space="preserve">
+        <value>Male</value>
+    </data>
+    <data name="Admin_Pages_Editor_RecommendationsWarning" xml:space="preserve">
+        <value>Please read the &lt;strong&gt;&lt;a href="#" class="cmd-show-popup" data-popup-url="{0}"&gt;style guide&lt;/a&gt;&lt;/strong&gt; before working with pages.</value>
+    </data>
+    <data name="Admin_Pages_Facts_Language" xml:space="preserve">
+        <value>Language</value>
+    </data>
+    <data name="Admin_Pages_Facts_LanguageLevel" xml:space="preserve">
+        <value>Level</value>
+    </data>
+    <data name="Admin_Pages_Facts_LastName" xml:space="preserve">
+        <value>Last name</value>
+    </data>
+    <data name="Admin_Pages_Facts_Link" xml:space="preserve">
+        <value>Link</value>
+    </data>
+    <data name="Admin_Pages_Facts_LinkType" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="Admin_Pages_Facts_MiddleName" xml:space="preserve">
+        <value>Middle name</value>
+    </data>
+    <data name="Admin_Pages_Facts_Remove" xml:space="preserve">
+        <value>Remove fact</value>
+    </data>
+    <data name="Admin_Pages_Facts_Rhesus" xml:space="preserve">
+        <value>Rhesus</value>
+    </data>
+    <data name="Admin_Pages_Facts_RhesusNegative" xml:space="preserve">
+        <value>Negative (R-)</value>
+    </data>
+    <data name="Admin_Pages_Facts_RhesusPositive" xml:space="preserve">
+        <value>Positive (R+)</value>
+    </data>
+    <data name="Admin_Pages_Facts_RhesusUnknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="Admin_Pages_Facts_Skill" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="Admin_Pages_Facts_SkillLevel" xml:space="preserve">
+        <value>Level</value>
+    </data>
+    <data name="Admin_Pages_Facts_StringValue" xml:space="preserve">
+        <value>Value</value>
+    </data>
+    <data name="Admin_Pages_Facts_Unspecified" xml:space="preserve">
+        <value>Unspecified</value>
+    </data>
+    <data name="Admin_Pages_List_Created" xml:space="preserve">
+        <value>Created</value>
+    </data>
+    <data name="Admin_Pages_List_CreateNew" xml:space="preserve">
+        <value>Create new page</value>
+    </data>
+    <data name="Admin_Pages_List_Empty" xml:space="preserve">
+        <value>No pages have been created.</value>
+    </data>
+    <data name="Admin_Pages_List_NotFound" xml:space="preserve">
+        <value>No pages have been found for your request.</value>
+    </data>
+    <data name="Admin_Pages_List_Media" xml:space="preserve">
+        <value>Media</value>
+    </data>
+    <data name="Admin_Pages_List_Rank" xml:space="preserve">
+        <value>Rank</value>
+    </data>
+    <data name="Admin_Pages_List_Relations" xml:space="preserve">
+        <value>Relations</value>
+    </data>
+    <data name="Admin_Pages_List_Title" xml:space="preserve">
+        <value>Page index</value>
+    </data>
+    <data name="Admin_Pages_List_Updated" xml:space="preserve">
+        <value>Changed</value>
+    </data>
+    <data name="Admin_Pages_NotFound" xml:space="preserve">
+        <value>Page does not exist!</value>
+    </data>
+    <data name="Admin_Pages_RemovedMessage" xml:space="preserve">
+        <value>Page removed</value>
+    </data>
+    <data name="Admin_Pages_Remove_Completely" xml:space="preserve">
+        <value>Remove page and all references to it completely (irreversible)</value>
+    </data>
+    <data name="Admin_Pages_Remove_ConfirmationFormat" xml:space="preserve">
+        <value>Are you sure you want to remove the page &lt;b&gt;{0}&lt;/b&gt;?</value>
+    </data>
+    <data name="Admin_Pages_Remove_Title" xml:space="preserve">
+        <value>Remove page</value>
+    </data>
+    <data name="Admin_Pages_UpdatedMessage" xml:space="preserve">
+        <value>Page updated.</value>
+    </data>
+    <data name="Admin_Pages_Validation_TitleEmpty" xml:space="preserve">
+        <value>Please enter the page title</value>
+    </data>
+    <data name="Admin_Pages_Validation_TitleTooLong" xml:space="preserve">
+        <value>Page title cannot exceed 200 characters</value>
+    </data>
+    <data name="Admin_Changesets_AuthorNameFormat" xml:space="preserve">
+        <value>{0} {1}</value>
+    </data>
+    <data name="Admin_Relations_CreatedMessage" xml:space="preserve">
+        <value>Relation created.</value>
+    </data>
+    <data name="Admin_Relations_Editor_CreateTitle" xml:space="preserve">
+        <value>Create relation</value>
+    </data>
+    <data name="Admin_Relations_Editor_DurationEnd" xml:space="preserve">
+        <value>Duration end</value>
+    </data>
+    <data name="Admin_Relations_Editor_DurationStart" xml:space="preserve">
+        <value>Duration start</value>
+    </data>
+    <data name="Admin_Relations_Editor_EditTitle" xml:space="preserve">
+        <value>Edit relation</value>
+    </data>
+    <data name="Admin_Relations_Editor_Event" xml:space="preserve">
+        <value>Event link</value>
+    </data>
+    <data name="Admin_Relations_Editor_Type" xml:space="preserve">
+        <value>Relation type</value>
+    </data>
+    <data name="Admin_Relations_List_CreateNew" xml:space="preserve">
+        <value>Create new relation</value>
+    </data>
+    <data name="Admin_Relations_List_Empty" xml:space="preserve">
+        <value>No relations have been created.</value>
+    </data>
+    <data name="Admin_Relations_List_NotFound" xml:space="preserve">
+        <value>No relations have been found for your request.</value>
+    </data>
+    <data name="Admin_Relations_List_Page" xml:space="preserve">
+        <value>Page</value>
+    </data>
+    <data name="Admin_Relations_List_PageTitle" xml:space="preserve">
+        <value>Page title</value>
+    </data>
+    <data name="Admin_Relations_List_RelatedPage" xml:space="preserve">
+        <value>Related page</value>
+    </data>
+    <data name="Admin_Relations_List_RelationType" xml:space="preserve">
+        <value>Relation type</value>
+    </data>
+    <data name="Admin_Relations_List_Title" xml:space="preserve">
+        <value>Relation index</value>
+    </data>
+    <data name="Admin_Relations_NotFound" xml:space="preserve">
+        <value>Relation not found</value>
+    </data>
+    <data name="Admin_Relations_RemovedMessage" xml:space="preserve">
+        <value>Relation removed.</value>
+    </data>
+    <data name="Admin_Relations_Remove_Completely" xml:space="preserve">
+        <value>Remove completely (irreversible)</value>
+    </data>
+    <data name="Admin_Relations_Remove_ConfirmationFormat" xml:space="preserve">
+        <value>Are you sure you want to remove the relation &lt;b&gt;{0}&lt;/b&gt; between pages &lt;b&gt;{1}&lt;/b&gt; and &lt;b&gt;{2}&lt;/b&gt;?</value>
+    </data>
+    <data name="Admin_Relations_Remove_Title" xml:space="preserve">
+        <value>Remove relation</value>
+    </data>
+    <data name="Admin_Relations_UpdatedMessage" xml:space="preserve">
+        <value>Relation updated</value>
+    </data>
+    <data name="Admin_Tree_Unknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="Admin_Users_CannotRemoveMessage" xml:space="preserve">
+        <value>This user account cannot be removed.</value>
+    </data>
+    <data name="Admin_Users_CannotRemoveSelfMessage" xml:space="preserve">
+        <value>Your own user account cannot be removed.</value>
+    </data>
+    <data name="Admin_Users_CreatedMessage" xml:space="preserve">
+        <value>User created.</value>
+    </data>
+    <data name="Admin_Users_Editor_Access" xml:space="preserve">
+        <value>Access</value>
+    </data>
+    <data name="Admin_Users_Editor_CreateNewPage" xml:space="preserve">
+        <value>Create new</value>
+    </data>
+    <data name="Admin_Users_Editor_CreateTitle" xml:space="preserve">
+        <value>Create user account</value>
+    </data>
+    <data name="Admin_Users_Editor_EditTitle" xml:space="preserve">
+        <value>Edit user account</value>
+    </data>
+    <data name="Admin_Users_Editor_Lock" xml:space="preserve">
+        <value>Lock state</value>
+    </data>
+    <data name="Admin_Users_Editor_Locked" xml:space="preserve">
+        <value>Locked out</value>
+    </data>
+    <data name="Admin_Users_Editor_Or" xml:space="preserve">
+        <value>or</value>
+    </data>
+    <data name="Admin_Users_Editor_Page" xml:space="preserve">
+        <value>Page</value>
+    </data>
+    <data name="Admin_Users_Editor_PasswordAuth1" xml:space="preserve">
+        <value>You are creating a password-based account.</value>
+    </data>
+    <data name="Admin_Users_Editor_PasswordAuth2" xml:space="preserve">
+        <value>This authentication type is not the most secure and convenient, but does not require a social profile. It is best suited for giving to elderly relatives or checking out Bonsai's features quickly.</value>
+    </data>
+    <data name="Admin_Users_Editor_PasswordAuth3" xml:space="preserve">
+        <value>If the user forgets their password, only the administrator will be able to restore it.</value>
+    </data>
+    <data name="Admin_Users_Editor_Unlocked" xml:space="preserve">
+        <value>Active</value>
+    </data>
+    <data name="Admin_Users_Editor_ValidateTitle" xml:space="preserve">
+        <value>User validation</value>
+    </data>
+    <data name="Admin_Users_Forbidden" xml:space="preserve">
+        <value>Operation is restricted for current user!</value>
+    </data>
+    <data name="Admin_Users_List_Access" xml:space="preserve">
+        <value>Access</value>
+    </data>
+    <data name="Admin_Users_List_ChangePassword" xml:space="preserve">
+        <value>Change password</value>
+    </data>
+    <data name="Admin_Users_List_CreateNew" xml:space="preserve">
+        <value>Create new account</value>
+    </data>
+    <data name="Admin_Users_List_CreatePasswordUser" xml:space="preserve">
+        <value>Password account</value>
+    </data>
+    <data name="Admin_Users_List_Email" xml:space="preserve">
+        <value>Email</value>
+    </data>
+    <data name="Admin_Users_List_Locked" xml:space="preserve">
+        <value>Locked out</value>
+    </data>
+    <data name="Admin_Users_List_LockedForever" xml:space="preserve">
+        <value>Locked out forever</value>
+    </data>
+    <data name="Admin_Users_List_LockedUntilFormat" xml:space="preserve">
+        <value>Locked out until {0}</value>
+    </data>
+    <data name="Admin_Users_List_Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Admin_Users_List_NameOrEmail" xml:space="preserve">
+        <value>Name / E-mail</value>
+    </data>
+    <data name="Admin_Users_List_NotFound" xml:space="preserve">
+        <value>No users have been found for your request.</value>
+    </data>
+    <data name="Admin_Users_List_PasswordAuth" xml:space="preserve">
+        <value>Password auth</value>
+    </data>
+    <data name="Admin_Users_List_Title" xml:space="preserve">
+        <value>User index</value>
+    </data>
+    <data name="Admin_Users_NotFound" xml:space="preserve">
+        <value>User not found</value>
+    </data>
+    <data name="Admin_Users_PasswordAuthRestrictedMessage" xml:space="preserve">
+        <value>Password auth is disabled in settings.</value>
+    </data>
+    <data name="Admin_Users_PasswordChangeFailedMessage" xml:space="preserve">
+        <value>Password change failed, please try again.</value>
+    </data>
+    <data name="Admin_Users_PasswordResetMessage" xml:space="preserve">
+        <value>Password changed.</value>
+    </data>
+    <data name="Admin_Global_ValidationError" xml:space="preserve">
+        <value>&lt;b&gt;Error:&lt;/b&gt; please make sure you filled all fields correctly, and try again.</value>
+    </data>
+    <data name="Admin_Users_PasswordReset_SaveAndUnlock" xml:space="preserve">
+        <value>Save and unlock</value>
+    </data>
+    <data name="Admin_Users_PasswordReset_Title" xml:space="preserve">
+        <value>Password reset</value>
+    </data>
+    <data name="Admin_Page_Contacts_Validation_InvalidEmail" xml:space="preserve">
+        <value>Contact #{0}: email address is invalid</value>
+    </data>
+    <data name="Admin_Page_Contacts_Validation_InvalidHandle" xml:space="preserve">
+        <value>Contact #{0}: value must either be a link or start with @</value>
+    </data>
+    <data name="Admin_Page_Contacts_Validation_InvalidLink" xml:space="preserve">
+        <value>Contact #{0}: link must start with 'https://'</value>
+    </data>
+    <data name="Admin_Page_Contacts_Validation_InvalidPhone" xml:space="preserve">
+        <value>Contact #{0}: phone number must start with + and contain only digits</value>
+    </data>
+    <data name="Admin_Page_Contacts_Validation_UnknownType" xml:space="preserve">
+        <value>Contact #{0}: type is not selected</value>
+    </data>
+    <data name="Admin_Page_Contacts_Validation_UnknownValue" xml:space="preserve">
+        <value>Contact #{0}: value is missing</value>
+    </data>
+    <data name="Admin_Page_Facts_Validation_DeathDate" xml:space="preserve">
+        <value>Death date cannot be specified if it is marked as unknown.</value>
+    </data>
+    <data name="Admin_Users_PasswordReset_Username" xml:space="preserve">
+        <value>Username</value>
+    </data>
+    <data name="Admin_Users_RemovedMessage" xml:space="preserve">
+        <value>User removed.</value>
+    </data>
+    <data name="Admin_Users_RemoveFailedMessage" xml:space="preserve">
+        <value>User removal failed, please try again.</value>
+    </data>
+    <data name="Admin_Users_Remove_CannotRemoveEditor1" xml:space="preserve">
+        <value>You cannot remove a user that has made any changes.</value>
+    </data>
+    <data name="Admin_Users_Remove_CannotRemoveEditor2" xml:space="preserve">
+        <value>Instead you can lock the account so that they can no longer log in.</value>
+    </data>
+    <data name="Admin_Users_Remove_CannotRemoveSelf" xml:space="preserve">
+        <value>You cannot remove your own account.</value>
+    </data>
+    <data name="Admin_Users_Remove_CannotRevert" xml:space="preserve">
+        <value>This operation cannot be reversed.</value>
+    </data>
+    <data name="Admin_Users_Remove_ConfirmFormat" xml:space="preserve">
+        <value>Are you sure you want to remove user &lt;b&gt;{0}&lt;/b&gt;?</value>
+    </data>
+    <data name="Admin_Users_Remove_Title" xml:space="preserve">
+        <value>Remove user</value>
+    </data>
+    <data name="Admin_Users_UpdatedMessage" xml:space="preserve">
+        <value>User updated</value>
+    </data>
+    <data name="Admin_Validation_IncorrectDate" xml:space="preserve">
+        <value>Enter correct date</value>
+    </data>
+    <data name="Admin_Validation_Page_AliasesAlreadyExist" xml:space="preserve">
+        <value>Aliases are already used by other pages: {0}</value>
+    </data>
+    <data name="Admin_Validation_Page_BadFactsFormat" xml:space="preserve">
+        <value>Facts format is incorrect!</value>
+    </data>
+    <data name="Admin_Validation_Page_BioParentsSameGender" xml:space="preserve">
+        <value>Biological parents cannot be of the same gender</value>
+    </data>
+    <data name="Admin_Validation_Page_BirthAfterDeath" xml:space="preserve">
+        <value>Birthday cannot be later than date of death</value>
+    </data>
+    <data name="Admin_Validation_Page_IncorrectFact" xml:space="preserve">
+        <value>Fact {0} is filled incorrectly!</value>
+    </data>
+    <data name="Admin_Validation_Page_InvalidAliases" xml:space="preserve">
+        <value>Aliases format is incorrect!</value>
+    </data>
+    <data name="Admin_Validation_Page_InvalidPhoto" xml:space="preserve">
+        <value>Media file is not a photo!</value>
+    </data>
+    <data name="Admin_Validation_Page_ManyBioParents" xml:space="preserve">
+        <value>A person cannot have more than 2 biological parents</value>
+    </data>
+    <data name="Admin_Validation_Page_MarriageExceedsLifetime" xml:space="preserve">
+        <value>Marriage duration cannot exceed a spouse's lifetime: {0}</value>
+    </data>
+    <data name="Admin_Validation_Page_ParentLoop" xml:space="preserve">
+        <value>Two persons cannot be parents to each other</value>
+    </data>
+    <data name="Admin_Validation_Page_ParentYoungerThanChild" xml:space="preserve">
+        <value>Parent cannot be younger than their child</value>
+    </data>
+    <data name="Admin_Validation_Page_PhotoNotFound" xml:space="preserve">
+        <value>Photo not found!</value>
+    </data>
+    <data name="Admin_Validation_Page_SpouseLifetimesNoOverlap" xml:space="preserve">
+        <value>Birthday of one spouse ({0}) cannot be later than the death date of another ({1})</value>
+    </data>
+    <data name="Admin_Validation_Page_TitleAlreadyExists" xml:space="preserve">
+        <value>Page with the same title already exists.</value>
+    </data>
+    <data name="Admin_Validation_Page_UnknownFact" xml:space="preserve">
+        <value>Fact type {0} does not exist.</value>
+    </data>
+    <data name="Admin_Validation_Relation_AlreadyExists" xml:space="preserve">
+        <value>The same relation already exists.</value>
+    </data>
+    <data name="Admin_Validation_Relation_DateNotAllowedForType" xml:space="preserve">
+        <value>This type of relation cannot have a date</value>
+    </data>
+    <data name="Admin_Validation_Relation_EventPageNotAllowedForType" xml:space="preserve">
+        <value>This type of relation cannot have an event</value>
+    </data>
+    <data name="Admin_Validation_Relation_EventPageRequired" xml:space="preserve">
+        <value>Event page is required</value>
+    </data>
+    <data name="Admin_Validation_Relation_OnlyOneSource" xml:space="preserve">
+        <value>Only one page can be specified when editing a relation</value>
+    </data>
+    <data name="Admin_Validation_Relation_PageNotSelected" xml:space="preserve">
+        <value>Pick a page</value>
+    </data>
+    <data name="Admin_Validation_Relation_RelationNotAllowedForPageTypes" xml:space="preserve">
+        <value>Relation type is not allowed for the types of pages</value>
+    </data>
+    <data name="Admin_Validation_Relation_StartAfterEnd" xml:space="preserve">
+        <value>Duration start cannot be later than the end</value>
+    </data>
+    <data name="Admin_Validation_User_EmailExists" xml:space="preserve">
+        <value>Email is already used by another user</value>
+    </data>
+    <data name="Admin_Validation_User_InvalidBirthday" xml:space="preserve">
+        <value>Birthday is specified incorrectly.</value>
+    </data>
+    <data name="Admin_Validation_User_PasswordDoesNotMatch" xml:space="preserve">
+        <value>Passwords do not match.</value>
+    </data>
+    <data name="Admin_Validation_User_PasswordTooShort" xml:space="preserve">
+        <value>Password must be at least 6 symbols long.</value>
+    </data>
+    <data name="AuthProvider_Google" xml:space="preserve">
+        <value>Google</value>
+    </data>
+    <data name="AuthProvider_Vkontakte" xml:space="preserve">
+        <value>VK.com</value>
+    </data>
+    <data name="AuthProvider_Yandex" xml:space="preserve">
+        <value>Yandex</value>
+    </data>
+    <data name="AuthService_Error_EmailAlreadyExists" xml:space="preserve">
+        <value>Email is already registered</value>
+    </data>
+    <data name="AuthService_Error_PasswordTooShort" xml:space="preserve">
+        <value>Password must be at least 6 symbols long.</value>
+    </data>
+    <data name="AuthService_Error_PasswordDoesNotMatch" xml:space="preserve">
+        <value>Passwords do not match.</value>
+    </data>
+    <data name="AuthService_Error_InvalidBirthday" xml:space="preserve">
+        <value>Birthday is specified incorrectly.</value>
+    </data>
+    <data name="CalendarPresenter_Birthday_Anniversary" xml:space="preserve">
+        <value>Birthday</value>
+    </data>
+    <data name="CalendarPresenter_Birthday_Day" xml:space="preserve">
+        <value>Birth</value>
+    </data>
+    <data name="CalendarPresenter_Birthday_PreciseAnniversary" xml:space="preserve">
+        <value>Birthday ({0})</value>
+    </data>
+    <data name="CalendarPresenter_ChildAdoptionF" xml:space="preserve">
+        <value>Adoption</value>
+    </data>
+    <data name="CalendarPresenter_ChildAdoptionM" xml:space="preserve">
+        <value>Adoption</value>
+    </data>
+    <data name="CalendarPresenter_Death_Anniversary" xml:space="preserve">
+        <value>Death anniversary</value>
+    </data>
+    <data name="CalendarPresenter_Death_Day" xml:space="preserve">
+        <value>Death</value>
+    </data>
+    <data name="CalendarPresenter_Death_PreciseAnniversary" xml:space="preserve">
+        <value>{0} death anniversary</value>
+    </data>
+    <data name="CalendarPresenter_Event_Title" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="CalendarPresenter_PetAdoption_Title" xml:space="preserve">
+        <value>Pet adoption</value>
+    </data>
+    <data name="CalendarPresenter_Wedding_Anniversary" xml:space="preserve">
+        <value>Wedding anniversary</value>
+    </data>
+    <data name="CalendarPresenter_Wedding_Day" xml:space="preserve">
+        <value>Wedding</value>
+    </data>
+    <data name="CalendarPresenter_Wedding_PreciseAnniversary" xml:space="preserve">
+        <value>{0} wedding anniversary</value>
+    </data>
+    <data name="CalendarPresenter_Wedding_Title" xml:space="preserve">
+        <value>Wedding</value>
+    </data>
+    <data name="DateFormat_Changeset" xml:space="preserve">
+        <value>f</value>
+    </data>
+    <data name="DateFormat_Full" xml:space="preserve">
+        <value>G</value>
+    </data>
+    <data name="Datepicker_Placeholder" xml:space="preserve">
+        <value>YYYY.MM.DD</value>
+    </data>
+    <data name="Datepicker_From" xml:space="preserve">
+        <value>From</value>
+    </data>
+    <data name="Datepicker_To" xml:space="preserve">
+        <value>To</value>
+    </data>
+    <data name="Enum_BloodType_A" xml:space="preserve">
+        <value>A (II)</value>
+    </data>
+    <data name="Enum_BloodType_AB" xml:space="preserve">
+        <value>AB (IV)</value>
+    </data>
+    <data name="Enum_BloodType_B" xml:space="preserve">
+        <value>B (III)</value>
+    </data>
+    <data name="Enum_BloodType_O" xml:space="preserve">
+        <value>0 (I)</value>
+    </data>
+    <data name="Enum_ChangesetEntityType_Media" xml:space="preserve">
+        <value>Media</value>
+    </data>
+    <data name="Enum_ChangesetEntityType_Page" xml:space="preserve">
+        <value>Page</value>
+    </data>
+    <data name="Enum_ChangesetEntityType_Relation" xml:space="preserve">
+        <value>Relation</value>
+    </data>
+    <data name="Enum_ChangesetType_Created" xml:space="preserve">
+        <value>Created</value>
+    </data>
+    <data name="Enum_ChangesetType_Removed" xml:space="preserve">
+        <value>Removed</value>
+    </data>
+    <data name="Enum_ChangesetType_Restored" xml:space="preserve">
+        <value>Restored</value>
+    </data>
+    <data name="Enum_ChangesetType_Updated" xml:space="preserve">
+        <value>Updated</value>
+    </data>
+    <data name="Enum_ContactType_Email" xml:space="preserve">
+        <value>E-mail</value>
+    </data>
+    <data name="Enum_ContactType_Facebook" xml:space="preserve">
+        <value>Facebook</value>
+    </data>
+    <data name="Enum_ContactType_Github" xml:space="preserve">
+        <value>Github</value>
+    </data>
+    <data name="Enum_ContactType_Odnoklassniki" xml:space="preserve">
+        <value>Odnoklassniki</value>
+    </data>
+    <data name="Enum_ContactType_Phone" xml:space="preserve">
+        <value>Phone</value>
+    </data>
+    <data name="Enum_ContactType_Telegram" xml:space="preserve">
+        <value>Telegram</value>
+    </data>
+    <data name="Enum_ContactType_Twitter" xml:space="preserve">
+        <value>Twitter</value>
+    </data>
+    <data name="Enum_ContactType_Vkontakte" xml:space="preserve">
+        <value>VK.com</value>
+    </data>
+    <data name="Enum_ContactType_Youtube" xml:space="preserve">
+        <value>Youtube</value>
+    </data>
+    <data name="Enum_LanguageProficiency_Beginner" xml:space="preserve">
+        <value>Basic</value>
+    </data>
+    <data name="Enum_LanguageProficiency_Intermediate" xml:space="preserve">
+        <value>Intermediate</value>
+    </data>
+    <data name="Enum_LanguageProficiency_Native" xml:space="preserve">
+        <value>Native</value>
+    </data>
+    <data name="Enum_LanguageProficiency_Profound" xml:space="preserve">
+        <value>Fluent</value>
+    </data>
+    <data name="Enum_MediaEditorSaveAction_Save" xml:space="preserve">
+        <value>Save</value>
+    </data>
+    <data name="Enum_MediaEditorSaveAction_SaveAndShowNext" xml:space="preserve">
+        <value>Save and open next</value>
+    </data>
+    <data name="DateFormat_Short" xml:space="preserve">
+        <value>MMMM dd, yyyy</value>
+    </data>
+    <data name="Enum_MediaType_Document" xml:space="preserve">
+        <value>Document</value>
+    </data>
+    <data name="Enum_MediaType_Photo" xml:space="preserve">
+        <value>Photo</value>
+    </data>
+    <data name="Enum_MediaType_Photo360" xml:space="preserve">
+        <value>Photosphere</value>
+    </data>
+    <data name="Enum_MediaType_Video" xml:space="preserve">
+        <value>Video</value>
+    </data>
+    <data name="Enum_PageType_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Enum_PageType_Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="Enum_PageType_Other" xml:space="preserve">
+        <value>Other</value>
+    </data>
+    <data name="Enum_PageType_Person" xml:space="preserve">
+        <value>Person</value>
+    </data>
+    <data name="Enum_PageType_Pet" xml:space="preserve">
+        <value>Pet</value>
+    </data>
+    <data name="Enum_RelationType_Child" xml:space="preserve">
+        <value>Child</value>
+    </data>
+    <data name="Enum_RelationType_Colleague" xml:space="preserve">
+        <value>Colleague</value>
+    </data>
+    <data name="Enum_RelationType_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Enum_RelationType_EventVisitor" xml:space="preserve">
+        <value>Participant</value>
+    </data>
+    <data name="Enum_RelationType_Friend" xml:space="preserve">
+        <value>Friend</value>
+    </data>
+    <data name="Enum_RelationType_Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="Enum_RelationType_LocationInhabitant" xml:space="preserve">
+        <value>Inhabitant</value>
+    </data>
+    <data name="Enum_RelationType_Other" xml:space="preserve">
+        <value>Other</value>
+    </data>
+    <data name="Enum_RelationType_Owner" xml:space="preserve">
+        <value>Owner</value>
+    </data>
+    <data name="Enum_RelationType_Parent" xml:space="preserve">
+        <value>Parent</value>
+    </data>
+    <data name="Enum_RelationType_Pet" xml:space="preserve">
+        <value>Pet</value>
+    </data>
+    <data name="Enum_RelationType_Spouse" xml:space="preserve">
+        <value>Spouse</value>
+    </data>
+    <data name="Enum_RelationType_StepChild" xml:space="preserve">
+        <value>Stepchild</value>
+    </data>
+    <data name="Enum_RelationType_StepParent" xml:space="preserve">
+        <value>Stepparent</value>
+    </data>
+    <data name="Enum_SkillProficiency_Beginner" xml:space="preserve">
+        <value>Beginner</value>
+    </data>
+    <data name="Enum_SkillProficiency_Intermediate" xml:space="preserve">
+        <value>Intermediate</value>
+    </data>
+    <data name="Enum_SkillProficiency_Profound" xml:space="preserve">
+        <value>Expert</value>
+    </data>
+    <data name="Enum_TreeKind_Ancestors" xml:space="preserve">
+        <value>Ancestors</value>
+    </data>
+    <data name="Enum_TreeKind_CloseFamily" xml:space="preserve">
+        <value>Family</value>
+    </data>
+    <data name="Enum_TreeKind_Descendants" xml:space="preserve">
+        <value>Descendants</value>
+    </data>
+    <data name="Enum_TreeKind_FullTree" xml:space="preserve">
+        <value>Full</value>
+    </data>
+    <data name="Enum_UserRole_Admin" xml:space="preserve">
+        <value>Administrator</value>
+    </data>
+    <data name="Enum_UserRole_Editor" xml:space="preserve">
+        <value>Editor</value>
+    </data>
+    <data name="Enum_UserRole_Unvalidated" xml:space="preserve">
+        <value>New</value>
+    </data>
+    <data name="Enum_UserRole_User" xml:space="preserve">
+        <value>Reader</value>
+    </data>
+    <data name="Facts_Birth_Day" xml:space="preserve">
+        <value>Birthday</value>
+    </data>
+    <data name="Facts_Birth_DayS" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Facts_Birth_Place" xml:space="preserve">
+        <value>Birth place</value>
+    </data>
+    <data name="Facts_Birth_PlaceS" xml:space="preserve">
+        <value>Place</value>
+    </data>
+    <data name="Facts_Death_Burial" xml:space="preserve">
+        <value>Burial place</value>
+    </data>
+    <data name="Facts_Death_BurialS" xml:space="preserve">
+        <value>Burial</value>
+    </data>
+    <data name="Facts_Death_Cause" xml:space="preserve">
+        <value>Cause of death</value>
+    </data>
+    <data name="Facts_Death_CauseS" xml:space="preserve">
+        <value>Cause</value>
+    </data>
+    <data name="Facts_Death_Date" xml:space="preserve">
+        <value>Death date</value>
+    </data>
+    <data name="Facts_Death_DateS" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Facts_Death_Place" xml:space="preserve">
+        <value>Death place</value>
+    </data>
+    <data name="Facts_Death_PlaceS" xml:space="preserve">
+        <value>Place</value>
+    </data>
+    <data name="Facts_Event_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Facts_Group_Bio" xml:space="preserve">
+        <value>Biology</value>
+    </data>
+    <data name="Facts_Group_Birth" xml:space="preserve">
+        <value>Birth</value>
+    </data>
+    <data name="Facts_Group_Death" xml:space="preserve">
+        <value>Death</value>
+    </data>
+    <data name="Facts_Group_Main" xml:space="preserve">
+        <value>Main</value>
+    </data>
+    <data name="Facts_Group_Meta" xml:space="preserve">
+        <value>Other</value>
+    </data>
+    <data name="Facts_Group_Person" xml:space="preserve">
+        <value>Personality</value>
+    </data>
+    <data name="Facts_Location_Address" xml:space="preserve">
+        <value>Address</value>
+    </data>
+    <data name="Facts_Location_Opening" xml:space="preserve">
+        <value>Acquired</value>
+    </data>
+    <data name="Facts_Location_Shutdown" xml:space="preserve">
+        <value>Sold</value>
+    </data>
+    <data name="Facts_Person_BloodType" xml:space="preserve">
+        <value>Blood type</value>
+    </data>
+    <data name="Facts_Person_BloodTypeS" xml:space="preserve">
+        <value>B. type</value>
+    </data>
+    <data name="Facts_Person_EyeColor" xml:space="preserve">
+        <value>Eye color</value>
+    </data>
+    <data name="Facts_Person_EyeColorS" xml:space="preserve">
+        <value>Eyes</value>
+    </data>
+    <data name="Facts_Person_Gender" xml:space="preserve">
+        <value>Gender</value>
+    </data>
+    <data name="Facts_Person_HairColor" xml:space="preserve">
+        <value>Hair color</value>
+    </data>
+    <data name="Facts_Person_HairColorS" xml:space="preserve">
+        <value>Hair</value>
+    </data>
+    <data name="Facts_Person_Language" xml:space="preserve">
+        <value>Language</value>
+    </data>
+    <data name="Facts_Person_LanguageS" xml:space="preserve">
+        <value>Language|Languages</value>
+    </data>
+    <data name="Facts_Person_Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Facts_Person_NameS" xml:space="preserve">
+        <value>Name|Names</value>
+    </data>
+    <data name="Facts_Person_Profession" xml:space="preserve">
+        <value>Profession</value>
+    </data>
+    <data name="Facts_Person_ProfessionS" xml:space="preserve">
+        <value>Profession|Professions</value>
+    </data>
+    <data name="Facts_Person_Religion" xml:space="preserve">
+        <value>Religion</value>
+    </data>
+    <data name="Facts_Person_ReligionS" xml:space="preserve">
+        <value>Religion|Religions</value>
+    </data>
+    <data name="Facts_Person_Skill" xml:space="preserve">
+        <value>Hobby</value>
+    </data>
+    <data name="Facts_Person_SocialProfiles" xml:space="preserve">
+        <value>Contacts</value>
+    </data>
+    <data name="Facts_Pet_Breed" xml:space="preserve">
+        <value>Breed</value>
+    </data>
+    <data name="Facts_Pet_Color" xml:space="preserve">
+        <value>Color</value>
+    </data>
+    <data name="Facts_Pet_Gender" xml:space="preserve">
+        <value>Gender</value>
+    </data>
+    <data name="Facts_Pet_Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Facts_Pet_Species" xml:space="preserve">
+        <value>Species</value>
+    </data>
+    <data name="Front_AuthFailed_Description" xml:space="preserve">
+        <value>Authentication via the specified provider failed. &lt;br/&gt; Please try again or contact Bonsai admin.</value>
+    </data>
+    <data name="Front_AuthFailed_GoBack" xml:space="preserve">
+        <value>Back to auth page</value>
+    </data>
+    <data name="Front_AuthFailed_Title" xml:space="preserve">
+        <value>Auth error</value>
+    </data>
+    <data name="Front_Calendar_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Front_Calendar_NothingHappened" xml:space="preserve">
+        <value>Nothing happened on this day.</value>
+    </data>
+    <data name="Front_Calendar_WeekdaysShort" xml:space="preserve">
+        <value>Mo, Tu, We, Th, Fr, Sa, Su</value>
+    </data>
+    <data name="Front_Error_NotFound_AddPage" xml:space="preserve">
+        <value>Add page</value>
+    </data>
+    <data name="Front_Error_NotFound_Description" xml:space="preserve">
+        <value>Alas, this page does not exist.&lt;br/&gt;Maybe it does not exist yet, or you have followed a bad link.</value>
+    </data>
+    <data name="Front_Error_NotFound_Error" xml:space="preserve">
+        <value>Error 404</value>
+    </data>
+    <data name="Front_Error_NotFound_MainLink" xml:space="preserve">
+        <value>To main page</value>
+    </data>
+    <data name="Front_Error_NotFound_Title" xml:space="preserve">
+        <value>Page not found</value>
+    </data>
+    <data name="Front_Facts_DeathDate_Unknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="Front_Facts_Gender_Female" xml:space="preserve">
+        <value>Female</value>
+    </data>
+    <data name="Front_Facts_Gender_Male" xml:space="preserve">
+        <value>Male</value>
+    </data>
+    <data name="Front_Facts_HumanName_FullFormat" xml:space="preserve">
+        <value>{0} {1} {2}</value>
+    </data>
+    <data name="Front_Facts_HumanName_LastNames" xml:space="preserve">
+        <value>Last names</value>
+    </data>
+    <data name="Front_Home_Title" xml:space="preserve">
+        <value>Main page</value>
+    </data>
+    <data name="Front_Home_UpdatedMedia" xml:space="preserve">
+        <value>New media</value>
+    </data>
+    <data name="Front_Home_UpdatedPages" xml:space="preserve">
+        <value>Updated pages</value>
+    </data>
+    <data name="Front_Loading_Error" xml:space="preserve">
+        <value>Bonsai failed to start up.&lt;br/&gt;Detailed information can be found in server logs.</value>
+    </data>
+    <data name="Front_Loading_InProgress1" xml:space="preserve">
+        <value>Bonsai is loading...</value>
+    </data>
+    <data name="Front_Loading_InProgress2" xml:space="preserve">
+        <value>Sit back and relax - this will take less than a minute :)</value>
+    </data>
+    <data name="Front_Loading_Title" xml:space="preserve">
+        <value>Loading</value>
+    </data>
+    <data name="Front_Login_DemoAccount" xml:space="preserve">
+        <value>Demo admin account:</value>
+    </data>
+    <data name="Front_Login_EnterPassword" xml:space="preserve">
+        <value>Or use the login and password provided by your administrator:</value>
+    </data>
+    <data name="Front_Login_ExternalAuth" xml:space="preserve">
+        <value>Log in via {0}</value>
+    </data>
+    <data name="Front_Login_Login" xml:space="preserve">
+        <value>Log in</value>
+    </data>
+    <data name="Front_Login_OnlyForRegistered" xml:space="preserve">
+        <value>Page is only available to registered users.</value>
+    </data>
+    <data name="Front_Login_Password" xml:space="preserve">
+        <value>Password</value>
+    </data>
+    <data name="Front_Login_PasswordAuth" xml:space="preserve">
+        <value>Login and password auth</value>
+    </data>
+    <data name="Front_Login_PleaseAuthorize" xml:space="preserve">
+        <value>Please authenticate via one of the following services:</value>
+    </data>
+    <data name="Front_Login_Register" xml:space="preserve">
+        <value>You can also &lt;a href="{0}"&gt;register a new account&lt;/a&gt;, or use the login and password provided by your administrator:</value>
+    </data>
+    <data name="Front_Login_StatusFailed" xml:space="preserve">
+        <value>&lt;b&gt;Error:&lt;/b&gt; Authorization failed.&lt;br/&gt;Maybe your password was entered incorrectly? Please try again.</value>
+    </data>
+    <data name="Front_Login_StatusLockedOut" xml:space="preserve">
+        <value>&lt;b&gt;Error:&lt;/b&gt; your account is locked out.</value>
+    </data>
+    <data name="Front_Login_StatusUnvalidated" xml:space="preserve">
+        <value>Your account has not yet been checked by the administrator.&lt;br/&gt;Please wait for the check - only then you will be able to log in.</value>
+    </data>
+    <data name="Front_Login_Title" xml:space="preserve">
+        <value>Log in</value>
+    </data>
+    <data name="Front_Login_Username" xml:space="preserve">
+        <value>Username</value>
+    </data>
+    <data name="Front_Media_Actions" xml:space="preserve">
+        <value>Actions</value>
+    </data>
+    <data name="Front_Media_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="Front_Media_Depicted" xml:space="preserve">
+        <value>Depicted</value>
+    </data>
+    <data name="Front_Media_Download" xml:space="preserve">
+        <value>Download</value>
+    </data>
+    <data name="Front_Media_Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Front_Media_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Front_Media_Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="Front_Media_Original" xml:space="preserve">
+        <value>Source</value>
+    </data>
+    <data name="Front_Media_PhotoTitlePlaceholder" xml:space="preserve">
+        <value>Photo</value>
+    </data>
+    <data name="Front_Media_Video_BrowserUnsupported" xml:space="preserve">
+        <value>Your browser does not support video playback.</value>
+    </data>
+    <data name="Front_Media_Video_Processing" xml:space="preserve">
+        <value>Video is being processed...</value>
+    </data>
+    <data name="Front_Media_Video_TryRefreshing" xml:space="preserve">
+        <value>Video will be available after processing. Try reloading the page.</value>
+    </data>
+    <data name="Front_Page_AdminLinks_Changes" xml:space="preserve">
+        <value>Changes</value>
+    </data>
+    <data name="Front_Page_AdminLinks_Media" xml:space="preserve">
+        <value>Media</value>
+    </data>
+    <data name="Front_Page_AdminLinks_Relations" xml:space="preserve">
+        <value>Relations</value>
+    </data>
+    <data name="Front_Page_AdminLinks_TextAndFacts" xml:space="preserve">
+        <value>Text and facts</value>
+    </data>
+    <data name="Front_Page_Description_Empty" xml:space="preserve">
+        <value>No information.</value>
+    </data>
+    <data name="Front_Page_Media_DateUnknown" xml:space="preserve">
+        <value>Date is unknown</value>
+    </data>
+    <data name="Front_Page_Media_Empty" xml:space="preserve">
+        <value>No media files</value>
+    </data>
+    <data name="Front_Page_Media_LongAgo" xml:space="preserve">
+        <value>Long time ago</value>
+    </data>
+    <data name="Front_Page_Media_Title" xml:space="preserve">
+        <value>{0}  — Media</value>
+    </data>
+    <data name="Front_Page_References_Empty" xml:space="preserve">
+        <value>This page is not referenced anywhere.</value>
+    </data>
+    <data name="Front_Page_References_Hint" xml:space="preserve">
+        <value>This page is referenced in the following pages:</value>
+    </data>
+    <data name="Front_Page_Tabs_Description" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="Front_Page_Tabs_Media" xml:space="preserve">
+        <value>Media</value>
+    </data>
+    <data name="Front_Page_Tabs_References" xml:space="preserve">
+        <value>References</value>
+    </data>
+    <data name="Front_Page_Tabs_Tree" xml:space="preserve">
+        <value>Tree</value>
+    </data>
+    <data name="Front_Page_Tree_Fullscreen" xml:space="preserve">
+        <value>Fullscreen</value>
+    </data>
+    <data name="Front_Page_Tree_NewWindow" xml:space="preserve">
+        <value>New window</value>
+    </data>
+    <data name="Front_Page_Tree_Title" xml:space="preserve">
+        <value>{0}  — Family tree</value>
+    </data>
+    <data name="Front_RegisterDisabled_Title" xml:space="preserve">
+        <value>Registration is disabled</value>
+    </data>
+    <data name="Front_RegisterDisabled_Description" xml:space="preserve">
+        <value>Account cannot be created, because registration is disabled by the administrator.</value>
+    </data>
+    <data name="Front_RegisterSuccess_GoMain" xml:space="preserve">
+        <value>To main page</value>
+    </data>
+    <data name="Front_RegisterSuccess_ReviewPending" xml:space="preserve">
+        <value>Your account will be validated by the administrator, then you can log in and use the system.</value>
+    </data>
+    <data name="Front_RegisterSuccess_Success" xml:space="preserve">
+        <value>You are successfully registered!</value>
+    </data>
+    <data name="Front_RegisterSuccess_Title" xml:space="preserve">
+        <value>Registration</value>
+    </data>
+    <data name="Front_Register_Birthday" xml:space="preserve">
+        <value>Birthday</value>
+    </data>
+    <data name="Front_Register_CreatePersonalPage" xml:space="preserve">
+        <value>Create personal page</value>
+    </data>
+    <data name="Front_Register_Email" xml:space="preserve">
+        <value>E-mail</value>
+    </data>
+    <data name="Front_Register_Email_Hint" xml:space="preserve">
+        <value>Use it to log in</value>
+    </data>
+    <data name="Front_Register_FirstName" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Front_Register_FirstUserHint" xml:space="preserve">
+        <value>Your account will get administration rights.</value>
+    </data>
+    <data name="Front_Register_Hint" xml:space="preserve">
+        <value>Please make sure you have provided actual data without mistakes.&lt;br/&gt;Your account will be validated by the administrator, then you can log in and use the system.</value>
+    </data>
+    <data name="Front_Register_LastName" xml:space="preserve">
+        <value>Last name</value>
+    </data>
+    <data name="Front_Register_MiddleName" xml:space="preserve">
+        <value>Middle name</value>
+    </data>
+    <data name="Front_Register_Options" xml:space="preserve">
+        <value>Options</value>
+    </data>
+    <data name="Front_Register_Password" xml:space="preserve">
+        <value>Password</value>
+    </data>
+    <data name="Front_Register_Password_Hint" xml:space="preserve">
+        <value>At least 6 symbols</value>
+    </data>
+    <data name="Front_Register_Password_Repeat" xml:space="preserve">
+        <value>Repeat password</value>
+    </data>
+    <data name="Front_Register_Submit" xml:space="preserve">
+        <value>Submit</value>
+    </data>
+    <data name="Front_Register_Subtitle" xml:space="preserve">
+        <value>Please fill all required fields to create an account.</value>
+    </data>
+    <data name="Front_Register_Title" xml:space="preserve">
+        <value>Registration</value>
+    </data>
+    <data name="Front_Register_Validation_BirthdayEmpty" xml:space="preserve">
+        <value>Please enter your birthday.</value>
+    </data>
+    <data name="Front_Register_Validation_BirthdayInvalid" xml:space="preserve">
+        <value>Please enter the date in YYYY.MM.DD format.</value>
+    </data>
+    <data name="Front_Register_Validation_EmailEmpty" xml:space="preserve">
+        <value>Please enter the e-mail.</value>
+    </data>
+    <data name="Front_Register_Validation_EmailInvalid" xml:space="preserve">
+        <value>Please enter a valid e-mail.</value>
+    </data>
+    <data name="Front_Register_Validation_FirstNameEmpty" xml:space="preserve">
+        <value>Please enter your first name.</value>
+    </data>
+    <data name="Front_Register_Validation_LastNameEmpty" xml:space="preserve">
+        <value>Please enter your last name.</value>
+    </data>
+    <data name="Front_Search_NothingFound" xml:space="preserve">
+        <value>Nothing found for your query.</value>
+    </data>
+    <data name="Front_Search_Placeholder" xml:space="preserve">
+        <value>Search...</value>
+    </data>
+    <data name="Front_Search_QueryTooShort" xml:space="preserve">
+        <value>Query is too short. Please enter at least 3 characters.</value>
+    </data>
+    <data name="Front_Search_Results" xml:space="preserve">
+        <value>Search results</value>
+    </data>
+    <data name="Front_Search_Title" xml:space="preserve">
+        <value>Search</value>
+    </data>
+    <data name="Front_Tree_LoadFailed" xml:space="preserve">
+        <value>Could not load family tree.</value>
+    </data>
+    <data name="Front_Tree_Loading" xml:space="preserve">
+        <value>Loading...</value>
+    </data>
+    <data name="FuzzyDate_Age_FullPreciseFormat" xml:space="preserve">
+        <value>{0} {1}</value>
+    </data>
+    <data name="FuzzyDate_Age_FullRangeFormat" xml:space="preserve">
+        <value>{0}..{1} {2}</value>
+    </data>
+    <data name="FuzzyDate_Age_LessThanAMonth" xml:space="preserve">
+        <value>Less than a month</value>
+    </data>
+    <data name="FuzzyDate_Age_LessThanAYear" xml:space="preserve">
+        <value>Less than a year</value>
+    </data>
+    <data name="FuzzyDate_Age_MonthsFormat" xml:space="preserve">
+        <value>{0} {1}</value>
+    </data>
+    <data name="FuzzyDate_Age_YearsFormat" xml:space="preserve">
+        <value>{0} {1}</value>
+    </data>
+    <data name="FuzzyDate_April" xml:space="preserve">
+        <value>April</value>
+    </data>
+    <data name="FuzzyDate_AprilPrecise" xml:space="preserve">
+        <value>April {0}</value>
+    </data>
+    <data name="FuzzyDate_August" xml:space="preserve">
+        <value>August</value>
+    </data>
+    <data name="FuzzyDate_AugustPrecise" xml:space="preserve">
+        <value>August {0}</value>
+    </data>
+    <data name="FuzzyDate_DecadeFormat" xml:space="preserve">
+        <value>{0}-s</value>
+    </data>
+    <data name="FuzzyDate_December" xml:space="preserve">
+        <value>December</value>
+    </data>
+    <data name="FuzzyDate_DecemberPrecise" xml:space="preserve">
+        <value>December {0}</value>
+    </data>
+    <data name="FuzzyDate_February" xml:space="preserve">
+        <value>February</value>
+    </data>
+    <data name="FuzzyDate_FebruaryPrecise" xml:space="preserve">
+        <value>February {0}</value>
+    </data>
+    <data name="FuzzyDate_FullDecadeFormat" xml:space="preserve">
+        <value>{0}, {1}-s</value>
+    </data>
+    <data name="FuzzyDate_FullYearFormat" xml:space="preserve">
+        <value>{0}, {1}</value>
+    </data>
+    <data name="FuzzyDate_January" xml:space="preserve">
+        <value>January</value>
+    </data>
+    <data name="FuzzyDate_JanuaryPrecise" xml:space="preserve">
+        <value>January {0}</value>
+    </data>
+    <data name="FuzzyDate_July" xml:space="preserve">
+        <value>July</value>
+    </data>
+    <data name="FuzzyDate_JulyPrecise" xml:space="preserve">
+        <value>July {0}</value>
+    </data>
+    <data name="FuzzyDate_June" xml:space="preserve">
+        <value>June</value>
+    </data>
+    <data name="FuzzyDate_JunePrecise" xml:space="preserve">
+        <value>June {0}</value>
+    </data>
+    <data name="FuzzyDate_March" xml:space="preserve">
+        <value>March</value>
+    </data>
+    <data name="FuzzyDate_MarchPrecise" xml:space="preserve">
+        <value>March {0}</value>
+    </data>
+    <data name="FuzzyDate_May" xml:space="preserve">
+        <value>May</value>
+    </data>
+    <data name="FuzzyDate_MayPrecise" xml:space="preserve">
+        <value>May {0}</value>
+    </data>
+    <data name="FuzzyDate_Months" xml:space="preserve">
+        <value>month|months</value>
+    </data>
+    <data name="FuzzyDate_November" xml:space="preserve">
+        <value>November</value>
+    </data>
+    <data name="FuzzyDate_NovemberPrecise" xml:space="preserve">
+        <value>November {0}</value>
+    </data>
+    <data name="FuzzyDate_October" xml:space="preserve">
+        <value>October</value>
+    </data>
+    <data name="FuzzyDate_OctoberPrecise" xml:space="preserve">
+        <value>October {0}</value>
+    </data>
+    <data name="FuzzyDate_September" xml:space="preserve">
+        <value>September</value>
+    </data>
+    <data name="FuzzyDate_SeptemberPrecise" xml:space="preserve">
+        <value>September {0}</value>
+    </data>
+    <data name="FuzzyDate_YearFormat" xml:space="preserve">
+        <value>{0}</value>
+    </data>
+    <data name="FuzzyDate_Years" xml:space="preserve">
+        <value>year|years</value>
+    </data>
+    <data name="FuzzyRange_Full_Since" xml:space="preserve">
+        <value>since {0}</value>
+    </data>
+    <data name="FuzzyRange_Full_SinceUntil" xml:space="preserve">
+        <value>{0} — {1}</value>
+    </data>
+    <data name="FuzzyRange_Full_Until" xml:space="preserve">
+        <value>until {0}</value>
+    </data>
+    <data name="FuzzyRange_Short_SameDecade" xml:space="preserve">
+        <value>in {0}-s</value>
+    </data>
+    <data name="FuzzyRange_Short_SameYear" xml:space="preserve">
+        <value>in {0}</value>
+    </data>
+    <data name="FuzzyRange_Short_SinceDecade" xml:space="preserve">
+        <value>since {0}-s</value>
+    </data>
+    <data name="FuzzyRange_Short_SinceYear" xml:space="preserve">
+        <value>since {0}</value>
+    </data>
+    <data name="FuzzyRange_Short_UntilDecade" xml:space="preserve">
+        <value>until {0}-s</value>
+    </data>
+    <data name="FuzzyRange_Short_UntilYear" xml:space="preserve">
+        <value>until {0}</value>
+    </data>
+    <data name="Global_Error_PageNotFound" xml:space="preserve">
+        <value>Page not found.</value>
+    </data>
+    <data name="Global_Error_UserNotFound" xml:space="preserve">
+        <value>User not found</value>
+    </data>
+    <data name="Global_MediaFallbackDescription" xml:space="preserve">
+        <value>{0} from {1}</value>
+    </data>
+    <data name="Global_NotSelected" xml:space="preserve">
+        <value>Not selected</value>
+    </data>
+    <data name="Global_UserHeader_Administration" xml:space="preserve">
+        <value>Administration</value>
+    </data>
+    <data name="Global_UserHeader_Login" xml:space="preserve">
+        <value>Log in</value>
+    </data>
+    <data name="Global_UserHeader_Logout" xml:space="preserve">
+        <value>Log out</value>
+    </data>
+    <data name="Global_UserHeader_Page" xml:space="preserve">
+        <value>Page</value>
+    </data>
+    <data name="Js_Autocomplete_Empty" xml:space="preserve">
+        <value>Please enter the search query</value>
+    </data>
+    <data name="Js_Autocomplete_NothingFound" xml:space="preserve">
+        <value>Nothing found</value>
+    </data>
+    <data name="Js_Datepicker_InvalidDate" xml:space="preserve">
+        <value>Invalid date</value>
+    </data>
+    <data name="Js_Datepicker_Locale" xml:space="preserve">
+        <value>en-us</value>
+    </data>
+    <data name="Js_Draft_DateLocale" xml:space="preserve">
+        <value>en-US</value>
+    </data>
+    <data name="Js_Draft_DiscardConfirmation" xml:space="preserve">
+        <value>All changes will be discarded.\n\nAre you sure?</value>
+    </data>
+    <data name="Js_Draft_SavedAt" xml:space="preserve">
+        <value>Draft saved at {0}</value>
+    </data>
+    <data name="Js_Facts_DefaultLanguage" xml:space="preserve">
+        <value>English</value>
+    </data>
+    <data name="Js_Facts_PhoneNumberPlaceholder" xml:space="preserve">
+        <value>+1234567890</value>
+    </data>
+    <data name="Js_Markdown_Description" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="Js_Markdown_FormatReference" xml:space="preserve">
+        <value>Formatting reference</value>
+    </data>
+    <data name="Js_Markdown_PickMedia" xml:space="preserve">
+        <value>Pick media</value>
+    </data>
+    <data name="Js_Markdown_PickPage" xml:space="preserve">
+        <value>Pick page</value>
+    </data>
+    <data name="Js_MediaPopup_Close" xml:space="preserve">
+        <value>Close</value>
+    </data>
+    <data name="Js_MediaPopup_CounterTemplate" xml:space="preserve">
+        <value>%curr% of %total%</value>
+    </data>
+    <data name="Js_MediaPopup_LoadFailed" xml:space="preserve">
+        <value>Could not load data.</value>
+    </data>
+    <data name="Js_PagePicker_PageOrName" xml:space="preserve">
+        <value>Page or name</value>
+    </data>
+    <data name="Js_PagePicker_WithoutLink" xml:space="preserve">
+        <value>(no link)</value>
+    </data>
+    <data name="Js_Photo_UploadFailed" xml:space="preserve">
+        <value>Could not upload image!</value>
+    </data>
+    <data name="Js_Picker_MediaLoadFailed" xml:space="preserve">
+        <value>Media list load failed.</value>
+    </data>
+    <data name="Js_Picker_PageLoadFailed" xml:space="preserve">
+        <value>Page list load failed.</value>
+    </data>
+    <data name="Js_Relations_EnterPageTitle" xml:space="preserve">
+        <value>Enter page name</value>
+    </data>
+    <data name="Js_Tags_PageOrTitle" xml:space="preserve">
+        <value>Page or title</value>
+    </data>
+    <data name="Js_Upload_FileTooBig" xml:space="preserve">
+        <value>File is too large!</value>
+    </data>
+    <data name="Js_Upload_UnknownError" xml:space="preserve">
+        <value>Unknown error</value>
+    </data>
+    <data name="Js_User_EnterName" xml:space="preserve">
+        <value>Enter name</value>
+    </data>
+    <data name="MarkdownService_AlignmentAmbiguous" xml:space="preserve">
+        <value>Media alignment is specified more than once.</value>
+    </data>
+    <data name="MarkdownService_AlignmentUnknown" xml:space="preserve">
+        <value>Unknown media alignment.</value>
+    </data>
+    <data name="MarkdownService_DescriptionAmbiguous" xml:space="preserve">
+        <value>Media description is specified more than once.</value>
+    </data>
+    <data name="MarkdownService_MediaNotFound" xml:space="preserve">
+        <value>Media file {0} does not exist.</value>
+    </data>
+    <data name="MarkdownService_PageNotFound" xml:space="preserve">
+        <value>Page not found: {0}.</value>
+    </data>
+    <data name="MarkdownService_SizeAmbiguous" xml:space="preserve">
+        <value>Media size is specified more than once.,</value>
+    </data>
+    <data name="MarkdownService_SizeUnknown" xml:space="preserve">
+        <value>Unknown media size.</value>
+    </data>
+    <data name="Relations_ChildChild" xml:space="preserve">
+        <value>Grandson|Granddaughter|Grandchild</value>
+    </data>
+    <data name="Relations_ChildChild_Mult" xml:space="preserve">
+        <value>Grandchildren</value>
+    </data>
+    <data name="Relations_ChildFSpouseM" xml:space="preserve">
+        <value>Son-in-law</value>
+    </data>
+    <data name="Relations_ChildFSpouseM_Mult" xml:space="preserve">
+        <value>Sons-in-law</value>
+    </data>
+    <data name="Relations_ChildMSpouseF" xml:space="preserve">
+        <value>Daughter-in-law</value>
+    </data>
+    <data name="Relations_ChildMSpouseF_Mult" xml:space="preserve">
+        <value>Daughters-in-law</value>
+    </data>
+    <data name="Relations_Colleague" xml:space="preserve">
+        <value>Colleague</value>
+    </data>
+    <data name="Relations_Colleague_Mult" xml:space="preserve">
+        <value>Colleagues</value>
+    </data>
+    <data name="Relations_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Relations_EventVisitor" xml:space="preserve">
+        <value>Participant|Participant|Participant</value>
+    </data>
+    <data name="Relations_EventVisitor_Mult" xml:space="preserve">
+        <value>Participants</value>
+    </data>
+    <data name="Relations_Event_Mult" xml:space="preserve">
+        <value>Events</value>
+    </data>
+    <data name="Relations_Friend" xml:space="preserve">
+        <value>Friend|Friend|Friend</value>
+    </data>
+    <data name="Relations_Friend_Mult" xml:space="preserve">
+        <value>Friends</value>
+    </data>
+    <data name="Relations_Group_Pages" xml:space="preserve">
+        <value>Pages</value>
+    </data>
+    <data name="Relations_Group_People" xml:space="preserve">
+        <value>People</value>
+    </data>
+    <data name="Relations_Group_Relatives" xml:space="preserve">
+        <value>Relatives</value>
+    </data>
+    <data name="Relations_Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="Relations_LocationInhabitant" xml:space="preserve">
+        <value>Inhabitant|Inhabitant|Inhabitant</value>
+    </data>
+    <data name="Relations_LocationInhabitant_Mult" xml:space="preserve">
+        <value>Inhabitants</value>
+    </data>
+    <data name="Relations_Location_Mult" xml:space="preserve">
+        <value>Locations</value>
+    </data>
+    <data name="Relations_Owner" xml:space="preserve">
+        <value>Owner|Owner|Owner</value>
+    </data>
+    <data name="Relations_Owner_Mult" xml:space="preserve">
+        <value>Owners</value>
+    </data>
+    <data name="Relations_Parent" xml:space="preserve">
+        <value>Parent</value>
+    </data>
+    <data name="Relations_ParentChildF" xml:space="preserve">
+        <value>Sister</value>
+    </data>
+    <data name="Relations_ParentChildF_Mult" xml:space="preserve">
+        <value>Sisters</value>
+    </data>
+    <data name="Relations_ParentChildM" xml:space="preserve">
+        <value>Brother</value>
+    </data>
+    <data name="Relations_ParentChildM_Mult" xml:space="preserve">
+        <value>Brothers</value>
+    </data>
+    <data name="Relations_ParentF" xml:space="preserve">
+        <value>Mother</value>
+    </data>
+    <data name="Relations_ParentM" xml:space="preserve">
+        <value>Father</value>
+    </data>
+    <data name="Relations_ParentParentF" xml:space="preserve">
+        <value>Grandmother</value>
+    </data>
+    <data name="Relations_ParentParentF_Mult" xml:space="preserve">
+        <value>Grandmothers</value>
+    </data>
+    <data name="Relations_ParentParentM" xml:space="preserve">
+        <value>Grandfather</value>
+    </data>
+    <data name="Relations_ParentParentM_Mult" xml:space="preserve">
+        <value>Grandfathers</value>
+    </data>
+    <data name="Relations_Parent_Mult" xml:space="preserve">
+        <value>Parents</value>
+    </data>
+    <data name="Relations_Pet" xml:space="preserve">
+        <value>Pet</value>
+    </data>
+    <data name="Relations_Pet_Mult" xml:space="preserve">
+        <value>Pets</value>
+    </data>
+    <data name="Relations_SpouseChild" xml:space="preserve">
+        <value>Son|Daughter|Child</value>
+    </data>
+    <data name="Relations_SpouseChild_Mult" xml:space="preserve">
+        <value>Children</value>
+    </data>
+    <data name="Relations_SpouseF" xml:space="preserve">
+        <value>Wife</value>
+    </data>
+    <data name="Relations_SpouseFParentChildF" xml:space="preserve">
+        <value>Sister-in-law</value>
+    </data>
+    <data name="Relations_SpouseFParentChildF_Mult" xml:space="preserve">
+        <value>Sisters-in-law</value>
+    </data>
+    <data name="Relations_SpouseFParentChildM" xml:space="preserve">
+        <value>Brother-in-law</value>
+    </data>
+    <data name="Relations_SpouseFParentChildM_Mult" xml:space="preserve">
+        <value>Brothers-in-law</value>
+    </data>
+    <data name="Relations_SpouseFParentF" xml:space="preserve">
+        <value>Mother-in-law</value>
+    </data>
+    <data name="Relations_SpouseFParentM" xml:space="preserve">
+        <value>Father-in-law</value>
+    </data>
+    <data name="Relations_SpouseM" xml:space="preserve">
+        <value>Husband</value>
+    </data>
+    <data name="Relations_SpouseMParentChildF" xml:space="preserve">
+        <value>Sister-in-law</value>
+    </data>
+    <data name="Relations_SpouseMParentChildF_Mult" xml:space="preserve">
+        <value>Sisters-in-law</value>
+    </data>
+    <data name="Relations_SpouseMParentChildM" xml:space="preserve">
+        <value>Brother-in-law</value>
+    </data>
+    <data name="Relations_SpouseMParentChildM_Mult" xml:space="preserve">
+        <value>Brothers-in-law</value>
+    </data>
+    <data name="Relations_SpouseMParentF" xml:space="preserve">
+        <value>Mother-in-law</value>
+    </data>
+    <data name="Relations_SpouseMParentM" xml:space="preserve">
+        <value>Father-in-law</value>
+    </data>
+    <data name="Relations_SpouseOtherChild" xml:space="preserve">
+        <value>Son|Daughter|Child</value>
+    </data>
+    <data name="Relations_SpouseOtherChild_Mult" xml:space="preserve">
+        <value>Children</value>
+    </data>
+    <data name="Startup_Task_Configuration" xml:space="preserve">
+        <value>Processing configuration</value>
+    </data>
+    <data name="Startup_Task_DatabaseCleanup" xml:space="preserve">
+        <value>Cleaning up the database</value>
+    </data>
+    <data name="Startup_Task_DatabaseMigration" xml:space="preserve">
+        <value>Preparing the database</value>
+    </data>
+    <data name="Startup_Task_DatabaseReplication" xml:space="preserve">
+        <value>Transitioning the database</value>
+    </data>
+    <data name="Startup_Task_ReferenceDetection" xml:space="preserve">
+        <value>Detecting page references</value>
+    </data>
+    <data name="Startup_Task_SearchIndexPreparation" xml:space="preserve">
+        <value>Preparing search index</value>
+    </data>
+    <data name="Startup_Task_TestDataSeeding" xml:space="preserve">
+        <value>Preparing demo data</value>
+    </data>
+    <data name="Startup_Task_TreeBuilding" xml:space="preserve">
+        <value>Building family trees</value>
+    </data>
+</root>

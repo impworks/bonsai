@@ -285,7 +285,7 @@ namespace Bonsai.Code.Utils.Date
                 ? MonthNames[Month!.Value]
                 : string.Format(MonthPreciseNames[Month!.Value], Day.Value);
 
-            return string.Format(IsDecade ? Texts.FuzzyDate_FullDecadeFormat : Texts.FuzzyDate_FullYearFormat, monthPart);
+            return string.Format(IsDecade ? Texts.FuzzyDate_FullDecadeFormat : Texts.FuzzyDate_FullYearFormat, monthPart, Year);
         }
 
         /// <summary>
