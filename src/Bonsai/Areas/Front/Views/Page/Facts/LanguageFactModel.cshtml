@@ -1,5 +1,5 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
-@using Impworks.Utils.Format
+@using Bonsai.Code.Services
 @model LanguageFactModel
 
 <tr class="fact">
@@ -11,7 +11,7 @@
                 <span class="fact-item-main">@item.Name</span>
                 @if (item.Proficiency != null)
                 {
-                    <span class="fact-item-extra">(@item.Proficiency.Value.GetEnumDescription())</span>
+                    <span class="fact-item-extra">(@item.Proficiency.Value.GetLocaleEnumDescription())</span>
                 }
                 @if (item.Duration != null)
                 {

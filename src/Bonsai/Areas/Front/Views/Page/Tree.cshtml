@@ -1,7 +1,7 @@
 ﻿@using Bonsai.Areas.Front.ViewModels.Page
+@using Bonsai.Code.Services
 @using Bonsai.Data.Models
 @using Bonsai.Localization
-@using Impworks.Utils.Format
 @model PageVM<PageTreeVM>
 @{
     Layout = "~/Areas/Front/Views/Page/PageLayout.cshtml";
@@ -24,7 +24,7 @@
         <div class="float-left btn-group btn-group-toggle">
             @foreach (var kind in Model.Body.SupportedKinds)
             {
-                <a href="@GetTreeUrl(kind)" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")" data-kind="@kind">@kind.GetEnumDescription()</a>
+                <a href="@GetTreeUrl(kind)" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")" data-kind="@kind">@kind.GetLocaleEnumDescription()</a>
             }
         </div>
         <div class="float-right btn-group">

@@ -171,7 +171,7 @@
                 @if (data.DraftLastUpdateDate is DateTimeOffset draftDate)
                 {
                     var today = draftDate.Date == DateTimeOffset.Now.Date;
-                    <text>@string.Format(@Texts.Admin_Pages_Editor_DraftLoadedFormat, data.DraftLastUpdateDate.Value.ToString(today ? "T" : "G", LocaleProvider.GetCulture()))</text>
+                    <text>@string.Format(Texts.Admin_Pages_Editor_DraftLoadedFormat, data.DraftLastUpdateDate.Value.ToString(today ? "T" : "G", LocaleProvider.GetCulture()))</text>
                 }
             </span>
             @if (data.DraftDisplayNotification)
@@ -194,7 +194,7 @@
 @await Html.PartialAsync("~/Areas/Admin/Views/Components/PagePicker.cshtml")
 
 <script type="text/x-template" id="date-picker-template">
-    <input type="text" class="form-control" placeholder="@Texts.Datepicker_Placeholder" />
+    <input type="text" class="form-control" placeholder="@Html.Raw(Texts.Datepicker_Placeholder)" />
 </script>
 <script type="text/x-template" id="duration-picker-template">
     <div class="form-row">

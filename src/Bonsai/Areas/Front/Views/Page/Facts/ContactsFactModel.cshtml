@@ -1,5 +1,5 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
-@using Impworks.Utils.Format
+@using Bonsai.Code.Services
 @model ContactsFactModel
 
 <tr class="fact">
@@ -9,7 +9,7 @@
     <td class="fact-value big-icons">
         @foreach (var item in Model.Values)
         {
-            <a class="big-icon" href="@item.GetLink()" target="_blank" title="@item.Type.GetEnumDescription()">
+            <a class="big-icon" href="@item.GetLink()" target="_blank" title="@item.Type.GetLocaleEnumDescription()">
                 <span class="fa @(GetIcon(item.Type))"></span>
             </a>
         }

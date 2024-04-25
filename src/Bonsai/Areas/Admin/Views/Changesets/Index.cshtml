@@ -107,7 +107,7 @@
                         }
                     </td>
                     <td><span title="@c.Date.LocalDateTime.ToLocalizedFullDate()">@c.Date.Humanize()</span></td>
-                    <td>@c.ChangeType.GetEnumDescription()</td>
+                    <td>@c.ChangeType.GetLocaleEnumDescription()</td>
                     <td>@c.Author</td>
                     <td class="admin-row-actions">
                         @if (c.CanRevert)

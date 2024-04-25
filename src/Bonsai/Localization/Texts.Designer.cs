@@ -3401,7 +3401,7 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dd MMMM yy.
+        ///   Looks up a localized string similar to dd MMMM yyyy.
         /// </summary>
         public static string DateFormat_Short {
             get {

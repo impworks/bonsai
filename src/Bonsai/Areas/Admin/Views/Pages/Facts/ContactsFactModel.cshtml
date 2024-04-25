@@ -1,6 +1,6 @@
 ﻿@using Bonsai.Code.DomainModel.Facts.Models
+@using Bonsai.Code.Services
 @using Bonsai.Localization
-@using Impworks.Utils.Format
 <script type="text/x-template" data-kind="fact-template" id="ContactsFactModel">
     <div class="fact-wrapper">
         <h6>
@@ -16,7 +16,7 @@
                         <div class="form-group col-sm-4">
                             <label>@Texts.Admin_Pages_Facts_LinkType</label>
                             <select v-model="row.Type" class="form-control form-control-sm mr-2">
-                                @foreach (var prof in EnumHelper.GetEnumDescriptions<ContactType>())
+                                @foreach (var prof in LocaleProvider.GetLocaleEnumDescriptions<ContactType>())
                                 {
                                     <option value="@prof.Key">@prof.Value</option>
                                 }
