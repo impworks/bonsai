@@ -1,36 +1,35 @@
 ﻿using Bonsai.Code.Utils.Date;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Front.ViewModels.Media
+namespace Bonsai.Areas.Front.ViewModels.Media;
+
+/// <summary>
+/// Details about a media item's thumbnail.
+/// </summary>
+public class MediaThumbnailVM
 {
     /// <summary>
-    /// Details about a media item's thumbnail.
+    /// Full URL of the media's display page.
     /// </summary>
-    public class MediaThumbnailVM
-    {
-        /// <summary>
-        /// Full URL of the media's display page.
-        /// </summary>
-        public string Key { get; set; }
+    public string Key { get; set; }
 
-        /// <summary>
-        /// URL of the media's thumbnail.
-        /// </summary>
-        public string ThumbnailUrl { get; set; }
+    /// <summary>
+    /// URL of the media's thumbnail.
+    /// </summary>
+    public string ThumbnailUrl { get; set; }
 
-        /// <summary>
-        /// Type of the media. 
-        /// </summary>
-        public MediaType Type { get; set; }
+    /// <summary>
+    /// Type of the media. 
+    /// </summary>
+    public MediaType Type { get; set; }
 
-        /// <summary>
-        /// Date of the media's origin.
-        /// </summary>
-        public FuzzyDate? Date { get; set; }
+    /// <summary>
+    /// Date of the media's origin.
+    /// </summary>
+    public FuzzyDate? Date { get; set; }
         
-        /// <summary>
-        /// Flag indicating that the media file is ready for viewing.
-        /// </summary>
-        public bool IsProcessed { get; set; }
-    }
+    /// <summary>
+    /// Flag indicating that the media file is ready for viewing.
+    /// </summary>
+    public bool IsProcessed { get; set; }
 }

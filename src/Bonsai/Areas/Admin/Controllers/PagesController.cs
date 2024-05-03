@@ -23,221 +23,220 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bonsai.Areas.Admin.Controllers
+namespace Bonsai.Areas.Admin.Controllers;
+
+/// <summary>
+/// Controller for handling pages.
+/// </summary>
+[Route("admin/pages")]
+public class PagesController: AdminControllerBase
 {
-    /// <summary>
-    /// Controller for handling pages.
-    /// </summary>
-    [Route("admin/pages")]
-    public class PagesController: AdminControllerBase
+    public PagesController(PagesManagerService pages, ISearchEngine search, AppDbContext db, IBackgroundJobService jobs)
     {
-        public PagesController(PagesManagerService pages, ISearchEngine search, AppDbContext db, IBackgroundJobService jobs)
+        _pages = pages;
+        _search = search;
+        _db = db;
+        _jobs = jobs;
+    }
+
+    private readonly PagesManagerService _pages;
+    private readonly ISearchEngine _search;
+    private readonly AppDbContext _db;
+    private readonly IBackgroundJobService _jobs;
+
+    protected override Type ListStateType => typeof(PagesListRequestVM);
+
+    /// <summary>
+    /// Readable captions of the fields.
+    /// </summary>
+    private static IDictionary<string, string> FieldCaptions = new Dictionary<string, string>
+    {
+        [nameof(PageEditorVM.Title)] = Texts.Admin_Pages_Caption_Title,
+        [nameof(PageEditorVM.Description)] = Texts.Admin_Pages_Caption_Description,
+        [nameof(PageEditorVM.Facts)] = Texts.Admin_Pages_Caption_Facts,
+        [nameof(PageEditorVM.Aliases)] = Texts.Admin_Pages_Caption_Aliases,
+        [nameof(PageEditorVM.MainPhotoKey)] = Texts.Admin_Pages_Caption_Photo,
+    };
+
+    /// <summary>
+    /// Displays the list of pages.
+    /// </summary>
+    [HttpGet]
+    public async Task<ActionResult> Index(PagesListRequestVM request)
+    {
+        PersistListState(request);
+        var vm = await _pages.GetPagesAsync(request);
+        return View(vm);
+    }
+
+    /// <summary>
+    /// Dispays the editor form for a new page.
+    /// </summary>
+    [HttpGet]
+    [Route("create")]
+    public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
+    {
+        var vm = await _pages.RequestCreateAsync(type, User);
+        if (vm.Type != type)
         {
-            _pages = pages;
-            _search = search;
-            _db = db;
-            _jobs = jobs;
+            TempData[NotificationsService.NOTE_PAGETYPE_RESET_FROM_DRAFT] = type;
+            return RedirectToAction("Create", "Pages", new {area = "Admin", type = vm.Type});
         }
 
-        private readonly PagesManagerService _pages;
-        private readonly ISearchEngine _search;
-        private readonly AppDbContext _db;
-        private readonly IBackgroundJobService _jobs;
+        return await ViewEditorFormAsync(vm, displayDraft: true);
+    }
 
-        protected override Type ListStateType => typeof(PagesListRequestVM);
+    /// <summary>
+    /// Attempts to create a new page.
+    /// </summary>
+    [HttpPost]
+    [Route("create")]
+    public async Task<ActionResult> Create(PageEditorVM vm)
+    {
+        if(!ModelState.IsValid)
+            return await ViewEditorFormAsync(vm);
 
-        /// <summary>
-        /// Readable captions of the fields.
-        /// </summary>
-        private static IDictionary<string, string> FieldCaptions = new Dictionary<string, string>
+        try
         {
-            [nameof(PageEditorVM.Title)] = Texts.Admin_Pages_Caption_Title,
-            [nameof(PageEditorVM.Description)] = Texts.Admin_Pages_Caption_Description,
-            [nameof(PageEditorVM.Facts)] = Texts.Admin_Pages_Caption_Facts,
-            [nameof(PageEditorVM.Aliases)] = Texts.Admin_Pages_Caption_Aliases,
-            [nameof(PageEditorVM.MainPhotoKey)] = Texts.Admin_Pages_Caption_Photo,
-        };
-
-        /// <summary>
-        /// Displays the list of pages.
-        /// </summary>
-        [HttpGet]
-        public async Task<ActionResult> Index(PagesListRequestVM request)
-        {
-            PersistListState(request);
-            var vm = await _pages.GetPagesAsync(request);
-            return View(vm);
-        }
-
-        /// <summary>
-        /// Dispays the editor form for a new page.
-        /// </summary>
-        [HttpGet]
-        [Route("create")]
-        public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
-        {
-            var vm = await _pages.RequestCreateAsync(type, User);
-            if (vm.Type != type)
-            {
-                TempData[NotificationsService.NOTE_PAGETYPE_RESET_FROM_DRAFT] = type;
-                return RedirectToAction("Create", "Pages", new {area = "Admin", type = vm.Type});
-            }
-
-            return await ViewEditorFormAsync(vm, displayDraft: true);
-        }
-
-        /// <summary>
-        /// Attempts to create a new page.
-        /// </summary>
-        [HttpPost]
-        [Route("create")]
-        public async Task<ActionResult> Create(PageEditorVM vm)
-        {
-            if(!ModelState.IsValid)
-                return await ViewEditorFormAsync(vm);
-
-            try
-            {
-                var page = await _pages.CreateAsync(vm, User);
-                await _db.SaveChangesAsync();
-                await _search.AddPageAsync(page);
-                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
-
-                return RedirectToSuccess(Texts.Admin_Pages_CreatedMessage);
-            }
-            catch (ValidationException ex)
-            {
-                SetModelState(ex);
-                return await ViewEditorFormAsync(vm);
-            }
-        }
-
-        /// <summary>
-        /// Displays the editor for an existing page.
-        /// </summary>
-        [HttpGet]
-        [Route("update")]
-        public async Task<ActionResult> Update(Guid id)
-        {
-            var vm = await _pages.RequestUpdateAsync(id, User);
-            return await ViewEditorFormAsync(vm, displayDraft: true);
-        }
-
-        /// <summary>
-        /// Attempts to update the existing page.
-        /// </summary>
-        [HttpPost]
-        [Route("update")]
-        public async Task<ActionResult> Update(PageEditorVM vm, string tab)
-        {
-            if(!ModelState.IsValid)
-                return await ViewEditorFormAsync(vm, tab);
-
-            try
-            {
-                var page = await _pages.UpdateAsync(vm, User);
-                await _db.SaveChangesAsync();
-                await _search.AddPageAsync(page);
-                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
-
-                return RedirectToSuccess(Texts.Admin_Pages_UpdatedMessage);
-            }
-            catch (ValidationException ex)
-            {
-                SetModelState(ex);
-                return await ViewEditorFormAsync(vm, tab);
-            }
-        }
-
-
-        /// <summary>
-        /// Removes the page file.
-        /// </summary>
-        [HttpGet]
-        [Route("remove")]
-        public async Task<ActionResult> Remove(Guid id)
-        {
-            ViewBag.Info = await _pages.RequestRemoveAsync(id, User);
-            return View(new RemoveEntryRequestVM { Id = id });
-        }
-
-        /// <summary>
-        /// Removes the page file.
-        /// </summary>
-        [HttpPost]
-        [Route("remove")]
-        public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
-        {
-            if (vm.RemoveCompletely)
-                await _pages.RemoveCompletelyAsync(vm.Id, User);
-            else
-                await _pages.RemoveAsync(vm.Id, User);
-            
+            var page = await _pages.CreateAsync(vm, User);
             await _db.SaveChangesAsync();
-            await _search.RemovePageAsync(vm.Id);
+            await _search.AddPageAsync(page);
             await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-            return RedirectToSuccess(Texts.Admin_Pages_RemovedMessage);
+            return RedirectToSuccess(Texts.Admin_Pages_CreatedMessage);
         }
-
-        #region Helpers
-
-        /// <summary>
-        /// Displays the editor form.
-        /// </summary>
-        private async Task<ActionResult> ViewEditorFormAsync(PageEditorVM vm, string tab = null, bool displayDraft = false)
+        catch (ValidationException ex)
         {
-            var groups = FactDefinitions.Groups[vm.Type];
-            var editorTpls = groups.SelectMany(x => x.Defs)
-                                   .Select(x => x.Kind)
-                                   .Distinct()
-                                   .Select(x => $"~/Areas/Admin/Views/Pages/Facts/{x.Name}.cshtml")
-                                   .ToList();
-
-            var errorFields = ModelState.Where(x => x.Value.ValidationState == ModelValidationState.Invalid)
-                                        .Select(x => FieldCaptions.TryGetValue(x.Key))
-                                        .JoinString(", ");
-
-            var photoThumbUrl = await GetMainPhotoThumbnailUrlAsync(vm.MainPhotoKey);
-            var draft = await _pages.GetPageDraftAsync(vm.Id, User);
-
-            ViewBag.Data = new PageEditorDataVM
-            {
-                IsNew = vm.Id == Guid.Empty,
-                PageTypes = ViewHelper.GetEnumSelectList(vm.Type),
-                FactGroups = groups,
-                EditorTemplates = editorTpls,
-                Tab = StringHelper.Coalesce(tab, "main"),
-                ErrorFields = errorFields,
-                MainPhotoThumbnailUrl = photoThumbUrl,
-                DraftId = draft?.Id,
-                DraftLastUpdateDate = draft?.LastUpdateDate,
-                DraftDisplayNotification = draft != null && displayDraft
-
-            };
-
-            return View("Editor", vm);
+            SetModelState(ex);
+            return await ViewEditorFormAsync(vm);
         }
-
-        /// <summary>
-        /// Returns the thumbnail preview for a photo.
-        /// </summary>
-        private async Task<string> GetMainPhotoThumbnailUrlAsync(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-                return null;
-
-            var path = await _db.Media
-                                .Where(x => x.Key == key && x.Type == MediaType.Photo)
-                                .Select(x => x.FilePath)
-                                .FirstOrDefaultAsync();
-
-            if (string.IsNullOrEmpty(path))
-                return null;
-
-            return MediaPresenterService.GetSizedMediaPath(path, MediaSize.Small);
-        }
-
-        #endregion
     }
+
+    /// <summary>
+    /// Displays the editor for an existing page.
+    /// </summary>
+    [HttpGet]
+    [Route("update")]
+    public async Task<ActionResult> Update(Guid id)
+    {
+        var vm = await _pages.RequestUpdateAsync(id, User);
+        return await ViewEditorFormAsync(vm, displayDraft: true);
+    }
+
+    /// <summary>
+    /// Attempts to update the existing page.
+    /// </summary>
+    [HttpPost]
+    [Route("update")]
+    public async Task<ActionResult> Update(PageEditorVM vm, string tab)
+    {
+        if(!ModelState.IsValid)
+            return await ViewEditorFormAsync(vm, tab);
+
+        try
+        {
+            var page = await _pages.UpdateAsync(vm, User);
+            await _db.SaveChangesAsync();
+            await _search.AddPageAsync(page);
+            await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+
+            return RedirectToSuccess(Texts.Admin_Pages_UpdatedMessage);
+        }
+        catch (ValidationException ex)
+        {
+            SetModelState(ex);
+            return await ViewEditorFormAsync(vm, tab);
+        }
+    }
+
+
+    /// <summary>
+    /// Removes the page file.
+    /// </summary>
+    [HttpGet]
+    [Route("remove")]
+    public async Task<ActionResult> Remove(Guid id)
+    {
+        ViewBag.Info = await _pages.RequestRemoveAsync(id, User);
+        return View(new RemoveEntryRequestVM { Id = id });
+    }
+
+    /// <summary>
+    /// Removes the page file.
+    /// </summary>
+    [HttpPost]
+    [Route("remove")]
+    public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
+    {
+        if (vm.RemoveCompletely)
+            await _pages.RemoveCompletelyAsync(vm.Id, User);
+        else
+            await _pages.RemoveAsync(vm.Id, User);
+            
+        await _db.SaveChangesAsync();
+        await _search.RemovePageAsync(vm.Id);
+        await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+
+        return RedirectToSuccess(Texts.Admin_Pages_RemovedMessage);
+    }
+
+    #region Helpers
+
+    /// <summary>
+    /// Displays the editor form.
+    /// </summary>
+    private async Task<ActionResult> ViewEditorFormAsync(PageEditorVM vm, string tab = null, bool displayDraft = false)
+    {
+        var groups = FactDefinitions.Groups[vm.Type];
+        var editorTpls = groups.SelectMany(x => x.Defs)
+                               .Select(x => x.Kind)
+                               .Distinct()
+                               .Select(x => $"~/Areas/Admin/Views/Pages/Facts/{x.Name}.cshtml")
+                               .ToList();
+
+        var errorFields = ModelState.Where(x => x.Value.ValidationState == ModelValidationState.Invalid)
+                                    .Select(x => FieldCaptions.TryGetValue(x.Key))
+                                    .JoinString(", ");
+
+        var photoThumbUrl = await GetMainPhotoThumbnailUrlAsync(vm.MainPhotoKey);
+        var draft = await _pages.GetPageDraftAsync(vm.Id, User);
+
+        ViewBag.Data = new PageEditorDataVM
+        {
+            IsNew = vm.Id == Guid.Empty,
+            PageTypes = ViewHelper.GetEnumSelectList(vm.Type),
+            FactGroups = groups,
+            EditorTemplates = editorTpls,
+            Tab = StringHelper.Coalesce(tab, "main"),
+            ErrorFields = errorFields,
+            MainPhotoThumbnailUrl = photoThumbUrl,
+            DraftId = draft?.Id,
+            DraftLastUpdateDate = draft?.LastUpdateDate,
+            DraftDisplayNotification = draft != null && displayDraft
+
+        };
+
+        return View("Editor", vm);
+    }
+
+    /// <summary>
+    /// Returns the thumbnail preview for a photo.
+    /// </summary>
+    private async Task<string> GetMainPhotoThumbnailUrlAsync(string key)
+    {
+        if (string.IsNullOrEmpty(key))
+            return null;
+
+        var path = await _db.Media
+                            .Where(x => x.Key == key && x.Type == MediaType.Photo)
+                            .Select(x => x.FilePath)
+                            .FirstOrDefaultAsync();
+
+        if (string.IsNullOrEmpty(path))
+            return null;
+
+        return MediaPresenterService.GetSizedMediaPath(path, MediaSize.Small);
+    }
+
+    #endregion
 }

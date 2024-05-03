@@ -3,27 +3,26 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bonsai.Code.Config
+namespace Bonsai.Code.Config;
+
+public partial class Startup
 {
-    public partial class Startup
+    /// <summary>
+    /// Registers Mapster.
+    /// </summary>
+    private void ConfigureMapster(IServiceCollection services)
     {
-        /// <summary>
-        /// Registers Mapster.
-        /// </summary>
-        private void ConfigureMapster(IServiceCollection services)
+        var config = new TypeAdapterConfig
         {
-            var config = new TypeAdapterConfig
-            {
-                RequireExplicitMapping = true,
-            };
+            RequireExplicitMapping = true,
+        };
 
-            foreach (var map in RuntimeHelper.GetAllInstances<IMapped>())
-                map.Configure(config);
+        foreach (var map in RuntimeHelper.GetAllInstances<IMapped>())
+            map.Configure(config);
 
-            config.Compile();
-            var mapper = new Mapper(config);
+        config.Compile();
+        var mapper = new Mapper(config);
 
-            services.AddSingleton<IMapper>(mapper);
-        }
+        services.AddSingleton<IMapper>(mapper);
     }
 }

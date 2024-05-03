@@ -17,219 +17,218 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bonsai.Areas.Admin.Controllers
+namespace Bonsai.Areas.Admin.Controllers;
+
+/// <summary>
+/// Controller for managing relations.
+/// </summary>
+[Route("admin/relations")]
+public class RelationsController: AdminControllerBase
 {
-    /// <summary>
-    /// Controller for managing relations.
-    /// </summary>
-    [Route("admin/relations")]
-    public class RelationsController: AdminControllerBase
+    public RelationsController(RelationsManagerService rels, PagesManagerService pages, AppDbContext db, IBackgroundJobService jobs)
     {
-        public RelationsController(RelationsManagerService rels, PagesManagerService pages, AppDbContext db, IBackgroundJobService jobs)
-        {
-            _rels = rels;
-            _pages = pages;
-            _db = db;
-            _jobs = jobs;
-        }
+        _rels = rels;
+        _pages = pages;
+        _db = db;
+        _jobs = jobs;
+    }
 
-        private readonly RelationsManagerService _rels;
-        private readonly PagesManagerService _pages;
-        private readonly AppDbContext _db;
-        private readonly IBackgroundJobService _jobs;
+    private readonly RelationsManagerService _rels;
+    private readonly PagesManagerService _pages;
+    private readonly AppDbContext _db;
+    private readonly IBackgroundJobService _jobs;
 
-        protected override Type ListStateType => typeof(RelationsListRequestVM);
+    protected override Type ListStateType => typeof(RelationsListRequestVM);
 
-        /// <summary>
-        /// Displays the list of relations.
-        /// </summary>
-        [HttpGet]
-        [Route("")]
-        public async Task<ActionResult> Index(RelationsListRequestVM request)
-        {
-            PersistListState(request);
-            ViewBag.Data = await GetDataAsync(request);
-            var rels = await _rels.GetRelationsAsync(request);
-            return View(rels);
-        }
+    /// <summary>
+    /// Displays the list of relations.
+    /// </summary>
+    [HttpGet]
+    [Route("")]
+    public async Task<ActionResult> Index(RelationsListRequestVM request)
+    {
+        PersistListState(request);
+        ViewBag.Data = await GetDataAsync(request);
+        var rels = await _rels.GetRelationsAsync(request);
+        return View(rels);
+    }
 
-        /// <summary>
-        /// Dispays the editor form for a new relation.
-        /// </summary>
-        [HttpGet]
-        [Route("create")]
-        public async Task<ActionResult> Create()
-        {
-            return await ViewEditorFormAsync(new RelationEditorVM { Type = RelationType.Child });
-        }
+    /// <summary>
+    /// Dispays the editor form for a new relation.
+    /// </summary>
+    [HttpGet]
+    [Route("create")]
+    public async Task<ActionResult> Create()
+    {
+        return await ViewEditorFormAsync(new RelationEditorVM { Type = RelationType.Child });
+    }
 
-        /// <summary>
-        /// Attempts to create a new page.
-        /// </summary>
-        [HttpPost]
-        [Route("create")]
-        public async Task<ActionResult> Create(RelationEditorVM vm)
-        {
-            if(!ModelState.IsValid)
-                return await ViewEditorFormAsync(vm);
-
-            try
-            {
-                await _rels.CreateAsync(vm, User);
-                await _db.SaveChangesAsync();
-                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
-
-                return RedirectToSuccess(Texts.Admin_Relations_CreatedMessage);
-            }
-            catch(ValidationException ex)
-            {
-                SetModelState(ex);
-                return await ViewEditorFormAsync(vm);
-            }
-        }
-
-        /// <summary>
-        /// Displays the editor for an existing relation.
-        /// </summary>
-        [HttpGet]
-        [Route("update")]
-        public async Task<ActionResult> Update(Guid id)
-        {
-            var vm = await _rels.RequestUpdateAsync(id);
+    /// <summary>
+    /// Attempts to create a new page.
+    /// </summary>
+    [HttpPost]
+    [Route("create")]
+    public async Task<ActionResult> Create(RelationEditorVM vm)
+    {
+        if(!ModelState.IsValid)
             return await ViewEditorFormAsync(vm);
-        }
 
-        /// <summary>
-        /// Attempts to update the existing relation.
-        /// </summary>
-        [HttpPost]
-        [Route("update")]
-        public async Task<ActionResult> Update(RelationEditorVM vm)
+        try
         {
-            if(!ModelState.IsValid)
-                return await ViewEditorFormAsync(vm);
-
-            try
-            {
-                await _rels.UpdateAsync(vm, User);
-                await _db.SaveChangesAsync();
-                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
-
-                return RedirectToSuccess(Texts.Admin_Relations_UpdatedMessage);
-            }
-            catch(ValidationException ex)
-            {
-                SetModelState(ex);
-                return await ViewEditorFormAsync(vm);
-            }
-        }
-
-        /// <summary>
-        /// Displays the relation removal confirmation.
-        /// </summary>
-        [HttpGet]
-        [Route("remove")]
-        public async Task<ActionResult> Remove(Guid id)
-        {
-            ViewBag.Info = await _rels.RequestRemoveAsync(id, User);
-            return View(new RemoveEntryRequestVM { Id = id });
-        }
-
-        /// <summary>
-        /// Removes the relation.
-        /// </summary>
-        [HttpPost]
-        [Route("remove")]
-        public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
-        {
-            if (vm.RemoveCompletely)
-                await _rels.RemoveCompletelyAsync(vm.Id, User);
-            else
-                await _rels.RemoveAsync(vm.Id, User);
-            
+            await _rels.CreateAsync(vm, User);
             await _db.SaveChangesAsync();
             await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
-            return RedirectToSuccess(Texts.Admin_Relations_RemovedMessage);
+            return RedirectToSuccess(Texts.Admin_Relations_CreatedMessage);
         }
-
-        /// <summary>
-        /// Returns editor properties for the selected relation type.
-        /// </summary>
-        [HttpGet]
-        [Route("editorProps")]
-        public async Task<ActionResult> EditorProperties(RelationType relType)
+        catch(ValidationException ex)
         {
-            return Json(_rels.GetPropertiesForRelationType(relType));
+            SetModelState(ex);
+            return await ViewEditorFormAsync(vm);
         }
-
-        #region Helpers
-
-        /// <summary>
-        /// Displays the editor.
-        /// </summary>
-        private async Task<ActionResult> ViewEditorFormAsync(RelationEditorVM vm)
-        {
-            if(vm.SourceIds == null)
-                vm.SourceIds = Array.Empty<Guid>();
-
-            var pageIds = new[] {vm.DestinationId, vm.EventId}.Concat(vm.SourceIds.Cast<Guid?>()).ToList();
-            var pageLookup = await _pages.FindPagesByIdsAsync(pageIds);
-
-            ViewBag.Data = new RelationEditorDataVM
-            {
-                IsNew = vm.Id == Guid.Empty,
-                SourceItems = GetPageLookup(vm.SourceIds),
-                DestinationItem = GetPageLookup(vm.DestinationId ?? Guid.Empty),
-                EventItem = GetPageLookup(vm.EventId ?? Guid.Empty),
-
-                Properties = _rels.GetPropertiesForRelationType(vm.Type),
-                RelationTypes = EnumHelper.GetEnumValues<RelationType>()
-                                          .Select(x => new SelectListItem
-                                          {
-                                              Value = x.ToString(),
-                                              Text = x.GetLocaleEnumDescription(),
-                                              Selected = x == vm.Type
-                                          })
-            };
-
-            return View("Editor", vm);
-
-            IReadOnlyList<SelectListItem> GetPageLookup(params Guid[] ids)
-            {
-                var result = new List<SelectListItem>();
-
-                foreach(var id in ids)
-                    if(pageLookup.TryGetValue(id, out var page))
-                        result.Add(new SelectListItem { Selected = true, Text = page.Title, Value = page.Id.ToString() });
-
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Loads extra data for the filter.
-        /// </summary>
-        private async Task<RelationsListDataVM> GetDataAsync(RelationsListRequestVM request)
-        {
-            var data = new RelationsListDataVM();
-
-            if (request.EntityId != null)
-            {
-                var title = await _db.Pages
-                                     .Where(x => x.Id == request.EntityId)
-                                     .Select(x => x.Title)
-                                     .FirstOrDefaultAsync();
-
-                if (title != null)
-                    data.EntityTitle = title;
-                else
-                    request.EntityId = null;
-            }
-
-            return data;
-        }
-
-        #endregion
     }
+
+    /// <summary>
+    /// Displays the editor for an existing relation.
+    /// </summary>
+    [HttpGet]
+    [Route("update")]
+    public async Task<ActionResult> Update(Guid id)
+    {
+        var vm = await _rels.RequestUpdateAsync(id);
+        return await ViewEditorFormAsync(vm);
+    }
+
+    /// <summary>
+    /// Attempts to update the existing relation.
+    /// </summary>
+    [HttpPost]
+    [Route("update")]
+    public async Task<ActionResult> Update(RelationEditorVM vm)
+    {
+        if(!ModelState.IsValid)
+            return await ViewEditorFormAsync(vm);
+
+        try
+        {
+            await _rels.UpdateAsync(vm, User);
+            await _db.SaveChangesAsync();
+            await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+
+            return RedirectToSuccess(Texts.Admin_Relations_UpdatedMessage);
+        }
+        catch(ValidationException ex)
+        {
+            SetModelState(ex);
+            return await ViewEditorFormAsync(vm);
+        }
+    }
+
+    /// <summary>
+    /// Displays the relation removal confirmation.
+    /// </summary>
+    [HttpGet]
+    [Route("remove")]
+    public async Task<ActionResult> Remove(Guid id)
+    {
+        ViewBag.Info = await _rels.RequestRemoveAsync(id, User);
+        return View(new RemoveEntryRequestVM { Id = id });
+    }
+
+    /// <summary>
+    /// Removes the relation.
+    /// </summary>
+    [HttpPost]
+    [Route("remove")]
+    public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
+    {
+        if (vm.RemoveCompletely)
+            await _rels.RemoveCompletelyAsync(vm.Id, User);
+        else
+            await _rels.RemoveAsync(vm.Id, User);
+            
+        await _db.SaveChangesAsync();
+        await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+
+        return RedirectToSuccess(Texts.Admin_Relations_RemovedMessage);
+    }
+
+    /// <summary>
+    /// Returns editor properties for the selected relation type.
+    /// </summary>
+    [HttpGet]
+    [Route("editorProps")]
+    public async Task<ActionResult> EditorProperties(RelationType relType)
+    {
+        return Json(_rels.GetPropertiesForRelationType(relType));
+    }
+
+    #region Helpers
+
+    /// <summary>
+    /// Displays the editor.
+    /// </summary>
+    private async Task<ActionResult> ViewEditorFormAsync(RelationEditorVM vm)
+    {
+        if(vm.SourceIds == null)
+            vm.SourceIds = Array.Empty<Guid>();
+
+        var pageIds = new[] {vm.DestinationId, vm.EventId}.Concat(vm.SourceIds.Cast<Guid?>()).ToList();
+        var pageLookup = await _pages.FindPagesByIdsAsync(pageIds);
+
+        ViewBag.Data = new RelationEditorDataVM
+        {
+            IsNew = vm.Id == Guid.Empty,
+            SourceItems = GetPageLookup(vm.SourceIds),
+            DestinationItem = GetPageLookup(vm.DestinationId ?? Guid.Empty),
+            EventItem = GetPageLookup(vm.EventId ?? Guid.Empty),
+
+            Properties = _rels.GetPropertiesForRelationType(vm.Type),
+            RelationTypes = EnumHelper.GetEnumValues<RelationType>()
+                                      .Select(x => new SelectListItem
+                                      {
+                                          Value = x.ToString(),
+                                          Text = x.GetLocaleEnumDescription(),
+                                          Selected = x == vm.Type
+                                      })
+        };
+
+        return View("Editor", vm);
+
+        IReadOnlyList<SelectListItem> GetPageLookup(params Guid[] ids)
+        {
+            var result = new List<SelectListItem>();
+
+            foreach(var id in ids)
+                if(pageLookup.TryGetValue(id, out var page))
+                    result.Add(new SelectListItem { Selected = true, Text = page.Title, Value = page.Id.ToString() });
+
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Loads extra data for the filter.
+    /// </summary>
+    private async Task<RelationsListDataVM> GetDataAsync(RelationsListRequestVM request)
+    {
+        var data = new RelationsListDataVM();
+
+        if (request.EntityId != null)
+        {
+            var title = await _db.Pages
+                                 .Where(x => x.Id == request.EntityId)
+                                 .Select(x => x.Title)
+                                 .FirstOrDefaultAsync();
+
+            if (title != null)
+                data.EntityTitle = title;
+            else
+                request.EntityId = null;
+        }
+
+        return data;
+    }
+
+    #endregion
 }

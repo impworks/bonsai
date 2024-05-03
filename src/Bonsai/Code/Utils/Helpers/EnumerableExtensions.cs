@@ -2,40 +2,39 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Bonsai.Code.Utils.Helpers
+namespace Bonsai.Code.Utils.Helpers;
+
+/// <summary>
+/// Helper methods for IEnumerable.
+/// </summary>
+public static class EnumerableExtensions
 {
     /// <summary>
-    /// Helper methods for IEnumerable.
+    /// Converts the IEnumerable to a readonly list.
     /// </summary>
-    public static class EnumerableExtensions
+    public static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> source)
     {
-        /// <summary>
-        /// Converts the IEnumerable to a readonly list.
-        /// </summary>
-        public static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> source)
-        {
-            return source.ToList();
-        }
+        return source.ToList();
+    }
 
-        /// <summary>
-        /// Converts an async enumerable to a list.
-        /// </summary>
-        public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> source)
-        {
-            var result = new List<T>();
+    /// <summary>
+    /// Converts an async enumerable to a list.
+    /// </summary>
+    public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> source)
+    {
+        var result = new List<T>();
 
-            await foreach(var elem in source)
-                result.Add(elem);
+        await foreach(var elem in source)
+            result.Add(elem);
 
-            return result;
-        }
+        return result;
+    }
 
-        /// <summary>
-        /// Adds an index to the sequence.
-        /// </summary>
-        public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> source)
-        {
-            return source.Select((x, id) => (x, id));
-        }
+    /// <summary>
+    /// Adds an index to the sequence.
+    /// </summary>
+    public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> source)
+    {
+        return source.Select((x, id) => (x, id));
     }
 }

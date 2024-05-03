@@ -1,26 +1,31 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Models
+﻿using JetBrains.Annotations;
+
+namespace Bonsai.Code.DomainModel.Facts.Models;
+
+/// <summary>
+/// The template for specifying blood type.
+/// </summary>
+public class BloodTypeFactModel: FactModelBase
 {
     /// <summary>
-    /// The template for specifying blood type.
+    /// Blood type.
     /// </summary>
-    public class BloodTypeFactModel: FactModelBase
-    {
-        /// <summary>
-        /// Blood type.
-        /// </summary>
-        public BloodType Type { get; set; }
+    public BloodType Type { get; set; }
 
-        /// <summary>
-        /// Rhesus factor (if known).
-        /// </summary>
-        public bool? RhesusFactor { get; set; }
-    }
+    /// <summary>
+    /// Rhesus factor (if known).
+    /// </summary>
+    public bool? RhesusFactor { get; set; }
+}
 
-    public enum BloodType
-    {
-        O,
-        A,
-        B,
-        AB
-    }
+public enum BloodType
+{
+    [UsedImplicitly]
+    O,
+    [UsedImplicitly]
+    A,
+    [UsedImplicitly]
+    B,
+    [UsedImplicitly]
+    AB
 }

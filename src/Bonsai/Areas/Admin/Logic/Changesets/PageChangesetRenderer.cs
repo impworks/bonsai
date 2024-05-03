@@ -18,127 +18,126 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Bonsai.Areas.Admin.Logic.Changesets
+namespace Bonsai.Areas.Admin.Logic.Changesets;
+
+/// <summary>
+/// Renderer for page-related changesets.
+/// </summary>
+public class PageChangesetRenderer: IChangesetRenderer
 {
-    /// <summary>
-    /// Renderer for page-related changesets.
-    /// </summary>
-    public class PageChangesetRenderer: IChangesetRenderer
+    public PageChangesetRenderer(IHtmlHelper html, ViewRenderService viewRenderer, IUrlHelper url)
     {
-        public PageChangesetRenderer(IHtmlHelper html, ViewRenderService viewRenderer, IUrlHelper url)
-        {
-            _html = html;
-            _viewRenderer = viewRenderer;
-            _url = url;
-        }
-
-        private readonly IHtmlHelper _html;
-        private readonly IUrlHelper _url;
-        private readonly ViewRenderService _viewRenderer;
-
-        #region IChangesetRenderer implementation
-
-        /// <summary>
-        /// Supported type of changed entity.
-        /// </summary>
-        public ChangesetEntityType EntityType => ChangesetEntityType.Page;
-
-        /// <summary>
-        /// Renders the properties.
-        /// </summary>
-        public async Task<IReadOnlyList<ChangePropertyValue>> RenderValuesAsync(string json)
-        {
-            var result = new List<ChangePropertyValue>();
-            var isEmpty = string.IsNullOrEmpty(json);
-            var data = JsonConvert.DeserializeObject<PageEditorVM>(StringHelper.Coalesce(json, "{}"));
-            var aliases = JsonConvert.DeserializeObject<string[]>(data.Aliases ?? "[]");
-            var photoUrl = GetMediaThumbnailPath(data.MainPhotoKey);
-            var facts = await RenderFactsAsync(data.Type, data.Facts);
-
-            Add(nameof(PageEditorVM.Title), Texts.Admin_Changesets_Page_Title, data.Title);
-            Add(nameof(PageEditorVM.MainPhotoKey), Texts.Admin_Changesets_Page_Photo, photoUrl == null ? null : ViewHelper.RenderMediaThumbnail(photoUrl));
-            Add(nameof(PageEditorVM.Type), Texts.Admin_Changesets_Page_Type, isEmpty ? null :  data.Type.GetLocaleEnumDescription());
-            Add(nameof(PageEditorVM.Description), Texts.Admin_Changesets_Page_Text, data.Description);
-            Add(nameof(PageEditorVM.Aliases), Texts.Admin_Changesets_Page_Aliases, data.Aliases == null ? null : ViewHelper.RenderBulletList(_html, aliases));
-            Add(nameof(PageEditorVM.Facts), Texts.Admin_Changesets_Page_Facts, facts);
-
-            return result;
-
-            void Add(string prop, string name, string value)
-            {
-                result.Add(new ChangePropertyValue(prop, name, value));
-            }
-        }
-
-        /// <summary>
-        /// Returns custom diffs.
-        /// </summary>
-        public string GetCustomDiff(string propName, string oldValue, string newValue)
-        {
-            if (propName == nameof(PageEditorVM.MainPhotoKey))
-            {
-                var sb = new StringBuilder();
-
-                if (oldValue != null)
-                    sb.Append($@"<del class=""img"">{oldValue}</del>");
-
-                if (newValue != null)
-                    sb.Append($@"<ins class=""img"">{newValue}</ins>");
-
-                return sb.ToString();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Returns the full path for a photo.
-        /// </summary>
-        private string GetMediaThumbnailPath(string key)
-        {
-            if (key == null)
-                return null;
-
-            // hack: using original path with fake extension to avoid a DB query because thumbnails are always JPG
-            var path = MediaPresenterService.GetSizedMediaPath($"~/media/{key}.fake", MediaSize.Small);
-            return _url.Content(path);
-        }
-
-        /// <summary>
-        /// Renders the facts for display in changeset viewer.
-        /// </summary>
-        private async Task<string> RenderFactsAsync(PageType pageType, string rawFacts)
-        {
-            if (string.IsNullOrEmpty(rawFacts))
-                return null;
-
-            var facts = JObject.Parse(rawFacts);
-            var vms = new List<FactGroupVM>();
-
-            foreach (var group in FactDefinitions.Groups[pageType])
-            {
-                var groupVm = new FactGroupVM { Definition = group, Facts = new List<FactModelBase>() };
-                foreach (var fact in group.Defs)
-                {
-                    var key = group.Id + "." + fact.Id;
-                    var factInfo = facts[key]?.ToString();
-
-                    if (string.IsNullOrEmpty(factInfo))
-                        continue;
-
-                    var factVm = (FactModelBase) JsonConvert.DeserializeObject(factInfo, fact.Kind);
-                    factVm.Definition = fact;
-
-                    groupVm.Facts.Add(factVm);
-                }
-
-                if (groupVm.Facts.Any())
-                    vms.Add(groupVm);
-            }
-
-            return await _viewRenderer.RenderToStringAsync("~/Areas/Admin/Views/Changesets/Facts/FactsList.cshtml", vms);
-        }
-
-        #endregion
+        _html = html;
+        _viewRenderer = viewRenderer;
+        _url = url;
     }
+
+    private readonly IHtmlHelper _html;
+    private readonly IUrlHelper _url;
+    private readonly ViewRenderService _viewRenderer;
+
+    #region IChangesetRenderer implementation
+
+    /// <summary>
+    /// Supported type of changed entity.
+    /// </summary>
+    public ChangesetEntityType EntityType => ChangesetEntityType.Page;
+
+    /// <summary>
+    /// Renders the properties.
+    /// </summary>
+    public async Task<IReadOnlyList<ChangePropertyValue>> RenderValuesAsync(string json)
+    {
+        var result = new List<ChangePropertyValue>();
+        var isEmpty = string.IsNullOrEmpty(json);
+        var data = JsonConvert.DeserializeObject<PageEditorVM>(StringHelper.Coalesce(json, "{}"));
+        var aliases = JsonConvert.DeserializeObject<string[]>(data.Aliases ?? "[]");
+        var photoUrl = GetMediaThumbnailPath(data.MainPhotoKey);
+        var facts = await RenderFactsAsync(data.Type, data.Facts);
+
+        Add(nameof(PageEditorVM.Title), Texts.Admin_Changesets_Page_Title, data.Title);
+        Add(nameof(PageEditorVM.MainPhotoKey), Texts.Admin_Changesets_Page_Photo, photoUrl == null ? null : ViewHelper.RenderMediaThumbnail(photoUrl));
+        Add(nameof(PageEditorVM.Type), Texts.Admin_Changesets_Page_Type, isEmpty ? null :  data.Type.GetLocaleEnumDescription());
+        Add(nameof(PageEditorVM.Description), Texts.Admin_Changesets_Page_Text, data.Description);
+        Add(nameof(PageEditorVM.Aliases), Texts.Admin_Changesets_Page_Aliases, data.Aliases == null ? null : ViewHelper.RenderBulletList(_html, aliases));
+        Add(nameof(PageEditorVM.Facts), Texts.Admin_Changesets_Page_Facts, facts);
+
+        return result;
+
+        void Add(string prop, string name, string value)
+        {
+            result.Add(new ChangePropertyValue(prop, name, value));
+        }
+    }
+
+    /// <summary>
+    /// Returns custom diffs.
+    /// </summary>
+    public string GetCustomDiff(string propName, string oldValue, string newValue)
+    {
+        if (propName == nameof(PageEditorVM.MainPhotoKey))
+        {
+            var sb = new StringBuilder();
+
+            if (oldValue != null)
+                sb.Append($@"<del class=""img"">{oldValue}</del>");
+
+            if (newValue != null)
+                sb.Append($@"<ins class=""img"">{newValue}</ins>");
+
+            return sb.ToString();
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Returns the full path for a photo.
+    /// </summary>
+    private string GetMediaThumbnailPath(string key)
+    {
+        if (key == null)
+            return null;
+
+        // hack: using original path with fake extension to avoid a DB query because thumbnails are always JPG
+        var path = MediaPresenterService.GetSizedMediaPath($"~/media/{key}.fake", MediaSize.Small);
+        return _url.Content(path);
+    }
+
+    /// <summary>
+    /// Renders the facts for display in changeset viewer.
+    /// </summary>
+    private async Task<string> RenderFactsAsync(PageType pageType, string rawFacts)
+    {
+        if (string.IsNullOrEmpty(rawFacts))
+            return null;
+
+        var facts = JObject.Parse(rawFacts);
+        var vms = new List<FactGroupVM>();
+
+        foreach (var group in FactDefinitions.Groups[pageType])
+        {
+            var groupVm = new FactGroupVM { Definition = group, Facts = new List<FactModelBase>() };
+            foreach (var fact in group.Defs)
+            {
+                var key = group.Id + "." + fact.Id;
+                var factInfo = facts[key]?.ToString();
+
+                if (string.IsNullOrEmpty(factInfo))
+                    continue;
+
+                var factVm = (FactModelBase) JsonConvert.DeserializeObject(factInfo, fact.Kind);
+                factVm.Definition = fact;
+
+                groupVm.Facts.Add(factVm);
+            }
+
+            if (groupVm.Facts.Any())
+                vms.Add(groupVm);
+        }
+
+        return await _viewRenderer.RenderToStringAsync("~/Areas/Admin/Views/Changesets/Facts/FactsList.cshtml", vms);
+    }
+
+    #endregion
 }

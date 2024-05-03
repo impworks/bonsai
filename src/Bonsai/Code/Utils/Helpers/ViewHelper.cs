@@ -7,122 +7,113 @@ using Bonsai.Code.Services;
 using Bonsai.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Bonsai.Code.Utils.Helpers
+namespace Bonsai.Code.Utils.Helpers;
+
+/// <summary>
+/// Helper methods for rendering data.
+/// </summary>
+public static class ViewHelper
 {
     /// <summary>
-    /// Helper methods for rendering data.
+    /// Returns the select list with current element selected.
     /// </summary>
-    public static class ViewHelper
+    public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T? value, bool addEmpty = true, T[] except = null)
+        where T : struct, Enum, IComparable
     {
-        /// <summary>
-        /// Returns the select list with current element selected.
-        /// </summary>
-        public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T? value, bool addEmpty = true, T[] except = null)
-            where T : struct, Enum, IComparable
-        {
-            var list = new List<SelectListItem>();
-            if(value == null && addEmpty)
-                list.Add(new SelectListItem { Text = Texts.Global_NotSelected, Selected = true });
+        var list = new List<SelectListItem>();
+        if(value == null && addEmpty)
+            list.Add(new SelectListItem { Text = Texts.Global_NotSelected, Selected = true });
 
-            foreach(var entry in LocaleProvider.GetLocaleEnumDescriptions<T>())
+        foreach(var entry in LocaleProvider.GetLocaleEnumDescriptions<T>())
+        {
+            if (except?.Contains(entry.Key) == true)
+                continue;
+
+            list.Add(new SelectListItem
             {
-                if (except?.Contains(entry.Key) == true)
-                    continue;
-
-                list.Add(new SelectListItem
-                {
-                    Text = entry.Value,
-                    Value = Convert.ToInt32(entry.Key).ToString(),
-                    Selected = entry.Key.CompareTo(value) == 0
-                });
-            }
-
-            return list;
+                Text = entry.Value,
+                Value = Convert.ToInt32(entry.Key).ToString(),
+                Selected = entry.Key.CompareTo(value) == 0
+            });
         }
 
-        /// <summary>
-        /// Returns the select list with current element selected.
-        /// </summary>
-        public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T value, T[] except = null)
-            where T : struct, Enum, IComparable
+        return list;
+    }
+
+    /// <summary>
+    /// Returns the select list with current element selected.
+    /// </summary>
+    public static IReadOnlyList<SelectListItem> GetEnumSelectList<T>(T value, T[] except = null)
+        where T : struct, Enum, IComparable
+    {
+        return GetEnumSelectList(value, false, except);
+    }
+
+    /// <summary>
+    /// Returns the Gravatar URL for an email address.
+    /// </summary>
+    public static string GetGravatarUrl(string email)
+    {
+        var cleanEmail = (email ?? "").ToLowerInvariant().Trim();
+        return "https://www.gravatar.com/avatar/" + Md5(cleanEmail);
+    }
+
+    /// <summary>
+    /// Renders a bullet list with specified items.
+    /// </summary>
+    public static string RenderBulletList(IHtmlHelper html, IEnumerable<string> items)
+    {
+        var sb = new StringBuilder("<ul>");
+
+        foreach (var item in items)
         {
-            return GetEnumSelectList(value, false, except);
+            sb.Append("<li>");
+            sb.Append(html.Encode(item));
+            sb.Append("</li>");
         }
 
-        /// <summary>
-        /// Returns the Gravatar URL for an email address.
-        /// </summary>
-        public static string GetGravatarUrl(string email)
-        {
-            var cleanEmail = (email ?? "").ToLowerInvariant().Trim();
-            return "https://www.gravatar.com/avatar/" + Md5(cleanEmail);
-        }
+        sb.Append("</ul>");
 
-        /// <summary>
-        /// Renders a bullet list with specified items.
-        /// </summary>
-        public static string RenderBulletList(IHtmlHelper html, IEnumerable<string> items)
-        {
-            var sb = new StringBuilder("<ul>");
+        return sb.ToString();
+    }
 
-            foreach (var item in items)
-            {
-                sb.Append("<li>");
-                sb.Append(html.Encode(item));
-                sb.Append("</li>");
-            }
-
-            sb.Append("</ul>");
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Renders the media thumbnail in a wrapper.
-        /// </summary>
-        public static string RenderMediaThumbnail(string url)
-        {
-            return $@"
+    /// <summary>
+    /// Renders the media thumbnail in a wrapper.
+    /// </summary>
+    public static string RenderMediaThumbnail(string url)
+    {
+        return $@"
                 <div class=""media-thumb-wrapper"">
                     <div class=""media-thumb-square"" style=""background-image: url('{url}')""></div>
                 </div>
             ";
-        }
-
-        /// <summary>
-        /// Renders the short-readable date.
-        /// </summary>
-        public static string ToLocalizedShortDate(this DateTime date)
-        {
-            return date.ToString(Texts.DateFormat_Short, LocaleProvider.GetCulture());
-        }
-
-        /// <summary>
-        /// Renders the detailed date.
-        /// </summary>
-        public static string ToLocalizedFullDate(this DateTime date)
-        {
-            return date.ToString(Texts.DateFormat_Full, LocaleProvider.GetCulture());
-        }
-
-        #region Helpers
-
-        /// <summary>
-        /// Returns the MD5 hash of a string.
-        /// </summary>
-        private static string Md5(string str)
-        {
-            using var md5 = MD5.Create();
-            var input = Encoding.UTF8.GetBytes(str);
-            var output = md5.ComputeHash(input);
-
-            var sb = new StringBuilder();
-            foreach(var b in output)
-                sb.Append(b.ToString("x2"));
-
-            return sb.ToString();
-        }
-
-        #endregion
     }
+
+    /// <summary>
+    /// Renders the short-readable date.
+    /// </summary>
+    public static string ToLocalizedShortDate(this DateTime date)
+    {
+        return date.ToString(Texts.DateFormat_Short, LocaleProvider.GetCulture());
+    }
+
+    /// <summary>
+    /// Renders the detailed date.
+    /// </summary>
+    public static string ToLocalizedFullDate(this DateTime date)
+    {
+        return date.ToString(Texts.DateFormat_Full, LocaleProvider.GetCulture());
+    }
+
+    #region Helpers
+
+    /// <summary>
+    /// Returns the MD5 hash of a string.
+    /// </summary>
+    private static string Md5(string str)
+    {
+        return Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(str)));
+    }
+
+    #endregion
 }

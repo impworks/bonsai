@@ -1,29 +1,28 @@
-﻿namespace Bonsai.Data.Models
+﻿namespace Bonsai.Data.Models;
+
+/// <summary>
+/// Kinds of entity relationships.
+/// </summary>
+public enum RelationType
 {
-    /// <summary>
-    /// Kinds of entity relationships.
-    /// </summary>
-    public enum RelationType
-    {
-        Parent,
-        Child,
-        Spouse,
+    Parent,
+    Child,
+    Spouse,
 
-        StepParent,
-        StepChild,
+    StepParent,
+    StepChild,
 
-        Friend,
-        Colleague,
+    Friend,
+    Colleague,
 
-        Owner,
-        Pet,
+    Owner,
+    Pet,
 
-        Location,
-        LocationInhabitant,
+    Location,
+    LocationInhabitant,
 
-        Event,
-        EventVisitor,
+    Event,
+    EventVisitor,
 
-        Other
-    }
+    Other
 }

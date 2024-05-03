@@ -1,33 +1,32 @@
-﻿namespace Bonsai.Areas.Front.ViewModels.Auth
+﻿namespace Bonsai.Areas.Front.ViewModels.Auth;
+
+/// <summary>
+/// Types of authorization result.
+/// </summary>
+public enum LoginStatus
 {
     /// <summary>
-    /// Types of authorization result.
+    /// The auth credentials are invalid.
     /// </summary>
-    public enum LoginStatus
-    {
-        /// <summary>
-        /// The auth credentials are invalid.
-        /// </summary>
-        Failed,
+    Failed,
 
-        /// <summary>
-        /// User has been authorized successfully.
-        /// </summary>
-        Succeeded,
+    /// <summary>
+    /// User has been authorized successfully.
+    /// </summary>
+    Succeeded,
 
-        /// <summary>
-        /// Administrator has blocked this account.
-        /// </summary>
-        LockedOut,
+    /// <summary>
+    /// Administrator has blocked this account.
+    /// </summary>
+    LockedOut,
 
-        /// <summary>
-        /// The user account is not yet validated by the admin.
-        /// </summary>
-        Unvalidated,
+    /// <summary>
+    /// The user account is not yet validated by the admin.
+    /// </summary>
+    Unvalidated,
 
-        /// <summary>
-        /// The user account has just been created, but validation is pending.
-        /// </summary>
-        NewUser
-    }
+    /// <summary>
+    /// The user account has just been created, but validation is pending.
+    /// </summary>
+    NewUser
 }

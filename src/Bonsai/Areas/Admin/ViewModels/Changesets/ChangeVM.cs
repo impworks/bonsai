@@ -1,18 +1,17 @@
-﻿namespace Bonsai.Areas.Admin.ViewModels.Changesets
+﻿namespace Bonsai.Areas.Admin.ViewModels.Changesets;
+
+/// <summary>
+/// Details about a particular property.
+/// </summary>
+public class ChangeVM
 {
     /// <summary>
-    /// Details about a particular property.
+    /// Title of the property.
     /// </summary>
-    public class ChangeVM
-    {
-        /// <summary>
-        /// Title of the property.
-        /// </summary>
-        public string Title { get; set; }
+    public string Title { get; set; }
 
-        /// <summary>
-        /// Difference in property values.
-        /// </summary>
-        public string Diff { get; set; }
-    }
+    /// <summary>
+    /// Difference in property values.
+    /// </summary>
+    public string Diff { get; set; }
 }

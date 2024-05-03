@@ -5,31 +5,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Bonsai.Data.Utils
+namespace Bonsai.Data.Utils;
+
+/// <summary>
+/// Configures the design-time instance of the data context (for migrations).
+/// </summary>
+[UsedImplicitly]
+public class MigrationConfigurator: IDesignTimeDbContextFactory<AppDbContext>
 {
-    /// <summary>
-    /// Configures the design-time instance of the data context (for migrations).
-    /// </summary>
-    [UsedImplicitly]
-    public class MigrationConfigurator: IDesignTimeDbContextFactory<AppDbContext>
+    public AppDbContext CreateDbContext(string[] args)
     {
-        public AppDbContext CreateDbContext(string[] args)
-        {
-            var config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile("appsettings.Development.json")
-                .Build()
-                .Get<StaticConfig>()
-                .ConnectionStrings;
+        var config = new ConfigurationBuilder()
+                     .SetBasePath(Directory.GetCurrentDirectory())
+                     .AddJsonFile("appsettings.json")
+                     .AddJsonFile("appsettings.Development.json")
+                     .Build()
+                     .Get<StaticConfig>()
+                     .ConnectionStrings;
 
-            var builder = new DbContextOptionsBuilder<AppDbContext>();
-            if (config.UseEmbeddedDatabase)
-                builder.UseSqlite(config.EmbeddedDatabase);
-            else
-                builder.UseNpgsql(config.Database);
+        var builder = new DbContextOptionsBuilder<AppDbContext>();
+        if (config.UseEmbeddedDatabase)
+            builder.UseSqlite(config.EmbeddedDatabase);
+        else
+            builder.UseNpgsql(config.Database);
 
-            return new AppDbContext(builder.Options);
-        }
+        return new AppDbContext(builder.Options);
     }
 }

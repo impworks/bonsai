@@ -18,256 +18,255 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 
-namespace Bonsai.Areas.Front.Logic
+namespace Bonsai.Areas.Front.Logic;
+
+/// <summary>
+/// Page displayer service.
+/// </summary>
+public class PagePresenterService
 {
-    /// <summary>
-    /// Page displayer service.
-    /// </summary>
-    public class PagePresenterService
+    public PagePresenterService(AppDbContext db, IMapper mapper, MarkdownService markdown, RelationsPresenterService relations, BonsaiConfigService config)
     {
-        public PagePresenterService(AppDbContext db, IMapper mapper, MarkdownService markdown, RelationsPresenterService relations, BonsaiConfigService config)
-        {
-            _db = db;
-            _mapper = mapper;
-            _markdown = markdown;
-            _relations = relations;
-            _config = config;
-        }
-
-        private readonly AppDbContext _db;
-        private readonly IMapper _mapper;
-        private readonly MarkdownService _markdown;
-        private readonly RelationsPresenterService _relations;
-        private readonly BonsaiConfigService _config;
-
-        #region Public methods
-
-        /// <summary>
-        /// Returns the description VM for a page.
-        /// </summary>
-        public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
-        {
-            var page = await FindPageAsync(key);
-            return await GetPageDescriptionAsync(page);
-        }
-
-        /// <summary>
-        /// Returns the description for a constructed page.
-        /// </summary>
-        public async Task<PageDescriptionVM> GetPageDescriptionAsync(Page page)
-        {
-            var descr = await _markdown.CompileAsync(page.Description);
-            return Configure(page, new PageDescriptionVM { Description = descr });
-        }
-
-        /// <summary>
-        /// Returns the list of media files.
-        /// </summary>
-        public async Task<PageMediaVM> GetPageMediaAsync(string key)
-        {
-            var page = await FindPageAsync(key, q => q.Include(p => p.MediaTags)
-                                                      .ThenInclude(t => t.Media));
-
-            var media = page.MediaTags
-                            .Where(x => x.Media.IsDeleted == false)
-                            .Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small))
-                            .ToList();
-
-            return Configure(page, new PageMediaVM { Media = media });
-        }
-
-        /// <summary>
-        /// Returns the tree VM (empty).
-        /// </summary>
-        public async Task<PageTreeVM> GetPageTreeAsync(string key, TreeKind? kind = null)
-        {
-            var configValue = _config.GetDynamicConfig().TreeKinds;
-            var supportedKinds = Enum.GetValues<TreeKind>()
-                                     .Where(x => configValue.HasFlag(x))
-                                     .ToList();
-
-            if (kind == null)
-                kind = supportedKinds.Count > 0 ? supportedKinds.First() : throw new KeyNotFoundException();
-            else if (!Enum.IsDefined(kind.Value))
-                throw new KeyNotFoundException();
-
-            var page = await FindPageAsync(key);
-            if(page.Type != PageType.Person)
-                throw new KeyNotFoundException();
-
-            return Configure(page, new PageTreeVM
-            {
-                TreeKind = kind.Value,
-                SupportedKinds = supportedKinds
-            });
-        }
-
-        /// <summary>
-        /// Returns the list of references to current page.
-        /// </summary>
-        public async Task<PageReferencesVM> GetPageReferencesAsync(string key)
-        {
-            var page = await FindPageAsync(key, q => q.Include(x => x.References).ThenInclude(x => x.Source));
-            var refs = page.References
-                           .Select(x => x.Source)
-                           .Select(x => _mapper.Map<PageTitleVM>(x))
-                           .OrderBy(x => x.Title)
-                           .ToList();
-            
-            return Configure(page, new PageReferencesVM {References = refs});
-        }
-
-        /// <summary>
-        /// Returns the data for the page's side block.
-        /// </summary>
-        public async Task<InfoBlockVM> GetPageInfoBlockAsync(string key)
-        {
-            var keyLower = key?.ToLowerInvariant();
-            var page = await _db.Pages
-                                .AsNoTracking()
-                                .Include(x => x.MainPhoto)
-                                .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
-
-            if (page == null)
-                throw new KeyNotFoundException();
-
-            return await GetPageInfoBlockAsync(page);
-        }
-
-        /// <summary>
-        /// Returns the info block for a constructed page.
-        /// </summary>
-        public async Task<InfoBlockVM> GetPageInfoBlockAsync(Page page)
-        {
-            var factGroups = GetPersonalFacts(page).ToList();
-            var relations = await _relations.GetRelationsForPage(page.Id);
-
-            return new InfoBlockVM
-            {
-                Photo = MediaPresenterService.GetMediaThumbnail(page.MainPhoto, MediaSize.Medium),
-                Facts = factGroups,
-                RelationGroups = relations,
-            };
-        }
-
-        /// <summary>
-        /// Returns the list of last N updated pages.
-        /// </summary>
-        public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
-        {
-            var list = await _db.Pages
-                                .Where(x => !x.IsDeleted)
-                                .OrderByDescending(x => x.LastUpdateDate)
-                                .Take(count)
-                                .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
-                                .ToListAsync();
-
-            foreach (var elem in list)
-                elem.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(elem.MainPhotoPath, MediaSize.Small);
-
-            return list;
-        }
-
-        #endregion
-
-        #region Helper methods
-
-        /// <summary>
-        /// Sets additional properties on a page view model.
-        /// </summary>
-        private T Configure<T>(Page page, T vm) where T : PageTitleVM
-        {
-            vm.Id = page.Id;
-            vm.Title = page.Title;
-            vm.Key = page.Key;
-            vm.Type = page.Type;
-
-            return vm;
-        }
-
-        /// <summary>
-        /// Returns the page by its key.
-        /// </summary>
-        private async Task<Page> FindPageAsync(string key, Func<IQueryable<Page>, IQueryable<Page>> config = null)
-        {
-            var query = _db.Pages
-                           .AsNoTracking()
-                           .Include(x => x.MainPhoto) as IQueryable<Page>;
-
-            if (config != null)
-                query = config(query);
-
-            var keyLower = key?.ToLowerInvariant();
-            var page = await query.FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
-
-            if (page == null)
-                throw new KeyNotFoundException();
-
-            if (page.Key != key)
-                throw new RedirectRequiredException(page.Key);
-
-            return page;
-        }
-
-        /// <summary>
-        /// Returns the list of personal facts for a page.
-        /// </summary>
-        private IEnumerable<FactGroupVM> GetPersonalFacts(Page page)
-        {
-            if (string.IsNullOrEmpty(page.Facts))
-                yield break;
-
-            var pageFacts = JObject.Parse(page.Facts);
-
-            foreach (var group in FactDefinitions.Groups[page.Type])
-            {
-                var factsVms = new List<FactModelBase>();
-
-                foreach (var fact in group.Defs)
-                {
-                    var key = group.Id + "." + fact.Id;
-                    var factInfo = pageFacts[key];
-
-                    var vm = Deserialize(factInfo, fact.Kind);
-                    if (vm == null)
-                        continue;
-
-                    vm.Definition = fact;
-
-                    if (!vm.IsHidden)
-                        factsVms.Add(vm);
-                } 
-
-                if (factsVms.Count > 0)
-                {
-                    yield return new FactGroupVM
-                    {
-                        Definition = group,
-                        Facts = factsVms
-                    };
-                }
-            }
-        }
-
-        /// <summary>
-        /// Attempts to deserialize the fact.
-        /// Returns null on error.
-        /// </summary>
-        private FactModelBase Deserialize(JToken json, Type kind)
-        {
-            if (json == null)
-                return null;
-
-            try
-            {
-                return (FactModelBase) json.ToObject(kind);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        #endregion
+        _db = db;
+        _mapper = mapper;
+        _markdown = markdown;
+        _relations = relations;
+        _config = config;
     }
+
+    private readonly AppDbContext _db;
+    private readonly IMapper _mapper;
+    private readonly MarkdownService _markdown;
+    private readonly RelationsPresenterService _relations;
+    private readonly BonsaiConfigService _config;
+
+    #region Public methods
+
+    /// <summary>
+    /// Returns the description VM for a page.
+    /// </summary>
+    public async Task<PageDescriptionVM> GetPageDescriptionAsync(string key)
+    {
+        var page = await FindPageAsync(key);
+        return await GetPageDescriptionAsync(page);
+    }
+
+    /// <summary>
+    /// Returns the description for a constructed page.
+    /// </summary>
+    public async Task<PageDescriptionVM> GetPageDescriptionAsync(Page page)
+    {
+        var descr = await _markdown.CompileAsync(page.Description);
+        return Configure(page, new PageDescriptionVM { Description = descr });
+    }
+
+    /// <summary>
+    /// Returns the list of media files.
+    /// </summary>
+    public async Task<PageMediaVM> GetPageMediaAsync(string key)
+    {
+        var page = await FindPageAsync(key, q => q.Include(p => p.MediaTags)
+                                                  .ThenInclude(t => t.Media));
+
+        var media = page.MediaTags
+                        .Where(x => x.Media.IsDeleted == false)
+                        .Select(x => MediaPresenterService.GetMediaThumbnail(x.Media, MediaSize.Small))
+                        .ToList();
+
+        return Configure(page, new PageMediaVM { Media = media });
+    }
+
+    /// <summary>
+    /// Returns the tree VM (empty).
+    /// </summary>
+    public async Task<PageTreeVM> GetPageTreeAsync(string key, TreeKind? kind = null)
+    {
+        var configValue = _config.GetDynamicConfig().TreeKinds;
+        var supportedKinds = Enum.GetValues<TreeKind>()
+                                 .Where(x => configValue.HasFlag(x))
+                                 .ToList();
+
+        if (kind == null)
+            kind = supportedKinds.Count > 0 ? supportedKinds.First() : throw new KeyNotFoundException();
+        else if (!Enum.IsDefined(kind.Value))
+            throw new KeyNotFoundException();
+
+        var page = await FindPageAsync(key);
+        if(page.Type != PageType.Person)
+            throw new KeyNotFoundException();
+
+        return Configure(page, new PageTreeVM
+        {
+            TreeKind = kind.Value,
+            SupportedKinds = supportedKinds
+        });
+    }
+
+    /// <summary>
+    /// Returns the list of references to current page.
+    /// </summary>
+    public async Task<PageReferencesVM> GetPageReferencesAsync(string key)
+    {
+        var page = await FindPageAsync(key, q => q.Include(x => x.References).ThenInclude(x => x.Source));
+        var refs = page.References
+                       .Select(x => x.Source)
+                       .Select(x => _mapper.Map<PageTitleVM>(x))
+                       .OrderBy(x => x.Title)
+                       .ToList();
+            
+        return Configure(page, new PageReferencesVM {References = refs});
+    }
+
+    /// <summary>
+    /// Returns the data for the page's side block.
+    /// </summary>
+    public async Task<InfoBlockVM> GetPageInfoBlockAsync(string key)
+    {
+        var keyLower = key?.ToLowerInvariant();
+        var page = await _db.Pages
+                            .AsNoTracking()
+                            .Include(x => x.MainPhoto)
+                            .FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
+
+        if (page == null)
+            throw new KeyNotFoundException();
+
+        return await GetPageInfoBlockAsync(page);
+    }
+
+    /// <summary>
+    /// Returns the info block for a constructed page.
+    /// </summary>
+    public async Task<InfoBlockVM> GetPageInfoBlockAsync(Page page)
+    {
+        var factGroups = GetPersonalFacts(page).ToList();
+        var relations = await _relations.GetRelationsForPage(page.Id);
+
+        return new InfoBlockVM
+        {
+            Photo = MediaPresenterService.GetMediaThumbnail(page.MainPhoto, MediaSize.Medium),
+            Facts = factGroups,
+            RelationGroups = relations,
+        };
+    }
+
+    /// <summary>
+    /// Returns the list of last N updated pages.
+    /// </summary>
+    public async Task<IReadOnlyList<PageTitleExtendedVM>> GetLastUpdatedPagesAsync(int count)
+    {
+        var list = await _db.Pages
+                            .Where(x => !x.IsDeleted)
+                            .OrderByDescending(x => x.LastUpdateDate)
+                            .Take(count)
+                            .ProjectToType<PageTitleExtendedVM>(_mapper.Config)
+                            .ToListAsync();
+
+        foreach (var elem in list)
+            elem.MainPhotoPath = MediaPresenterService.GetSizedMediaPath(elem.MainPhotoPath, MediaSize.Small);
+
+        return list;
+    }
+
+    #endregion
+
+    #region Helper methods
+
+    /// <summary>
+    /// Sets additional properties on a page view model.
+    /// </summary>
+    private T Configure<T>(Page page, T vm) where T : PageTitleVM
+    {
+        vm.Id = page.Id;
+        vm.Title = page.Title;
+        vm.Key = page.Key;
+        vm.Type = page.Type;
+
+        return vm;
+    }
+
+    /// <summary>
+    /// Returns the page by its key.
+    /// </summary>
+    private async Task<Page> FindPageAsync(string key, Func<IQueryable<Page>, IQueryable<Page>> config = null)
+    {
+        var query = _db.Pages
+                       .AsNoTracking()
+                       .Include(x => x.MainPhoto) as IQueryable<Page>;
+
+        if (config != null)
+            query = config(query);
+
+        var keyLower = key?.ToLowerInvariant();
+        var page = await query.FirstOrDefaultAsync(x => x.Aliases.Any(y => y.Key == keyLower) && x.IsDeleted == false);
+
+        if (page == null)
+            throw new KeyNotFoundException();
+
+        if (page.Key != key)
+            throw new RedirectRequiredException(page.Key);
+
+        return page;
+    }
+
+    /// <summary>
+    /// Returns the list of personal facts for a page.
+    /// </summary>
+    private IEnumerable<FactGroupVM> GetPersonalFacts(Page page)
+    {
+        if (string.IsNullOrEmpty(page.Facts))
+            yield break;
+
+        var pageFacts = JObject.Parse(page.Facts);
+
+        foreach (var group in FactDefinitions.Groups[page.Type])
+        {
+            var factsVms = new List<FactModelBase>();
+
+            foreach (var fact in group.Defs)
+            {
+                var key = group.Id + "." + fact.Id;
+                var factInfo = pageFacts[key];
+
+                var vm = Deserialize(factInfo, fact.Kind);
+                if (vm == null)
+                    continue;
+
+                vm.Definition = fact;
+
+                if (!vm.IsHidden)
+                    factsVms.Add(vm);
+            } 
+
+            if (factsVms.Count > 0)
+            {
+                yield return new FactGroupVM
+                {
+                    Definition = group,
+                    Facts = factsVms
+                };
+            }
+        }
+    }
+
+    /// <summary>
+    /// Attempts to deserialize the fact.
+    /// Returns null on error.
+    /// </summary>
+    private FactModelBase Deserialize(JToken json, Type kind)
+    {
+        if (json == null)
+            return null;
+
+        try
+        {
+            return (FactModelBase) json.ToObject(kind);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    #endregion
 }

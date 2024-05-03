@@ -1,9 +1,8 @@
 ﻿using Xunit;
 
-namespace Bonsai.Tests.Search.Fixtures
+namespace Bonsai.Tests.Search.Fixtures;
+
+[CollectionDefinition("Search tests")]
+public class SearchCollection: ICollectionFixture<SearchEngineFixture>
 {
-    [CollectionDefinition("Search tests")]
-    public class SearchCollection: ICollectionFixture<SearchEngineFixture>
-    {
-    }
 }

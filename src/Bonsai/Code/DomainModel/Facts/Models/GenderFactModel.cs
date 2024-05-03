@@ -1,13 +1,12 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Models
+﻿namespace Bonsai.Code.DomainModel.Facts.Models;
+
+/// <summary>
+/// A template for gender specification.
+/// </summary>
+public class GenderFactModel: FactModelBase
 {
     /// <summary>
-    /// A template for gender specification.
+    /// Flag indicating the gender.
     /// </summary>
-    public class GenderFactModel: FactModelBase
-    {
-        /// <summary>
-        /// Flag indicating the gender.
-        /// </summary>
-        public bool IsMale { get; set; }
-    }
+    public bool IsMale { get; set; }
 }

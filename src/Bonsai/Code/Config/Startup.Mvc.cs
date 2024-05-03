@@ -13,67 +13,66 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
 
-namespace Bonsai.Code.Config
+namespace Bonsai.Code.Config;
+
+public partial class Startup
 {
-    public partial class Startup
+    /// <summary>
+    /// Configures and registers MVC-related services.
+    /// </summary>
+    private void ConfigureMvcServices(IServiceCollection services)
     {
-        /// <summary>
-        /// Configures and registers MVC-related services.
-        /// </summary>
-        private void ConfigureMvcServices(IServiceCollection services)
-        {
-            services.AddSingleton(p => Configuration);
-            services.AddSingleton(p => Log.Logger);
+        services.AddSingleton(p => Configuration);
+        services.AddSingleton(p => Log.Logger);
 
-            services.AddMvc()
-                    .AddControllersAsServices()
-                    .AddSessionStateTempDataProvider()
-                    .AddRazorRuntimeCompilation()
-                    .AddNewtonsoftJson(opts =>
-                    {
-                        var convs = new List<JsonConverter>
-                        {
-                            new FuzzyDate.FuzzyDateJsonConverter(),
-                            new FuzzyRange.FuzzyRangeJsonConverter()
-                        };
-
-                        convs.ForEach(x => opts.SerializerSettings.Converters.Add(x));
-
-                        JsonConvert.DefaultSettings = () =>
-                        {
-                            var settings = new JsonSerializerSettings();
-                            convs.ForEach(settings.Converters.Add);
-                            return settings;
-                        };
-                    });
-
-            services.AddRouting(opts =>
-            {
-                opts.AppendTrailingSlash = false;
-                opts.LowercaseUrls = false;
-            });
-
-            services.AddSession();
-
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(x =>
-            {
-                var httpAcc = x.GetService<IHttpContextAccessor>();
-                var urlFactory = x.GetService<IUrlHelperFactory>();
-                var actionCtx = new ActionContext(httpAcc.HttpContext, httpAcc.HttpContext.GetRouteData(), new ActionDescriptor());
-                return urlFactory.GetUrlHelper(actionCtx);
-            });
-            services.AddScoped<ViewRenderService>();
-
-            services.AddScoped<ConfigurableRequestSizeLimitFilter>();
-
-            if(Configuration.WebServer.RequireHttps)
-            {
-                services.Configure<MvcOptions>(opts =>
+        services.AddMvc()
+                .AddControllersAsServices()
+                .AddSessionStateTempDataProvider()
+                .AddRazorRuntimeCompilation()
+                .AddNewtonsoftJson(opts =>
                 {
-                    opts.Filters.Add(new RequireHttpsAttribute());
+                    var convs = new List<JsonConverter>
+                    {
+                        new FuzzyDate.FuzzyDateJsonConverter(),
+                        new FuzzyRange.FuzzyRangeJsonConverter()
+                    };
+
+                    convs.ForEach(x => opts.SerializerSettings.Converters.Add(x));
+
+                    JsonConvert.DefaultSettings = () =>
+                    {
+                        var settings = new JsonSerializerSettings();
+                        convs.ForEach(settings.Converters.Add);
+                        return settings;
+                    };
                 });
-            }
+
+        services.AddRouting(opts =>
+        {
+            opts.AppendTrailingSlash = false;
+            opts.LowercaseUrls = false;
+        });
+
+        services.AddSession();
+
+        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        services.AddScoped<IUrlHelper>(x =>
+        {
+            var httpAcc = x.GetService<IHttpContextAccessor>();
+            var urlFactory = x.GetService<IUrlHelperFactory>();
+            var actionCtx = new ActionContext(httpAcc.HttpContext, httpAcc.HttpContext.GetRouteData(), new ActionDescriptor());
+            return urlFactory.GetUrlHelper(actionCtx);
+        });
+        services.AddScoped<ViewRenderService>();
+
+        services.AddScoped<ConfigurableRequestSizeLimitFilter>();
+
+        if(Configuration.WebServer.RequireHttps)
+        {
+            services.Configure<MvcOptions>(opts =>
+            {
+                opts.Filters.Add(new RequireHttpsAttribute());
+            });
         }
     }
 }

@@ -2,31 +2,30 @@
 using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.ViewModels.Relations
+namespace Bonsai.Areas.Admin.ViewModels.Relations;
+
+/// <summary>
+/// Request for finding relations.
+/// </summary>
+public class RelationsListRequestVM: ListRequestVM
 {
     /// <summary>
-    /// Request for finding relations.
+    /// Filter by entity.
     /// </summary>
-    public class RelationsListRequestVM: ListRequestVM
+    public Guid? EntityId { get; set; }
+
+    /// <summary>
+    /// Allowed types of relations.
+    /// </summary>
+    public RelationType[] Types { get; set; }
+
+    /// <summary>
+    /// Checks if the request has no filter applied.
+    /// </summary>
+    public override bool IsEmpty()
     {
-        /// <summary>
-        /// Filter by entity.
-        /// </summary>
-        public Guid? EntityId { get; set; }
-
-        /// <summary>
-        /// Allowed types of relations.
-        /// </summary>
-        public RelationType[] Types { get; set; }
-
-        /// <summary>
-        /// Checks if the request has no filter applied.
-        /// </summary>
-        public override bool IsEmpty()
-        {
-            return base.IsEmpty()
-                   && EntityId == null
-                   && (Types == null || Types.Length == 0);
-        }
+        return base.IsEmpty()
+               && EntityId == null
+               && (Types == null || Types.Length == 0);
     }
 }

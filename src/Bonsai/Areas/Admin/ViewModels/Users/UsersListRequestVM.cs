@@ -1,16 +1,15 @@
 ﻿using Bonsai.Areas.Admin.ViewModels.Common;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.ViewModels.Users
+namespace Bonsai.Areas.Admin.ViewModels.Users;
+
+/// <summary>
+/// Request for filtering users.
+/// </summary>
+public class UsersListRequestVM: ListRequestVM
 {
     /// <summary>
-    /// Request for filtering users.
+    /// List of selected page types.
     /// </summary>
-    public class UsersListRequestVM: ListRequestVM
-    {
-        /// <summary>
-        /// List of selected page types.
-        /// </summary>
-        public UserRole[] Roles { get; set; }
-    }
+    public UserRole[] Roles { get; set; }
 }

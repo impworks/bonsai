@@ -1,13 +1,12 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Models
+﻿namespace Bonsai.Code.DomainModel.Facts.Models;
+
+/// <summary>
+/// The template for specifying arbitrary string-based facts.
+/// </summary>
+public class StringFactModel: FactModelBase
 {
     /// <summary>
-    /// The template for specifying arbitrary string-based facts.
+    /// Arbitrary value.
     /// </summary>
-    public class StringFactModel: FactModelBase
-    {
-        /// <summary>
-        /// Arbitrary value.
-        /// </summary>
-        public string Value { get; set; }
-    }
+    public string Value { get; set; }
 }

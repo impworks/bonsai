@@ -1,18 +1,17 @@
-﻿namespace Bonsai.Areas.Admin.ViewModels.Users
+﻿namespace Bonsai.Areas.Admin.ViewModels.Users;
+
+/// <summary>
+/// Common interface for password-related VMs.
+/// </summary>
+interface IPasswordForm
 {
     /// <summary>
-    /// Common interface for password-related VMs.
+    /// Password.
     /// </summary>
-    interface IPasswordForm
-    {
-        /// <summary>
-        /// Password.
-        /// </summary>
-        string Password { get; }
+    string Password { get; }
 
-        /// <summary>
-        /// Password copy for typo checking.
-        /// </summary>
-        string PasswordCopy { get; }
-    }
+    /// <summary>
+    /// Password copy for typo checking.
+    /// </summary>
+    string PasswordCopy { get; }
 }

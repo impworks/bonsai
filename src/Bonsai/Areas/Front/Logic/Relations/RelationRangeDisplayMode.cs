@@ -1,23 +1,22 @@
-﻿namespace Bonsai.Areas.Front.Logic.Relations
+﻿namespace Bonsai.Areas.Front.Logic.Relations;
+
+/// <summary>
+/// The way of displaying a date next to a relation.
+/// </summary>
+public enum RelationDurationDisplayMode
 {
     /// <summary>
-    /// The way of displaying a date next to a relation.
+    /// Display the relation range (spouse).
     /// </summary>
-    public enum RelationDurationDisplayMode
-    {
-        /// <summary>
-        /// Display the relation range (spouse).
-        /// </summary>
-        RelationRange,
+    RelationRange,
 
-        /// <summary>
-        /// Display the birth of the related person (child).
-        /// </summary>
-        Birth,
+    /// <summary>
+    /// Display the birth of the related person (child).
+    /// </summary>
+    Birth,
 
-        /// <summary>
-        /// Display the life duration (pet).
-        /// </summary>
-        Life
-    }
+    /// <summary>
+    /// Display the life duration (pet).
+    /// </summary>
+    Life
 }

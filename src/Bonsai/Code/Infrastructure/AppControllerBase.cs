@@ -4,40 +4,39 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Bonsai.Code.Infrastructure
+namespace Bonsai.Code.Infrastructure;
+
+/// <summary>
+/// Base class for all Bonsai-app controllers.
+/// </summary>
+public class AppControllerBase: Controller
 {
     /// <summary>
-    /// Base class for all Bonsai-app controllers.
+    /// Returns the current session.
     /// </summary>
-    public class AppControllerBase: Controller
+    protected ISession Session => HttpContext.Session;
+
+    /// <summary>
+    /// Sets the state for the model from a validation exception.
+    /// </summary>
+    protected void SetModelState(ValidationException ex)
     {
-        /// <summary>
-        /// Returns the current session.
-        /// </summary>
-        protected ISession Session => HttpContext.Session;
+        foreach(var error in ex.Errors)
+            ModelState.AddModelError(error.Key, error.Value);
+    }
 
-        /// <summary>
-        /// Sets the state for the model from a validation exception.
-        /// </summary>
-        protected void SetModelState(ValidationException ex)
+    /// <summary>
+    /// Handles OperationExceptions.
+    /// </summary>
+    public override void OnActionExecuted(ActionExecutedContext context)
+    {
+        if (context.Exception is KeyNotFoundException)
         {
-            foreach(var error in ex.Errors)
-                ModelState.AddModelError(error.Key, error.Value);
+            context.Result = NotFound();
+            context.ExceptionHandled = true;
+            return;
         }
 
-        /// <summary>
-        /// Handles OperationExceptions.
-        /// </summary>
-        public override void OnActionExecuted(ActionExecutedContext context)
-        {
-            if (context.Exception is KeyNotFoundException)
-            {
-                context.Result = NotFound();
-                context.ExceptionHandled = true;
-                return;
-            }
-
-            base.OnActionExecuted(context);
-        }
+        base.OnActionExecuted(context);
     }
 }

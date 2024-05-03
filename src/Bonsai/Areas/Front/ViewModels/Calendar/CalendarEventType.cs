@@ -1,15 +1,14 @@
-﻿namespace Bonsai.Areas.Front.ViewModels.Calendar
+﻿namespace Bonsai.Areas.Front.ViewModels.Calendar;
+
+/// <summary>
+/// Type of calendar events.
+/// </summary>
+public enum CalendarEventType
 {
-    /// <summary>
-    /// Type of calendar events.
-    /// </summary>
-    public enum CalendarEventType
-    {
-        Birth,
-        Death,
-        Wedding,
-        PetAdoption,
-        ChildAdoption,
-        Event
-    }
+    Birth,
+    Death,
+    Wedding,
+    PetAdoption,
+    ChildAdoption,
+    Event
 }

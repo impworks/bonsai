@@ -1,23 +1,22 @@
-﻿namespace Bonsai.Areas.Admin.ViewModels.Components
+﻿namespace Bonsai.Areas.Admin.ViewModels.Components;
+
+/// <summary>
+/// Element of a single page.
+/// </summary>
+public class ListPaginatorPageVM
 {
     /// <summary>
-    /// Element of a single page.
+    /// Flag indicating that this page is selected.
     /// </summary>
-    public class ListPaginatorPageVM
-    {
-        /// <summary>
-        /// Flag indicating that this page is selected.
-        /// </summary>
-        public bool IsCurrent { get; set; }
+    public bool IsCurrent { get; set; }
 
-        /// <summary>
-        /// Displayed title.
-        /// </summary>
-        public string Title { get; set; }
+    /// <summary>
+    /// Displayed title.
+    /// </summary>
+    public string Title { get; set; }
 
-        /// <summary>
-        /// Link URL.
-        /// </summary>
-        public string Url { get; set; }
-    }
+    /// <summary>
+    /// Link URL.
+    /// </summary>
+    public string Url { get; set; }
 }

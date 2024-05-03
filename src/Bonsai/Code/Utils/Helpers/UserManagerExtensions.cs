@@ -4,32 +4,31 @@ using Bonsai.Data.Models;
 using Bonsai.Localization;
 using Microsoft.AspNetCore.Identity;
 
-namespace Bonsai.Code.Utils.Helpers
+namespace Bonsai.Code.Utils.Helpers;
+
+/// <summary>
+/// Helper functions for working with users.
+/// </summary>
+public static class UserManagerExtensions
 {
     /// <summary>
-    /// Helper functions for working with users.
+    /// Returns the user or throws a "not found" error.
     /// </summary>
-    public static class UserManagerExtensions
+    public static async Task<AppUser> GetUserAsync(this UserManager<AppUser> userMgr, ClaimsPrincipal principal, string errorMessage)
     {
-        /// <summary>
-        /// Returns the user or throws a "not found" error.
-        /// </summary>
-        public static async Task<AppUser> GetUserAsync(this UserManager<AppUser> userMgr, ClaimsPrincipal principal, string errorMessage)
-        {
-            return await userMgr.GetUserAsync(principal)
-                   ?? throw new OperationException(errorMessage);
-        }
+        return await userMgr.GetUserAsync(principal)
+               ?? throw new OperationException(errorMessage);
+    }
 
-        /// <summary>
-        /// Checks if the user belongs to a specific role.
-        /// Throws a <see cref="OperationException" /> if the user does not exist.
-        /// </summary>
-        public static async Task<bool> IsInRoleAsync(this UserManager<AppUser> userMgr, ClaimsPrincipal principal, UserRole role)
-        {
-            var user = await userMgr.GetUserAsync(principal)
-                ?? throw new OperationException(Texts.Global_Error_UserNotFound);
+    /// <summary>
+    /// Checks if the user belongs to a specific role.
+    /// Throws a <see cref="OperationException" /> if the user does not exist.
+    /// </summary>
+    public static async Task<bool> IsInRoleAsync(this UserManager<AppUser> userMgr, ClaimsPrincipal principal, UserRole role)
+    {
+        var user = await userMgr.GetUserAsync(principal)
+                   ?? throw new OperationException(Texts.Global_Error_UserNotFound);
 
-            return await userMgr.IsInRoleAsync(user, role.ToString());
-        }
+        return await userMgr.IsInRoleAsync(user, role.ToString());
     }
 }

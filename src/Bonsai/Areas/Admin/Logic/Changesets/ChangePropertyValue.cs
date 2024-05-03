@@ -1,30 +1,9 @@
-﻿namespace Bonsai.Areas.Admin.Logic.Changesets
-{
-    /// <summary>
-    /// Property name to value binding.
-    /// </summary>
-    public class ChangePropertyValue
-    {
-        public ChangePropertyValue(string propertyName, string title, string value)
-        {
-            PropertyName = propertyName;
-            Title = title;
-            Value = value;
-        }
+﻿namespace Bonsai.Areas.Admin.Logic.Changesets;
 
-        /// <summary>
-        /// Original name of the property (as in source code).
-        /// </summary>
-        public string PropertyName { get; }
-
-        /// <summary>
-        /// Readable of the property.
-        /// </summary>
-        public string Title { get; }
-
-        /// <summary>
-        /// Rendered value.
-        /// </summary>
-        public string Value { get; }
-    }
-}
+/// <summary>
+/// Property name to value binding.
+/// <param name="PropertyName">Original name of the property (as in source code).</param>
+/// <param name="Title">Readable of the property.</param>
+/// <param name="Value">Rendered value.</param>
+/// </summary>
+public record ChangePropertyValue(string PropertyName, string Title, string Value);

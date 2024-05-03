@@ -1,28 +1,27 @@
-﻿namespace Bonsai.Data.Models
+﻿namespace Bonsai.Data.Models;
+
+/// <summary>
+/// Kind of the change.
+/// </summary>
+public enum ChangesetType
 {
     /// <summary>
-    /// Kind of the change.
+    /// The entity has been created.
     /// </summary>
-    public enum ChangesetType
-    {
-        /// <summary>
-        /// The entity has been created.
-        /// </summary>
-        Created,
+    Created,
 
-        /// <summary>
-        /// The entity has been updated.
-        /// </summary>
-        Updated,
+    /// <summary>
+    /// The entity has been updated.
+    /// </summary>
+    Updated,
 
-        /// <summary>
-        /// The entity has been removed.
-        /// </summary>
-        Removed,
+    /// <summary>
+    /// The entity has been removed.
+    /// </summary>
+    Removed,
 
-        /// <summary>
-        /// The previous changeset has been reverted.
-        /// </summary>
-        Restored
-    }
+    /// <summary>
+    /// The previous changeset has been reverted.
+    /// </summary>
+    Restored
 }

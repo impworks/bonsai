@@ -1,26 +1,10 @@
 ﻿using System;
 
-namespace Bonsai.Areas.Admin.Logic.Validation
-{
-    /// <summary>
-    /// Information about contradictory facts.
-    /// </summary>
-    public class ConsistencyErrorInfo
-    {
-        public ConsistencyErrorInfo(string msg, params Guid[] pageIds)
-        {
-            Message = msg;
-            PageIds = pageIds;
-        }
+namespace Bonsai.Areas.Admin.Logic.Validation;
 
-        /// <summary>
-        /// Detailed information about the inconsistency.
-        /// </summary>
-        public string Message { get; }
-
-        /// <summary>
-        /// Related pages.
-        /// </summary>
-        public Guid[] PageIds { get; }
-    }
-}
+/// <summary>
+/// Information about contradictory facts.
+/// <param name="Message">Detailed information about the inconsistency.</param>
+/// <param name="PageIds">Related pages.</param>
+/// </summary>
+public record ConsistencyErrorInfo(string Message, params Guid[] PageIds);

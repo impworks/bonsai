@@ -1,37 +1,34 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Models
+﻿namespace Bonsai.Code.DomainModel.Facts.Models;
+
+/// <summary>
+/// The template for specifying known languages.
+/// </summary>
+public class LanguageFactModel: FactListModelBase<LanguageFactItem>;
+
+/// <summary>
+/// Information about a single known language.
+/// </summary>
+public class LanguageFactItem : DurationFactItem
 {
     /// <summary>
-    /// The template for specifying known languages.
+    /// Name of the language.
     /// </summary>
-    public class LanguageFactModel: FactListModelBase<LanguageFactItem>
-    {
-    }
+    public string Name { get; set; }
 
     /// <summary>
-    /// Information about a single known language.
+    /// Language proficiency.
     /// </summary>
-    public class LanguageFactItem : DurationFactItem
-    {
-        /// <summary>
-        /// Name of the language.
-        /// </summary>
-        public string Name { get; set; }
+    public LanguageProficiency? Proficiency { get; set; }
+}
 
-        /// <summary>
-        /// Language proficiency.
-        /// </summary>
-        public LanguageProficiency? Proficiency { get; set; }
-    }
-
-    /// <summary>
-    /// The proficiency in the specified language.
-    /// </summary>
-    // ReSharper disable UnusedMember.Global
-    public enum LanguageProficiency
-    {
-        Beginner,
-        Intermediate,
-        Profound,
-        Native
-    }
+/// <summary>
+/// The proficiency in the specified language.
+/// </summary>
+// ReSharper disable UnusedMember.Global
+public enum LanguageProficiency
+{
+    Beginner,
+    Intermediate,
+    Profound,
+    Native
 }

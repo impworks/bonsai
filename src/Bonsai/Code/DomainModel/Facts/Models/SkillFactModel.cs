@@ -1,36 +1,33 @@
-﻿namespace Bonsai.Code.DomainModel.Facts.Models
+﻿namespace Bonsai.Code.DomainModel.Facts.Models;
+
+/// <summary>
+/// The template for specifying posessed skills.
+/// </summary>
+public class SkillFactModel : FactListModelBase<SkillFactItem>;
+
+/// <summary>
+/// Information about a single skill.
+/// </summary>
+public class SkillFactItem : DurationFactItem
 {
     /// <summary>
-    /// The template for specifying posessed skills.
+    /// Name of the skill.
     /// </summary>
-    public class SkillFactModel : FactListModelBase<SkillFactItem>
-    {
-    }
+    public string Name { get; set; }
 
     /// <summary>
-    /// Information about a single skill.
+    /// Proficiency of the skill.
     /// </summary>
-    public class SkillFactItem : DurationFactItem
-    {
-        /// <summary>
-        /// Name of the skill.
-        /// </summary>
-        public string Name { get; set; }
+    public SkillProficiency? Proficiency { get; set; }
+}
 
-        /// <summary>
-        /// Proficiency of the skill.
-        /// </summary>
-        public SkillProficiency? Proficiency { get; set; }
-    }
-
-    /// <summary>
-    /// The proficiency in current skill or hobby.
-    /// </summary>
-    // ReSharper disable UnusedMember.Global
-    public enum SkillProficiency
-    {
-        Beginner,
-        Intermediate,
-        Profound
-    }
+/// <summary>
+/// The proficiency in current skill or hobby.
+/// </summary>
+// ReSharper disable UnusedMember.Global
+public enum SkillProficiency
+{
+    Beginner,
+    Intermediate,
+    Profound
 }

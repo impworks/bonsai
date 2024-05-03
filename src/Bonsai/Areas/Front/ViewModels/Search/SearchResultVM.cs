@@ -1,20 +1,19 @@
 ﻿using Bonsai.Areas.Front.ViewModels.Page;
 
-namespace Bonsai.Areas.Front.ViewModels.Search
+namespace Bonsai.Areas.Front.ViewModels.Search;
+
+/// <summary>
+/// Information about a page found in the search.
+/// </summary>
+public class SearchResultVM: PageTitleExtendedVM
 {
     /// <summary>
-    /// Information about a page found in the search.
+    /// Page title with matched elements highlighted.
     /// </summary>
-    public class SearchResultVM: PageTitleExtendedVM
-    {
-        /// <summary>
-        /// Page title with matched elements highlighted.
-        /// </summary>
-        public string HighlightedTitle { get; set; }
+    public string HighlightedTitle { get; set; }
 
-        /// <summary>
-        /// A portion of the page's description that matches the query.
-        /// </summary>
-        public string DescriptionExcerpt { get; set; }
-    }
+    /// <summary>
+    /// A portion of the page's description that matches the query.
+    /// </summary>
+    public string DescriptionExcerpt { get; set; }
 }

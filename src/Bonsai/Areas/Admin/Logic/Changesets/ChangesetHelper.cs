@@ -1,28 +1,27 @@
 using System;
 using Bonsai.Data.Models;
 
-namespace Bonsai.Areas.Admin.Logic.Changesets
+namespace Bonsai.Areas.Admin.Logic.Changesets;
+
+/// <summary>
+/// Helper changeset-related methods used in multiple places.
+/// </summary>
+public static class ChangesetHelper
 {
     /// <summary>
-    /// Helper changeset-related methods used in multiple places.
+    /// Returns the changeset type.
     /// </summary>
-    public static class ChangesetHelper
+    public static ChangesetType GetChangeType(object prev, object next, Guid? revertedId)
     {
-        /// <summary>
-        /// Returns the changeset type.
-        /// </summary>
-        public static ChangesetType GetChangeType(object prev, object next, Guid? revertedId)
-        {
-            if (revertedId != null)
-                return ChangesetType.Restored;
+        if (revertedId != null)
+            return ChangesetType.Restored;
 
-            if (prev == null)
-                return ChangesetType.Created;
+        if (prev == null)
+            return ChangesetType.Created;
 
-            if (next == null)
-                return ChangesetType.Removed;
+        if (next == null)
+            return ChangesetType.Removed;
 
-            return ChangesetType.Updated;
-        }
+        return ChangesetType.Updated;
     }
 }

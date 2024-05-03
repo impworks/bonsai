@@ -4,35 +4,34 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bonsai.Code.Config
+namespace Bonsai.Code.Config;
+
+public partial class Startup
 {
-    public partial class Startup
+    /// <summary>
+    /// Configures the auth-related sessions.
+    /// </summary>
+    private void ConfigureAuthServices(IServiceCollection services)
     {
-        /// <summary>
-        /// Configures the auth-related sessions.
-        /// </summary>
-        private void ConfigureAuthServices(IServiceCollection services)
+        services.AddAuthorization(opts =>
         {
-            services.AddAuthorization(opts =>
-            {
-                opts.AddPolicy(AuthRequirement.Name, p => p.Requirements.Add(new AuthRequirement()));
-                opts.AddPolicy(AdminAuthRequirement.Name, p => p.Requirements.Add(new AdminAuthRequirement()));
-            });
+            opts.AddPolicy(AuthRequirement.Name, p => p.Requirements.Add(new AuthRequirement()));
+            opts.AddPolicy(AdminAuthRequirement.Name, p => p.Requirements.Add(new AdminAuthRequirement()));
+        });
 
-            services.AddScoped<IAuthorizationHandler, AuthHandler>();
-            services.AddScoped<IAuthorizationHandler, AdminAuthHandler>();
+        services.AddScoped<IAuthorizationHandler, AuthHandler>();
+        services.AddScoped<IAuthorizationHandler, AdminAuthHandler>();
 
-            var auth = services.AddAuthentication(IdentityConstants.ApplicationScheme);
-            var authProvider = new AuthProviderService();
-            authProvider.Initialize(Configuration, auth);
-            services.AddSingleton(authProvider);
+        var auth = services.AddAuthentication(IdentityConstants.ApplicationScheme);
+        var authProvider = new AuthProviderService();
+        authProvider.Initialize(Configuration, auth);
+        services.AddSingleton(authProvider);
 
-            services.ConfigureApplicationCookie(opts =>
-            {
-                opts.LoginPath = "/auth/login";
-                opts.AccessDeniedPath = "/auth/login";
-                opts.ReturnUrlParameter = "returnUrl";
-            });
-        }
+        services.ConfigureApplicationCookie(opts =>
+        {
+            opts.LoginPath = "/auth/login";
+            opts.AccessDeniedPath = "/auth/login";
+            opts.ReturnUrlParameter = "returnUrl";
+        });
     }
 }

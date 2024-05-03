@@ -1,12 +1,11 @@
 ﻿using Mapster;
 
-namespace Bonsai.Code.Infrastructure
+namespace Bonsai.Code.Infrastructure;
+
+/// <summary>
+/// Configures automapper to map between types.
+/// </summary>
+internal interface IMapped
 {
-    /// <summary>
-    /// Configures automapper to map between types.
-    /// </summary>
-    internal interface IMapped
-    {
-        void Configure(TypeAdapterConfig config);
-    }
+    void Configure(TypeAdapterConfig config);
 }

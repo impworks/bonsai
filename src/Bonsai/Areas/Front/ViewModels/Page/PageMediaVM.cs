@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using Bonsai.Areas.Front.ViewModels.Media;
 
-namespace Bonsai.Areas.Front.ViewModels.Page
+namespace Bonsai.Areas.Front.ViewModels.Page;
+
+/// <summary>
+/// List of the page's media files.
+/// </summary>
+public class PageMediaVM: PageTitleVM
 {
     /// <summary>
-    /// List of the page's media files.
+    /// The list of media item thumbnails for current page.
     /// </summary>
-    public class PageMediaVM: PageTitleVM
-    {
-        /// <summary>
-        /// The list of media item thumbnails for current page.
-        /// </summary>
-        public IReadOnlyList<MediaThumbnailVM> Media { get; set; }
-    }
+    public IReadOnlyList<MediaThumbnailVM> Media { get; set; }
 }
