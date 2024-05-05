@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Bonsai.Code.Utils;
+using AsyncKeyedLock;
 using Newtonsoft.Json;
 
 namespace Bonsai.Code.Services;
@@ -11,13 +11,17 @@ namespace Bonsai.Code.Services;
 /// <summary>
 /// In-memory page cache service.
 /// </summary>
-public class CacheService: IDisposable
+public class CacheService : IDisposable
 {
     #region Constructor
 
     static CacheService()
     {
-        _locks = new Locker<(Type type, string id)>();
+        _locks = new AsyncKeyedLocker<(Type type, string id)>(o =>
+        {
+            o.PoolSize = 20;
+            o.PoolInitialFill = 1;
+        });
         _cache = new ConcurrentDictionary<(Type type, string id), string>();
         _jsonSettings = new JsonSerializerSettings
         {
@@ -36,7 +40,7 @@ public class CacheService: IDisposable
 
     private CancellationTokenSource _cts;
 
-    private static readonly Locker<(Type type, string id)> _locks;
+    private static readonly AsyncKeyedLocker<(Type type, string id)> _locks;
     private static readonly ConcurrentDictionary<(Type type, string id), string> _cache;
     private static readonly JsonSerializerSettings _jsonSettings;
 
@@ -50,21 +54,14 @@ public class CacheService: IDisposable
     public async Task<T> GetOrAddAsync<T>(string id, Func<Task<T>> getter)
     {
         var key = (typeof(T), id);
-        await _locks.WaitAsync(key, _cts.Token);
-        try
-        {
-            if (_cache.ContainsKey(key))
-                return JsonConvert.DeserializeObject<T>(_cache[key], _jsonSettings);
+        using var _ = await _locks.LockAsync(key, _cts.Token).ConfigureAwait(false);
+        if (_cache.ContainsKey(key))
+            return JsonConvert.DeserializeObject<T>(_cache[key], _jsonSettings);
 
-            var result = await getter();
-            _cache.TryAdd(key, JsonConvert.SerializeObject(result, _jsonSettings));
+        var result = await getter();
+        _cache.TryAdd(key, JsonConvert.SerializeObject(result, _jsonSettings));
 
-            return result;
-        }
-        finally
-        {
-            _locks.Release(key);
-        }
+        return result;
     }
 
     /// <summary>
