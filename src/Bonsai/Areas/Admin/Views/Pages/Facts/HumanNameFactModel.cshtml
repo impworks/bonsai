@@ -17,14 +17,14 @@
                         </div>
                         <div class="form-group col-sm-4">
                             <label>@Texts.Admin_Pages_Facts_FirstName</label>
-                            <input type="text" v-model="row.FirstName" class="form-control form-control-sm mr-2" placeholder="@Texts.Admin_Pages_Facts_FirstName" />
+                            <input type="text" v-model="row.FirstName" class="form-control form-control-sm mr-2" placeholder="@Html.Raw(Texts.Admin_Pages_Facts_FirstName)" />
                         </div>
                         <div class="form-group col-sm-4">
                             <button type="button" class="btn btn-sm btn-outline-danger btn-remove-fact" v-on:click="remove(row)" title="@Texts.Admin_Pages_Facts_Add">
                                 <i class="fa fa-remove"></i>
                             </button>
                             <label>@Texts.Admin_Pages_Facts_MiddleName</label>
-                            <input type="text" v-model="row.MiddleName" class="form-control form-control-sm mr-2" placeholder="@Texts.Admin_Pages_Facts_MiddleName" />
+                            <input type="text" v-model="row.MiddleName" class="form-control form-control-sm mr-2" placeholder="@Html.Raw(Texts.Admin_Pages_Facts_MiddleName)" />
                         </div>
                     </div>
                     <duration-picker v-model="row.Duration" size="sm" />
