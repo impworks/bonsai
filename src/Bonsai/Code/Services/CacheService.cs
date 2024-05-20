@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Bonsai.Code.Utils;
+using Impworks.Utils.Tasks;
 using Newtonsoft.Json;
 
 namespace Bonsai.Code.Services;
@@ -50,20 +50,15 @@ public class CacheService: IDisposable
     public async Task<T> GetOrAddAsync<T>(string id, Func<Task<T>> getter)
     {
         var key = (typeof(T), id);
-        await _locks.WaitAsync(key, _cts.Token);
-        try
+        using(await _locks.AcquireAsync(key, _cts.Token))
         {
-            if (_cache.ContainsKey(key))
-                return JsonConvert.DeserializeObject<T>(_cache[key], _jsonSettings);
+            if (_cache.TryGetValue(key, out var value))
+                return JsonConvert.DeserializeObject<T>(value, _jsonSettings);
 
             var result = await getter();
             _cache.TryAdd(key, JsonConvert.SerializeObject(result, _jsonSettings));
 
             return result;
-        }
-        finally
-        {
-            _locks.Release(key);
         }
     }
 
