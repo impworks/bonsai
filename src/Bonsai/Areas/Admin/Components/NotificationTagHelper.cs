@@ -7,15 +7,8 @@ namespace Bonsai.Areas.Admin.Components;
 /// Displays a notification if the user has not discarded it.
 /// </summary>
 [HtmlTargetElement("div", Attributes = "notification-id")]
-public class NotificationTagHelper: TagHelper
+public class NotificationTagHelper(NotificationsService notifications) : TagHelper
 {
-    public NotificationTagHelper(NotificationsService notifications)
-    {
-        _notifications = notifications;
-    }
-
-    private readonly NotificationsService _notifications;
-        
     /// <summary>
     /// ID of the notification.
     /// </summary>
@@ -24,7 +17,7 @@ public class NotificationTagHelper: TagHelper
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        if(!_notifications.IsShown(NotificationId))
+        if(!notifications.IsShown(NotificationId))
         { 
             output.SuppressOutput();
             return;

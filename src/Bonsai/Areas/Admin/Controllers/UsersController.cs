@@ -22,23 +22,9 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing users.
 /// </summary>
 [Route("admin/users")]
-public class UsersController : AdminControllerBase
+public class UsersController(UsersManagerService users, PagesManagerService pages, BonsaiConfigService config, ISearchEngine search, AppDbContext db)
+    : AdminControllerBase
 {
-    public UsersController(UsersManagerService users, PagesManagerService pages, BonsaiConfigService config, ISearchEngine search, AppDbContext db)
-    {
-        _users = users;
-        _pages = pages;
-        _config = config;
-        _search = search;
-        _db = db;
-    }
-
-    private readonly UsersManagerService _users;
-    private readonly PagesManagerService _pages;
-    private readonly BonsaiConfigService _config;
-    private readonly ISearchEngine _search;
-    private readonly AppDbContext _db;
-
     protected override Type ListStateType => typeof(UsersListRequestVM);
 
     /// <summary>
@@ -49,9 +35,9 @@ public class UsersController : AdminControllerBase
     public async Task<ActionResult> Index([FromQuery] UsersListRequestVM request)
     {
         PersistListState(request);
-        var users = await _users.GetUsersAsync(request);
-        ViewBag.AllowPasswordAuth = _config.GetStaticConfig().Auth.AllowPasswordAuth;
-        return View(users);
+        var users1 = await users.GetUsersAsync(request);
+        ViewBag.AllowPasswordAuth = config.GetStaticConfig().Auth.AllowPasswordAuth;
+        return View(users1);
     }
 
     /// <summary>
@@ -61,7 +47,7 @@ public class UsersController : AdminControllerBase
     [Route("remove")]
     public async Task<ActionResult> Remove(string id)
     {
-        var vm = await _users.RequestRemoveAsync(id, User);
+        var vm = await users.RequestRemoveAsync(id, User);
         return View(vm);
     }
 
@@ -72,7 +58,7 @@ public class UsersController : AdminControllerBase
     [Route("remove")]
     public async Task<ActionResult> Remove(string id, bool confirm)
     {
-        await _users.RemoveAsync(id, User);
+        await users.RemoveAsync(id, User);
         return RedirectToSuccess(Texts.Admin_Users_RemovedMessage);
     }
 
@@ -83,7 +69,7 @@ public class UsersController : AdminControllerBase
     [Route("update")]
     public async Task<ActionResult> Update(string id)
     {
-        var vm = await _users.RequestUpdateAsync(id);
+        var vm = await users.RequestUpdateAsync(id);
         return await ViewUpdateFormAsync(vm);
     }
 
@@ -99,18 +85,18 @@ public class UsersController : AdminControllerBase
 
         try
         {
-            if (vm.CreatePersonalPage && await _users.CanCreatePersonalPageAsync(vm))
+            if (vm.CreatePersonalPage && await users.CanCreatePersonalPageAsync(vm))
             {
-                var page = await _pages.CreateDefaultUserPageAsync(vm, User);
+                var page = await pages.CreateDefaultUserPageAsync(vm, User);
                 vm.PersonalPageId = page.Id;
                 vm.CreatePersonalPage = false;
 
-                await _search.AddPageAsync(page);
+                await search.AddPageAsync(page);
             }
 
-            await _users.UpdateAsync(vm, User);
+            await users.UpdateAsync(vm, User);
 
-            await _db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             return RedirectToSuccess(Texts.Admin_Users_UpdatedMessage);
         }
@@ -149,15 +135,15 @@ public class UsersController : AdminControllerBase
         {
             if (vm.CreatePersonalPage)
             {
-                var page = await _pages.CreateDefaultUserPageAsync(vm, User);
+                var page = await pages.CreateDefaultUserPageAsync(vm, User);
                 vm.PersonalPageId = page.Id;
                 vm.CreatePersonalPage = false;
                     
-                await _search.AddPageAsync(page);
+                await search.AddPageAsync(page);
             }
 
-            await _users.CreateAsync(vm);
-            await _db.SaveChangesAsync();
+            await users.CreateAsync(vm);
+            await db.SaveChangesAsync();
 
             return RedirectToSuccess(Texts.Admin_Users_CreatedMessage);
         }
@@ -191,7 +177,7 @@ public class UsersController : AdminControllerBase
 
         try
         {
-            await _users.ResetPasswordAsync(vm);
+            await users.ResetPasswordAsync(vm);
             return RedirectToSuccess(Texts.Admin_Users_PasswordResetMessage);
         }
         catch (ValidationException ex)
@@ -225,7 +211,7 @@ public class UsersController : AdminControllerBase
     /// </summary>
     private async Task<ActionResult> ViewResetPasswordFormAsync(string id)
     {
-        ViewBag.Data = await _users.GetAsync(id);
+        ViewBag.Data = await users.GetAsync(id);
         return View("ResetPassword", new UserPasswordEditorVM { Id = id });
     }
 
@@ -234,12 +220,12 @@ public class UsersController : AdminControllerBase
     /// </summary>
     private async Task<ActionResult> ViewUpdateFormAsync(UserEditorVM vm)
     {
-        var canCreate = await _users.CanCreatePersonalPageAsync(vm);
+        var canCreate = await users.CanCreatePersonalPageAsync(vm);
         var pageItems = await GetPageItemsAsync(vm.PersonalPageId);
 
         ViewBag.Data = new UserEditorDataVM
         {
-            IsSelf = _users.IsSelf(vm.Id, User),
+            IsSelf = users.IsSelf(vm.Id, User),
             UserRoleItems = ViewHelper.GetEnumSelectList(vm.Role),
             CanCreatePersonalPage = canCreate,
             PageItems = pageItems
@@ -255,7 +241,7 @@ public class UsersController : AdminControllerBase
     {
         if (pageId != null)
         {
-            var page = await _db.Pages
+            var page = await db.Pages
                                 .Where(x => x.Id == pageId)
                                 .Select(x => x.Title)
                                 .FirstOrDefaultAsync();
@@ -272,7 +258,7 @@ public class UsersController : AdminControllerBase
     /// </summary>
     private void CheckPasswordAuth()
     {
-        if (!_config.GetStaticConfig().Auth.AllowPasswordAuth)
+        if (!config.GetStaticConfig().Auth.AllowPasswordAuth)
             throw new OperationException(Texts.Admin_Users_PasswordAuthRestrictedMessage);
     }
 

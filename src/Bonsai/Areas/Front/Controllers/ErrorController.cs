@@ -10,15 +10,8 @@ namespace Bonsai.Areas.Front.Controllers;
 /// </summary>
 [Route("error")]
 [Area("Front")]
-public class ErrorController: AppControllerBase
+public class ErrorController(AuthService authSvc) : AppControllerBase
 {
-    public ErrorController(AuthService auth)
-    {
-        _auth = auth;
-    }
-
-    private readonly AuthService _auth;
-
     /// <summary>
     /// Displays the "not found"
     /// </summary>
@@ -26,7 +19,7 @@ public class ErrorController: AppControllerBase
     [HttpGet]
     public async Task<ActionResult> NotFoundError()
     {
-        ViewBag.User = await _auth.GetCurrentUserAsync(User);
+        ViewBag.User = await authSvc.GetCurrentUserAsync(User);
         return View("NotFound");
     }
 }

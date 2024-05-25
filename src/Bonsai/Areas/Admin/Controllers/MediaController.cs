@@ -26,21 +26,9 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing media files.
 /// </summary>
 [Route("admin/media")]
-public class MediaController: AdminControllerBase
+public class MediaController(MediaManagerService mediaSvc, PagesManagerService pagesSvc, IBackgroundJobService jobs, AppDbContext db)
+    : AdminControllerBase
 {
-    public MediaController(MediaManagerService media, PagesManagerService pages, IBackgroundJobService jobs, AppDbContext db)
-    {
-        _media = media;
-        _pages = pages;
-        _jobs = jobs;
-        _db = db;
-    }
-
-    private readonly MediaManagerService _media;
-    private readonly PagesManagerService _pages;
-    private readonly IBackgroundJobService _jobs;
-    private readonly AppDbContext _db;
-
     protected override Type ListStateType => typeof(MediaListRequestVM);
 
     /// <summary>
@@ -50,7 +38,7 @@ public class MediaController: AdminControllerBase
     public async Task<ActionResult> Index(MediaListRequestVM request)
     {
         PersistListState(request);
-        var vm = await _media.GetMediaAsync(request);
+        var vm = await mediaSvc.GetMediaAsync(request);
         return View(vm);
     }
 
@@ -74,13 +62,13 @@ public class MediaController: AdminControllerBase
     {
         try
         {
-            var result = await _media.UploadAsync(vm, file, User);
+            var result = await mediaSvc.UploadAsync(vm, file, User);
             result.ThumbnailPath = Url.Content(result.ThumbnailPath);
 
-            await _db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             if (!result.IsProcessed)
-                await _jobs.RunAsync(JobBuilder.For<MediaEncoderJob>().WithArgs(result.Id));
+                await jobs.RunAsync(JobBuilder.For<MediaEncoderJob>().WithArgs(result.Id));
 
             return Json(result);
         }
@@ -101,7 +89,7 @@ public class MediaController: AdminControllerBase
     [Route("thumbs")]
     public async Task<ActionResult> GetThumbnails(IEnumerable<Guid> ids)
     {
-        var vms = await _media.GetThumbnailsAsync(ids);
+        var vms = await mediaSvc.GetThumbnailsAsync(ids);
 
         foreach(var vm in vms)
             vm.ThumbnailPath = Url.Content(vm.ThumbnailPath);
@@ -116,7 +104,7 @@ public class MediaController: AdminControllerBase
     [Route("update")]
     public async Task<ActionResult> Update(Guid id, MediaEditorSaveAction? saveAction = null)
     {
-        var vm = await _media.RequestUpdateAsync(id);
+        var vm = await mediaSvc.RequestUpdateAsync(id);
 
         if (saveAction != null)
             vm.SaveAction = saveAction.Value;
@@ -136,14 +124,14 @@ public class MediaController: AdminControllerBase
 
         try
         {
-            await _media.UpdateAsync(vm, User);
-            await _db.SaveChangesAsync();
+            await mediaSvc.UpdateAsync(vm, User);
+            await db.SaveChangesAsync();
 
             ShowMessage(Texts.Admin_Media_UpdatedMessage);
 
             if (vm.SaveAction == MediaEditorSaveAction.SaveAndShowNext)
             {
-                var nextId = await _media.GetNextUntaggedMediaAsync();
+                var nextId = await mediaSvc.GetNextUntaggedMediaAsync();
                 if (nextId != null)
                     return RedirectToAction("Update", new {id = nextId.Value, saveAction = vm.SaveAction});
             }
@@ -164,7 +152,7 @@ public class MediaController: AdminControllerBase
     [Route("remove")]
     public async Task<ActionResult> Remove(Guid id)
     {
-        ViewBag.Info = await _media.RequestRemoveAsync(id, User);
+        ViewBag.Info = await mediaSvc.RequestRemoveAsync(id, User);
         return View(new RemoveEntryRequestVM { Id = id });
     }
 
@@ -176,11 +164,11 @@ public class MediaController: AdminControllerBase
     public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
     {
         if (vm.RemoveCompletely)
-            await _media.RemoveCompletelyAsync(vm.Id, User);
+            await mediaSvc.RemoveCompletelyAsync(vm.Id, User);
         else
-            await _media.RemoveAsync(vm.Id, User);
+            await mediaSvc.RemoveAsync(vm.Id, User);
             
-        await _db.SaveChangesAsync();
+        await db.SaveChangesAsync();
 
         return RedirectToSuccess(Texts.Admin_Media_RemovedMessage);
     }
@@ -197,7 +185,7 @@ public class MediaController: AdminControllerBase
                                   .Concat(new[] {vm.Location, vm.Event}.Select(x => x.TryParse<Guid?>()))
                                   .ToList();
 
-        var pageLookup = await _pages.FindPagesByIdsAsync(ids);
+        var pageLookup = await pagesSvc.FindPagesByIdsAsync(ids);
 
         foreach(var depicted in depictedEntities)
             if (depicted.PageId != null && pageLookup.TryGetValue(depicted.PageId.Value, out var depPage))

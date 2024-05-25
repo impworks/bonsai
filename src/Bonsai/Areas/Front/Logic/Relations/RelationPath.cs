@@ -35,5 +35,5 @@ public class RelationPath
     /// <summary>
     /// Required path segments.
     /// </summary>
-    public IReadOnlyList<RelationPathSegment> Segments;
+    public IReadOnlyList<RelationPathSegment> Segments { get; }
 }

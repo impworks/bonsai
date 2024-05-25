@@ -2,22 +2,7 @@
 
 /// <summary>
 /// Details of an external provider's authentication.
+/// <param name="LoginProvider">External provider: Facebook, Google, etc.</param>
+/// <param name="ProviderKey">User's personal key returned by the provider.</param>
 /// </summary>
-public class ExternalLoginData
-{
-    public ExternalLoginData(string loginProvider, string providerKey)
-    {
-        LoginProvider = loginProvider;
-        ProviderKey = providerKey;
-    }
-
-    /// <summary>
-    /// External provider: Facebook, Google, etc.
-    /// </summary>
-    public string LoginProvider { get; }
-
-    /// <summary>
-    /// User's personal key returned by the provider.
-    /// </summary>
-    public string ProviderKey { get; }
-}
+public record ExternalLoginData(string LoginProvider, string ProviderKey);

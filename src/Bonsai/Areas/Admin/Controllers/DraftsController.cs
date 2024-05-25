@@ -14,19 +14,9 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for handling drafts.
 /// </summary>
 [Route("admin/drafts")]
-public class DraftsController : AdminControllerBase
+public class DraftsController(PagesManagerService pagesSvc, PagePresenterService pagePresenter, AppDbContext db)
+    : AdminControllerBase
 {
-    public DraftsController(PagesManagerService pages, PagePresenterService pagePresenter, AppDbContext db)
-    {
-        _pages = pages;
-        _pagePresenter = pagePresenter;
-        _db = db;
-    }
-
-    private readonly PagesManagerService _pages;
-    private readonly PagePresenterService _pagePresenter;
-    private readonly AppDbContext _db;
-
     /// <summary>
     /// Discards the draft of a page.
     /// </summary>
@@ -34,8 +24,8 @@ public class DraftsController : AdminControllerBase
     [Route("update")]
     public async Task<ActionResult> Update(PageEditorVM vm)
     {
-        var info = await _pages.UpdatePageDraftAsync(vm, User);
-        await _db.SaveChangesAsync();
+        var info = await pagesSvc.UpdatePageDraftAsync(vm, User);
+        await db.SaveChangesAsync();
 
         return Json(info);
     }
@@ -47,8 +37,8 @@ public class DraftsController : AdminControllerBase
     [Route("remove")]
     public async Task<ActionResult> Remove(Guid? id, PageType? type)
     {
-        await _pages.DiscardPageDraftAsync(id, User);
-        await _db.SaveChangesAsync();
+        await pagesSvc.DiscardPageDraftAsync(id, User);
+        await db.SaveChangesAsync();
 
         if (id != null && id != Guid.Empty)
             return RedirectToAction("Update", "Pages", new { id = id });
@@ -62,14 +52,14 @@ public class DraftsController : AdminControllerBase
     [Route("preview")]
     public async Task<ActionResult> Preview(Guid? id)
     {
-        var page = await _pages.GetPageDraftPreviewAsync(id, User);
+        var page = await pagesSvc.GetPageDraftPreviewAsync(id, User);
         if (page == null)
             return NotFound();
 
         var vm = new PageVM<PageDescriptionVM>
         {
-            Body = await _pagePresenter.GetPageDescriptionAsync(page),
-            InfoBlock = await _pagePresenter.GetPageInfoBlockAsync(page)
+            Body = await pagePresenter.GetPageDescriptionAsync(page),
+            InfoBlock = await pagePresenter.GetPageInfoBlockAsync(page)
         };
         ViewBag.IsPreview = true;
         ViewBag.DisableSearch = true;

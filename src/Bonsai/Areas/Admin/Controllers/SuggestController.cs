@@ -11,15 +11,8 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for ajax lookups.
 /// </summary>
 [Route("admin")]
-public class SuggestController: AdminControllerBase
+public class SuggestController(SuggestService suggestSvc) : AdminControllerBase
 {
-    public SuggestController(SuggestService suggest)
-    {
-        _suggest = suggest;
-    }
-
-    private readonly SuggestService _suggest;
-
     /// <summary>
     /// Suggests pages for relation destination / media tag.
     /// </summary>
@@ -27,7 +20,7 @@ public class SuggestController: AdminControllerBase
     [Route("suggest/pages")]
     public async Task<ActionResult> SuggestPages([FromQuery] PickRequestVM<PageType> vm)
     {
-        var pages = await _suggest.SuggestPagesAsync(vm);
+        var pages = await suggestSvc.SuggestPagesAsync(vm);
         return Json(pages);
     }
 
@@ -38,7 +31,7 @@ public class SuggestController: AdminControllerBase
     [Route("suggest/pages/rel")]
     public async Task<ActionResult> SuggestPagesForRelationSource([FromQuery] RelationSuggestQueryVM vm)
     {
-        var pages = await _suggest.SuggestRelationPagesAsync(vm);
+        var pages = await suggestSvc.SuggestRelationPagesAsync(vm);
         return Json(pages);
     }
 
@@ -49,7 +42,7 @@ public class SuggestController: AdminControllerBase
     [Route("pick/pages")]
     public async Task<ActionResult> PickPages([FromQuery] PickRequestVM<PageType> vm)
     {
-        var media = await _suggest.GetPickablePagesAsync(vm);
+        var media = await suggestSvc.GetPickablePagesAsync(vm);
         return Json(media);
     }
 
@@ -60,7 +53,7 @@ public class SuggestController: AdminControllerBase
     [Route("pick/media")]
     public async Task<ActionResult> PickMedia([FromQuery] PickRequestVM<MediaType> vm)
     {
-        var media = await _suggest.GetPickableMediaAsync(vm);
+        var media = await suggestSvc.GetPickableMediaAsync(vm);
         return Json(media);
     }
 }

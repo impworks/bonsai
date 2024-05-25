@@ -23,21 +23,9 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing relations.
 /// </summary>
 [Route("admin/relations")]
-public class RelationsController: AdminControllerBase
+public class RelationsController(RelationsManagerService relsSvc, PagesManagerService pagesSvc, AppDbContext db, IBackgroundJobService jobs)
+    : AdminControllerBase
 {
-    public RelationsController(RelationsManagerService rels, PagesManagerService pages, AppDbContext db, IBackgroundJobService jobs)
-    {
-        _rels = rels;
-        _pages = pages;
-        _db = db;
-        _jobs = jobs;
-    }
-
-    private readonly RelationsManagerService _rels;
-    private readonly PagesManagerService _pages;
-    private readonly AppDbContext _db;
-    private readonly IBackgroundJobService _jobs;
-
     protected override Type ListStateType => typeof(RelationsListRequestVM);
 
     /// <summary>
@@ -49,7 +37,7 @@ public class RelationsController: AdminControllerBase
     {
         PersistListState(request);
         ViewBag.Data = await GetDataAsync(request);
-        var rels = await _rels.GetRelationsAsync(request);
+        var rels = await relsSvc.GetRelationsAsync(request);
         return View(rels);
     }
 
@@ -75,9 +63,9 @@ public class RelationsController: AdminControllerBase
 
         try
         {
-            await _rels.CreateAsync(vm, User);
-            await _db.SaveChangesAsync();
-            await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+            await relsSvc.CreateAsync(vm, User);
+            await db.SaveChangesAsync();
+            await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess(Texts.Admin_Relations_CreatedMessage);
         }
@@ -95,7 +83,7 @@ public class RelationsController: AdminControllerBase
     [Route("update")]
     public async Task<ActionResult> Update(Guid id)
     {
-        var vm = await _rels.RequestUpdateAsync(id);
+        var vm = await relsSvc.RequestUpdateAsync(id);
         return await ViewEditorFormAsync(vm);
     }
 
@@ -111,9 +99,9 @@ public class RelationsController: AdminControllerBase
 
         try
         {
-            await _rels.UpdateAsync(vm, User);
-            await _db.SaveChangesAsync();
-            await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+            await relsSvc.UpdateAsync(vm, User);
+            await db.SaveChangesAsync();
+            await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
             return RedirectToSuccess(Texts.Admin_Relations_UpdatedMessage);
         }
@@ -131,7 +119,7 @@ public class RelationsController: AdminControllerBase
     [Route("remove")]
     public async Task<ActionResult> Remove(Guid id)
     {
-        ViewBag.Info = await _rels.RequestRemoveAsync(id, User);
+        ViewBag.Info = await relsSvc.RequestRemoveAsync(id, User);
         return View(new RemoveEntryRequestVM { Id = id });
     }
 
@@ -143,12 +131,12 @@ public class RelationsController: AdminControllerBase
     public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
     {
         if (vm.RemoveCompletely)
-            await _rels.RemoveCompletelyAsync(vm.Id, User);
+            await relsSvc.RemoveCompletelyAsync(vm.Id, User);
         else
-            await _rels.RemoveAsync(vm.Id, User);
+            await relsSvc.RemoveAsync(vm.Id, User);
             
-        await _db.SaveChangesAsync();
-        await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+        await db.SaveChangesAsync();
+        await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
         return RedirectToSuccess(Texts.Admin_Relations_RemovedMessage);
     }
@@ -160,7 +148,7 @@ public class RelationsController: AdminControllerBase
     [Route("editorProps")]
     public async Task<ActionResult> EditorProperties(RelationType relType)
     {
-        return Json(_rels.GetPropertiesForRelationType(relType));
+        return Json(relsSvc.GetPropertiesForRelationType(relType));
     }
 
     #region Helpers
@@ -174,7 +162,7 @@ public class RelationsController: AdminControllerBase
             vm.SourceIds = Array.Empty<Guid>();
 
         var pageIds = new[] {vm.DestinationId, vm.EventId}.Concat(vm.SourceIds.Cast<Guid?>()).ToList();
-        var pageLookup = await _pages.FindPagesByIdsAsync(pageIds);
+        var pageLookup = await pagesSvc.FindPagesByIdsAsync(pageIds);
 
         ViewBag.Data = new RelationEditorDataVM
         {
@@ -183,7 +171,7 @@ public class RelationsController: AdminControllerBase
             DestinationItem = GetPageLookup(vm.DestinationId ?? Guid.Empty),
             EventItem = GetPageLookup(vm.EventId ?? Guid.Empty),
 
-            Properties = _rels.GetPropertiesForRelationType(vm.Type),
+            Properties = relsSvc.GetPropertiesForRelationType(vm.Type),
             RelationTypes = EnumHelper.GetEnumValues<RelationType>()
                                       .Select(x => new SelectListItem
                                       {
@@ -216,7 +204,7 @@ public class RelationsController: AdminControllerBase
 
         if (request.EntityId != null)
         {
-            var title = await _db.Pages
+            var title = await db.Pages
                                  .Where(x => x.Id == request.EntityId)
                                  .Select(x => x.Title)
                                  .FirstOrDefaultAsync();

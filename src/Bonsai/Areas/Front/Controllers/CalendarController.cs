@@ -13,22 +13,15 @@ namespace Bonsai.Areas.Front.Controllers;
 [Area("front")]
 [Route("util/cal")]
 [Authorize(Policy = AuthRequirement.Name)]
-public class CalendarController: AppControllerBase
+public class CalendarController(CalendarPresenterService calendarSvc) : AppControllerBase
 {
-    public CalendarController(CalendarPresenterService calendar)
-    {
-        _calendar = calendar;
-    }
-
-    private readonly CalendarPresenterService _calendar;
-
     /// <summary>
     /// Displays the calendar grid.
     /// </summary>
     [Route("grid")]
     public async Task<ActionResult> MonthGrid([FromQuery] int year, [FromQuery] int month)
     {
-        var vm = await _calendar.GetMonthEventsAsync(year, month);
+        var vm = await calendarSvc.GetMonthEventsAsync(year, month);
         return View(vm);
     }
 
@@ -38,7 +31,7 @@ public class CalendarController: AppControllerBase
     [Route("list")]
     public async Task<ActionResult> DayList([FromQuery] int year, [FromQuery] int month, [FromQuery] int? day = null)
     {
-        var vm = await _calendar.GetDayEventsAsync(year, month, day);
+        var vm = await calendarSvc.GetDayEventsAsync(year, month, day);
         return View(vm);
     }
 }

@@ -19,26 +19,16 @@ namespace Bonsai.Areas.Front.Controllers;
 [Area("Front")]
 [Route("p")]
 [Authorize(Policy = AuthRequirement.Name)]
-public class PageController: AppControllerBase
+public class PageController(PagePresenterService pagesSvc, AuthService authSvc, CacheService cacheSvc)
+    : AppControllerBase
 {
-    public PageController(PagePresenterService pages, AuthService auth, CacheService cache)
-    {
-        _pages = pages;
-        _auth = auth;
-        _cache = cache;
-    }
-
-    private readonly PagePresenterService _pages;
-    private readonly AuthService _auth;
-    private readonly CacheService _cache;
-
     /// <summary>
     /// Displays the page description.
     /// </summary>
     [Route("{key}")]
     public async Task<ActionResult> Description(string key)
     {
-        return await DisplayTab(key, () => _pages.GetPageDescriptionAsync(key));
+        return await DisplayTab(key, () => pagesSvc.GetPageDescriptionAsync(key));
     }
 
     /// <summary>
@@ -47,7 +37,7 @@ public class PageController: AppControllerBase
     [Route("{key}/media")]
     public async Task<ActionResult> Media(string key)
     {
-        return await DisplayTab(key, () => _pages.GetPageMediaAsync(key));
+        return await DisplayTab(key, () => pagesSvc.GetPageMediaAsync(key));
     }
 
     /// <summary>
@@ -56,7 +46,7 @@ public class PageController: AppControllerBase
     [Route("{key}/tree")]
     public async Task<ActionResult> Tree(string key)
     {
-        return await DisplayTab(key, () => _pages.GetPageTreeAsync(key));
+        return await DisplayTab(key, () => pagesSvc.GetPageTreeAsync(key));
     }
         
     /// <summary>
@@ -65,7 +55,7 @@ public class PageController: AppControllerBase
     [Route("{key}/refs")]
     public async Task<ActionResult> References(string key)
     {
-        return await DisplayTab(key, () => _pages.GetPageReferencesAsync(key));
+        return await DisplayTab(key, () => pagesSvc.GetPageReferencesAsync(key));
     }
 
     /// <summary>
@@ -80,11 +70,11 @@ public class PageController: AppControllerBase
 
         try
         {
-            ViewBag.User = await _auth.GetCurrentUserAsync(User);
+            ViewBag.User = await authSvc.GetCurrentUserAsync(User);
             var vm = new PageVM<T>
             {
-                Body = await _cache.GetOrAddAsync(key, bodyGetter),
-                InfoBlock = await _cache.GetOrAddAsync(key, async () => await _pages.GetPageInfoBlockAsync(key))
+                Body = await cacheSvc.GetOrAddAsync(key, bodyGetter),
+                InfoBlock = await cacheSvc.GetOrAddAsync(key, async () => await pagesSvc.GetPageInfoBlockAsync(key))
             };
             return View(vm);
         }

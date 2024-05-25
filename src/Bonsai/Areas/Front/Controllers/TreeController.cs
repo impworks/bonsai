@@ -16,19 +16,9 @@ namespace Bonsai.Areas.Front.Controllers;
 [Area("Front")]
 [Route("tree")]
 [Authorize(Policy = AuthRequirement.Name)]
-public class TreeController : AppControllerBase
+public class TreeController(PagePresenterService pagesSvc, TreePresenterService treeSvc, CacheService cacheSvc)
+    : AppControllerBase
 {
-    public TreeController(PagePresenterService pages, TreePresenterService tree, CacheService cache)
-    {
-        _pages = pages;
-        _tree = tree;
-        _cache = cache;
-    }
-        
-    private readonly PagePresenterService _pages;
-    private readonly TreePresenterService _tree;
-    private readonly CacheService _cache;
-
     /// <summary>
     /// Displays the internal page for a tree.
     /// </summary>
@@ -39,7 +29,7 @@ public class TreeController : AppControllerBase
         if (encKey != key)
             return RedirectToActionPermanent("Main", new { key = encKey });
 
-        var model = await _cache.GetOrAddAsync(key + "." + kind, () => _pages.GetPageTreeAsync(key, kind));
+        var model = await cacheSvc.GetOrAddAsync(key + "." + kind, () => pagesSvc.GetPageTreeAsync(key, kind));
 
         return View(model);
     }
@@ -51,7 +41,7 @@ public class TreeController : AppControllerBase
     public async Task<ActionResult> GetTreeData(string key, [FromQuery] TreeKind kind = TreeKind.FullTree)
     {
         var encKey = PageHelper.EncodeTitle(key);
-        var data = await _tree.GetTreeAsync(encKey, kind);
+        var data = await treeSvc.GetTreeAsync(encKey, kind);
         return Json(data);
     }
 }

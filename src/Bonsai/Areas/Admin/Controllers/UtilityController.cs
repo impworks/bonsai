@@ -8,22 +8,15 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for various utility methods.
 /// </summary>
 [Route("admin/util")]
-public class UtilityController: AdminControllerBase
+public class UtilityController(NotificationsService notificationsSvc) : AdminControllerBase
 {
-    public UtilityController(NotificationsService notifications)
-    {
-        _notifications = notifications;
-    }
-
-    private readonly NotificationsService _notifications;
-
     /// <summary>
     /// Hides the notification.
     /// </summary>
     [Route("hideNotification")]
     public async Task<ActionResult> HideNotification(string id)
     {
-        _notifications.Hide(id);
+        notificationsSvc.Hide(id);
         return Ok();
     }
 }

@@ -14,24 +14,15 @@ namespace Bonsai.Areas.Admin.Components;
 /// <summary>
 /// Component for displaying the side menu of the admin panel.
 /// </summary>
-public class AdminMenuComponent: ViewComponent
+public class AdminMenuComponent(UserManager<AppUser> userMgr, AppDbContext db) : ViewComponent
 {
-    public AdminMenuComponent(UserManager<AppUser> userMgr, AppDbContext db)
-    {
-        _userMgr = userMgr;
-        _db = db;
-    }
-
-    private readonly UserManager<AppUser> _userMgr;
-    private readonly AppDbContext _db;
-
     /// <summary>
     /// Displays the menu.
     /// </summary>
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var user = await _userMgr.GetUserAsync(HttpContext.User);
-        var roles = await _userMgr.GetRolesAsync(user);
+        var user = await userMgr.GetUserAsync(HttpContext.User);
+        var roles = await userMgr.GetRolesAsync(user);
 
         var groups = new List<MenuGroupVM>();
         groups.Add(
@@ -51,7 +42,7 @@ public class AdminMenuComponent: ViewComponent
 
         if (roles.Contains(nameof(UserRole.Admin)))
         {
-            var newUsers = await _db.Users.CountAsync(x => !x.IsValidated);
+            var newUsers = await db.Users.CountAsync(x => !x.IsValidated);
             groups.Add(
                 new MenuGroupVM(
                     new MenuItemVM { Title = Texts.Admin_Menu_Users, Icon = "user-circle-o", Url = Url.Action("Index", "Users", new { area = "Admin" }), NotificationsCount = newUsers },

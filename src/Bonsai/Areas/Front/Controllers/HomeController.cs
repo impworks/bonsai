@@ -14,17 +14,8 @@ namespace Bonsai.Areas.Front.Controllers;
 [Route("")]
 [Area("Front")]
 [Authorize(Policy = AuthRequirement.Name)]
-public class HomeController : AppControllerBase
+public class HomeController(PagePresenterService pagesSvc, MediaPresenterService mediaSvc) : AppControllerBase
 {
-    public HomeController(PagePresenterService pages, MediaPresenterService media)
-    {
-        _pages = pages;
-        _media = media;
-    }
-
-    private readonly PagePresenterService _pages;
-    private readonly MediaPresenterService _media;
-
     /// <summary>
     /// Returns the main page.
     /// </summary>
@@ -33,8 +24,8 @@ public class HomeController : AppControllerBase
     {
         var vm = new HomeVM
         {
-            LastUpdatedPages = await _pages.GetLastUpdatedPagesAsync(5),
-            LastUploadedMedia = await _media.GetLastUploadedMediaAsync(10)
+            LastUpdatedPages = await pagesSvc.GetLastUpdatedPagesAsync(5),
+            LastUploadedMedia = await mediaSvc.GetLastUploadedMediaAsync(10)
         };
 
         return View(vm);

@@ -13,17 +13,8 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing changesets.
 /// </summary>
 [Route("admin/changes")]
-public class ChangesetsController: AdminControllerBase
+public class ChangesetsController(ChangesetsManagerService changes, AppDbContext db) : AdminControllerBase
 {
-    public ChangesetsController(ChangesetsManagerService changes, AppDbContext db)
-    {
-        _changes = changes;
-        _db = db;
-    }
-
-    private readonly ChangesetsManagerService _changes;
-    private readonly AppDbContext _db;
-
     protected override Type ListStateType => typeof(ChangesetsListRequestVM);
 
     #region Public methods
@@ -35,7 +26,7 @@ public class ChangesetsController: AdminControllerBase
     public async Task<ActionResult> Index(ChangesetsListRequestVM request)
     {
         PersistListState(request);
-        var vm = await _changes.GetChangesetsAsync(request);
+        var vm = await changes.GetChangesetsAsync(request);
         return View(vm);
     }
 
@@ -46,7 +37,7 @@ public class ChangesetsController: AdminControllerBase
     [Route("details")]
     public async Task<ActionResult> Details(Guid id)
     {
-        var vm = await _changes.GetChangesetDetailsAsync(id);
+        var vm = await changes.GetChangesetDetailsAsync(id);
         return View(vm);
     }
 
@@ -57,7 +48,7 @@ public class ChangesetsController: AdminControllerBase
     [Route("revert")]
     public async Task<ActionResult> Revert(Guid id)
     {
-        var vm = await _changes.GetChangesetDetailsAsync(id);
+        var vm = await changes.GetChangesetDetailsAsync(id);
         if (!vm.CanRevert)
             throw new OperationException(Texts.Admin_Changesets_CannotRevertMessage);
 
@@ -71,12 +62,12 @@ public class ChangesetsController: AdminControllerBase
     [Route("revert")]
     public async Task<ActionResult> Revert(Guid id, bool confirm)
     {
-        var editVm = await _changes.GetChangesetDetailsAsync(id);
+        var editVm = await changes.GetChangesetDetailsAsync(id);
         if (!editVm.CanRevert)
             throw new OperationException(Texts.Admin_Changesets_CannotRevertMessage);
 
-        await _changes.RevertChangeAsync(id, User);
-        await _db.SaveChangesAsync();
+        await changes.RevertChangeAsync(id, User);
+        await db.SaveChangesAsync();
 
         return RedirectToSuccess(Texts.Admin_Changesets_RevertedMessage);
     }

@@ -17,15 +17,8 @@ namespace Bonsai.Areas.Front.Controllers;
 [Area("front")]
 [Route("s")]
 [Authorize(Policy = AuthRequirement.Name)]
-public class SearchController: AppControllerBase
+public class SearchController(SearchPresenterService searchSvc) : AppControllerBase
 {
-    public SearchController(SearchPresenterService search)
-    {
-        _search = search;
-    }
-
-    private readonly SearchPresenterService _search;
-
     /// <summary>
     /// Returns the global search's autocomplete results.
     /// </summary>
@@ -33,7 +26,7 @@ public class SearchController: AppControllerBase
     [Route("~/util/suggest/{*query}")]
     public async Task<IReadOnlyList<PageTitleVM>> Suggest(string query)
     {
-        var hints = await _search.SuggestAsync(query);
+        var hints = await searchSvc.SuggestAsync(query);
         return hints;
     }
 
@@ -44,11 +37,11 @@ public class SearchController: AppControllerBase
     [Route("")]
     public async Task<ActionResult> Search([FromQuery] string query)
     {
-        var exact = await _search.FindExactAsync(query);
+        var exact = await searchSvc.FindExactAsync(query);
         if (exact != null)
             return RedirectToAction("Description", "Page", new { key = exact.Key });
 
-        var results = await _search.SearchAsync(query);
+        var results = await searchSvc.SearchAsync(query);
         var vm = new SearchVM {Query = query, Results = results};
         return View(vm);
     }
@@ -60,7 +53,7 @@ public class SearchController: AppControllerBase
     [Route("results")]
     public async Task<ActionResult> SearchResults([FromQuery] string query, [FromQuery] int page = 0)
     {
-        var results = await _search.SearchAsync(query, Math.Max(0, page));
+        var results = await searchSvc.SearchAsync(query, Math.Max(0, page));
 
         if(results.Count > 0)
             return View(results);

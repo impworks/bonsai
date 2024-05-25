@@ -23,35 +23,16 @@ namespace Bonsai.Areas.Front.Controllers;
 /// </summary>
 [Area("Front")]
 [Route("auth")]
-public class AuthController: AppControllerBase
+public class AuthController(
+    AuthService authSvc,
+    AuthProviderService authProvSvc,
+    PagesManagerService pagesSvc,
+    ISearchEngine search,
+    BonsaiConfigService configSvc,
+    IBackgroundJobService jobs,
+    AppDbContext db)
+    : AppControllerBase
 {
-    public AuthController(
-        AuthService auth,
-        AuthProviderService provs,
-        PagesManagerService pages,
-        ISearchEngine search,
-        BonsaiConfigService cfgProvider,
-        IBackgroundJobService jobs,
-        AppDbContext db
-    )
-    {
-        _auth = auth;
-        _provs = provs;
-        _pages = pages;
-        _search = search;
-        _cfgProvider = cfgProvider;
-        _jobs = jobs;
-        _db = db;
-    }
-
-    private readonly AuthService _auth;
-    private readonly AuthProviderService _provs;
-    private readonly PagesManagerService _pages;
-    private readonly ISearchEngine _search;
-    private readonly BonsaiConfigService _cfgProvider;
-    private readonly IBackgroundJobService _jobs;
-    private readonly AppDbContext _db;
-
     /// <summary>
     /// Displays the authorization page.
     /// </summary>
@@ -59,10 +40,10 @@ public class AuthController: AppControllerBase
     [Route("login")]
     public async Task<ActionResult> Login(string returnUrl = null)
     {
-        if (await _auth.IsFirstUserAsync())
+        if (await authSvc.IsFirstUserAsync())
             return RedirectToAction("Register");
             
-        var user = await _auth.GetCurrentUserAsync(User);
+        var user = await authSvc.GetCurrentUserAsync(User);
         var status = user?.IsValidated switch
         {
             true => LoginStatus.Succeeded,
@@ -100,7 +81,7 @@ public class AuthController: AppControllerBase
     [Route("login")]
     public async Task<ActionResult> Login(LocalLoginVM vm)
     {
-        var result = await _auth.LocalLoginAsync(vm);
+        var result = await authSvc.LocalLoginAsync(vm);
 
         if (result.Status == LoginStatus.Succeeded)
             return RedirectLocal(vm.ReturnUrl);
@@ -115,7 +96,7 @@ public class AuthController: AppControllerBase
     [Route("logout")]
     public async Task<ActionResult> Logout()
     {
-        await _auth.LogoutAsync();
+        await authSvc.LogoutAsync();
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         return RedirectToAction("Index", "Home", new { area = "Front" });
     }
@@ -126,7 +107,7 @@ public class AuthController: AppControllerBase
     [Route("loginCallback")]
     public async Task<ActionResult> LoginCallback(string returnUrl)
     {
-        var result = await _auth.ExternalLoginAsync();
+        var result = await authSvc.ExternalLoginAsync();
 
         if (result.Status == LoginStatus.Succeeded)
             return RedirectLocal(returnUrl);
@@ -135,7 +116,7 @@ public class AuthController: AppControllerBase
         {
             Session.Set(new RegistrationInfo
             {
-                FormData = _auth.GetRegistrationData(result.Principal),
+                FormData = authSvc.GetRegistrationData(result.Principal),
                 Login = result.ExternalLogin
             });
             return RedirectToAction("Register");
@@ -153,7 +134,7 @@ public class AuthController: AppControllerBase
     [Route("register")]
     public async Task<ActionResult> Register()
     {
-        var user = await _auth.GetCurrentUserAsync(User);
+        var user = await authSvc.GetCurrentUserAsync(User);
         if (user != null)
         {
             return user.IsValidated
@@ -187,18 +168,18 @@ public class AuthController: AppControllerBase
 
         try
         {
-            var result = await _auth.RegisterAsync(vm, info?.Login);
+            var result = await authSvc.RegisterAsync(vm, info?.Login);
             if (!result.IsValidated)
                 return RedirectToAction("RegisterSuccess", "Auth");
 
             if (vm.CreatePersonalPage)
             {
-                _db.Entry(result.User).State = EntityState.Unchanged;
-                result.User.Page = await _pages.CreateDefaultUserPageAsync(vm, result.Principal);
-                await _db.SaveChangesAsync();
+                db.Entry(result.User).State = EntityState.Unchanged;
+                result.User.Page = await pagesSvc.CreateDefaultUserPageAsync(vm, result.Principal);
+                await db.SaveChangesAsync();
 
-                await _search.AddPageAsync(result.User.Page);
-                await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+                await search.AddPageAsync(result.User.Page);
+                await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
             }
 
             return RedirectToAction("Index", "Home");
@@ -262,7 +243,7 @@ public class AuthController: AppControllerBase
     {
         ViewBag.Data = new RegisterUserDataVM
         {
-            IsFirstUser = await _auth.IsFirstUserAsync(),
+            IsFirstUser = await authSvc.IsFirstUserAsync(),
             UsePasswordAuth = usesPasswordAuth
         };
 
@@ -274,15 +255,15 @@ public class AuthController: AppControllerBase
     /// </summary>
     private async Task<ActionResult> ViewLoginFormAsync(LoginStatus? status, string returnUrl = null)
     {
-        var dynCfg = _cfgProvider.GetDynamicConfig();
+        var dynCfg = configSvc.GetDynamicConfig();
         ViewBag.Data = new LoginDataVM
         {
             ReturnUrl = returnUrl,
             AllowGuests = dynCfg.AllowGuests,
             AllowRegistration = dynCfg.AllowRegistration,
-            AllowPasswordAuth = _cfgProvider.GetStaticConfig().Auth.AllowPasswordAuth,
-            Providers = _provs.AvailableProviders,
-            IsFirstUser = await _auth.IsFirstUserAsync(),
+            AllowPasswordAuth = configSvc.GetStaticConfig().Auth.AllowPasswordAuth,
+            Providers = authProvSvc.AvailableProviders,
+            IsFirstUser = await authSvc.IsFirstUserAsync(),
             Status = status
         };
         return View("Login", new LocalLoginVM());
@@ -293,10 +274,10 @@ public class AuthController: AppControllerBase
     /// </summary>
     private async Task<bool> CanRegisterAsync()
     {
-        if (_cfgProvider.GetDynamicConfig().AllowRegistration)
+        if (configSvc.GetDynamicConfig().AllowRegistration)
             return true;
 
-        if (await _auth.IsFirstUserAsync())
+        if (await authSvc.IsFirstUserAsync())
             return true;
 
         return false;

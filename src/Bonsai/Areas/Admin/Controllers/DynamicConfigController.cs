@@ -17,23 +17,9 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing the global configuration.
 /// </summary>
 [Route("admin/config")]
-public class DynamicConfigController: AdminControllerBase
+public class DynamicConfigController(DynamicConfigManagerService configMgr, BonsaiConfigService configSvc, IBackgroundJobService jobsScv, AppDbContext db, CacheService cache)
+    : AdminControllerBase
 {
-    public DynamicConfigController(DynamicConfigManagerService configMgr, BonsaiConfigService config, IBackgroundJobService jobs, AppDbContext db, CacheService cache)
-    {
-        _configMgr = configMgr;
-        _config = config;
-        _jobs = jobs;
-        _db = db;
-        _cache = cache;
-    }
-
-    private readonly DynamicConfigManagerService _configMgr;
-    private readonly BonsaiConfigService _config;
-    private readonly IBackgroundJobService _jobs;
-    private readonly AppDbContext _db;
-    private readonly CacheService _cache;
-
     /// <summary>
     /// Displays the form and edits the config.
     /// </summary>
@@ -41,7 +27,7 @@ public class DynamicConfigController: AdminControllerBase
     [Route("")]
     public async Task<ActionResult> Index()
     {
-        var vm = await _configMgr.RequestUpdateAsync();
+        var vm = await configMgr.RequestUpdateAsync();
         return View(vm);
     }
 
@@ -52,16 +38,16 @@ public class DynamicConfigController: AdminControllerBase
     [Route("")]
     public async Task<ActionResult> Update(UpdateDynamicConfigVM vm)
     {
-        var oldValue = await _configMgr.RequestUpdateAsync();
-        await _configMgr.UpdateAsync(vm);
-        await _db.SaveChangesAsync();
+        var oldValue = await configMgr.RequestUpdateAsync();
+        await configMgr.UpdateAsync(vm);
+        await db.SaveChangesAsync();
 
-        _config.ResetCache();
+        configSvc.ResetCache();
 
         if (IsTreeConfigChanged())
         {
-            _cache.Remove<PageTreeVM>();
-            await _jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
+            cache.Remove<PageTreeVM>();
+            await jobsScv.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
         }
 
         return RedirectToSuccess(Texts.Admin_Config_SavedMessage);
