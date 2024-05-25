@@ -22,7 +22,7 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing users.
 /// </summary>
 [Route("admin/users")]
-public class UsersController(UsersManagerService users, PagesManagerService pages, BonsaiConfigService config, ISearchEngine search, AppDbContext db)
+public class UsersController(UsersManagerService usersSvc, PagesManagerService pagesSvc, BonsaiConfigService configSvc, ISearchEngine search, AppDbContext db)
     : AdminControllerBase
 {
     protected override Type ListStateType => typeof(UsersListRequestVM);
@@ -35,9 +35,9 @@ public class UsersController(UsersManagerService users, PagesManagerService page
     public async Task<ActionResult> Index([FromQuery] UsersListRequestVM request)
     {
         PersistListState(request);
-        var users1 = await users.GetUsersAsync(request);
-        ViewBag.AllowPasswordAuth = config.GetStaticConfig().Auth.AllowPasswordAuth;
-        return View(users1);
+        var users = await usersSvc.GetUsersAsync(request);
+        ViewBag.AllowPasswordAuth = configSvc.GetStaticConfig().Auth.AllowPasswordAuth;
+        return View(users);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class UsersController(UsersManagerService users, PagesManagerService page
     [Route("remove")]
     public async Task<ActionResult> Remove(string id)
     {
-        var vm = await users.RequestRemoveAsync(id, User);
+        var vm = await usersSvc.RequestRemoveAsync(id, User);
         return View(vm);
     }
 
@@ -58,7 +58,7 @@ public class UsersController(UsersManagerService users, PagesManagerService page
     [Route("remove")]
     public async Task<ActionResult> Remove(string id, bool confirm)
     {
-        await users.RemoveAsync(id, User);
+        await usersSvc.RemoveAsync(id, User);
         return RedirectToSuccess(Texts.Admin_Users_RemovedMessage);
     }
 
@@ -69,7 +69,7 @@ public class UsersController(UsersManagerService users, PagesManagerService page
     [Route("update")]
     public async Task<ActionResult> Update(string id)
     {
-        var vm = await users.RequestUpdateAsync(id);
+        var vm = await usersSvc.RequestUpdateAsync(id);
         return await ViewUpdateFormAsync(vm);
     }
 
@@ -85,16 +85,16 @@ public class UsersController(UsersManagerService users, PagesManagerService page
 
         try
         {
-            if (vm.CreatePersonalPage && await users.CanCreatePersonalPageAsync(vm))
+            if (vm.CreatePersonalPage && await usersSvc.CanCreatePersonalPageAsync(vm))
             {
-                var page = await pages.CreateDefaultUserPageAsync(vm, User);
+                var page = await pagesSvc.CreateDefaultUserPageAsync(vm, User);
                 vm.PersonalPageId = page.Id;
                 vm.CreatePersonalPage = false;
 
                 await search.AddPageAsync(page);
             }
 
-            await users.UpdateAsync(vm, User);
+            await usersSvc.UpdateAsync(vm, User);
 
             await db.SaveChangesAsync();
 
@@ -135,14 +135,14 @@ public class UsersController(UsersManagerService users, PagesManagerService page
         {
             if (vm.CreatePersonalPage)
             {
-                var page = await pages.CreateDefaultUserPageAsync(vm, User);
+                var page = await pagesSvc.CreateDefaultUserPageAsync(vm, User);
                 vm.PersonalPageId = page.Id;
                 vm.CreatePersonalPage = false;
                     
                 await search.AddPageAsync(page);
             }
 
-            await users.CreateAsync(vm);
+            await usersSvc.CreateAsync(vm);
             await db.SaveChangesAsync();
 
             return RedirectToSuccess(Texts.Admin_Users_CreatedMessage);
@@ -177,7 +177,7 @@ public class UsersController(UsersManagerService users, PagesManagerService page
 
         try
         {
-            await users.ResetPasswordAsync(vm);
+            await usersSvc.ResetPasswordAsync(vm);
             return RedirectToSuccess(Texts.Admin_Users_PasswordResetMessage);
         }
         catch (ValidationException ex)
@@ -211,7 +211,7 @@ public class UsersController(UsersManagerService users, PagesManagerService page
     /// </summary>
     private async Task<ActionResult> ViewResetPasswordFormAsync(string id)
     {
-        ViewBag.Data = await users.GetAsync(id);
+        ViewBag.Data = await usersSvc.GetAsync(id);
         return View("ResetPassword", new UserPasswordEditorVM { Id = id });
     }
 
@@ -220,12 +220,12 @@ public class UsersController(UsersManagerService users, PagesManagerService page
     /// </summary>
     private async Task<ActionResult> ViewUpdateFormAsync(UserEditorVM vm)
     {
-        var canCreate = await users.CanCreatePersonalPageAsync(vm);
+        var canCreate = await usersSvc.CanCreatePersonalPageAsync(vm);
         var pageItems = await GetPageItemsAsync(vm.PersonalPageId);
 
         ViewBag.Data = new UserEditorDataVM
         {
-            IsSelf = users.IsSelf(vm.Id, User),
+            IsSelf = usersSvc.IsSelf(vm.Id, User),
             UserRoleItems = ViewHelper.GetEnumSelectList(vm.Role),
             CanCreatePersonalPage = canCreate,
             PageItems = pageItems
@@ -258,7 +258,7 @@ public class UsersController(UsersManagerService users, PagesManagerService page
     /// </summary>
     private void CheckPasswordAuth()
     {
-        if (!config.GetStaticConfig().Auth.AllowPasswordAuth)
+        if (!configSvc.GetStaticConfig().Auth.AllowPasswordAuth)
             throw new OperationException(Texts.Admin_Users_PasswordAuthRestrictedMessage);
     }
 

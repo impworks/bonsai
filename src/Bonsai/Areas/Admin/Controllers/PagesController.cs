@@ -29,7 +29,7 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for handling pages.
 /// </summary>
 [Route("admin/pages")]
-public class PagesController(PagesManagerService pages, ISearchEngine search, AppDbContext db, IBackgroundJobService jobs)
+public class PagesController(PagesManagerService pagesSvc, ISearchEngine search, AppDbContext db, IBackgroundJobService jobs)
     : AdminControllerBase
 {
     protected override Type ListStateType => typeof(PagesListRequestVM);
@@ -53,7 +53,7 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
     public async Task<ActionResult> Index(PagesListRequestVM request)
     {
         PersistListState(request);
-        var vm = await pages.GetPagesAsync(request);
+        var vm = await pagesSvc.GetPagesAsync(request);
         return View(vm);
     }
 
@@ -64,7 +64,7 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
     [Route("create")]
     public async Task<ActionResult> Create([FromQuery]PageType type = PageType.Person)
     {
-        var vm = await pages.RequestCreateAsync(type, User);
+        var vm = await pagesSvc.RequestCreateAsync(type, User);
         if (vm.Type != type)
         {
             TempData[NotificationsService.NOTE_PAGETYPE_RESET_FROM_DRAFT] = type;
@@ -86,7 +86,7 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
 
         try
         {
-            var page = await pages.CreateAsync(vm, User);
+            var page = await pagesSvc.CreateAsync(vm, User);
             await db.SaveChangesAsync();
             await search.AddPageAsync(page);
             await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
@@ -107,7 +107,7 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
     [Route("update")]
     public async Task<ActionResult> Update(Guid id)
     {
-        var vm = await pages.RequestUpdateAsync(id, User);
+        var vm = await pagesSvc.RequestUpdateAsync(id, User);
         return await ViewEditorFormAsync(vm, displayDraft: true);
     }
 
@@ -123,7 +123,7 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
 
         try
         {
-            var page = await pages.UpdateAsync(vm, User);
+            var page = await pagesSvc.UpdateAsync(vm, User);
             await db.SaveChangesAsync();
             await search.AddPageAsync(page);
             await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
@@ -145,7 +145,7 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
     [Route("remove")]
     public async Task<ActionResult> Remove(Guid id)
     {
-        ViewBag.Info = await pages.RequestRemoveAsync(id, User);
+        ViewBag.Info = await pagesSvc.RequestRemoveAsync(id, User);
         return View(new RemoveEntryRequestVM { Id = id });
     }
 
@@ -157,9 +157,9 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
     public async Task<ActionResult> Remove(RemoveEntryRequestVM vm)
     {
         if (vm.RemoveCompletely)
-            await pages.RemoveCompletelyAsync(vm.Id, User);
+            await pagesSvc.RemoveCompletelyAsync(vm.Id, User);
         else
-            await pages.RemoveAsync(vm.Id, User);
+            await pagesSvc.RemoveAsync(vm.Id, User);
             
         await db.SaveChangesAsync();
         await search.RemovePageAsync(vm.Id);
@@ -187,7 +187,7 @@ public class PagesController(PagesManagerService pages, ISearchEngine search, Ap
                                     .JoinString(", ");
 
         var photoThumbUrl = await GetMainPhotoThumbnailUrlAsync(vm.MainPhotoKey);
-        var draft = await pages.GetPageDraftAsync(vm.Id, User);
+        var draft = await pagesSvc.GetPageDraftAsync(vm.Id, User);
 
         ViewBag.Data = new PageEditorDataVM
         {

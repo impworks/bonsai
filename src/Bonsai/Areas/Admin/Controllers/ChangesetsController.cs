@@ -13,7 +13,7 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing changesets.
 /// </summary>
 [Route("admin/changes")]
-public class ChangesetsController(ChangesetsManagerService changes, AppDbContext db) : AdminControllerBase
+public class ChangesetsController(ChangesetsManagerService changesSvc, AppDbContext db) : AdminControllerBase
 {
     protected override Type ListStateType => typeof(ChangesetsListRequestVM);
 
@@ -26,7 +26,7 @@ public class ChangesetsController(ChangesetsManagerService changes, AppDbContext
     public async Task<ActionResult> Index(ChangesetsListRequestVM request)
     {
         PersistListState(request);
-        var vm = await changes.GetChangesetsAsync(request);
+        var vm = await changesSvc.GetChangesetsAsync(request);
         return View(vm);
     }
 
@@ -37,7 +37,7 @@ public class ChangesetsController(ChangesetsManagerService changes, AppDbContext
     [Route("details")]
     public async Task<ActionResult> Details(Guid id)
     {
-        var vm = await changes.GetChangesetDetailsAsync(id);
+        var vm = await changesSvc.GetChangesetDetailsAsync(id);
         return View(vm);
     }
 
@@ -48,7 +48,7 @@ public class ChangesetsController(ChangesetsManagerService changes, AppDbContext
     [Route("revert")]
     public async Task<ActionResult> Revert(Guid id)
     {
-        var vm = await changes.GetChangesetDetailsAsync(id);
+        var vm = await changesSvc.GetChangesetDetailsAsync(id);
         if (!vm.CanRevert)
             throw new OperationException(Texts.Admin_Changesets_CannotRevertMessage);
 
@@ -62,11 +62,11 @@ public class ChangesetsController(ChangesetsManagerService changes, AppDbContext
     [Route("revert")]
     public async Task<ActionResult> Revert(Guid id, bool confirm)
     {
-        var editVm = await changes.GetChangesetDetailsAsync(id);
+        var editVm = await changesSvc.GetChangesetDetailsAsync(id);
         if (!editVm.CanRevert)
             throw new OperationException(Texts.Admin_Changesets_CannotRevertMessage);
 
-        await changes.RevertChangeAsync(id, User);
+        await changesSvc.RevertChangeAsync(id, User);
         await db.SaveChangesAsync();
 
         return RedirectToSuccess(Texts.Admin_Changesets_RevertedMessage);
