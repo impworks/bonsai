@@ -322,6 +322,24 @@ public class MediaManagerService
                         .FirstOrDefaultAsync();
     }
 
+    /// <summary>
+    /// Tags the whole image with the corresponding page.
+    /// </summary>
+    public async Task TryAddMainPhotoTagAsync(Media media, Page page, ClaimsPrincipal principal)
+    {
+        if (media == null || media.Tags.Any())
+            return;
+
+        var vm = await RequestUpdateAsync(media.Id);
+        var tag = new MediaTagVM
+        {
+            PageId = page.Id,
+            Coordinates = "0;0;1;1"
+        };
+        vm.DepictedEntities = JsonConvert.SerializeObject(new[] {tag});
+        await UpdateAsync(vm, principal);
+    }
+
     #endregion
 
     #region Helpers

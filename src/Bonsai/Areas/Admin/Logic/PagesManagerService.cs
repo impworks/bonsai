@@ -226,7 +226,7 @@ public class PagesManagerService
         _db.Changes.Add(changeset);
 
         _mapper.Map(vm, page);
-        page.MainPhotoId = (await FindMainPhotoAsync(vm.MainPhotoKey))?.Id;
+        page.MainPhoto = await FindMainPhotoAsync(vm.MainPhotoKey);
         page.LivingBeingOverview = MapLivingBeingOverview(vm, page.LivingBeingOverview);
         page.NormalizedTitle = PageHelper.NormalizeTitle(page.Title);
 
@@ -248,7 +248,7 @@ public class PagesManagerService
             _cache.Remove<InfoBlockVM>(page.Key);
         }
 
-        if(revertedChangeId == null)
+        if (revertedChangeId == null)
             await DiscardPageDraftAsync(vm.Id, principal);
 
         return page;
@@ -546,6 +546,7 @@ public class PagesManagerService
             return null;
 
         var media = await _db.Media
+                             .Include(x => x.Tags)
                              .FirstOrDefaultAsync(x => x.Key == key && x.IsDeleted == false);
 
         if(media == null)

@@ -29,7 +29,7 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for handling pages.
 /// </summary>
 [Route("admin/pages")]
-public class PagesController(PagesManagerService pagesSvc, ISearchEngine search, AppDbContext db, IBackgroundJobService jobs)
+public class PagesController(PagesManagerService pagesSvc, MediaManagerService mediaSvc, ISearchEngine search, AppDbContext db, IBackgroundJobService jobs)
     : AdminControllerBase
 {
     protected override Type ListStateType => typeof(PagesListRequestVM);
@@ -88,6 +88,10 @@ public class PagesController(PagesManagerService pagesSvc, ISearchEngine search,
         {
             var page = await pagesSvc.CreateAsync(vm, User);
             await db.SaveChangesAsync();
+
+            await mediaSvc.TryAddMainPhotoTagAsync(page.MainPhoto, page, User);
+            await db.SaveChangesAsync();
+
             await search.AddPageAsync(page);
             await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
@@ -124,6 +128,7 @@ public class PagesController(PagesManagerService pagesSvc, ISearchEngine search,
         try
         {
             var page = await pagesSvc.UpdateAsync(vm, User);
+            await mediaSvc.TryAddMainPhotoTagAsync(page.MainPhoto, page, User);
             await db.SaveChangesAsync();
             await search.AddPageAsync(page);
             await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
