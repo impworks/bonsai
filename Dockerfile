@@ -42,6 +42,7 @@ RUN --mount=type=cache,id=apk-$TARGETARCH$TARGETVARIANT,sharing=locked,target=/v
       libintl \
       icu \
       icu-data-full \
+      curl \
     && apk add libgdiplus --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/
 
 WORKDIR /app
@@ -55,6 +56,8 @@ RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg && \
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV BuildCommit=$BUILD_COMMIT
+
+HEALTHCHECK --interval=5s --timeout=10s --retries=5 CMD curl --silent --fail http://localhost/ || exit 1
 
 EXPOSE 80
 
