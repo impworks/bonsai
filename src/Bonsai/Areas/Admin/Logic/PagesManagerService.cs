@@ -321,12 +321,16 @@ public class PagesManagerService
 
         // page-related stuff
         await _db.PageDrafts.RemoveWhereAsync(x => x.PageId == id);
-        await _db.PageAliases.RemoveWhereAsync(x => x.Page.Id == id);
+        await _db.PageAliases.RemoveWhereAsync(x => x.PageId == id);
         await _db.PageReferences.RemoveWhereAsync(x => x.SourceId == id || x.DestinationId == id);
+        await _db.LivingBeingOverviews.RemoveWhereAsync(x => x.PageId == id);
             
         // users
         await foreach (var user in _db.Users.WhereAsync(x => x.PageId == id))
             user.PageId = null;
+
+        // trees
+        await _db.TreeLayouts.RemoveWhereAsync(x => x.PageId == id);
             
         // page itself
         _db.Pages.Remove(page);
