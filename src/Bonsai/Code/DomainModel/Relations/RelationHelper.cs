@@ -108,6 +108,8 @@ public static class RelationHelper
             or RelationType.Pet
             or RelationType.Owner
             or RelationType.StepParent
-            or RelationType.StepChild;
+            or RelationType.StepChild
+            or RelationType.Location
+            or RelationType.LocationInhabitant;
     }
 }
