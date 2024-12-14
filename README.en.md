@@ -62,7 +62,7 @@ A family wiki and photoalbum engine.
 
 For development, you will need the following:
 
-* [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0): the main runtime for Bonsai
+* [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0): the main runtime for Bonsai
 
 1. Install [NodeJS 14](https://nodejs.org/en/)
 2. Download [ffmpeg shared binaries](https://www.ffmpeg.org/download.html) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
@@ -82,7 +82,7 @@ For development, you will need the following:
 
 5. _Optional, but suggested_:
 
-    Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (or Yandex / VK.com).
+    Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-9.0) (or Yandex / VK.com).
 
     Add the retrieved authorization credentials to the `appsettings.Development.json` and set `AllowPasswordAuth` to `false`:
 

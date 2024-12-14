@@ -42,7 +42,7 @@
 
 3. _Опционально_:
 
-    Создайте [приложение авторизации Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0) (или Yandex, Вконтакте).
+    Создайте [приложение авторизации Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-9.0) (или Yandex, Вконтакте).
 
     Отредактируйте файл `docker-compose.lite.yml`:
 
@@ -64,7 +64,7 @@
 
 Для участия в разработке понадобится:
 
-* [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0): основной рантайм для Bonsai
+* [.NET 9](https://dotnet.microsoft.com/download/dotnet/9.0): основной рантайм для Bonsai
 
 1. Установите [NodeJS 14](https://nodejs.org/en/)
 2. Скачайте [shared-сборку ffmpeg](https://www.ffmpeg.org/download.html) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
