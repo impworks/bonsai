@@ -3,6 +3,7 @@ using System.Linq;
 using Bonsai.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bonsai.Data;
@@ -33,6 +34,13 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public virtual DbSet<PageDraft> PageDrafts => Set<PageDraft>();
     public virtual DbSet<PageReference> PageReferences => Set<PageReference>();
     public virtual DbSet<TreeLayout> TreeLayouts => Set<TreeLayout>();
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.ConfigureWarnings(x => x.Ignore(RelationalEventId.PendingModelChangesWarning));
+
+        base.OnConfiguring(optionsBuilder);
+    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
