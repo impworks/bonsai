@@ -62,9 +62,9 @@ A family wiki and photoalbum engine.
 
 For development, you will need the following:
 
-* [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0): the main runtime for Bonsai
+* [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0): the main runtime for Bonsai
 
-1. Install [NodeJS 14](https://nodejs.org/en/)
+1. Install [NodeJS](https://nodejs.org/en/)
 2. Download [ffmpeg shared binaries](https://www.ffmpeg.org/download.html) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
 3. Create a file called `appsettings.Development.json`, add the connection string:
 
@@ -82,7 +82,7 @@ For development, you will need the following:
 
 5. _Optional, but suggested_:
 
-    Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-9.0) (or Yandex / VK.com).
+    Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0) (or Yandex / VK.com).
 
     Add the retrieved authorization credentials to the `appsettings.Development.json` and set `AllowPasswordAuth` to `false`:
 
@@ -137,7 +137,7 @@ There are many options available, free and paid: uploading to a cloud storage, c
 Bonsai features two authorization methods: OAuth and password authorization.
 
 OAuth is the preferred method: it's easier to use for end users, more secure and versatile. **Please use the OAuth method if you can!**
-For OAuth, you will need to create an authorization app on [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0), [Vkontakte](https://vk.com/editapp?act=create), or [Yandex](https://oauth.yandex.ru/client/new) as described in the installation steps.
+For OAuth, you will need to create an authorization app on [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0), [Vkontakte](https://vk.com/editapp?act=create), or [Yandex](https://oauth.yandex.ru/client/new) as described in the installation steps.
 You can enable multiple authorization apps at the same time: users will pick the one they prefer.
 
 As a fallback, you can also create an account with classic login/password authorization. It can be used for two purposes:

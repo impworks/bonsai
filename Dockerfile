@@ -10,7 +10,7 @@ RUN npm ci
 ADD src/Bonsai .
 RUN node_modules/.bin/gulp build
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine as net-builder
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine as net-builder
 ARG TARGETARCH
 ARG TARGETVARIANT
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Bonsai.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -88,6 +89,8 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
         if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
             ApplyDataTimeOffsetConverter(builder);
+
+        builder.Entity<IdentityPasskeyData>().HasNoKey();
     }
 
     private void ApplyDataTimeOffsetConverter(ModelBuilder builder)

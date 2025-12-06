@@ -447,9 +447,12 @@ public class MediaManagerService
     /// </summary>
     private async Task<(string LocalPath, string UrlPath)> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler)
     {
+        var mediaFolderPath = Path.Combine(_env.WebRootPath, "media");
+        Directory.CreateDirectory(mediaFolderPath);
+
         var ext = Path.GetExtension(file.FileName);
         var fileName = key + ext;
-        var filePath = Path.Combine(_env.WebRootPath, "media", fileName);
+        var filePath = Path.Combine(mediaFolderPath, fileName);
 
         await using (var localStream = new FileStream(filePath, FileMode.CreateNew))
         await using (var sourceStream = file.OpenReadStream())
