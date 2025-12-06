@@ -42,6 +42,7 @@ RUN --mount=type=cache,id=apk-$TARGETARCH$TARGETVARIANT,sharing=locked,target=/v
       libintl \
       icu \
       icu-data-full \
+      krb5-libs \
       curl \
     && apk add libgdiplus --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/
 
