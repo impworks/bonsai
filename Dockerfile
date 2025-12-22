@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:14-alpine as node
+FROM --platform=$BUILDPLATFORM node:22-alpine as node
 ARG TARGETARCH
 ARG TARGETVARIANT
 
@@ -8,7 +8,7 @@ ADD src/Bonsai/package.json .
 ADD src/Bonsai/package-lock.json .
 RUN npm ci
 ADD src/Bonsai .
-RUN node_modules/.bin/gulp build
+RUN npm run build
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine as net-builder
 ARG TARGETARCH
