@@ -11,19 +11,17 @@
   },
   "private": true,
   "scripts": {
-    "build": "gulp build",
-    "dev": "gulp dev",
-    "watch": "gulp watch"
+    "build": "vite build --mode production",
+    "dev": "vite build --mode development",
+    "watch": "vite build --mode development --watch"
   },
   "devDependencies": {
-    "gulp": "4.0.0",
-    "gulp-clean-css": "4.0.0",
-    "gulp-concat": "2.6.1",
-    "gulp-if": "2.0.2",
-    "gulp-rename": "1.4.0",
-    "gulp-sass": "5.0.0",
-    "gulp-uglify": "3.0.2",
-    "sass": "1.45.1"
+    "clean-css": "^5.3.3",
+    "glob": "^11.0.0",
+    "sass": "^1.83.0",
+    "terser": "^5.44.1",
+    "vite": "^6.0.0",
+    "vite-plugin-static-copy": "^2.2.0"
   },
   "dependencies": {
     "blueimp-file-upload": "10.32.0",
