@@ -53,7 +53,15 @@ function scssPlugin(mode) {
             // Compile SCSS using sass directly (preserves URLs as-is)
             const result = sass.compile('./Areas/Common/Styles/style.scss', {
                 loadPaths: ['node_modules'],
-                silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'legacy-js-api']
+                silenceDeprecations: [
+                    'import',
+                    'global-builtin',
+                    'color-functions',
+                    'legacy-js-api',
+                    'slash-div',
+                    'abs-percent',
+                    'if-function'
+                ]
             });
 
             let css = result.css;
