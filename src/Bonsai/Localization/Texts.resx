@@ -1700,6 +1700,15 @@
   <data name="Admin_Config_Version_Database" xml:space="preserve">
     <value>База данных</value>
   </data>
+  <data name="Admin_Config_Mcp" xml:space="preserve">
+    <value>MCP-сервер</value>
+  </data>
+  <data name="Admin_Config_Mcp_Enabled" xml:space="preserve">
+    <value>Включить MCP-сервер для AI-агентов</value>
+  </data>
+  <data name="Admin_Config_Mcp_EnabledDescription" xml:space="preserve">
+    <value>Позволяет AI-ассистентам получать доступ к вики</value>
+  </data>
   <data name="Admin_Dashboard_CreatedFormatF" xml:space="preserve">
     <value>{0} создала {1}</value>
     <comment>{0} =user, {1} = subject</comment>

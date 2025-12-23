@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
 using JetBrains.Annotations;
@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ModelContextProtocol.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 using Serilog;
 
 namespace Bonsai.Code.Config;
@@ -49,6 +51,7 @@ public partial class Startup
         ConfigureSearchServices(services);
         ConfigureMapster(services);
         ConfigureAppServices(services);
+        ConfigureMcpServices(services);
     }
 
     /// <summary>
@@ -85,7 +88,14 @@ public partial class Startup
            .UseEndpoints(x =>
            {
                x.MapAreaControllerRoute("admin", "Admin", "admin/{controller}/{action}/{id?}");
+               x.MapAreaControllerRoute("mcp-area", "Mcp", "mcp/{controller}/{action}/{id?}");
                x.MapControllers();
+
+               // MCP server endpoint (SSE/HTTP transport) - requires OAuth authentication
+               x.MapMcp("/mcp/server")
+                   .RequireAuthorization(policy =>
+                       policy.AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
+                             .RequireAuthenticatedUser());
            });
     }
 

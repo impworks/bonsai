@@ -300,3 +300,5 @@ src/Bonsai/appsettings.Development.json
 src/Bonsai/appsettings.Production.json
 src/Bonsai/appsettings.Staging.json
 src/Bonsai/App_Data/
+
+src/Bonsai/.claude/settings.local.json

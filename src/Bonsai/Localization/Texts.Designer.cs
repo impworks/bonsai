@@ -797,7 +797,223 @@ namespace Bonsai.Localization {
                 return ResourceManager.GetString("Admin_Config_Version_Database", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to MCP-сервер.
+        /// </summary>
+        public static string Admin_Config_Mcp {
+            get {
+                return ResourceManager.GetString("Admin_Config_Mcp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Включить MCP-сервер.
+        /// </summary>
+        public static string Admin_Config_Mcp_Enabled {
+            get {
+                return ResourceManager.GetString("Admin_Config_Mcp_Enabled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Разрешить AI-агентам подключаться к приложению через MCP.
+        /// </summary>
+        public static string Admin_Config_Mcp_EnabledDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_Mcp_EnabledDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to API-ключи.
+        /// </summary>
+        public static string Mcp_ApiKeys_Title {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Управление ключами доступа для MCP-клиентов.
+        /// </summary>
+        public static string Mcp_ApiKeys_Description {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MCP-сервер отключён администратором.
+        /// </summary>
+        public static string Mcp_ApiKeys_Disabled {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Disabled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to У вас пока нет API-ключей.
+        /// </summary>
+        public static string Mcp_ApiKeys_NoKeys {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_NoKeys", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Создать ключ.
+        /// </summary>
+        public static string Mcp_ApiKeys_Create {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Create", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Отозвать.
+        /// </summary>
+        public static string Mcp_ApiKeys_Revoke {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Revoke", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены, что хотите отозвать этот ключ?.
+        /// </summary>
+        public static string Mcp_ApiKeys_RevokeConfirm {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_RevokeConfirm", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Название.
+        /// </summary>
+        public static string Mcp_ApiKeys_Name {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Name", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Создан.
+        /// </summary>
+        public static string Mcp_ApiKeys_Created {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Created", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Последнее использование.
+        /// </summary>
+        public static string Mcp_ApiKeys_LastUsed {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_LastUsed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Никогда.
+        /// </summary>
+        public static string Mcp_ApiKeys_LastUsed_Never {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_LastUsed_Never", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Истекает.
+        /// </summary>
+        public static string Mcp_ApiKeys_Expires {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Expires", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Бессрочно.
+        /// </summary>
+        public static string Mcp_ApiKeys_Expires_Never {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Expires_Never", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Действия.
+        /// </summary>
+        public static string Mcp_ApiKeys_Actions {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Actions", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Новый API-ключ создан.
+        /// </summary>
+        public static string Mcp_ApiKeys_NewKeyTitle {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_NewKeyTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Сохраните этот ключ сейчас. Вы не сможете увидеть его снова..
+        /// </summary>
+        public static string Mcp_ApiKeys_NewKeyWarning {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_NewKeyWarning", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Создать API-ключ.
+        /// </summary>
+        public static string Mcp_ApiKeys_CreateTitle {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_CreateTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Название ключа.
+        /// </summary>
+        public static string Mcp_ApiKeys_NameLabel {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_NameLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Например: Claude Desktop.
+        /// </summary>
+        public static string Mcp_ApiKeys_NamePlaceholder {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_NamePlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Срок действия (необязательно).
+        /// </summary>
+        public static string Mcp_ApiKeys_ExpiresLabel {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_ExpiresLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Укажите название ключа.
+        /// </summary>
+        public static string Mcp_ApiKeys_Validation_NameRequired {
+            get {
+                return ResourceManager.GetString("Mcp_ApiKeys_Validation_NameRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to {0} создала {1}.
         /// </summary>
