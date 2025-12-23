@@ -39,4 +39,9 @@ public class DynamicConfig
     /// Allowed kinds of trees.
     /// </summary>
     public TreeKind TreeKinds { get; set; }
+
+    /// <summary>
+    /// Flag indicating whether the MCP server is enabled for AI agent access.
+    /// </summary>
+    public bool McpEnabled { get; set; }
 }

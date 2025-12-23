@@ -47,6 +47,9 @@ public class AppDbContext : IdentityDbContext<AppUser>
     {
         base.OnModelCreating(builder);
 
+        // Configure OpenIddict entities for OAuth 2.0/2.1 support
+        builder.UseOpenIddict();
+
         builder.Entity<AppUser>().HasMany(x => x.Changes).WithOne(x => x.Author).HasForeignKey(x => x.AuthorId);
         builder.Entity<AppUser>().HasOne(x => x.Page).WithMany().IsRequired(false).HasForeignKey(x => x.PageId);
 

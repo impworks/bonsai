@@ -81,7 +81,7 @@
                         </div>
                         <span asp-validation-for="TreeRenderThoroughness" class="text-danger"></span>
                     </div>
-                    <div class="ml-4">
+                    <div class="custom-control custom-checkbox">
                         <input type="checkbox" asp-for="HideBlackRibbon" class="custom-control-input" id="HideBlackRibbon" />
                         <label class="custom-control-label" for="HideBlackRibbon">
                             @Texts.Admin_Config_TreeDisplay_HideBlackRibbon
@@ -90,6 +90,19 @@
                 </div>
             </div>
             
+            <div class="form-group row">
+                <label class="col-sm-3">@Texts.Admin_Config_Mcp</label>
+                <div class="col-sm-9">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" asp-for="McpEnabled" class="custom-control-input" id="McpEnabled" />
+                        <label class="custom-control-label" for="McpEnabled">
+                            @Texts.Admin_Config_Mcp_Enabled<br />
+                            <small class="text-muted">@Texts.Admin_Config_Mcp_EnabledDescription</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group row">
                 <div class="col-sm-3">@Texts.Admin_Config_Version</div>
                 <div class="col-sm-9 text-muted">
@@ -118,7 +131,7 @@
 @{
     void TreeKindOption(TreeKind kind, string caption, string description)
     {
-        <div class="ml-4">
+        <div class="custom-control custom-checkbox">
             <input type="checkbox" name="TreeKinds[]" value="@kind" checked="@(Model.TreeKinds.Contains(kind))" class="custom-control-input" id="TreeKinds.@kind"/>
             <label class="custom-control-label" for="TreeKinds.@kind">
                 @caption <br/>

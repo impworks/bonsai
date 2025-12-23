@@ -46,6 +46,11 @@ public class UpdateDynamicConfigVM: IMapped
     /// </summary>
     public TreeKind[] TreeKinds { get; set; }
 
+    /// <summary>
+    /// Flag indicating whether the MCP server is enabled for AI agent access.
+    /// </summary>
+    public bool McpEnabled { get; set; }
+
     public void Configure(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateDynamicConfigVM, Code.Services.Config.DynamicConfig>()
@@ -54,7 +59,8 @@ public class UpdateDynamicConfigVM: IMapped
               .Map(x => x.AllowRegistration, x => x.AllowRegistration)
               .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
-              .Map(x => x.TreeKinds, x => x.TreeKinds == null ? 0 : x.TreeKinds.Aggregate((TreeKind)0, (a, b) => a | b));
+              .Map(x => x.TreeKinds, x => x.TreeKinds == null ? 0 : x.TreeKinds.Aggregate((TreeKind)0, (a, b) => a | b))
+              .Map(x => x.McpEnabled, x => x.McpEnabled);
 
         config.NewConfig<Code.Services.Config.DynamicConfig, UpdateDynamicConfigVM>()
               .Map(x => x.Title, x => x.Title)
@@ -62,6 +68,7 @@ public class UpdateDynamicConfigVM: IMapped
               .Map(x => x.AllowRegistration, x => x.AllowRegistration)
               .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
-              .Map(x => x.TreeKinds, x => Enum.GetValues<TreeKind>().Where(y => x.TreeKinds.HasFlag(y)).ToArray());
+              .Map(x => x.TreeKinds, x => Enum.GetValues<TreeKind>().Where(y => x.TreeKinds.HasFlag(y)).ToArray())
+              .Map(x => x.McpEnabled, x => x.McpEnabled);
     }
 }

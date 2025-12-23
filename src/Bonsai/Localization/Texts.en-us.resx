@@ -254,6 +254,15 @@
     <data name="Admin_Config_Version_Database" xml:space="preserve">
         <value>Database</value>
     </data>
+    <data name="Admin_Config_Mcp" xml:space="preserve">
+        <value>MCP Server</value>
+    </data>
+    <data name="Admin_Config_Mcp_Enabled" xml:space="preserve">
+        <value>Enable MCP server for AI agents</value>
+    </data>
+    <data name="Admin_Config_Mcp_EnabledDescription" xml:space="preserve">
+        <value>Allow AI assistants to access the wiki</value>
+    </data>
     <data name="Admin_Dashboard_CreatedFormatF" xml:space="preserve">
         <value>{0} created {1}</value>
     </data>
