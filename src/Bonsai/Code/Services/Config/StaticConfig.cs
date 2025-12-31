@@ -51,6 +51,8 @@ public class DemoModeConfig
     public bool CreateDefaultAdmin { get; set; }
     public bool ClearOnStartup { get; set; }
     public string YandexMetrikaId { get; set; }
+    public string DefaultAdminEmail { get; set; }
+    public string DefaultAdminPassword { get; set; }
 }
 
 /// <summary>
