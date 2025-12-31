@@ -97,15 +97,15 @@
                 </div>
             </div>
 
-            @if (demoCfg.Enabled && demoCfg.CreateDefaultAdmin)
+            @if (demoCfg.Enabled && demoCfg.CreateDefaultAdmin && !demoCfg.HideCredentials)
             {
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="alert alert-info">
                             <p>@Texts.Front_Login_DemoAccount</p>
                             <p>
-                                <strong>@Texts.Front_Login_Username:</strong> admin@example.com<br />
-                                <strong>@Texts.Front_Login_Password:</strong> 123456
+                                <strong>@Texts.Front_Login_Username:</strong> @demoCfg.DefaultAdminEmail<br />
+                                <strong>@Texts.Front_Login_Password:</strong> @demoCfg.DefaultAdminPassword
                             </p>
                         </div>
                     </div>

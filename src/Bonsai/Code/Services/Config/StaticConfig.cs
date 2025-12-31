@@ -50,6 +50,7 @@ public class DemoModeConfig
     public bool CreateDefaultPages { get; set; }
     public bool CreateDefaultAdmin { get; set; }
     public bool ClearOnStartup { get; set; }
+    public bool HideCredentials { get; set; }
     public string YandexMetrikaId { get; set; }
     public string DefaultAdminEmail { get; set; }
     public string DefaultAdminPassword { get; set; }
