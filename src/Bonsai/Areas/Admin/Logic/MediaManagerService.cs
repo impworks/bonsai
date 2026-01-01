@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp;
 using MediaTagVM = Bonsai.Areas.Admin.ViewModels.Media.MediaTagVM;
 
 namespace Bonsai.Areas.Admin.Logic;
@@ -119,7 +120,7 @@ public class MediaManagerService
     /// <summary>
     /// Uploads a new media file.
     /// </summary>
-    public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, IFormFile file, ClaimsPrincipal principal)
+    public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, IFormFile file, IFormFile preview, ClaimsPrincipal principal)
     {
         var id = Guid.NewGuid();
         var key = PageHelper.GetMediaKey(id);
@@ -129,7 +130,7 @@ public class MediaManagerService
             throw new UploadException(Texts.Admin_Media_UnknownFileType);
 
         var user = await _userMgr.GetUserAsync(principal, Texts.Admin_Users_NotFound);
-        var paths = await SaveUploadAsync(file, key, handler);
+        var paths = await SaveUploadAsync(file, key, handler, preview);
         var tags = await GetTagsForUploadedMedia(vm);
         var meta = await handler.ExtractMetadataAsync(paths.LocalPath, file.ContentType);
 
@@ -445,7 +446,7 @@ public class MediaManagerService
     /// <summary>
     /// Saves an uploaded file to disk.
     /// </summary>
-    private async Task<(string LocalPath, string UrlPath)> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler)
+    private async Task<(string LocalPath, string UrlPath)> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler, IFormFile preview = null)
     {
         var mediaFolderPath = Path.Combine(_env.WebRootPath, "media");
         Directory.CreateDirectory(mediaFolderPath);
@@ -458,10 +459,28 @@ public class MediaManagerService
         await using (var sourceStream = file.OpenReadStream())
             await sourceStream.CopyToAsync(localStream);
 
-        using(var frame = await handler.ExtractThumbnailAsync(filePath, file.ContentType))
+        using (var frame = await GetPreviewFrameAsync())
             await MediaHandlerHelper.CreateThumbnailsAsync(filePath, frame);
 
         return (filePath, $"~/media/{fileName}");
+
+        async Task<Image> GetPreviewFrameAsync()
+        {
+            if (preview?.Length > 0)
+            {
+                try
+                {
+                    await using var previewStream = preview.OpenReadStream();
+                    return await Image.LoadAsync(previewStream);
+                }
+                catch
+                {
+                    // client-generated preview is invalid, fallback to server-side handler
+                }
+            }
+
+            return await handler.ExtractThumbnailAsync(filePath, file.ContentType);
+        }
     }
 
     /// <summary>

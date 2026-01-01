@@ -30,6 +30,7 @@ const bundles = {
             './Areas/Common/Libs/throttle.js'
         ],
         admin: [
+            './node_modules/pdfjs-dist/build/pdf.js',
             './node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
             './node_modules/blueimp-file-upload/js/jquery.iframe-transport.js',
             './node_modules/blueimp-file-upload/js/jquery.fileupload.js',
@@ -181,6 +182,12 @@ export default defineConfig(({ mode }) => ({
                     src: 'node_modules/elkjs/lib/main.js',
                     dest: '../../External/tree',
                     rename: 'elk.js'
+                },
+                // PDF.js worker (named to match vendor-admin.js bundle)
+                {
+                    src: 'node_modules/pdfjs-dist/build/pdf.worker.js',
+                    dest: 'scripts',
+                    rename: 'vendor-admin.worker.js'
                 }
             ]
         })
