@@ -90,9 +90,9 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label form-label-required">@Texts.Front_Register_Options</label>
                         <div class="col-sm-9">
-                            <div class="form-check">
-                                <input asp-for="CreatePersonalPage" class="form-check-input" />
-                                <label asp-for="CreatePersonalPage" class="form-check-label">@Texts.Front_Register_CreatePersonalPage</label>
+                            <div class="custom-control custom-checkbox">
+                                <input asp-for="CreatePersonalPage" class="custom-control-input" />
+                                <label asp-for="CreatePersonalPage" class="custom-control-label">@Texts.Front_Register_CreatePersonalPage</label>
                                 <span asp-validation-for="CreatePersonalPage" class="text-danger"></span>
                             </div>
                         </div>
