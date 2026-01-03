@@ -164,44 +164,6 @@ public class MediaTools(
     }
 
     /// <summary>
-    /// Adds tags to media.
-    /// </summary>
-    [McpServerTool(Name = "tag_media")]
-    [Description("Add person/entity tags to media. Requires Editor role. Each tag specifies who is depicted and optionally where in the image.")]
-    public async Task<TagMediaResult> TagMedia(
-        [Description("Media ID (GUID)")] string mediaId,
-        [Description("JSON array of tags, each with pageId (GUID) and optional coordinates (format: 'x;y;width;height' as floats 0-1)")] string tagsJson)
-    {
-        await authService.RequireRoleAsync(UserRole.Editor);
-
-        var id = Guid.Parse(mediaId);
-        var current = await mediaManagerService.RequestUpdateAsync(id);
-
-        // Merge existing tags with new ones
-        var existingTags = System.Text.Json.JsonSerializer.Deserialize<List<MediaTagInput>>(current.DepictedEntities ?? "[]");
-        var newTags = System.Text.Json.JsonSerializer.Deserialize<List<MediaTagInput>>(tagsJson);
-
-        if (newTags != null)
-            existingTags.AddRange(newTags);
-
-        current.DepictedEntities = System.Text.Json.JsonSerializer.Serialize(existingTags.Select(t => new
-        {
-            PageId = t.PageId,
-            Coordinates = t.Coordinates ?? "0;0;1;1"
-        }));
-
-        await mediaManagerService.UpdateAsync(current, userContext.Principal);
-        await db.SaveChangesAsync();
-
-        return new TagMediaResult
-        {
-            Id = id,
-            TagCount = existingTags.Count,
-            Success = true
-        };
-    }
-
-    /// <summary>
     /// Deletes a media file (soft delete).
     /// </summary>
     [McpServerTool(Name = "delete_media")]
@@ -221,59 +183,9 @@ public class MediaTools(
             Success = true
         };
     }
-
-    /// <summary>
-    /// Gets recently uploaded media.
-    /// </summary>
-    [McpServerTool(Name = "get_recent_media")]
-    [Description("Get the most recently uploaded media files.")]
-    public async Task<RecentMediaResult> GetRecentMedia(
-        [Description("Number of items to return (default: 10, max: 50)")] int count = 10)
-    {
-        await authService.RequireRoleAsync(UserRole.User);
-
-        count = Math.Min(count, 50);
-        var media = await mediaPresenterService.GetLastUploadedMediaAsync(count);
-
-        return new RecentMediaResult
-        {
-            Media = media.Select(m => new MediaListItem
-            {
-                Key = m.Key,
-                Type = m.Type.ToString(),
-                ThumbnailPath = m.ThumbnailUrl,
-                Date = m.Date?.ToString(),
-                IsProcessed = m.IsProcessed
-            }).ToList()
-        };
-    }
-
-    /// <summary>
-    /// Gets the next untagged media file.
-    /// </summary>
-    [McpServerTool(Name = "get_next_untagged_media")]
-    [Description("Get the next media file that has no person tags. Useful for batch tagging.")]
-    public async Task<NextUntaggedMediaResult> GetNextUntaggedMedia()
-    {
-        await authService.RequireRoleAsync(UserRole.User);
-
-        var id = await mediaManagerService.GetNextUntaggedMediaAsync();
-
-        return new NextUntaggedMediaResult
-        {
-            MediaId = id,
-            HasUntagged = id.HasValue
-        };
-    }
 }
 
 #region Input/Result Types
-
-public class MediaTagInput
-{
-    public Guid PageId { get; set; }
-    public string Coordinates { get; set; }
-}
 
 public class ListMediaResult
 {
@@ -332,28 +244,10 @@ public class UpdateMediaResult
     public bool Success { get; set; }
 }
 
-public class TagMediaResult
-{
-    public Guid Id { get; set; }
-    public int TagCount { get; set; }
-    public bool Success { get; set; }
-}
-
 public class DeleteMediaResult
 {
     public Guid Id { get; set; }
     public bool Success { get; set; }
-}
-
-public class RecentMediaResult
-{
-    public List<MediaListItem> Media { get; set; }
-}
-
-public class NextUntaggedMediaResult
-{
-    public Guid? MediaId { get; set; }
-    public bool HasUntagged { get; set; }
 }
 
 #endregion

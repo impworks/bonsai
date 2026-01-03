@@ -71,37 +71,6 @@ public class UsersTools(
     }
 
     /// <summary>
-    /// Reads user details. Can read own profile or any user if Admin.
-    /// </summary>
-    [McpServerTool(Name = "read_user")]
-    [Description("Read user details. Regular users can only read their own profile, Admins can read any user.")]
-    public async Task<ReadUserResult> ReadUser(
-        [Description("User ID (leave empty to read own profile)")] string userId = null)
-    {
-        await authService.RequireRoleAsync(UserRole.User);
-
-        var currentUserId = userContext.UserId;
-        var targetUserId = string.IsNullOrEmpty(userId) ? currentUserId : userId;
-
-        // Only admins can read other users
-        if (targetUserId != currentUserId)
-        {
-            await authService.RequireRoleAsync(UserRole.Admin);
-        }
-
-        var user = await usersManagerService.GetAsync(targetUserId);
-
-        return new ReadUserResult
-        {
-            Id = user.Id,
-            FullName = user.FullName,
-            Email = user.Email,
-            Role = user.Role.ToString(),
-            PageId = user.PageId
-        };
-    }
-
-    /// <summary>
     /// Gets the current user's role and permissions.
     /// </summary>
     [McpServerTool(Name = "get_current_user")]
@@ -147,15 +116,6 @@ public class UserListItem
     public string Email { get; set; }
     public string Role { get; set; }
     public bool IsLocked { get; set; }
-    public Guid? PageId { get; set; }
-}
-
-public class ReadUserResult
-{
-    public string Id { get; set; }
-    public string FullName { get; set; }
-    public string Email { get; set; }
-    public string Role { get; set; }
     public Guid? PageId { get; set; }
 }
 

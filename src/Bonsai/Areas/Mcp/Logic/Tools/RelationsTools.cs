@@ -30,7 +30,7 @@ public class RelationsTools(
     /// Lists relations with optional filters.
     /// </summary>
     [McpServerTool(Name = "list_relations")]
-    [Description("List relations between pages. Relations define family connections, friendships, ownership, and other links between people, pets, locations, and events.")]
+    [Description("List relations between pages. Requires Editor role. Relations define family connections, friendships, ownership, and other links between people, pets, locations, and events.")]
     public async Task<ListRelationsResult> ListRelations(
         [Description("Filter by entity ID - show only relations involving this page")] string entityId = null,
         [Description("Filter by relation types (comma-separated: Parent, Child, Spouse, StepParent, StepChild, Friend, Colleague, Owner, Pet, Location, LocationInhabitant, Event, EventVisitor, Other)")] string types = null,
@@ -39,7 +39,7 @@ public class RelationsTools(
         [Description("Order descending (default: false)")] bool orderDescending = false,
         [Description("Page number for pagination (0-based, default: 0)")] int page = 0)
     {
-        await authService.RequireRoleAsync(UserRole.User);
+        await authService.RequireRoleAsync(UserRole.Editor);
 
         var typesList = string.IsNullOrEmpty(types)
             ? null
@@ -87,11 +87,11 @@ public class RelationsTools(
     /// Reads relation details.
     /// </summary>
     [McpServerTool(Name = "read_relation")]
-    [Description("Read details of a specific relation by its ID.")]
+    [Description("Read details of a specific relation by its ID. Requires Editor role.")]
     public async Task<ReadRelationResult> ReadRelation(
         [Description("Relation ID (GUID)")] string relationId)
     {
-        await authService.RequireRoleAsync(UserRole.User);
+        await authService.RequireRoleAsync(UserRole.Editor);
 
         var id = Guid.Parse(relationId);
         var rel = await relationsManagerService.RequestUpdateAsync(id);
@@ -120,12 +120,12 @@ public class RelationsTools(
     [McpServerTool(Name = "create_relation")]
     [Description("Create a new relation between pages. Requires Editor role. Common relation types include: Parent/Child (family), Spouse (marriage), Owner/Pet (pet ownership), Friend, Colleague, Location/LocationInhabitant.")]
     public async Task<CreateRelationResult> CreateRelation(
-        [Description("Relation type (Parent, Child, Spouse, StepParent, StepChild, Friend, Colleague, Owner, Pet, Location, LocationInhabitant, Event, EventVisitor, Other)")] string type,
-        [Description("Source page ID (GUID) - the person/entity on one side of the relation")] string sourceId,
-        [Description("Destination page ID (GUID) - the person/entity on the other side of the relation")] string destinationId,
+        [Description("Relation type that describes the destination page (Parent, Child, Spouse, StepParent, StepChild, Friend, Colleague, Owner, Pet, Location, LocationInhabitant, Event, EventVisitor, Other)")] string type,
+        [Description("Source page ID (GUID) - the person/entity on one side of the relation. Example: for a 'Child' relation type, this needs the parent's page ID.")] string sourceId,
+        [Description("Destination page ID (GUID) - the person/entity on the other side of the relation. Example: for a 'Child' relation type, this needs the child's page ID.")] string destinationId,
         [Description("Event page ID (GUID) for relations like marriage (optional)")] string eventId = null,
-        [Description("Duration start date in any of the formats: YYYY.MM.DD = precise date, YYYY.MM.?? = year and month, YYYY.??.?? = year, YYY?.YY.YY = decade, ????.MM.DD = date without year (optional)")] string durationStart = null,
-        [Description("Duration end date in any of the formats: YYYY.MM.DD = precise date, YYYY.MM.?? = year and month, YYYY.??.?? = year, YYY?.YY.YY = decade, ????.MM.DD = date without year (optional)")] string durationEnd = null)
+        [Description("Duration start date FuzzyDate format (optional)")] string durationStart = null,
+        [Description("Duration end date in FuzzyDate format (optional)")] string durationEnd = null)
     {
         await authService.RequireRoleAsync(UserRole.Editor);
 
@@ -163,19 +163,28 @@ public class RelationsTools(
         [Description("New relation type (optional)")] string type = null,
         [Description("New destination page ID (optional)")] string destinationId = null,
         [Description("New event page ID (optional)")] string eventId = null,
-        [Description("New duration start date in any of the formats: YYYY.MM.DD = precise date, YYYY.MM.?? = year and month, YYYY.??.?? = year, YYY?.YY.YY = decade, ????.MM.DD = date without year (optional)")] string durationStart = null,
-        [Description("New duration end date in any of the formats: YYYY.MM.DD = precise date, YYYY.MM.?? = year and month, YYYY.??.?? = year, YYY?.YY.YY = decade, ????.MM.DD = date without year (optional)")] string durationEnd = null)
+        [Description("New duration start date in FuzzyDate format (optional)")] string durationStart = null,
+        [Description("New duration end date in FuzzyDate format (optional)")] string durationEnd = null)
     {
         await authService.RequireRoleAsync(UserRole.Editor);
 
         var id = Guid.Parse(relationId);
         var current = await relationsManagerService.RequestUpdateAsync(id);
 
-        if (type != null) current.Type = Enum.Parse<RelationType>(type, ignoreCase: true);
-        if (destinationId != null) current.DestinationId = Guid.Parse(destinationId);
-        if (eventId != null) current.EventId = string.IsNullOrEmpty(eventId) ? null : Guid.Parse(eventId);
-        if (durationStart != null) current.DurationStart = durationStart;
-        if (durationEnd != null) current.DurationEnd = durationEnd;
+        if (type != null)
+            current.Type = Enum.Parse<RelationType>(type, ignoreCase: true);
+
+        if (destinationId != null)
+            current.DestinationId = Guid.Parse(destinationId);
+
+        if (eventId != null)
+            current.EventId = string.IsNullOrEmpty(eventId) ? null : Guid.Parse(eventId);
+
+        if (durationStart != null)
+            current.DurationStart = durationStart;
+
+        if (durationEnd != null)
+            current.DurationEnd = durationEnd;
 
         await relationsManagerService.UpdateAsync(current, userContext.Principal);
         await db.SaveChangesAsync();

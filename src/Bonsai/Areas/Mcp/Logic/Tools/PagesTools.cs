@@ -1,19 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.ViewModels.Pages;
 using Bonsai.Areas.Front.Logic;
+using Bonsai.Areas.Front.ViewModels.Page.InfoBlock;
 using Bonsai.Areas.Mcp.Logic.Auth;
 using Bonsai.Areas.Mcp.Logic.Services;
+using Bonsai.Code.DomainModel.Facts.Models;
 using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using ModelContextProtocol.Server;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Impworks.Utils.Linq;
 
 namespace Bonsai.Areas.Mcp.Logic.Tools;
 
@@ -59,30 +62,6 @@ public class PagesTools(
     }
 
     /// <summary>
-    /// Gets autocomplete suggestions for page search.
-    /// </summary>
-    [McpServerTool(Name = "suggest_pages")]
-    [Description("Get autocomplete suggestions for page titles. Useful for finding pages by partial name.")]
-    public async Task<SuggestPagesResult> SuggestPages(
-        [Description("The partial title to search for (minimum 3 characters)")] string query)
-    {
-        await authService.RequireRoleAsync(UserRole.User);
-
-        var results = await searchService.SuggestAsync(query);
-
-        return new SuggestPagesResult
-        {
-            Suggestions = results.Select(r => new PageSuggestion
-            {
-                Id = r.Id ?? Guid.Empty,
-                Key = r.Key,
-                Title = r.Title,
-                Type = r.Type.ToString()
-            }).ToList()
-        };
-    }
-
-    /// <summary>
     /// Reads a page's content and metadata.
     /// </summary>
     [McpServerTool(Name = "read_page")]
@@ -103,14 +82,7 @@ public class PagesTools(
             Type = description.Type.ToString(),
             Description = description.Description,
             PhotoPath = infoBlock.Photo?.ThumbnailUrl,
-            Facts = infoBlock.Facts?.SelectMany(g => g.Facts.Select(f => new FactInfo
-            {
-                GroupId = g.Definition.Id,
-                GroupTitle = g.Definition.Title,
-                FactId = f.Definition.Id,
-                FactTitle = f.Definition.Title,
-                Value = f.ShortTitle ?? f.ToString()
-            })).ToList() ?? [],
+            Facts = infoBlock.Facts?.SelectMany(g => g.Facts).Select(GetFactInfo).ToList() ?? [],
             Relations = infoBlock.RelationGroups?.SelectMany(c =>
                 c.Groups.SelectMany(g =>
                     g.Relations.SelectMany(r =>
@@ -234,10 +206,17 @@ public class PagesTools(
         var id = Guid.Parse(pageId);
         var current = await pagesManagerService.RequestUpdateAsync(id, userContext.Principal, force: true);
 
-        if (title != null) current.Title = title;
-        if (description != null) current.Description = description;
-        if (facts != null) current.Facts = facts;
-        if (aliases != null) current.Aliases = System.Text.Json.JsonSerializer.Serialize(aliases.Split(',').Select(a => a.Trim()).ToList());
+        if (title != null)
+            current.Title = title;
+        
+        if (description != null)
+            current.Description = description;
+
+        if (facts != null)
+            current.Facts = facts;
+
+        if (aliases != null)
+            current.Aliases = System.Text.Json.JsonSerializer.Serialize(aliases.Split(',').Select(a => a.Trim()).ToList());
 
         var page = await pagesManagerService.UpdateAsync(current, userContext.Principal);
         await db.SaveChangesAsync();
@@ -262,7 +241,7 @@ public class PagesTools(
     public async Task<DeletePageResult> DeletePage(
         [Description("Page ID (GUID)")] string pageId)
     {
-        await authService.RequireRoleAsync(UserRole.Editor);
+        await authService.RequireRoleAsync(UserRole.Admin);
 
         var id = Guid.Parse(pageId);
         var page = await pagesManagerService.RemoveAsync(id, userContext.Principal);
@@ -304,6 +283,37 @@ public class PagesTools(
             }).ToList()
         };
     }
+
+    /// <summary>
+    /// Parses the fact details to a LLM-readable format.
+    /// </summary>
+    private FactInfo GetFactInfo(FactModelBase fact)
+    {
+        var value = fact switch
+        {
+            AddressFactModel f => f.Value,
+            BirthDateFactModel f => f.Value.ToString(),
+            BloodTypeFactModel f => $"{f.Type}" +
+                                    (f.RhesusFactor.HasValue ? " Rhesus " + (f.RhesusFactor.Value ? "+" : "-") : ""),
+            ContactsFactModel f => f.Values.Select(x => $"{x.Type}: {x.Value}").JoinString(", "),
+            DateFactModel f => f.Value.ToString(),
+            DeathDateFactModel f => f.IsUnknown || f.Value == null ? "Unknown" : f.Value.ToString(),
+            GenderFactModel f => f.IsMale ? "Male" : "Female",
+            HumanNameFactModel f => f.Values.Select(x => $"{x.FirstName} {x.MiddleName} {x.LastName} ({x.Duration})").JoinString(", "),
+            LanguageFactModel f => f.Values.Select(x => $"{x.Name}: {x.Proficiency} (duration: {x.Duration})").JoinString(", "),
+            NameFactModel f => f.Value,
+            SkillFactModel f => f.Values.Select(x => $"{x.Name}: {x.Proficiency} (duration: {x.Duration})").JoinString(", "),
+            StringFactModel f => f.Value,
+            StringListFactModel f => f.Values.Select(i => i.Value).JoinString(", "),
+            _ => "",
+        };
+
+        return new FactInfo
+        {
+            FactTitle = fact.Definition.Title,
+            Value = value
+        };
+    }
 }
 
 #region Result Types
@@ -323,19 +333,6 @@ public class PageSearchHit
     public string DescriptionExcerpt { get; set; }
 }
 
-public class SuggestPagesResult
-{
-    public List<PageSuggestion> Suggestions { get; set; }
-}
-
-public class PageSuggestion
-{
-    public Guid Id { get; set; }
-    public string Key { get; set; }
-    public string Title { get; set; }
-    public string Type { get; set; }
-}
-
 public class ReadPageResult
 {
     public Guid Id { get; set; }
@@ -350,9 +347,6 @@ public class ReadPageResult
 
 public class FactInfo
 {
-    public string GroupId { get; set; }
-    public string GroupTitle { get; set; }
-    public string FactId { get; set; }
     public string FactTitle { get; set; }
     public string Value { get; set; }
 }
