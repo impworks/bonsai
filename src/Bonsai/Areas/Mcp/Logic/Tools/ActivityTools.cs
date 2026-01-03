@@ -26,7 +26,7 @@ public class ActivityTools(
     /// Lists changesets (history of changes).
     /// </summary>
     [McpServerTool(Name = "list_changesets")]
-    [Description("List changesets showing the history of changes to pages, media, and relations.")]
+    [Description("List changesets showing the history of changes to pages, media, and relations. Requires Editor role.")]
     public async Task<ListChangesetsResult> ListChangesets(
         [Description("Filter by entity types (comma-separated: Page, Media, Relation)")] string entityTypes = null,
         [Description("Filter by change types (comma-separated: Created, Updated, Removed, Restored)")] string changesetTypes = null,
@@ -37,7 +37,7 @@ public class ActivityTools(
         [Description("Order descending (default: true)")] bool orderDescending = true,
         [Description("Page number for pagination (0-based, default: 0)")] int page = 0)
     {
-        await authService.RequireRoleAsync(UserRole.User);
+        await authService.RequireRoleAsync(UserRole.Editor);
 
         var entityTypesList = string.IsNullOrEmpty(entityTypes)
             ? null
@@ -93,11 +93,11 @@ public class ActivityTools(
     /// Gets detailed information about a specific changeset.
     /// </summary>
     [McpServerTool(Name = "get_changeset_details")]
-    [Description("Get detailed information about a specific changeset, including what was changed.")]
+    [Description("Get detailed information about a specific changeset, including what was changed. Requires Editor role.")]
     public async Task<ChangesetDetailsResult> GetChangesetDetails(
         [Description("Changeset ID (GUID)")] string changesetId)
     {
-        await authService.RequireRoleAsync(UserRole.User);
+        await authService.RequireRoleAsync(UserRole.Editor);
 
         var id = Guid.Parse(changesetId);
         var details = await changesetsService.GetChangesetDetailsAsync(id);
@@ -118,68 +118,6 @@ public class ActivityTools(
                 Title = c.Title,
                 Diff = c.Diff
             }).ToList() ?? []
-        };
-    }
-
-    /// <summary>
-    /// Gets recent activity summary.
-    /// </summary>
-    [McpServerTool(Name = "get_recent_activity")]
-    [Description("Get a summary of recent activity in the wiki.")]
-    public async Task<RecentActivityResult> GetRecentActivity(
-        [Description("Number of recent changesets to include (default: 20, max: 100)")] int count = 20)
-    {
-        await authService.RequireRoleAsync(UserRole.User);
-
-        count = Math.Min(count, 100);
-
-        var changes = await db.Changes
-            .AsNoTracking()
-            .Include(x => x.Author)
-            .Include(x => x.EditedPage)
-            .Include(x => x.EditedMedia)
-            .Include(x => x.EditedRelation).ThenInclude(r => r.Source)
-            .Include(x => x.EditedRelation).ThenInclude(r => r.Destination)
-            .OrderByDescending(x => x.Date)
-            .Take(count)
-            .ToListAsync();
-
-        var activityItems = changes.Select(c => new ActivityItem
-        {
-            Date = c.Date.DateTime,
-            ChangeType = c.ChangeType.ToString(),
-            EntityType = c.EntityType.ToString(),
-            EntityTitle = GetEntityTitle(c),
-            EntityKey = c.EditedPage?.Key ?? c.EditedMedia?.Key,
-            EntityId = c.EditedPageId ?? c.EditedMediaId ?? c.EditedRelationId,
-            Author = c.Author != null ? $"{c.Author.FirstName} {c.Author.LastName}".Trim() : "Unknown",
-            AuthorId = c.Author?.Id
-        }).ToList();
-
-        // Calculate summary
-        var summary = new ActivitySummary
-        {
-            TotalChanges = activityItems.Count,
-            ChangesByType = activityItems.GroupBy(x => x.ChangeType).ToDictionary(g => g.Key, g => g.Count()),
-            ChangesByEntityType = activityItems.GroupBy(x => x.EntityType).ToDictionary(g => g.Key, g => g.Count()),
-            TopContributors = activityItems
-                .Where(x => !string.IsNullOrEmpty(x.AuthorId))
-                .GroupBy(x => new { x.AuthorId, x.Author })
-                .Select(g => new ContributorSummary
-                {
-                    UserId = g.Key.AuthorId,
-                    Name = g.Key.Author,
-                    ChangeCount = g.Count()
-                })
-                .OrderByDescending(x => x.ChangeCount)
-                .Take(5)
-                .ToList()
-        };
-
-        return new RecentActivityResult
-        {
-            Items = activityItems,
-            Summary = summary
         };
     }
 
@@ -214,17 +152,6 @@ public class ActivityTools(
             TotalUsers = await db.Users.CountAsync(x => x.IsValidated),
             TotalChangesets = await db.Changes.CountAsync()
         };
-    }
-
-    private string GetEntityTitle(Changeset c)
-    {
-        if (c.EditedPage != null)
-            return c.EditedPage.Title;
-        if (c.EditedMedia != null)
-            return c.EditedMedia.Title;
-        if (c.EditedRelation != null)
-            return $"{c.EditedRelation.Source?.Title ?? "?"} → {c.EditedRelation.Destination?.Title ?? "?"}";
-        return "Unknown";
     }
 }
 
@@ -269,39 +196,6 @@ public class ChangeDetails
 {
     public string Title { get; set; }
     public string Diff { get; set; }
-}
-
-public class RecentActivityResult
-{
-    public List<ActivityItem> Items { get; set; }
-    public ActivitySummary Summary { get; set; }
-}
-
-public class ActivityItem
-{
-    public DateTime Date { get; set; }
-    public string ChangeType { get; set; }
-    public string EntityType { get; set; }
-    public string EntityTitle { get; set; }
-    public string EntityKey { get; set; }
-    public Guid? EntityId { get; set; }
-    public string Author { get; set; }
-    public string AuthorId { get; set; }
-}
-
-public class ActivitySummary
-{
-    public int TotalChanges { get; set; }
-    public Dictionary<string, int> ChangesByType { get; set; }
-    public Dictionary<string, int> ChangesByEntityType { get; set; }
-    public List<ContributorSummary> TopContributors { get; set; }
-}
-
-public class ContributorSummary
-{
-    public string UserId { get; set; }
-    public string Name { get; set; }
-    public int ChangeCount { get; set; }
 }
 
 public class WikiStatsResult

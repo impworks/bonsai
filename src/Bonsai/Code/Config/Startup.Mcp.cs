@@ -1,4 +1,6 @@
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using Bonsai.Areas.Mcp.Logic.Auth;
 using Bonsai.Areas.Mcp.Logic.Services;
 using Bonsai.Data;
@@ -22,6 +24,12 @@ public partial class Startup
         services.AddScoped<McpUserContext>();
         services.AddScoped<McpToolAuthorizationService>();
 
+        var jsonOpts = new JsonSerializerOptions
+        {
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+
         // MCP server with tools
         services.AddMcpServer(options =>
             {
@@ -29,7 +37,7 @@ public partial class Startup
                 options.ServerInstructions = GetServerInstructions();
             })
             .WithHttpTransport()
-            .WithToolsFromAssembly(typeof(Startup).Assembly);
+            .WithToolsFromAssembly(typeof(Startup).Assembly, jsonOpts);
     }
 
     /// <summary>

@@ -52,34 +52,6 @@ public class CalendarTools(
     }
 
     /// <summary>
-    /// Gets events for a specific day.
-    /// </summary>
-    [McpServerTool(Name = "get_day_events")]
-    [Description("Get calendar events for a specific day. Returns all events that occurred on that date.")]
-    public async Task<DayEventsResult> GetDayEvents(
-        [Description("Year (e.g., 2024)")] int year,
-        [Description("Month (1-12)")] int month,
-        [Description("Day (1-31, or null for events without specific day)")] int? day = null)
-    {
-        await authService.RequireRoleAsync(UserRole.User);
-
-        var result = await calendarService.GetDayEventsAsync(year, month, day);
-
-        var events = result.Events?
-            .Select(e => MapEvent(e, day))
-            .ToList() ?? [];
-
-        return new DayEventsResult
-        {
-            Year = year,
-            Month = month,
-            Day = day,
-            DateDisplay = result.Date.ReadableDate,
-            Events = events
-        };
-    }
-
-    /// <summary>
     /// Gets today's events.
     /// </summary>
     [McpServerTool(Name = "get_today_events")]
@@ -89,51 +61,23 @@ public class CalendarTools(
         await authService.RequireRoleAsync(UserRole.User);
 
         var today = DateTime.Today;
-        return await GetDayEvents(today.Year, today.Month, today.Day);
-    }
+        var result = await calendarService.GetDayEventsAsync(today.Year, today.Month, today.Day);
 
-    /// <summary>
-    /// Gets upcoming events for the next N days.
-    /// </summary>
-    [McpServerTool(Name = "get_upcoming_events")]
-    [Description("Get calendar events for the next N days, including today.")]
-    public async Task<UpcomingEventsResult> GetUpcomingEvents(
-        [Description("Number of days to look ahead (default: 7, max: 31)")] int days = 7)
-    {
-        await authService.RequireRoleAsync(UserRole.User);
+        var events = result.Events?
+            .Select(e => MapEvent(e, today.Day))
+            .ToList() ?? [];
 
-        days = Math.Min(days, 31);
-        var allEvents = new List<UpcomingEvent>();
-        var today = DateTime.Today;
-
-        for (var i = 0; i < days; i++)
+        return new DayEventsResult
         {
-            var date = today.AddDays(i);
-            var dayResult = await calendarService.GetDayEventsAsync(date.Year, date.Month, date.Day);
-
-            if (dayResult.Events?.Any() != true)
-                continue;
-
-            foreach (var evt in dayResult.Events)
-            {
-                allEvents.Add(new UpcomingEvent
-                {
-                    Date = date,
-                    DaysFromToday = i,
-                    Event = MapEvent(evt, date.Day)
-                });
-            }
-        }
-
-        return new UpcomingEventsResult
-        {
-            FromDate = today,
-            ToDate = today.AddDays(days - 1),
-            Events = allEvents
+            Year = today.Year,
+            Month = today.Month,
+            Day = today.Day,
+            DateDisplay = result.Date.ReadableDate,
+            Events = events
         };
     }
 
-    private static CalendarEvent MapEvent(Bonsai.Areas.Front.ViewModels.Calendar.CalendarEventVM evt, int? day)
+    private static CalendarEvent MapEvent(Front.ViewModels.Calendar.CalendarEventVM evt, int? day)
     {
         return new CalendarEvent
         {
@@ -177,20 +121,6 @@ public class DayEventsResult
     public int? Day { get; set; }
     public string DateDisplay { get; set; }
     public List<CalendarEvent> Events { get; set; }
-}
-
-public class UpcomingEventsResult
-{
-    public DateTime FromDate { get; set; }
-    public DateTime ToDate { get; set; }
-    public List<UpcomingEvent> Events { get; set; }
-}
-
-public class UpcomingEvent
-{
-    public DateTime Date { get; set; }
-    public int DaysFromToday { get; set; }
-    public CalendarEvent Event { get; set; }
 }
 
 public class CalendarEvent
