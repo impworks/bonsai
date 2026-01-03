@@ -25,9 +25,9 @@
     @if (info.CanRemoveCompletely)
     {
         <div class="form-group">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" asp-for="RemoveCompletely" id="RemoveCompletely" />
-                <label class="form-check-label" for="RemoveCompletely">@Texts.Admin_Media_Remove_CompletelyDescription</label>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" asp-for="RemoveCompletely" id="RemoveCompletely" />
+                <label class="custom-control-label" for="RemoveCompletely">@Texts.Admin_Media_Remove_CompletelyDescription</label>
             </div>
         </div>
     }
