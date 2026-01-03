@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data.Models;
-using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Data.Utils.Seed;
@@ -83,9 +82,9 @@ public static class SeedData
     /// <summary>
     /// Adds an administrator user account.
     /// </summary>
-    public static async Task EnsureDefaultUserCreatedAsync(UserManager<AppUser> userMgr, string email = null, string password = null)
+    public static async Task EnsureDefaultUserCreatedAsync(UserManager<AppUser> userMgr, string email, string password)
     {
-        await AddUser("Тестовый Админ", StringHelper.Coalesce(email, "admin@example.com"), StringHelper.Coalesce(password, "123456"));
+        await AddUser("Тестовый Админ", email, password);
 
         async Task AddUser(string name, string userEmail, string userPassword, UserRole role = UserRole.Admin)
         {

@@ -105,7 +105,7 @@ public partial class Startup
                             await SeedData.EnsureSampleDataSeededAsync(sp.GetService<AppDbContext>());
 
                         if (demoCfg.CreateDefaultAdmin)
-                            await SeedData.EnsureDefaultUserCreatedAsync(sp.GetService<UserManager<AppUser>>(), demoCfg.DefaultAdminEmail, demoCfg.DefaultAdminPassword);
+                            await SeedData.EnsureDefaultUserCreatedAsync(sp.GetService<UserManager<AppUser>>(), demoCfg.EffectiveAdminEmail, demoCfg.EffectiveAdminPassword);
                     });
             }
 

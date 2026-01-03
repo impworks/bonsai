@@ -1,4 +1,6 @@
-﻿namespace Bonsai.Code.Services.Config;
+﻿using Impworks.Utils.Strings;
+
+namespace Bonsai.Code.Services.Config;
 
 /// <summary>
 /// Global configuration properties defined in appsettings.json.
@@ -46,6 +48,9 @@ public class WebServerConfig
 /// </summary>
 public class DemoModeConfig
 {
+    public const string FallbackAdminEmail = "admin@example.com";
+    public const string FallbackAdminPassword = "123456";
+
     public bool Enabled { get; set; }
     public bool CreateDefaultPages { get; set; }
     public bool CreateDefaultAdmin { get; set; }
@@ -54,6 +59,9 @@ public class DemoModeConfig
     public string YandexMetrikaId { get; set; }
     public string DefaultAdminEmail { get; set; }
     public string DefaultAdminPassword { get; set; }
+
+    public string EffectiveAdminEmail => StringHelper.Coalesce(DefaultAdminEmail, FallbackAdminEmail);
+    public string EffectiveAdminPassword => StringHelper.Coalesce(DefaultAdminPassword, FallbackAdminPassword);
 }
 
 /// <summary>
