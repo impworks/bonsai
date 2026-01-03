@@ -7,12 +7,13 @@ A family wiki and photoalbum engine.
 ## Features
 
 * Pages with Markdown text
-* Media files: photos, videos (PDF documents will be supported later)
+* Media files: photos, videos, PDF documents
 * Person tags on photos
 * Relations: validation, inferrence
 * Fact storage (birthday, gender, blood type, languages, hobbies, etc.)
 * Access control: editor, reader and guest roles
 * Changesets: browse changes to any page/media, see diffs, easily revert if necessary
+* AI assistants interaction via MCP server
 
 ## Screenshots
 
