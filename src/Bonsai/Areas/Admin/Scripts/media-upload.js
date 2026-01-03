@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
     var $loc = $('#Location'),
         $evt = $('#Event'),
         $date = $('#Date'),
@@ -18,14 +18,20 @@
                     return;
                 }
             }
-            data.formData = {
-                Location: $loc.val(),
-                Event: $evt.val(),
-                Date: $date.val(),
-                UseFileNameAsTitle: $ufn.is(':checked'),
-            };
+
+            var file = data.originalFiles[0];
             data.context = createUploadItem();
-            data.submit();
+
+            // Generate PDF preview if applicable
+            if (file.type === 'application/pdf') {
+                generatePdfPreview(file).then(function (previewBlob) {
+                    submitUpload(data, previewBlob);
+                }).catch(function () {
+                    submitUpload(data, null);
+                });
+            } else {
+                submitUpload(data, null);
+            }
         },
         done: function (e, data) {
             var body = JSON.parse(data.response().jqXHR.responseText);
@@ -96,5 +102,50 @@
                     setTimeout(function() { refreshThumbnail($ctx, id); }, 5000);
                 }
             });
+    }
+
+    function submitUpload(data, previewBlob) {
+        data.formData = {
+            Location: $loc.val(),
+            Event: $evt.val(),
+            Date: $date.val(),
+            UseFileNameAsTitle: $ufn.is(':checked'),
+        };
+
+        if (previewBlob) {
+            data.formData.preview = previewBlob;
+        }
+
+        data.submit();
+    }
+
+    function generatePdfPreview(file) {
+        var PREVIEW_WIDTH = 1280;
+        var PREVIEW_HEIGHT = 768;
+
+        return file.arrayBuffer().then(function (arrayBuffer) {
+            return pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        }).then(function (pdf) {
+            return pdf.getPage(1);
+        }).then(function (page) {
+            var viewport = page.getViewport({ scale: 1 });
+            var scale = Math.min(PREVIEW_WIDTH / viewport.width, PREVIEW_HEIGHT / viewport.height);
+            var scaledViewport = page.getViewport({ scale: scale });
+
+            var canvas = document.createElement('canvas');
+            canvas.width = scaledViewport.width;
+            canvas.height = scaledViewport.height;
+
+            return page.render({
+                canvasContext: canvas.getContext('2d'),
+                viewport: scaledViewport
+            }).promise.then(function () {
+                return canvas;
+            });
+        }).then(function (canvas) {
+            return new Promise(function (resolve) {
+                canvas.toBlob(resolve, 'image/jpeg', 0.9);
+            });
+        });
     }
 });

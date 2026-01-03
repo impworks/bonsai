@@ -58,11 +58,11 @@ public class MediaController(MediaManagerService mediaSvc, PagesManagerService p
     [HttpPost]
     [Route("upload")]
     [ConfigurableRequestSizeLimit]
-    public async Task<ActionResult> Upload(MediaUploadRequestVM vm, IFormFile file)
+    public async Task<ActionResult> Upload(MediaUploadRequestVM vm, IFormFile file, IFormFile preview = null)
     {
         try
         {
-            var result = await mediaSvc.UploadAsync(vm, file, User);
+            var result = await mediaSvc.UploadAsync(vm, file, preview, User);
             result.ThumbnailPath = Url.Content(result.ThumbnailPath);
 
             await db.SaveChangesAsync();

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
 using Bonsai.Data.Models;
+using Impworks.Utils.Strings;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bonsai.Data.Utils.Seed;
@@ -82,19 +83,19 @@ public static class SeedData
     /// <summary>
     /// Adds an administrator user account.
     /// </summary>
-    public static async Task EnsureDefaultUserCreatedAsync(UserManager<AppUser> userMgr)
+    public static async Task EnsureDefaultUserCreatedAsync(UserManager<AppUser> userMgr, string email = null, string password = null)
     {
-        await AddUser("Тестовый Админ", "admin@example.com", "123456");
+        await AddUser("Тестовый Админ", StringHelper.Coalesce(email, "admin@example.com"), StringHelper.Coalesce(password, "123456"));
 
-        async Task AddUser(string name, string email, string password, UserRole role = UserRole.Admin)
+        async Task AddUser(string name, string userEmail, string userPassword, UserRole role = UserRole.Admin)
         {
             var parts = name.Split(' ');
             var user = new AppUser
             {
                 IsValidated = true,
                 AuthType = AuthType.Password,
-                UserName = email,
-                Email = email,
+                UserName = userEmail,
+                Email = userEmail,
                 LastName = parts.Length > 0 ? parts[0] : "",
                 FirstName = parts.Length > 1 ? parts[1] : "",
                 MiddleName = parts.Length > 2 ? parts[2] : ""
@@ -104,7 +105,7 @@ public static class SeedData
             if (!result.Succeeded)
                 return;
 
-            await userMgr.AddPasswordAsync(user, password);
+            await userMgr.AddPasswordAsync(user, userPassword);
             await userMgr.AddToRoleAsync(user, role.ToString());
         }
     }

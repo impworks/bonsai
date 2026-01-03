@@ -36,6 +36,7 @@
     "jquery-fullscreen-plugin": "1.0.0",
     "jquery-ui": "1.13.0",
     "magnific-popup": "1.1.0",
+    "pdfjs-dist": "^3.11.174",
     "popper.js": "1.16.1",
     "rangeslider.js": "2.3.3",
     "selectize": "0.12.6",
