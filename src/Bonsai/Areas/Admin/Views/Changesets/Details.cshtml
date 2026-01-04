@@ -27,7 +27,13 @@
             <dd class="col-sm-10">@Model.ChangeType.GetLocaleEnumDescription()</dd>
 
             <dt class="col-sm-2">@Texts.Admin_Changesets_Details_Author</dt>
-            <dd class="col-sm-10">@Model.Author</dd>
+            <dd class="col-sm-10">
+                @Model.Author
+                @if (Model.IsAIGenerated)
+                {
+                    <span class="fa fa-commenting ml-1" title="@Texts.Admin_Changesets_AIGenerated"></span>
+                }
+            </dd>
 
             <dt class="col-sm-2">@Texts.Admin_Changesets_Details_Date</dt>
             <dd class="col-sm-10">@Model.Date.ToLocalTime().ToString(Texts.DateFormat_Changeset) (@Model.Date.ToLocalTime().Humanize())</dd>

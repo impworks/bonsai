@@ -112,7 +112,7 @@ public class PagesManagerService
     /// <summary>
     /// Creates the new page.
     /// </summary>
-    public async Task<Page> CreateAsync(PageEditorVM vm, ClaimsPrincipal principal)
+    public async Task<Page> CreateAsync(PageEditorVM vm, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
         await ValidateRequestAsync(vm);
 
@@ -122,7 +122,7 @@ public class PagesManagerService
                                        .Select(x => new { x.Id })
                                        .FirstOrDefaultAsync();
         if (existingRemoved != null)
-            return await UpdateAsync(vm, principal, pageId: existingRemoved.Id);
+            return await UpdateAsync(vm, principal, pageId: existingRemoved.Id, isAIGenerated: isAIGenerated);
 
         var page = _mapper.Map<Page>(vm);
         page.Id = Guid.NewGuid();
@@ -133,9 +133,9 @@ public class PagesManagerService
 
         await _validator.ValidateAsync(page, vm.Facts);
 
-        var changeset = await GetChangesetAsync(null, _mapper.Map<PageEditorVM>(page), page.Id, principal, null);
+        var changeset = await GetChangesetAsync(null, _mapper.Map<PageEditorVM>(page), page.Id, principal, null, isAIGenerated);
         _db.Changes.Add(changeset);
-            
+
         _db.Pages.Add(page);
         _db.PageAliases.AddRange(GetPageAliases(vm.Aliases, vm.Title, page));
         _db.PageReferences.AddRange(await GetPageReferencesAsync(vm.Description, page));
@@ -206,7 +206,7 @@ public class PagesManagerService
     /// <summary>
     /// Updates the changes to a page.
     /// </summary>
-    public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal, Guid? revertedChangeId = null, Guid? pageId = null)
+    public async Task<Page> UpdateAsync(PageEditorVM vm, ClaimsPrincipal principal, Guid? revertedChangeId = null, Guid? pageId = null, bool isAIGenerated = false)
     {
         await ValidateRequestAsync(vm);
 
@@ -222,7 +222,7 @@ public class PagesManagerService
         await _validator.ValidateAsync(page, vm.Facts);
 
         var prevVm = page.IsDeleted ? null : _mapper.Map<PageEditorVM>(page);
-        var changeset = await GetChangesetAsync(prevVm, vm, pageId.Value, principal, revertedChangeId);
+        var changeset = await GetChangesetAsync(prevVm, vm, pageId.Value, principal, revertedChangeId, isAIGenerated);
         _db.Changes.Add(changeset);
 
         _mapper.Map(vm, page);
@@ -276,13 +276,13 @@ public class PagesManagerService
     /// <summary>
     /// Removes the page.
     /// </summary>
-    public async Task<Page> RemoveAsync(Guid id, ClaimsPrincipal principal)
+    public async Task<Page> RemoveAsync(Guid id, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
         var page = await _db.Pages
                             .GetAsync(x => x.Id == id && x.IsDeleted == false, Texts.Admin_Pages_NotFound);
 
         var prev = await RequestUpdateAsync(id, principal, force: true);
-        var changeset = await GetChangesetAsync(prev, null, id, principal, null);
+        var changeset = await GetChangesetAsync(prev, null, id, principal, null, isAIGenerated);
         _db.Changes.Add(changeset);
 
         page.IsDeleted = true;
@@ -521,7 +521,7 @@ public class PagesManagerService
     /// <summary>
     /// Gets the changeset for updates.
     /// </summary>
-    private async Task<Changeset> GetChangesetAsync(PageEditorVM prev, PageEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId)
+    private async Task<Changeset> GetChangesetAsync(PageEditorVM prev, PageEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId, bool isAIGenerated = false)
     {
         if(prev == null && next == null)
             throw new ArgumentNullException(nameof(next), "Either prev or next must be provided.");
@@ -538,6 +538,7 @@ public class PagesManagerService
             EditedPageId = id,
             Author = user,
             UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
+            IsAIGenerated = isAIGenerated,
         };
     }
 

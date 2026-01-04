@@ -83,4 +83,9 @@ public class Changeset
     /// The new state (after the change).
     /// </summary>
     public string UpdatedState { get; set; }
+
+    /// <summary>
+    /// Flag indicating the change was made by an AI assistant.
+    /// </summary>
+    public bool IsAIGenerated { get; set; }
 }

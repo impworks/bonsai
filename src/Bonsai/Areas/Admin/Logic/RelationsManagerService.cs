@@ -98,7 +98,7 @@ public class RelationsManagerService
     /// <summary>
     /// Creates a new relation.
     /// </summary>
-    public async Task CreateAsync(RelationEditorVM vm, ClaimsPrincipal principal)
+    public async Task CreateAsync(RelationEditorVM vm, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
         await ValidateRequestAsync(vm, isNew: true);
 
@@ -138,7 +138,7 @@ public class RelationsManagerService
             MapComplementaryRelation(rel, compRel);
             newRels.Add(compRel);
 
-            _db.Changes.Add(GetChangeset(null, _mapper.Map<RelationEditorVM>(rel), rel.Id, user, null, groupId));
+            _db.Changes.Add(GetChangeset(null, _mapper.Map<RelationEditorVM>(rel), rel.Id, user, null, groupId, isAIGenerated));
         }
 
         await _validator.ValidateAsync(newRels.Concat(updatedRels).ToList());
@@ -164,7 +164,7 @@ public class RelationsManagerService
     /// <summary>
     /// Updates the relation.
     /// </summary>
-    public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null)
+    public async Task UpdateAsync(RelationEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null, bool isAIGenerated = false)
     {
         await ValidateRequestAsync(vm, isNew: false);
 
@@ -178,7 +178,7 @@ public class RelationsManagerService
 
         var user = await GetUserAsync(principal);
         var prevVm = rel.IsDeleted ? null : _mapper.Map<RelationEditorVM>(rel);
-        var changeset = GetChangeset(prevVm, vm, rel.Id, user, revertedId);
+        var changeset = GetChangeset(prevVm, vm, rel.Id, user, revertedId, isAIGenerated: isAIGenerated);
         _db.Changes.Add(changeset);
 
         _mapper.Map(vm, rel);
@@ -214,7 +214,7 @@ public class RelationsManagerService
     /// <summary>
     /// Removes the relation.
     /// </summary>
-    public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
+    public async Task RemoveAsync(Guid id, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
         var rel = await _db.Relations
                            .GetAsync(x => x.Id == id
@@ -224,7 +224,7 @@ public class RelationsManagerService
         var compRel = await FindComplementaryRelationAsync(rel);
 
         var user = await GetUserAsync(principal);
-        var changeset = GetChangeset(_mapper.Map<RelationEditorVM>(rel), null, id, user, null);
+        var changeset = GetChangeset(_mapper.Map<RelationEditorVM>(rel), null, id, user, null, isAIGenerated: isAIGenerated);
         _db.Changes.Add(changeset);
 
         rel.IsDeleted = true;
@@ -378,7 +378,7 @@ public class RelationsManagerService
     /// <summary>
     /// Gets the changeset for updates.
     /// </summary>
-    private Changeset GetChangeset(RelationEditorVM prev, RelationEditorVM next, Guid id, AppUser user, Guid? revertedId, Guid? groupId = null)
+    private Changeset GetChangeset(RelationEditorVM prev, RelationEditorVM next, Guid id, AppUser user, Guid? revertedId, Guid? groupId = null, bool isAIGenerated = false)
     {
         if(prev == null && next == null)
             throw new ArgumentNullException();
@@ -394,6 +394,7 @@ public class RelationsManagerService
             EditedRelationId = id,
             Author = user,
             UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
+            IsAIGenerated = isAIGenerated,
         };
     }
 

@@ -153,7 +153,7 @@ public class MediaTools(
         if (eventId != null)
             current.Event = eventId;
 
-        await mediaManagerService.UpdateAsync(current, userContext.Principal);
+        await mediaManagerService.UpdateAsync(current, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
 
         return new UpdateMediaResult
@@ -174,7 +174,7 @@ public class MediaTools(
         await authService.RequireRoleAsync(UserRole.Editor);
 
         var id = Guid.Parse(mediaId);
-        await mediaManagerService.RemoveAsync(id, userContext.Principal);
+        await mediaManagerService.RemoveAsync(id, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
 
         return new DeleteMediaResult

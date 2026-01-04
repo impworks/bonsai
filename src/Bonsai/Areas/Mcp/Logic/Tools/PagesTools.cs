@@ -175,7 +175,7 @@ public class PagesTools(
             Aliases = aliases != null ? System.Text.Json.JsonSerializer.Serialize(aliases.Split(',').Select(a => a.Trim()).ToList()) : null
         };
 
-        var page = await pagesManagerService.CreateAsync(vm, userContext.Principal);
+        var page = await pagesManagerService.CreateAsync(vm, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
 
         await search.AddPageAsync(page);
@@ -218,7 +218,7 @@ public class PagesTools(
         if (aliases != null)
             current.Aliases = System.Text.Json.JsonSerializer.Serialize(aliases.Split(',').Select(a => a.Trim()).ToList());
 
-        var page = await pagesManagerService.UpdateAsync(current, userContext.Principal);
+        var page = await pagesManagerService.UpdateAsync(current, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
 
         await search.AddPageAsync(page);
@@ -244,7 +244,7 @@ public class PagesTools(
         await authService.RequireRoleAsync(UserRole.Admin);
 
         var id = Guid.Parse(pageId);
-        var page = await pagesManagerService.RemoveAsync(id, userContext.Principal);
+        var page = await pagesManagerService.RemoveAsync(id, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
 
         await search.RemovePageAsync(id);
