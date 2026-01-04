@@ -191,7 +191,7 @@ public partial class Startup
           "Main.Name": { "Values": [{ "FirstName": "John", "MiddleName": "Robert", "LastName": "Smith", "Duration": "1990.??.??-" }] },
           "Birth.Date": { "Value": "1985.03.15" },
           "Birth.Place": { "Value": "New York, USA" },
-          "Death.Date": { "Value": "2024.01.20", "Cause": "natural" },
+          "Death.Date": { "Value": "2024.01.20", "IsUnknown": false },
           "Death.Place": { "Value": "Los Angeles, USA" },
           "Death.Cause": { "Value": "Heart disease" },
           "Death.Burial": { "Value": "Forest Lawn Cemetery" },
@@ -203,9 +203,31 @@ public partial class Startup
           "Person.Skill": { "Values": [{ "Name": "Piano", "Level": "Professional" }] },
           "Person.Profession": { "Values": ["Software Engineer", "Teacher"] },
           "Person.Religion": { "Values": ["Christian"] },
-          "Meta.SocialProfiles": { "Values": [{ "Type": "Facebook", "Value": "john.smith" }] }
+          "Meta.SocialProfiles": { "Values": [{ "Type": "Facebook", "Value": "https://facebook.com/john-smith" }] }
         }
         ```
+        
+        Possible values for Person.Language.Values[...].Level:
+        * "Beginner"
+        * "Intermediate"
+        * "Profound"
+        * "Native"
+        
+        Possible values for Person.Skill.Values[...].Level:
+        * "Beginner"
+        * "Intermediate"
+        * "Profound"
+        
+        Possible values for Meta.SocialProfiles.Values[...].Type:
+        * "Facebook" (value must be a URL to Facebook profile)
+        * "Twitter" (value must be a URL or an @handle)
+        * "Odnoklassniki" (value must be a URL)
+        * "Vkontakte" (value must be a URL)
+        * "Telegram" (value must be a URL or an @handle)
+        * "Youtube" (value must be a URL)
+        * "Github" (value must be a URL)
+        * "Email" (value must be a valid email address)
+        * "Phone" (value must be a valid phone number in E.164 format)
 
         ### Pet Facts
         ```json
@@ -223,7 +245,7 @@ public partial class Startup
         ### Location Facts
         ```json
         {
-          "Main.Location": { "Address": "123 Main St, City, Country", "Latitude": 40.7128, "Longitude": -74.0060 },
+          "Main.Location": { "Value": "123 Main St, City, Country" },
           "Main.Opening": { "Value": "1995.??.??" },
           "Main.Shutdown": { "Value": null }
         }
@@ -267,5 +289,11 @@ public partial class Startup
         - **User**: Read-only access (search, list, read pages/media/relations)
         - **Editor**: Can create, update, and delete content
         - **Admin**: Full access including user management
+        
+        ## Changes
+        
+        Bonsai persists the history of changes to all pages, relations, and media files.
+        Whenever any create_*, update_*, or delete_* tool is invoked, a new changeset is created, so it's crucial not to invoke them multiple times.
+        It can be viewed using the changes-related tools, and reverted only manually in the Bonsai Web interface.
         """;
 }

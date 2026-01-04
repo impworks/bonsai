@@ -82,7 +82,7 @@ public class PagesTools(
             Type = description.Type.ToString(),
             Description = description.Description,
             PhotoPath = infoBlock.Photo?.ThumbnailUrl,
-            Facts = infoBlock.Facts?.SelectMany(g => g.Facts).Select(GetFactInfo).ToList() ?? [],
+            Facts = infoBlock.RawFacts,
             Relations = infoBlock.RelationGroups?.SelectMany(c =>
                 c.Groups.SelectMany(g =>
                     g.Relations.SelectMany(r =>
@@ -283,37 +283,6 @@ public class PagesTools(
             }).ToList()
         };
     }
-
-    /// <summary>
-    /// Parses the fact details to a LLM-readable format.
-    /// </summary>
-    private FactInfo GetFactInfo(FactModelBase fact)
-    {
-        var value = fact switch
-        {
-            AddressFactModel f => f.Value,
-            BirthDateFactModel f => f.Value.ToString(),
-            BloodTypeFactModel f => $"{f.Type}" +
-                                    (f.RhesusFactor.HasValue ? " Rhesus " + (f.RhesusFactor.Value ? "+" : "-") : ""),
-            ContactsFactModel f => f.Values.Select(x => $"{x.Type}: {x.Value}").JoinString(", "),
-            DateFactModel f => f.Value.ToString(),
-            DeathDateFactModel f => f.IsUnknown || f.Value == null ? "Unknown" : f.Value.ToString(),
-            GenderFactModel f => f.IsMale ? "Male" : "Female",
-            HumanNameFactModel f => f.Values.Select(x => $"{x.FirstName} {x.MiddleName} {x.LastName} ({x.Duration})").JoinString(", "),
-            LanguageFactModel f => f.Values.Select(x => $"{x.Name}: {x.Proficiency} (duration: {x.Duration})").JoinString(", "),
-            NameFactModel f => f.Value,
-            SkillFactModel f => f.Values.Select(x => $"{x.Name}: {x.Proficiency} (duration: {x.Duration})").JoinString(", "),
-            StringFactModel f => f.Value,
-            StringListFactModel f => f.Values.Select(i => i.Value).JoinString(", "),
-            _ => "",
-        };
-
-        return new FactInfo
-        {
-            FactTitle = fact.Definition.Title,
-            Value = value
-        };
-    }
 }
 
 #region Result Types
@@ -341,7 +310,7 @@ public class ReadPageResult
     public string Type { get; set; }
     public string Description { get; set; }
     public string PhotoPath { get; set; }
-    public List<FactInfo> Facts { get; set; }
+    public string Facts { get; set; }
     public List<RelationInfo> Relations { get; set; }
 }
 
