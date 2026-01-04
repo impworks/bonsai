@@ -36,7 +36,11 @@ public partial class Startup
                 options.ServerInfo = new() { Name = "Bonsai Family Wiki", Version = "1.0.0" };
                 options.ServerInstructions = GetServerInstructions();
             })
-            .WithHttpTransport()
+            .WithHttpTransport(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.MaxIdleSessionCount = 100;
+            })
             .WithToolsFromAssembly(typeof(Startup).Assembly, jsonOpts);
     }
 
