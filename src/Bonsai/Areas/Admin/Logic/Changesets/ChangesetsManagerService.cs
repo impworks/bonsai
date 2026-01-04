@@ -131,7 +131,8 @@ public class ChangesetsManagerService
                                                     || x.EditedRelation?.IsDeleted == false,
                                      EntityKey = x.EditedPage?.Key ?? x.EditedMedia?.Key,
                                      PageType = GetPageType(x),
-                                     CanRevert = CanRevert(x)
+                                     CanRevert = CanRevert(x),
+                                     IsAIGenerated = x.IsAIGenerated
                                  })
                                  .ToList();
 
@@ -172,7 +173,8 @@ public class ChangesetsManagerService
                 ? MediaPresenterService.GetSizedMediaPath(chg.EditedMedia.FilePath, MediaSize.Small)
                 : null,
             Changes = GetDiff(prevData, nextData, renderer),
-            CanRevert = CanRevert(chg)
+            CanRevert = CanRevert(chg),
+            IsAIGenerated = chg.IsAIGenerated
         };
     }
 

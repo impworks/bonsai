@@ -141,7 +141,7 @@ public class RelationsTools(
             DurationEnd = durationEnd
         };
 
-        await relationsManagerService.CreateAsync(vm, userContext.Principal);
+        await relationsManagerService.CreateAsync(vm, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
         await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
@@ -186,7 +186,7 @@ public class RelationsTools(
         if (durationEnd != null)
             current.DurationEnd = durationEnd;
 
-        await relationsManagerService.UpdateAsync(current, userContext.Principal);
+        await relationsManagerService.UpdateAsync(current, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
         await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
@@ -208,7 +208,7 @@ public class RelationsTools(
         await authService.RequireRoleAsync(UserRole.Editor);
 
         var id = Guid.Parse(relationId);
-        await relationsManagerService.RemoveAsync(id, userContext.Principal);
+        await relationsManagerService.RemoveAsync(id, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
         await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 

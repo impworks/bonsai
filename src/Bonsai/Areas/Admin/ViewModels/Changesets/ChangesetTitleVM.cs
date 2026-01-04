@@ -67,4 +67,9 @@ public class ChangesetTitleVM
     /// Flag indicating that this changeset can be reverted.
     /// </summary>
     public bool CanRevert { get; set; }
+
+    /// <summary>
+    /// Flag indicating the change was made by an AI assistant.
+    /// </summary>
+    public bool IsAIGenerated { get; set; }
 }

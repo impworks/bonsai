@@ -120,7 +120,7 @@ public class MediaManagerService
     /// <summary>
     /// Uploads a new media file.
     /// </summary>
-    public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, IFormFile file, IFormFile preview, ClaimsPrincipal principal)
+    public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, IFormFile file, IFormFile preview, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
         var id = Guid.NewGuid();
         var key = PageHelper.GetMediaKey(id);
@@ -155,7 +155,7 @@ public class MediaManagerService
 
         _db.Media.Add(media);
 
-        var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal, null);
+        var changeset = await GetChangesetAsync(null, _mapper.Map<MediaEditorVM>(media), id, principal, null, isAIGenerated);
         _db.Changes.Add(changeset);
 
         return _mapper.Map<MediaUploadResultVM>(media);
@@ -206,7 +206,7 @@ public class MediaManagerService
     /// <summary>
     /// Updates the media data.
     /// </summary>
-    public async Task UpdateAsync(MediaEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null)
+    public async Task UpdateAsync(MediaEditorVM vm, ClaimsPrincipal principal, Guid? revertedId = null, bool isAIGenerated = false)
     {
         await ValidateRequestAsync(vm);
 
@@ -217,7 +217,7 @@ public class MediaManagerService
 
         var prevTags = media.Tags.ToList();
         var prevVm = media.IsDeleted ? null : await RequestUpdateAsync(vm.Id, revertedId != null);
-        var changeset = await GetChangesetAsync(prevVm, vm, vm.Id, principal, revertedId);
+        var changeset = await GetChangesetAsync(prevVm, vm, vm.Id, principal, revertedId, isAIGenerated);
         _db.Changes.Add(changeset);
 
         _mapper.Map(vm, media);
@@ -257,14 +257,14 @@ public class MediaManagerService
     /// <summary>
     /// Removes the media file.
     /// </summary>
-    public async Task RemoveAsync(Guid id, ClaimsPrincipal principal)
+    public async Task RemoveAsync(Guid id, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
         var media = await _db.Media
                              .Include(x => x.Tags)
                              .GetAsync(x => x.Id == id && x.IsDeleted == false, Texts.Admin_Media_NotFound);
 
         var prevState = await RequestUpdateAsync(id);
-        var changeset = await GetChangesetAsync(prevState, null, id, principal, null);
+        var changeset = await GetChangesetAsync(prevState, null, id, principal, null, isAIGenerated);
         _db.Changes.Add(changeset);
 
         media.IsDeleted = true;
@@ -486,7 +486,7 @@ public class MediaManagerService
     /// <summary>
     /// Gets the changeset for updates.
     /// </summary>
-    private async Task<Changeset> GetChangesetAsync(MediaEditorVM prev, MediaEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId)
+    private async Task<Changeset> GetChangesetAsync(MediaEditorVM prev, MediaEditorVM next, Guid id, ClaimsPrincipal principal, Guid? revertedId, bool isAIGenerated = false)
     {
         if(prev == null && next == null)
             throw new ArgumentNullException();
@@ -503,6 +503,7 @@ public class MediaManagerService
             EditedMediaId = id,
             Author = user,
             UpdatedState = next == null ? null : JsonConvert.SerializeObject(next),
+            IsAIGenerated = isAIGenerated,
         };
     }
 
