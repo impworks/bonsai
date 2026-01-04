@@ -19,6 +19,11 @@ public class InfoBlockVM
     public IReadOnlyCollection<FactGroupVM> Facts { get; set; }
 
     /// <summary>
+    /// Facts in raw format.
+    /// </summary>
+    public string RawFacts { get; set; }
+
+    /// <summary>
     /// Groups of inferred relations.
     /// </summary>
     public IReadOnlyCollection<RelationCategoryVM> RelationGroups { get; set; }

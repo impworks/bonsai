@@ -145,6 +145,7 @@ public class PagePresenterService
         return new InfoBlockVM
         {
             Photo = MediaPresenterService.GetMediaThumbnail(page.MainPhoto, MediaSize.Medium),
+            RawFacts = page.Facts,
             Facts = factGroups,
             RelationGroups = relations,
         };
