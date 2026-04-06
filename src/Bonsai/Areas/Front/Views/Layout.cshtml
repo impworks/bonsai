@@ -28,7 +28,7 @@
     <header class="main-header border-bottom shadow-sm">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-auto">
+                <div class="col-auto order-1">
                     <a class="logotype d-flex" href="@rootUrl">
                         <div class="logotype-image">
                             <img src="/assets/img/logo.svg">
@@ -36,7 +36,7 @@
                         <div class="logotype-text">@appTitle</div>
                     </a>
                 </div>
-                <div class="col search">
+                <div class="col-12 col-md order-3 order-md-2 search">
                     @if (ViewBag.DisableSearch == null)
                     {
                         <form method="get" action="@Url.Action("Search", "Search")">
@@ -44,7 +44,7 @@
                         </form>
                     }
                 </div>
-                <div class="col-auto">
+                <div class="col-auto order-2 order-md-3 ml-auto ml-md-0">
                     @if (isStarted)
                     {
                         @await Component.InvokeAsync("UserHeaderComponent")

@@ -61,6 +61,21 @@
         width: 9rem;
     }
 
+    @media (max-width: 575.98px) {
+        &.left,
+        &.right {
+            float: none;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        &.large,
+        &.medium,
+        &.small {
+            width: 100%;
+        }
+    }
+
     &.error {
         width: 11rem;
         background: #fcf5f4;

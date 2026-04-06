@@ -3,6 +3,15 @@
 .search-results {
     padding: 0.5rem 3rem;
 
+    @media (max-width: 767.98px) {
+        padding: 0.5rem 1rem;
+
+        .search-image-wrapper .image {
+            width: 3.5rem;
+            height: 3.5rem;
+        }
+    }
+
     .search-result {
         display: flex;
         -webkit-box-align: start;

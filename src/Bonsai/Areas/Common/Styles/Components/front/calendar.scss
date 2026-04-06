@@ -65,6 +65,10 @@
                         position: relative;
                         border: $border-width solid $gray-300;
 
+                        @media (max-width: 767.98px) {
+                            height: 3.5rem;
+                        }
+
                         &.calendar-day-selected {
                             background: linear-gradient(45deg, #94c11e, #36a23d);
 
@@ -109,6 +113,11 @@
                             height: calc(100% + 2px);
                             width: calc(100% + 2px);
                             border: 1px solid rgba(0,0,0,0);
+
+                            @media (max-width: 767.98px) {
+                                font-size: 0.9rem;
+                                padding-top: 0.6rem;
+                            }
 
                             &:hover {
                                 text-decoration: none;

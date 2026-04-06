@@ -18,10 +18,10 @@
 }
 
 <div id="page" class="row flex-grow-1">
-    <div class="sidebar col-3">
+    <div class="sidebar col-12 col-lg-3 order-lg-1 order-2">
         @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
     </div>
-    <div class="content col-9">
+    <div class="content col-12 col-lg-9 order-lg-2 order-1">
         <div class="content-header">
             <h1>@pageVm.Title</h1>
             @if(user?.IsAdministrator == true && !isPreview)

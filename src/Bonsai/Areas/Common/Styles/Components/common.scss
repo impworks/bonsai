@@ -47,6 +47,10 @@
 
 .content {
     padding: 1rem 3rem;
+
+    @media (max-width: 767.98px) {
+        padding: 1rem;
+    }
 }
 
 .popover-wrapper {

@@ -6,6 +6,11 @@
     background: $gray-100;
     border-right: $border-width solid $gray-300;
 
+    @media (max-width: 991.98px) {
+        border-right: 0;
+        border-top: $border-width solid $gray-300;
+    }
+
     .fact-item:not(:last-child) {
         padding-bottom: 0.3rem;
     }
@@ -39,6 +44,11 @@
             height: 11rem;
             margin: auto;
             display: block;
+
+            @media (max-width: 991.98px) {
+                width: 7rem;
+                height: 7rem;
+            }
         }
     }
 

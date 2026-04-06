@@ -31,7 +31,7 @@
 
     .search {
         height: 4.2rem;
-        
+
         form {
             margin: 0;
             position: relative;
@@ -56,7 +56,7 @@
             &:after {
                 right: 0;
             }
-            
+
             input {
                 border: 0;
                 width: 100%;
@@ -72,6 +72,42 @@
                     box-shadow: none;
                 }
             }
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        padding: 0 0.5rem;
+
+        .logotype-text {
+            font-size: 1.5rem;
+        }
+
+        .logotype-image img {
+            $image-size: 2rem;
+            width: $image-size;
+            height: $image-size;
+            margin-right: 0.5rem;
+        }
+
+        .search {
+            height: 2.8rem;
+            border-top: $border-width solid $gray-300;
+
+            form {
+                &:before,
+                &:after {
+                    display: none;
+                }
+
+                input {
+                    height: 2.8rem;
+                    padding: 0 1rem;
+                }
+            }
+        }
+
+        .account-text {
+            display: none;
         }
     }
     

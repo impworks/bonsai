@@ -38,12 +38,18 @@
     .media-block {
         background: #fff;
         max-width: 1024px;
-        min-width: 800px;
+        width: 100%;
         margin: 1rem auto;
         position: relative;
         padding: 2rem;
         text-align: left;
         border-radius: 0.2rem;
+
+        @media (max-width: 767.98px) {
+            padding: 1rem;
+            margin: 0;
+            border-radius: 0;
+        }
 
         .media-wrapper {
             text-align: center;
