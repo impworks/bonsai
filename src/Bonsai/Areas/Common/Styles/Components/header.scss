@@ -9,7 +9,7 @@
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
-        padding: 4px;
+        padding: 2px 4px;
         gap: 4px;
         min-height: 4.2rem;  // preserves desktop height driven by search bar
     }
@@ -113,11 +113,13 @@
         input {
             flex: 1;
             min-width: 0;
+            align-self: center;
             border: 0;
             border-bottom: $border-width solid $gray-300;
             background: transparent;
-            padding: 0.4rem 0.5rem;
+            padding: 0.3rem 0.5rem;
             font-size: 1rem;
+            line-height: 1.4;
 
             @include placeholder-color($gray-600);
 
@@ -147,8 +149,7 @@
         }
     }
 
-    .mobile-search-toggle,
-    .mobile-search-close {
+    .mobile-search-toggle {
         background: none;
         border: none;
         cursor: pointer;
@@ -160,10 +161,6 @@
         &:hover {
             color: $primary;
         }
-    }
-
-    .mobile-search-close:hover {
-        color: $red;
     }
 
     // ─── Search-open state ────────────────────────────────────────────────────

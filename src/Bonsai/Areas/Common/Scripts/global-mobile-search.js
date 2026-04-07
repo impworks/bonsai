@@ -1,7 +1,6 @@
 $(function () {
     var $header = $('.main-header');
     var $toggle = $('.mobile-search-toggle');
-    var $close = $('.mobile-search-close');
     var $input = $('#search-query-mobile');
 
     // Auto-open if the mobile input already has a search value (e.g. after a search)
@@ -11,11 +10,7 @@ $(function () {
 
     $toggle.on('click', function () {
         $header.addClass('search-open');
-        $input.focus();
-    });
-
-    $close.on('click', function () {
-        $header.removeClass('search-open');
-        $input.val('');
+        // Small delay ensures the element has started expanding before focus
+        setTimeout(function () { $input.focus(); }, 50);
     });
 });
