@@ -26,47 +26,43 @@
 <body>
 <div class="main-container d-flex flex-column">
     <header class="main-header border-bottom shadow-sm">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <a class="logotype d-flex" href="@rootUrl">
-                        <div class="logotype-image">
-                            <img src="/assets/img/logo.svg">
-                        </div>
-                        <div class="logotype-text">@appTitle</div>
-                    </a>
+        <div class="header-inner">
+            <a class="logotype" href="@rootUrl">
+                <div class="logotype-image">
+                    <img src="/assets/img/logo.svg">
                 </div>
-                <div class="col search d-none d-md-block">
-                    @if (ViewBag.DisableSearch == null)
-                    {
-                        <form method="get" action="@Url.Action("Search", "Search")">
-                            <input type="text" name="query" id="search-query" placeholder="@Texts.Front_Search_Placeholder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
-                        </form>
-                    }
-                </div>
-                <div class="col mobile-search-field">
-                    @if (ViewBag.DisableSearch == null)
-                    {
-                        <form method="get" action="@Url.Action("Search", "Search")">
-                            <input type="text" name="query" id="search-query-mobile" placeholder="@Texts.Front_Search_Placeholder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
-                            <button type="button" class="mobile-search-close" aria-label="Close search">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </form>
-                    }
-                </div>
-                <div class="col-auto ml-auto ml-md-0 d-flex align-items-center header-actions">
-                    @if (ViewBag.DisableSearch == null)
-                    {
-                        <button class="mobile-search-toggle d-md-none" type="button" aria-label="Search">
-                            <i class="fa fa-search"></i>
+                <div class="logotype-text">@appTitle</div>
+            </a>
+            <div class="search d-none d-md-block">
+                @if (ViewBag.DisableSearch == null)
+                {
+                    <form method="get" action="@Url.Action("Search", "Search")">
+                        <input type="text" name="query" id="search-query" placeholder="@Texts.Front_Search_Placeholder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
+                    </form>
+                }
+            </div>
+            <div class="mobile-search-field">
+                @if (ViewBag.DisableSearch == null)
+                {
+                    <form method="get" action="@Url.Action("Search", "Search")">
+                        <input type="text" name="query" id="search-query-mobile" placeholder="@Texts.Front_Search_Placeholder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
+                        <button type="button" class="mobile-search-close" aria-label="Close search">
+                            <i class="fa fa-times"></i>
                         </button>
-                    }
-                    @if (isStarted)
-                    {
-                        @await Component.InvokeAsync("UserHeaderComponent")
-                    }
-                </div>
+                    </form>
+                }
+            </div>
+            <div class="header-actions">
+                @if (ViewBag.DisableSearch == null)
+                {
+                    <button class="mobile-search-toggle d-md-none" type="button" aria-label="Search">
+                        <i class="fa fa-search"></i>
+                    </button>
+                }
+                @if (isStarted)
+                {
+                    @await Component.InvokeAsync("UserHeaderComponent")
+                }
             </div>
         </div>
     </header>

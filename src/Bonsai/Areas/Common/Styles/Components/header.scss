@@ -1,120 +1,158 @@
-﻿@import '../variables.scss';
+@import '../variables.scss';
 
 .main-header {
     z-index: 1;
     position: relative;
-    padding: 0 0.75rem;
-    
-    .logotype {
-        color: $gray-900;
+
+    // Single flex row — no Bootstrap grid, full control over layout
+    .header-inner {
+        display: flex;
         align-items: center;
+        flex-wrap: nowrap;
+        padding: 4px;
+        gap: 4px;
+        min-height: 4.2rem;  // preserves desktop height driven by search bar
+    }
+
+    // ─── Logo ────────────────────────────────────────────────────────────────
+
+    .logotype {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        color: $gray-900;
+        text-decoration: none;
 
         &:hover {
             text-decoration: none;
         }
-        
+
         &-text {
             font-size: 2rem;
             font-weight: bold;
             font-family: 'PT Serif', serif;
         }
-        
+
         &-image img {
             $image-size: 2.6rem;
-            
             display: block;
-            margin-right: 1rem;
+            margin-right: 0.75rem;
             width: $image-size;
             height: $image-size;
         }
     }
 
+    // ─── Desktop search bar (hidden on mobile) ────────────────────────────────
+
     .search {
+        flex: 1;
         height: 4.2rem;
+        position: relative;
+
+        // decorative vertical dividers
+        &:before,
+        &:after {
+            content: "";
+            display: block;
+            top: 50%;
+            width: 1px;
+            height: 2rem;
+            z-index: 102;
+            position: absolute;
+            margin-top: -1rem;
+            background: $gray-300;
+        }
+
+        &:before { left: 0; }
+        &:after  { right: 0; }
 
         form {
             margin: 0;
-            position: relative;
+            height: 100%;
+        }
 
-            &:before,
-            &:after {
-                content: "";
-                display: block;
-                top: 50%;
-                width: 1px;
-                height: 2rem;
-                z-index: 102;
-                position: absolute;
-                margin-top: -1rem;
-                background: $gray-300;
-            }
+        input {
+            border: 0;
+            width: 100%;
+            height: 100%;
+            background: $white;
+            border-radius: 0;
+            padding: 0 $grid-gutter-width;
 
-            &:before {
-                left: 0;
-            }
+            @include placeholder-color($gray-600);
 
-            &:after {
-                right: 0;
-            }
-
-            input {
-                border: 0;
-                width: 100%;
-                height: 4.2rem;
-                background: $white;
-                border-radius: 0;
-                padding: 0 $grid-gutter-width;
-
-                @include placeholder-color($gray-600);
-
-                &:focus {
-                    outline: none;
-                    box-shadow: none;
-                }
+            &:focus {
+                outline: none;
+                box-shadow: none;
             }
         }
     }
 
-    // Expandable search field on mobile (hidden by default, shown via .search-open)
+    // ─── Mobile expandable search field ──────────────────────────────────────
+    //
+    // Always kept in flex flow (display: flex) so flex-grow can be transitioned.
+    // Starts at width 0 (flex-grow: 0, flex-basis: 0), expands to fill available
+    // space when .search-open is applied to the header.
+
     .mobile-search-field {
-        display: none;
+        display: flex;
+        align-items: center;
+        flex: 0 0 0%;
+        min-width: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: flex-grow 0.25s ease, opacity 0.2s ease;
 
         form {
             display: flex;
             align-items: center;
             width: 100%;
-            padding: 0 0.25rem;
+            min-width: 0;
+        }
 
-            input {
-                flex: 1;
-                border: 0;
-                border-bottom: $border-width solid $gray-300;
-                background: transparent;
-                padding: 0.4rem 0.5rem;
-                font-size: 1rem;
+        input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            border-bottom: $border-width solid $gray-300;
+            background: transparent;
+            padding: 0.4rem 0.5rem;
+            font-size: 1rem;
 
-                @include placeholder-color($gray-600);
+            @include placeholder-color($gray-600);
 
-                &:focus {
-                    outline: none;
-                    box-shadow: none;
-                }
+            &:focus {
+                outline: none;
+                box-shadow: none;
             }
         }
 
-        // Always hidden on desktop — overrides any .search-open state
+        // Never shown on desktop — !important beats any .search-open override
         @media (min-width: 768px) {
             display: none !important;
         }
     }
 
-    // Search toggle and close buttons (mobile only)
+    // ─── Right-hand actions: search icon (mobile) + user ─────────────────────
+
+    .header-actions {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin-left: auto;  // pushes actions to the right when search is collapsed
+
+        @media (min-width: 768px) {
+            margin-left: 0;
+        }
+    }
+
     .mobile-search-toggle,
     .mobile-search-close {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 0.4rem 0.5rem;
+        padding: 4px 6px;
         color: $gray-700;
         font-size: 1.2rem;
         line-height: 1;
@@ -128,10 +166,16 @@
         color: $red;
     }
 
-    // Expanded state: show search field, hide site name
+    // ─── Search-open state ────────────────────────────────────────────────────
+
     &.search-open {
         .mobile-search-field {
-            display: flex;
+            flex-grow: 1;
+            opacity: 1;
+        }
+
+        .mobile-search-toggle {
+            display: none;
         }
 
         @media (max-width: 767.98px) {
@@ -145,10 +189,9 @@
         }
     }
 
-    // Mobile layout adjustments
-    @media (max-width: 767.98px) {
-        padding: 0 0.5rem;
+    // ─── Mobile tweaks ────────────────────────────────────────────────────────
 
+    @media (max-width: 767.98px) {
         .logotype-text {
             font-size: 1.5rem;
         }
@@ -165,8 +208,11 @@
         }
     }
 
+    // ─── Account / user component ─────────────────────────────────────────────
+
     .account {
         display: flex;
+        align-items: center;
 
         &-text a {
             color: $black;
@@ -174,9 +220,7 @@
 
         &-image img {
             $image-size: 2.2rem;
-
             display: block;
-            margin-right: 1rem;
             width: $image-size;
             height: $image-size;
         }
@@ -195,10 +239,9 @@
             &-icon {
                 font-size: 2.2rem;
                 line-height: 1;
-                margin-right: 0.5rem;
 
-                @media (max-width: 767.98px) {
-                    margin-right: 0;
+                @media (min-width: 768px) {
+                    margin-right: 0.5rem;
                 }
             }
         }
@@ -237,7 +280,7 @@
 
         &:hover {
             background: $gray-100;
-            
+
             .fa {
                 color: $red;
             }
