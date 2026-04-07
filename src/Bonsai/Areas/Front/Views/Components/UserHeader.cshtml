@@ -15,9 +15,10 @@
     }
     else
     {
-        <div class="account-text">
-            <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">@Texts.Global_UserHeader_Login</a>
-        </div>
+        <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })" class="account-login">
+            <i class="fa fa-user-circle-o account-login-icon"></i>
+            <span class="account-text">@Texts.Global_UserHeader_Login</span>
+        </a>
     }
     
     <div id="user-popover-contents">

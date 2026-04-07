@@ -75,6 +75,77 @@
         }
     }
 
+    // Expandable search field on mobile (hidden by default, shown via .search-open)
+    .mobile-search-field {
+        display: none;
+
+        form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0 0.25rem;
+
+            input {
+                flex: 1;
+                border: 0;
+                border-bottom: $border-width solid $gray-300;
+                background: transparent;
+                padding: 0.4rem 0.5rem;
+                font-size: 1rem;
+
+                @include placeholder-color($gray-600);
+
+                &:focus {
+                    outline: none;
+                    box-shadow: none;
+                }
+            }
+        }
+
+        // Always hidden on desktop — overrides any .search-open state
+        @media (min-width: 768px) {
+            display: none !important;
+        }
+    }
+
+    // Search toggle and close buttons (mobile only)
+    .mobile-search-toggle,
+    .mobile-search-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.4rem 0.5rem;
+        color: $gray-700;
+        font-size: 1.2rem;
+        line-height: 1;
+
+        &:hover {
+            color: $primary;
+        }
+    }
+
+    .mobile-search-close:hover {
+        color: $red;
+    }
+
+    // Expanded state: show search field, hide site name
+    &.search-open {
+        .mobile-search-field {
+            display: flex;
+        }
+
+        @media (max-width: 767.98px) {
+            .logotype-text {
+                display: none;
+            }
+
+            .logotype-image img {
+                margin-right: 0;
+            }
+        }
+    }
+
+    // Mobile layout adjustments
     @media (max-width: 767.98px) {
         padding: 0 0.5rem;
 
@@ -89,28 +160,11 @@
             margin-right: 0.5rem;
         }
 
-        .search {
-            height: 2.8rem;
-            border-top: $border-width solid $gray-300;
-
-            form {
-                &:before,
-                &:after {
-                    display: none;
-                }
-
-                input {
-                    height: 2.8rem;
-                    padding: 0 1rem;
-                }
-            }
-        }
-
         .account-text {
             display: none;
         }
     }
-    
+
     .account {
         display: flex;
 
@@ -120,11 +174,33 @@
 
         &-image img {
             $image-size: 2.2rem;
-            
+
             display: block;
             margin-right: 1rem;
             width: $image-size;
             height: $image-size;
+        }
+
+        &-login {
+            display: flex;
+            align-items: center;
+            color: $gray-900;
+            text-decoration: none;
+
+            &:hover {
+                color: $red;
+                text-decoration: none;
+            }
+
+            &-icon {
+                font-size: 2.2rem;
+                line-height: 1;
+                margin-right: 0.5rem;
+
+                @media (max-width: 767.98px) {
+                    margin-right: 0;
+                }
+            }
         }
     }
 }
