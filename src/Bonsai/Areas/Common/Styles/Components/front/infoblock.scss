@@ -6,6 +6,18 @@
     background: $gray-100;
     border-right: $border-width solid $gray-300;
 
+    .sidebar-toggle {
+        display: none;
+        width: 100%;
+        margin-top: 0.5rem;
+        color: $gray-600;
+        border-color: $gray-300;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
     .fact-item:not(:last-child) {
         padding-bottom: 0.3rem;
     }

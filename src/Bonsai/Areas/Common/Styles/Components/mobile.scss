@@ -1,0 +1,174 @@
+@import '../variables.scss';
+
+$mobile-breakpoint: 767px;
+$mobile-gap: 10px;
+
+@media (max-width: $mobile-breakpoint) {
+
+    // -------------------------------------------------------------------------
+    // Layout
+    // -------------------------------------------------------------------------
+
+    .main-container {
+        border-left: none;
+        border-right: none;
+    }
+
+    // -------------------------------------------------------------------------
+    // Header
+    // -------------------------------------------------------------------------
+
+    .main-header {
+        .header-inner {
+            padding: 0 $mobile-gap;
+            gap: $mobile-gap;
+            min-height: 3rem;
+        }
+
+        // Logo fills available space, pushing icons to the right
+        .logotype {
+            flex-grow: 1;
+            padding: 0;
+
+            &-image img {
+                margin-right: 0.5rem;
+            }
+        }
+
+        .search {
+            display: none;
+            height: 2.6rem;
+            padding: 0;
+
+            form {
+                width: 100%;
+                height: 100%;
+
+                &:before,
+                &:after {
+                    display: none;
+                }
+
+                input {
+                    height: 100%;
+                    padding: 0 0.25rem;
+                }
+            }
+        }
+
+        .search-toggle {
+            display: flex;
+            padding: 0;
+        }
+
+        .account {
+            padding: 0;
+
+            &-image img {
+                margin-right: 0;
+            }
+        }
+
+        &.search-open {
+            .logotype {
+                flex-grow: 0;
+
+                &-text {
+                    display: none;
+                }
+            }
+
+            .search {
+                display: flex;
+                align-items: center;
+                flex-grow: 1;
+            }
+
+            .search-toggle {
+                display: none;
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Page layout: sidebar
+    // -------------------------------------------------------------------------
+
+    .sidebar {
+        border-right: none;
+        border-bottom: $border-width solid $gray-300;
+        padding-bottom: 0.75rem;
+
+        .sidebar-summary {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+
+            .profile-photo {
+                flex-shrink: 0;
+                margin-bottom: 0;
+
+                img {
+                    width: 5rem;
+                    height: 5rem;
+                }
+            }
+        }
+
+        .sidebar-details {
+            display: none;
+
+            &.open {
+                display: block;
+            }
+        }
+
+        .sidebar-toggle {
+            display: block;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Page layout: tabs
+    // -------------------------------------------------------------------------
+
+    .nav.nav-tabs {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-link {
+            white-space: nowrap;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Calendar
+    // -------------------------------------------------------------------------
+
+    // Use the full selector chain to match the specificity of the desktop rule
+    .calendar-wrapper .calendar .calendar-month .calendar-table tbody .calendar-day {
+        height: 3rem;
+
+        .calendar-day-number {
+            font-size: 1.1rem;
+            padding-top: 0.5rem;
+        }
+
+        .calendar-event-markers {
+            bottom: 0.3rem;
+
+            .calendar-event-marker {
+                height: 6px;
+                width: 6px;
+                margin: 1px;
+            }
+        }
+    }
+}

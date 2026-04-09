@@ -145,7 +145,7 @@
 
         .calendar-events {
             position: relative;
-            padding: 0 1.5rem;
+            padding: 0 1.5rem 1.5rem;
             background: $gray-100;
             border-left: $border-width solid $gray-300;
             border-bottom: $border-width solid $gray-300;
@@ -167,6 +167,10 @@
                 .card {
                     margin-bottom: 1rem;
                     padding: 0 1rem;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
 
                     p {
                         margin: 0;
