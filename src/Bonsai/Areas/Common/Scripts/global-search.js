@@ -1,5 +1,33 @@
 ﻿$(function () {
+    var $header = $('.main-header');
+    var $toggle = $('.search-toggle');
     var $query = $('#search-query');
+
+    function openMobileSearch() {
+        $header.addClass('search-open');
+        $query.focus();
+    }
+
+    function closeMobileSearch() {
+        $header.removeClass('search-open');
+    }
+
+    $toggle.on('click', function () {
+        openMobileSearch();
+    });
+
+    $query.on('blur', function () {
+        if (window.matchMedia('(max-width: 767px)').matches && !$query.val()) {
+            closeMobileSearch();
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape' && $header.hasClass('search-open')) {
+            closeMobileSearch();
+        }
+    });
+
     $query.autocomplete({
         minChars: 2,
         lookup: function (query, done) {

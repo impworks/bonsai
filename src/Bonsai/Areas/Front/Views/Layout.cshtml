@@ -26,31 +26,32 @@
 <body>
 <div class="main-container d-flex flex-column">
     <header class="main-header border-bottom shadow-sm">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <a class="logotype d-flex" href="@rootUrl">
-                        <div class="logotype-image">
-                            <img src="/assets/img/logo.svg">
-                        </div>
-                        <div class="logotype-text">@appTitle</div>
-                    </a>
+        <div class="header-inner d-flex align-items-center">
+            <a class="logotype d-flex align-items-center" href="@rootUrl">
+                <div class="logotype-image">
+                    <img src="/assets/img/logo.svg">
                 </div>
-                <div class="col search">
-                    @if (ViewBag.DisableSearch == null)
-                    {
-                        <form method="get" action="@Url.Action("Search", "Search")">
-                            <input type="text" name="query" id="search-query" placeholder="@Texts.Front_Search_Placeholder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
-                        </form>
-                    }
+                <div class="logotype-text">@appTitle</div>
+            </a>
+            @if (ViewBag.DisableSearch == null)
+            {
+                <div class="search flex-grow-1">
+                    <form method="get" action="@Url.Action("Search", "Search")">
+                        <input type="text" name="query" id="search-query" placeholder="@Texts.Front_Search_Placeholder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@ViewBag.SearchQuery" />
+                    </form>
                 </div>
-                <div class="col-auto">
-                    @if (isStarted)
-                    {
-                        @await Component.InvokeAsync("UserHeaderComponent")
-                    }
-                </div>
-            </div>
+                <button class="search-toggle btn d-md-none" type="button" aria-label="Search">
+                    <i class="fa fa-search"></i>
+                </button>
+            }
+            else
+            {
+                <div class="flex-grow-1"></div>
+            }
+            @if (isStarted)
+            {
+                @await Component.InvokeAsync("UserHeaderComponent")
+            }
         </div>
     </header>
     @RenderBody()

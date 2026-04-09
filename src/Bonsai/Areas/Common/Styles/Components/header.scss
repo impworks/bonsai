@@ -3,25 +3,31 @@
 .main-header {
     z-index: 1;
     position: relative;
-    padding: 0 0.75rem;
-    
+
+    .header-inner {
+        padding: 0 0.75rem;
+        min-height: 4.2rem;  // keeps height consistent regardless of content (logged-out, no search)
+    }
+
     .logotype {
         color: $gray-900;
         align-items: center;
+        flex-shrink: 0;
+        padding: 0 0.75rem;  // symmetric: matches account padding so left/right edges are equal
 
         &:hover {
             text-decoration: none;
         }
-        
+
         &-text {
             font-size: 2rem;
             font-weight: bold;
             font-family: 'PT Serif', serif;
         }
-        
+
         &-image img {
             $image-size: 2.6rem;
-            
+
             display: block;
             margin-right: 1rem;
             width: $image-size;
@@ -31,7 +37,8 @@
 
     .search {
         height: 4.2rem;
-        
+        padding: 0 0.75rem;
+
         form {
             margin: 0;
             position: relative;
@@ -56,7 +63,7 @@
             &:after {
                 right: 0;
             }
-            
+
             input {
                 border: 0;
                 width: 100%;
@@ -74,9 +81,10 @@
             }
         }
     }
-    
+
     .account {
         display: flex;
+        padding: 0 0.75rem;
 
         &-text a {
             color: $black;
@@ -84,14 +92,44 @@
 
         &-image img {
             $image-size: 2.2rem;
-            
+
             display: block;
             margin-right: 1rem;
             width: $image-size;
             height: $image-size;
         }
+
+        &-icon {
+            font-size: 1.6rem;
+            line-height: 1;
+
+            a {
+                color: $gray-700;
+
+                &:hover {
+                    color: $gray-900;
+                }
+            }
+        }
     }
+
+    .search-toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: $gray-700;
+        font-size: 1.1rem;
+        border: none;
+        background: none;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    }
+
 }
+
 
 #user-popover-contents {
     display: none;

@@ -18,10 +18,10 @@
 }
 
 <div id="page" class="row flex-grow-1">
-    <div class="sidebar col-3">
+    <div class="sidebar col-12 col-md-3">
         @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
     </div>
-    <div class="content col-9">
+    <div class="content col-12 col-md-9">
         <div class="content-header">
             <h1>@pageVm.Title</h1>
             @if(user?.IsAdministrator == true && !isPreview)
@@ -49,7 +49,7 @@
         </div>
         @if(!isPreview)
         {
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs flex-nowrap">
                 <li class="nav-item">
                     <a class="nav-link @(pageVm is PageDescriptionVM ? "active" : "")" href="@Url.Action("Description", new {key = pageVm.Key})">
                         <i class="fa fa-user"></i> @Texts.Front_Page_Tabs_Description

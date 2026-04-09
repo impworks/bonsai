@@ -9,14 +9,19 @@
                 <img class="user-image rounded-circle" src="@ViewHelper.GetGravatarUrl(Model.Email)" />
             </span>
         </div>
-        <div class="account-text">
+        <div class="account-text d-none d-md-block">
             <span class="user-popover-toggle">@Model.Name</span>
         </div>
     }
     else
     {
-        <div class="account-text">
+        <div class="account-text d-none d-md-block">
             <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })">@Texts.Global_UserHeader_Login</a>
+        </div>
+        <div class="account-icon d-md-none">
+            <a href="@Url.Action("Login", "Auth", new { returnUrl = ViewBag.ReturnUrl })" aria-label="@Texts.Global_UserHeader_Login">
+                <i class="fa fa-user-circle-o"></i>
+            </a>
         </div>
     }
     

@@ -16,22 +16,15 @@
 <body>
     <div class="main-container d-flex flex-column">
         <header class="main-header border-bottom shadow-sm">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a class="logotype d-flex" href="@Url.Action("Index", "Home", new { Area = "Front" })">
-                            <div class="logotype-image">
-                                <img src="/assets/img/logo.svg">
-                            </div>
-                            <div class="logotype-text">@cfg.Title</div>
-                        </a>
+            <div class="header-inner d-flex align-items-center">
+                <a class="logotype d-flex align-items-center" href="@Url.Action("Index", "Home", new { Area = "Front" })">
+                    <div class="logotype-image">
+                        <img src="/assets/img/logo.svg">
                     </div>
-                    <div class="col search">
-                    </div>
-                    <div class="col-auto">
-                        @await Component.InvokeAsync("UserHeaderComponent")
-                    </div>
-                </div>
+                    <div class="logotype-text">@cfg.Title</div>
+                </a>
+                <div class="flex-grow-1"></div>
+                @await Component.InvokeAsync("UserHeaderComponent")
             </div>
         </header>
         <div class="dashboard">
