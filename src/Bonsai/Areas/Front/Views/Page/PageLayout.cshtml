@@ -18,7 +18,8 @@
 }
 
 <div id="page" class="row flex-grow-1">
-    <div class="sidebar col-12 col-md-3">
+    @* Desktop sidebar: left column, hidden on mobile *@
+    <div class="sidebar col-md-3 d-none d-md-block">
         @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
     </div>
     <div class="content col-12 col-md-9">
@@ -52,29 +53,33 @@
             <ul class="nav nav-tabs flex-nowrap">
                 <li class="nav-item">
                     <a class="nav-link @(pageVm is PageDescriptionVM ? "active" : "")" href="@Url.Action("Description", new {key = pageVm.Key})">
-                        <i class="fa fa-user"></i> @Texts.Front_Page_Tabs_Description
+                        <i class="fa fa-user"></i><span class="tab-label"> @Texts.Front_Page_Tabs_Description</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @(pageVm is PageMediaVM ? "active" : "")" href="@Url.Action("Media", new {key = pageVm.Key})">
-                        <i class="fa fa-image"></i> @Texts.Front_Page_Tabs_Media
+                        <i class="fa fa-image"></i><span class="tab-label"> @Texts.Front_Page_Tabs_Media</span>
                     </a>
                 </li>
                 @if (showTree)
                 {
                     <li class="nav-item">
                         <a class="nav-link @(pageVm is PageTreeVM ? "active" : "")" href="@Url.Action("Tree", new {key = pageVm.Key})">
-                            <i class="fa fa-sitemap"></i> @Texts.Front_Page_Tabs_Tree
+                            <i class="fa fa-sitemap"></i><span class="tab-label"> @Texts.Front_Page_Tabs_Tree</span>
                         </a>
                     </li>
                 }
                 <li class="nav-item">
                     <a class="nav-link @(pageVm is PageReferencesVM ? "active" : "")" href="@Url.Action("References", new {key = pageVm.Key})">
-                        <i class="fa fa-random"></i> @Texts.Front_Page_Tabs_References
+                        <i class="fa fa-random"></i><span class="tab-label"> @Texts.Front_Page_Tabs_References</span>
                     </a>
                 </li>
             </ul>
         }
+        @* Mobile sidebar: shown between tabs and body content, hidden on desktop *@
+        <div class="sidebar d-md-none">
+            @await Html.PartialAsync("~/Areas/Front/Views/Page/InfoBlock/InfoBlock.cshtml", infoBlock)
+        </div>
         @RenderBody()
     </div>
 </div>

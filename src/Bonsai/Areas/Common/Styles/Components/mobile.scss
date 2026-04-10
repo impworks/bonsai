@@ -91,30 +91,46 @@ $mobile-gap: 10px;
     }
 
     // -------------------------------------------------------------------------
-    // Page layout: sidebar
+    // Page layout: content column
     // -------------------------------------------------------------------------
 
-    .sidebar {
-        border-right: none;
-        border-bottom: $border-width solid $gray-300;
-        padding-bottom: 0.75rem;
+    .content {
+        padding: 0 10px;
+    }
 
-        .sidebar-summary {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
+    .content .content-header {
+        margin: 8px 0;
 
-            .profile-photo {
-                flex-shrink: 0;
-                margin-bottom: 0;
-
-                img {
-                    width: 5rem;
-                    height: 5rem;
-                }
-            }
+        h1 {
+            font-size: 1.5rem;
         }
 
+        .dropdown-icons {
+            display: none;
+        }
+    }
+
+    .nav.nav-tabs {
+        margin: 0;
+        margin-bottom: 1rem;
+    }
+
+    // -------------------------------------------------------------------------
+    // Page layout: sidebar (mobile instance, inside .content)
+    // -------------------------------------------------------------------------
+
+    // The mobile sidebar sits inside .content which already has 10px padding.
+    .content > .sidebar {
+        padding: 0.75rem 0.5rem;
+        border-right: none;
+        border-bottom: $border-width solid $gray-300;
+
+        // Collapsed view (birth/death summary): visible by default
+        .sidebar-collapsed {
+            display: block;
+        }
+
+        // Full sidebar: hidden until toggle is clicked
         .sidebar-details {
             display: none;
 
@@ -129,22 +145,106 @@ $mobile-gap: 10px;
     }
 
     // -------------------------------------------------------------------------
-    // Page layout: tabs
+    // Mobile sidebar: compact birth/death summary layout
+    // -------------------------------------------------------------------------
+
+    .mobile-summary {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+
+        &-photo {
+            flex-shrink: 0;
+            width: 100px;
+
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+                display: block;
+            }
+        }
+
+        &-facts {
+            flex: 1;
+            font-size: 0.85rem;
+            border-collapse: collapse;
+
+            th {
+                white-space: nowrap;
+                padding-right: 0.4rem;
+                padding-bottom: 0.1rem;
+                vertical-align: top;
+                color: #2f373a;
+                font-weight: normal;
+            }
+
+            td {
+                vertical-align: top;
+                padding-bottom: 0.1rem;
+            }
+        }
+
+        &-age {
+            opacity: 0.7;
+            font-size: 0.8rem;
+        }
+
+        &-place {
+            color: $gray-600;
+            font-size: 0.8rem;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Page layout: tabs (scroll horizontally, no wrap)
     // -------------------------------------------------------------------------
 
     .nav.nav-tabs {
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
         flex-wrap: nowrap;
-        scrollbar-width: none;
+        // Stretch all nav-items to the same height so every tab's bottom
+        // aligns with the border-bottom (Bootstrap default is center, which
+        // leaves shorter icon-only tabs floating above the border line)
+        align-items: stretch;
 
-        &::-webkit-scrollbar {
-            display: none;
+        .nav-item {
+            display: flex;
         }
 
         .nav-link {
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+            line-height: 1.5;
+
+            &:not(.active) {
+                padding-left: 1rem;
+                padding-right: 1rem;
+
+                .tab-label {
+                    display: none;
+                }
+            }
+
+            &.active {
+                border-bottom-color: #fff;
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Page typography: tighter line and paragraph spacing
+    // -------------------------------------------------------------------------
+
+    .typography {
+        p {
+            line-height: 1.5rem;
+            margin-bottom: 0.5em;
+        }
+
+        p + p {
+            margin-top: -0.25em;
         }
     }
 
