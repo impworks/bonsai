@@ -21,14 +21,25 @@
 
 <div class="tree-view">
     <div class="mb-3">
-        <div class="float-left btn-group btn-group-toggle">
+        <div class="float-left btn-group btn-group-toggle d-none d-md-inline-flex">
             @foreach (var kind in Model.Body.SupportedKinds)
             {
-                <a href="@GetTreeUrl(kind)" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")" data-kind="@kind">@kind.GetLocaleEnumDescription()</a>
+                <a href="@GetTreeUrl(kind)" class="btn btn-sm btn-outline-primary cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")" data-kind="@kind" data-label="@kind.GetLocaleEnumDescription()">@kind.GetLocaleEnumDescription()</a>
             }
         </div>
+        <div class="dropdown float-left d-md-none">
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="cmd-tree-kind-label">@Model.Body.TreeKind.GetLocaleEnumDescription()</span>
+            </button>
+            <div class="dropdown-menu">
+                @foreach (var kind in Model.Body.SupportedKinds)
+                {
+                    <a href="@GetTreeUrl(kind)" class="dropdown-item cmd-switch-tree @(kind == Model.Body.TreeKind ? "active" : "")" data-kind="@kind" data-label="@kind.GetLocaleEnumDescription()">@kind.GetLocaleEnumDescription()</a>
+                }
+            </div>
+        </div>
         <div class="float-right btn-group">
-            <a class="btn btn-sm btn-outline-primary cmd-fullscreen" href="#" title="@Texts.Front_Page_Tree_Fullscreen">
+            <a class="btn btn-sm btn-outline-primary cmd-fullscreen d-none d-md-inline-block" href="#" title="@Texts.Front_Page_Tree_Fullscreen">
                 <span class="fa fa-arrows-alt"></span> @Texts.Front_Page_Tree_Fullscreen
             </a>
             <a class="btn btn-sm btn-outline-primary cmd-new-window" href="@GetTreeUrl()" target="_blank" title="@Texts.Front_Page_Tree_NewWindow">
