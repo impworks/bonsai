@@ -278,4 +278,139 @@ $mobile-gap: 10px;
             }
         }
     }
+
+    // -------------------------------------------------------------------------
+    // Media viewer (Magnific Popup)
+    // -------------------------------------------------------------------------
+
+    .mfp-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .mfp-content .media-block {
+        min-width: 0;
+        max-width: none;
+        width: 100%;
+        margin: 0;
+        padding: $mobile-gap;
+        border-radius: 0;
+        box-sizing: border-box;
+
+        h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-right: 2rem; // leave space for the close button
+        }
+
+        .media-wrapper {
+            .photo-wrapper {
+                display: block;
+
+                img.media-photo {
+                    width: 100%;
+                    max-width: 100%;
+                    height: auto;
+                }
+            }
+        }
+
+        // Stack metadata in a single column
+        .media-meta.row {
+            flex-direction: column;
+            margin-left: 0;
+            margin-right: 0;
+
+            .media-meta-column {
+                flex: 0 0 100%;
+                max-width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+
+                & + .media-meta-column {
+                    margin-top: 0.75rem;
+                }
+            }
+        }
+
+        // Close (X) icon at the top-right corner
+        .mfp-close {
+            width: 2rem;
+            height: 2rem;
+            font-size: 1.5rem;
+            line-height: 2rem;
+            top: 0.25rem;
+            right: 0.25rem;
+            opacity: 0.8;
+        }
+    }
+
+    // Arrows overlay the photo (instead of sitting at screen edges).
+    // The triangle uses two stacked CSS-border triangles: :before is the
+    // larger darker outline behind, :after is the smaller lighter triangle
+    // on top — both bounding boxes are centered on the same point (22, 22)
+    // inside the 44×44 button so the dark one frames the light one.
+    .mfp-arrow {
+        position: fixed;
+        top: 50%;
+        margin-top: -22px;
+        width: 44px;
+        height: 44px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 50%;
+        opacity: 0.85;
+        transform: none;
+
+        &:active {
+            margin-top: -22px;
+        }
+
+        // Reset the desktop margin offsets and position the triangles via top/left
+        &:before,
+        &:after {
+            margin: 0;
+        }
+
+        // Inner (light) triangle: 10×16 bounding box, centered at (22, 22)
+        &:after {
+            top: 14px;
+            left: 17px;
+            border-top-width: 8px;
+            border-bottom-width: 8px;
+        }
+
+        // Outer (dark) triangle: 16×24 bounding box, centered at (22, 22)
+        &:before {
+            top: 10px;
+            left: 14px;
+            border-top-width: 12px;
+            border-bottom-width: 12px;
+        }
+    }
+
+    .mfp-arrow-left {
+        left: $mobile-gap * 2;
+        transform: none;
+
+        &:after {
+            border-right-width: 10px;
+        }
+
+        &:before {
+            border-right-width: 16px;
+        }
+    }
+
+    .mfp-arrow-right {
+        right: $mobile-gap * 2;
+        transform: none;
+
+        &:after {
+            border-left-width: 10px;
+        }
+
+        &:before {
+            border-left-width: 16px;
+        }
+    }
 }
