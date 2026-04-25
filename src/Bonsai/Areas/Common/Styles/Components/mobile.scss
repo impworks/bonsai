@@ -100,9 +100,33 @@ $mobile-gap: 10px;
 
     .content .content-header {
         margin: 8px 0;
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .mobile-page-photo {
+            flex-shrink: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.3rem;
+            overflow: hidden;
+
+            .image {
+                width: 2.5rem;
+                height: 2.5rem;
+                background-color: #efefef;
+                background-size: cover;
+                background-position: center;
+            }
+        }
 
         h1 {
             font-size: 1.5rem;
+            line-height: 1.2;
+            margin: 0;
+            padding-top: 0;
+            display: block;
         }
 
         .dropdown-icons {
@@ -149,25 +173,8 @@ $mobile-gap: 10px;
     // -------------------------------------------------------------------------
 
     .mobile-summary {
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-
-        &-photo {
-            flex-shrink: 0;
-            width: 100px;
-
-            img {
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                object-fit: cover;
-                display: block;
-            }
-        }
-
         &-facts {
-            flex: 1;
+            width: 100%;
             font-size: 0.85rem;
             border-collapse: collapse;
 

@@ -4,6 +4,7 @@
 @using Bonsai.Code.Services.Config
 @using Bonsai.Data.Models
 @using Bonsai.Localization
+@addTagHelper *, Bonsai
 @inject BonsaiConfigService ConfigService
 @{
     Layout = "~/Areas/Front/Views/Layout.cshtml";
@@ -24,6 +25,16 @@
     </div>
     <div class="content col-12 col-md-9">
         <div class="content-header">
+            <div class="mobile-page-photo d-md-none">
+                @if (infoBlock?.Photo != null)
+                {
+                    <page-image image="@infoBlock.Photo.ThumbnailUrl" type="@pageVm.Type" />
+                }
+                else
+                {
+                    <page-image image="" type="@pageVm.Type" />
+                }
+            </div>
             <h1>@pageVm.Title</h1>
             @if(user?.IsAdministrator == true && !isPreview)
             {
