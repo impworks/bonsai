@@ -28,10 +28,17 @@ $mobile-gap: 10px;
         // Logo fills available space, pushing icons to the right
         .logotype {
             flex-grow: 1;
+            min-width: 0;  // allow flex item to shrink below content size for truncation
             padding: 0;
 
             &-image img {
                 margin-right: 0.5rem;
+            }
+
+            &-text {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
 
