@@ -27,8 +27,8 @@ $mobile-gap: 10px;
 
         // Logo fills available space, pushing icons to the right
         .logotype {
-            flex-grow: 1;
-            min-width: 0;  // allow flex item to shrink below content size for truncation
+            flex: 1 1 auto;   // override desktop flex-shrink: 0 so the title can shrink
+            min-width: 0;
             padding: 0;
 
             &-image img {
