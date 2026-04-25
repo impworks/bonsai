@@ -76,10 +76,12 @@ p {
 
         &:not(.nav-link) {
             @include gradient-underline(#82bb36);
+            text-decoration: none;
             text-shadow: 0.1rem 0 #FCFCFC, 0.15rem 0 #FCFCFC, -0.1rem 0 #FCFCFC, -0.15rem 0 #FCFCFC;
 
             &:hover {
                 @include gradient-underline(#f64b3b);
+                text-decoration: none;
             }
         }
     }
