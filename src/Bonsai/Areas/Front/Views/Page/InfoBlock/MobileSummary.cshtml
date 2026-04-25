@@ -1,13 +1,19 @@
 @using Bonsai.Areas.Front.ViewModels.Page
 @using Bonsai.Areas.Front.ViewModels.Page.InfoBlock
 @using Bonsai.Code.DomainModel.Facts.Models
-@using Bonsai.Code.Utils.Helpers
+@using Bonsai.Data.Models
 @using Bonsai.Localization
 @model InfoBlockVM
 @{
     var pageVm = (PageTitleVM) ViewBag.PageModel.Body;
+    var pageType = pageVm.Type;
 
     var allFacts = Model.Facts.SelectMany(x => x.Facts).ToList();
+
+    var gender = allFacts.OfType<GenderFactModel>().FirstOrDefault();
+    var breed = Model.Facts.FirstOrDefault(g => g.Definition.Id == "Bio")
+                          ?.Facts.OfType<StringFactModel>()
+                           .FirstOrDefault(f => f.Definition.Id == "Breed");
 
     var birthDate  = allFacts.OfType<BirthDateFactModel>().FirstOrDefault();
     var birthPlace = Model.Facts.FirstOrDefault(g => g.Definition.Id == "Birth")
@@ -19,67 +25,105 @@
                               ?.Facts.OfType<StringFactModel>()
                                .FirstOrDefault(f => f.Definition.Id == "Place");
 
+    var eventDate = allFacts.OfType<DateFactModel>()
+                            .FirstOrDefault(x => x is not BirthDateFactModel);
+    var address   = allFacts.OfType<AddressFactModel>().FirstOrDefault();
+
     // Age shown next to birth only if alive; age at death shown next to death date
     var birthAge = deathDate == null ? birthDate?.Value.GetAge() : null;
     var deathAge = birthDate != null && deathDate?.Value.HasValue == true
                    ? birthDate.Value.GetAge(deathDate.Value.Value)
                    : null;
+
+    var hasContent = pageType switch
+    {
+        PageType.Person   => gender != null || birthDate != null || deathDate != null,
+        PageType.Pet      => breed != null || birthDate != null || deathDate != null,
+        PageType.Event    => eventDate != null,
+        PageType.Location => address != null,
+        _                 => false
+    };
 }
 
-<div class="mobile-summary">
-    @if (Model.Photo != null)
-    {
-        <div class="mobile-summary-photo">
-            <img src="@Url.MediaUrl(Model.Photo)" alt="@pageVm.Title" />
-        </div>
-    }
-    <table class="mobile-summary-facts">
-        @if (birthDate != null)
-        {
-            <tr>
-                <th>@Texts.Facts_Group_Birth</th>
-                <td>
-                    @birthDate.Value.ReadableDate
-                    @if (!string.IsNullOrEmpty(birthAge))
-                    {
-                        <span class="mobile-summary-age">(@birthAge)</span>
-                    }
-                </td>
-            </tr>
-            @if (!string.IsNullOrEmpty(birthPlace?.Value))
+@if (hasContent)
+{
+    <div class="mobile-summary">
+        <table class="mobile-summary-facts">
+            @if (pageType == PageType.Person && gender != null)
             {
                 <tr>
-                    <td></td>
-                    <td class="mobile-summary-place">@birthPlace.Value</td>
+                    <th>@gender.ShortTitle</th>
+                    <td>@(gender.IsMale ? Texts.Front_Facts_Gender_Male : Texts.Front_Facts_Gender_Female)</td>
                 </tr>
             }
-        }
-        @if (deathDate != null)
-        {
-            <tr>
-                <th>@Texts.Facts_Group_Death</th>
-                <td>
-                    @if (deathDate.Value == null)
-                    {
-                        @Texts.Front_Facts_DeathDate_Unknown
-                    }
-                    else
-                    {
-                        @deathDate.Value.Value.ReadableDate
-                        @if (!string.IsNullOrEmpty(deathAge))
+            @if (pageType == PageType.Pet && breed != null)
+            {
+                <tr>
+                    <th>@breed.ShortTitle</th>
+                    <td>@breed.Value</td>
+                </tr>
+            }
+            @if ((pageType == PageType.Person || pageType == PageType.Pet) && birthDate != null)
+            {
+                <tr>
+                    <th>@Texts.Facts_Group_Birth</th>
+                    <td>
+                        @birthDate.Value.ReadableDate
+                        @if (!string.IsNullOrEmpty(birthAge))
                         {
-                            <span class="mobile-summary-age">(@deathAge)</span>
+                            <span class="mobile-summary-age">(@birthAge)</span>
                         }
-                    }
-                </td>
-            </tr>
-            @if (!string.IsNullOrEmpty(deathPlace?.Value))
+                    </td>
+                </tr>
+                @if (!string.IsNullOrEmpty(birthPlace?.Value))
+                {
+                    <tr>
+                        <td></td>
+                        <td class="mobile-summary-place">@birthPlace.Value</td>
+                    </tr>
+                }
+            }
+            @if ((pageType == PageType.Person || pageType == PageType.Pet) && deathDate != null)
             {
                 <tr>
-                    <td></td>
-                    <td class="mobile-summary-place">@deathPlace.Value</td>
+                    <th>@Texts.Facts_Group_Death</th>
+                    <td>
+                        @if (deathDate.Value == null)
+                        {
+                            @Texts.Front_Facts_DeathDate_Unknown
+                        }
+                        else
+                        {
+                            @deathDate.Value.Value.ReadableDate
+                            @if (!string.IsNullOrEmpty(deathAge))
+                            {
+                                <span class="mobile-summary-age">(@deathAge)</span>
+                            }
+                        }
+                    </td>
+                </tr>
+                @if (!string.IsNullOrEmpty(deathPlace?.Value))
+                {
+                    <tr>
+                        <td></td>
+                        <td class="mobile-summary-place">@deathPlace.Value</td>
+                    </tr>
+                }
+            }
+            @if (pageType == PageType.Event && eventDate != null)
+            {
+                <tr>
+                    <th>@eventDate.ShortTitle</th>
+                    <td>@eventDate.Value.ReadableDate</td>
                 </tr>
             }
-        }
-    </table>
-</div>
+            @if (pageType == PageType.Location && address != null)
+            {
+                <tr>
+                    <th>@address.ShortTitle</th>
+                    <td>@address.Value</td>
+                </tr>
+            }
+        </table>
+    </div>
+}
