@@ -83,7 +83,7 @@ For development, you will need the following:
 
 5. _Optional, but suggested_:
 
-    Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0) (or Yandex / VK.com).
+    Create a [Google Authorization App](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0) (or GitHub / Yandex / VK.com).
 
     Add the retrieved authorization credentials to the `appsettings.Development.json` and set `AllowPasswordAuth` to `false`:
 
@@ -92,6 +92,10 @@ For development, you will need the following:
         "Auth": {
             "AllowPasswordAuth": false,
             "Google": {
+              "ClientId": "<...>",
+              "ClientSecret": "<...>" 
+            },
+            "Github": {
               "ClientId": "<...>",
               "ClientSecret": "<...>" 
             },

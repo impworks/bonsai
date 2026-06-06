@@ -57,6 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="10.0.0" />
     <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="10.0.0" />
     <PackageReference Include="AspNet.Security.OAuth.Yandex" Version="10.0.0" />
     <PackageReference Include="Ben.Demystifier" Version="0.4.1" />

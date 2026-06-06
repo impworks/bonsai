@@ -103,6 +103,35 @@ public class AuthProviderService
 
                 return true;
             }
+        },
+
+
+        new AuthProviderVM
+        {
+            Key = "GitHub",
+            Caption = Texts.AuthProvider_Github,
+            IconClass = "fa fa-github",
+            TryActivate = (cfg, auth) =>
+            {
+                if (cfg?.Auth?.Github == null)
+                    return false;
+
+                var id = cfg.Auth.Github?.ClientId;
+                var secret = cfg.Auth.Github?.ClientSecret;
+                if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(secret))
+                    return false;
+
+                auth.AddGitHub(opts =>
+                {
+                    opts.ClientId = id;
+                    opts.ClientSecret = secret;
+                    opts.Scope.AddRange(new[] {"user:email"});
+                    opts.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "name");
+                    opts.AccessDeniedPath = "/auth/failed";
+                });
+
+                return true;
+            }
         }
 
     ];

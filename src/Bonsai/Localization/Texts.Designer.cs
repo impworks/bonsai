@@ -3230,6 +3230,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub.
+        /// </summary>
+        public static string AuthProvider_Github {
+            get {
+                return ResourceManager.GetString("AuthProvider_Github", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Google.
         /// </summary>
         public static string AuthProvider_Google {
