@@ -85,7 +85,7 @@
 
 5. _Опционально, но рекомендуемо_:
 
-    Создайте [приложение авторизации Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0) (или Yandex, Вконтакте).
+    Создайте [приложение авторизации Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0) (или GitHub, Yandex, Вконтакте).
 
     Впишите данные для авторизации в файл `appsettings.Development.json` и установите свойство `AllowPasswordAuth` в значение `false`:
 
@@ -94,6 +94,10 @@
       "Auth": {
         "AllowPasswordAuth": false,
         "Google": {
+          "ClientId": "<...>",
+          "ClientSecret": "<...>" 
+        },
+        "Github": {
           "ClientId": "<...>",
           "ClientSecret": "<...>" 
         },
@@ -142,7 +146,7 @@
 Bonsai поддерживает 2 метода авторизации: OAuth с использованием внешних сайтов и авторизация по паролю.
 
 OAuth является предпочтительным: он проще для пользователей, более безопасный и универсальный. **Если можете, используйте его!**
-Для этого вам потребуется создать приложение авторизации на сайте [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0), [ВКонтакте](https://vk.com/editapp?act=create) или в [Яндексе](https://oauth.yandex.ru/client/new), как написано в инструкции.
+Для этого вам потребуется создать приложение авторизации на сайте [Google](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0), [GitHub](https://github.com/settings/developers), [ВКонтакте](https://vk.com/editapp?act=create) или в [Яндексе](https://oauth.yandex.ru/client/new), как написано в инструкции.
 Можно подключить несколько авторизационных приложений одновременно - пользователи смогут выбирать из них то, которое им больше по душе.
 
 Также вы можете создать учетную запись с авторизацией по логину и паролю. Она пригодится в двух случаях:

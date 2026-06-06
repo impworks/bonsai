@@ -72,6 +72,7 @@ public class AuthConfig
     public bool AllowPasswordAuth { get; set; }
     public FacebookAuthConfig Facebook { get; set; }
     public GenericAuthConfig Google { get; set; }
+    public GenericAuthConfig Github { get; set; }
     public GenericAuthConfig Vkontakte { get; set; }
     public GenericAuthConfig Yandex { get; set; }
 }
