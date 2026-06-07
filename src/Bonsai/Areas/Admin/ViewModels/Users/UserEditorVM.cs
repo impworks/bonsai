@@ -55,6 +55,7 @@ public class UserEditorVM: RegisterUserVM
               .Map(x => x.NormalizedUserName, x => ClearEmail(x.Email).ToUpperInvariant());
 
         config.NewConfig<AppUser, UserEditorVM>()
+              .Map(x => x.Id, x => x.Id)
               .Map(x => x.Birthday, x => x.Birthday)
               .Map(x => x.FirstName, x => x.FirstName)
               .Map(x => x.MiddleName, x => x.MiddleName)
