@@ -23,7 +23,7 @@ else
 {
     <p>@Html.Raw(string.Format(Texts.Admin_Users_Remove_ConfirmFormat, Model.FullName))</p>
     <p>@Texts.Admin_Users_Remove_CannotRevert</p>
-    <form class="@Url.Action("Remove")" method="POST">
+    <form action="@Url.Action("Remove", "Users", new { area = "Admin", id = Model.Id })" method="POST">
         @Html.HiddenFor(x => x.Id)
         <input type="hidden" name="confirm" value="true" />
         <button type="submit" class="btn btn-danger">@Texts.Admin_Global_Remove</button>
