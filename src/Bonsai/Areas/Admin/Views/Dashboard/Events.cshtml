@@ -103,9 +103,9 @@
                     {
                         <text>@Html.Raw(GetLink(evt.MainLink))</text>
                     }
-                    @if (evt.EntityType == ChangesetEntityType.Relation && evt.ExtraLinks != null)
+                    if (evt.EntityType == ChangesetEntityType.Relation && evt.ExtraLinks != null)
                     {
-                        <text>@Html.Raw(string.Format(Texts.Admin_Dashboard_LinkBetweenPages, GetLink(evt.ExtraLinks[0]), GetLink(evt.ExtraLinks[1])))</text>
+                        <text>&nbsp;@Html.Raw(string.Format(Texts.Admin_Dashboard_LinkBetweenPages, GetLink(evt.ExtraLinks[0]), GetLink(evt.ExtraLinks[1])))</text>
                     }
                 }
             </div>
