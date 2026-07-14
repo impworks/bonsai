@@ -5,6 +5,7 @@ using Bonsai.Areas.Mcp.Logic.Auth;
 using Bonsai.Areas.Mcp.Logic.Services;
 using Bonsai.Data;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Server;
 
@@ -83,18 +84,15 @@ public partial class Startup
                     "mcp"  // Custom scope for MCP access
                 );
 
-                // Use development encryption/signing keys in development
-                // In production, you should use proper certificates
+                // In development, use the framework's development certificates, which are persisted
+                // in the current user's profile and therefore survive restarts.
+                // In production, persistent RSA keys are loaded from (or generated into) the database
+                // by ConfigureOpenIddictServerKeys, so that tokens issued to already-authorized MCP
+                // agents remain valid across restarts instead of being invalidated by a fresh key.
                 if (Environment.EnvironmentName == "Development")
                 {
                     options.AddDevelopmentEncryptionCertificate()
                         .AddDevelopmentSigningCertificate();
-                }
-                else
-                {
-                    // For production, use ephemeral keys (you should configure proper certificates)
-                    options.AddEphemeralEncryptionKey()
-                        .AddEphemeralSigningKey();
                 }
 
                 // Disable access token encryption for easier debugging
@@ -138,6 +136,14 @@ public partial class Startup
                 // Register the ASP.NET Core host
                 options.UseAspNetCore();
             });
+
+        // In production, supply the server's signing/encryption credentials from persistent keys
+        // stored in the database (development relies on the framework's development certificates).
+        if (Environment.EnvironmentName != "Development")
+        {
+            services.AddSingleton<OAuthKeyManager>();
+            services.AddSingleton<IConfigureOptions<OpenIddictServerOptions>, ConfigureOpenIddictServerKeys>();
+        }
     }
 
     /// <summary>
