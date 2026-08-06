@@ -154,7 +154,7 @@ public class UsersManagerService
             Id = id,
             FullName = user.FirstName + " " + user.LastName,
             IsSelf = id == _userMgr.GetUserId(principal),
-            IsFullyDeletable = !user.Changes.Any()
+            IsFullyDeletable = await IsUserFullyDeletableAsync(user)
         };
     }
 
@@ -173,7 +173,7 @@ public class UsersManagerService
 
         ValidateDemoModeRestrictions(user);
 
-        if (user.Changes.Any())
+        if(!await IsUserFullyDeletableAsync(user))
             throw new OperationException(Texts.Admin_Users_CannotRemoveMessage);
 
         var result = await _userMgr.DeleteAsync(user);
@@ -356,6 +356,20 @@ public class UsersManagerService
 
         if(user.Email == "admin@example.com" && _demoCfg.CreateDefaultAdmin)
             throw new OperationException(Texts.Admin_ForbiddenInDemoMessage);
+    }
+
+    /// <summary>
+    /// Checks if the user has no activity history and can be safely removed.
+    /// </summary>
+    private async Task<bool> IsUserFullyDeletableAsync(AppUser user)
+    {
+        if (user.Changes.Any())
+            return false;
+
+        if (await _db.Media.AnyAsync(x => x.Uploader.Id == user.Id))
+            return false;
+
+        return true;
     }
 
     #endregion
