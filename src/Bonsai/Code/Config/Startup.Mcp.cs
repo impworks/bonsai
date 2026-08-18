@@ -84,17 +84,6 @@ public partial class Startup
                     "mcp"  // Custom scope for MCP access
                 );
 
-                // In development, use the framework's development certificates, which are persisted
-                // in the current user's profile and therefore survive restarts.
-                // In production, persistent RSA keys are loaded from (or generated into) the database
-                // by ConfigureOpenIddictServerKeys, so that tokens issued to already-authorized MCP
-                // agents remain valid across restarts instead of being invalidated by a fresh key.
-                if (Environment.EnvironmentName == "Development")
-                {
-                    options.AddDevelopmentEncryptionCertificate()
-                        .AddDevelopmentSigningCertificate();
-                }
-
                 // Disable access token encryption for easier debugging
                 // MCP clients expect plain JWT tokens
                 options.DisableAccessTokenEncryption();
@@ -137,13 +126,10 @@ public partial class Startup
                 options.UseAspNetCore();
             });
 
-        // In production, supply the server's signing/encryption credentials from persistent keys
-        // stored in the database (development relies on the framework's development certificates).
-        if (Environment.EnvironmentName != "Development")
-        {
-            services.AddSingleton<OAuthKeyManager>();
-            services.AddSingleton<IConfigureOptions<OpenIddictServerOptions>, ConfigureOpenIddictServerKeys>();
-        }
+        // Supply the server's signing/encryption credentials from persistent keys
+        // stored in the database.
+        services.AddSingleton<OAuthKeyManager>();
+        services.AddSingleton<IConfigureOptions<OpenIddictServerOptions>, ConfigureOpenIddictServerKeys>();
     }
 
     /// <summary>
