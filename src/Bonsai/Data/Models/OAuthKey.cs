@@ -11,11 +11,10 @@ namespace Bonsai.Data.Models;
 public class OAuthKey
 {
     /// <summary>
-    /// Purpose of the key: <c>Signing</c> or <c>Encryption</c>.
+    /// Purpose of the key: signing or encryption.
     /// </summary>
     [Key]
-    [StringLength(50)]
-    public string Purpose { get; set; }
+    public OAuthKeyPurpose Purpose { get; set; }
 
     /// <summary>
     /// Base64-encoded PKCS#8 RSA private key.

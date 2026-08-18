@@ -1,3 +1,4 @@
+using Bonsai.Data.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Server;
@@ -14,11 +15,11 @@ public class ConfigureOpenIddictServerKeys(OAuthKeyManager keyManager) : IConfig
     public void Configure(OpenIddictServerOptions options)
     {
         options.SigningCredentials.Add(new SigningCredentials(
-            keyManager.GetSigningKey(),
+            keyManager.GetKey(OAuthKeyPurpose.Signing),
             SecurityAlgorithms.RsaSha256));
 
         options.EncryptionCredentials.Add(new EncryptingCredentials(
-            keyManager.GetEncryptionKey(),
+            keyManager.GetKey(OAuthKeyPurpose.Encryption),
             SecurityAlgorithms.RsaOAEP,
             SecurityAlgorithms.Aes256CbcHmacSha512));
     }

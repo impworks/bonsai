@@ -15,7 +15,7 @@ namespace Bonsai.Data.Migrations
                 name: "OAuthKeys",
                 columns: table => new
                 {
-                    Purpose = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Purpose = table.Column<int>(type: "integer", nullable: false),
                     PrivateKey = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },

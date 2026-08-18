@@ -357,9 +357,8 @@ namespace Bonsai.Data.Migrations
 
             modelBuilder.Entity("Bonsai.Data.Models.OAuthKey", b =>
                 {
-                    b.Property<string>("Purpose")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("Purpose")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
@@ -17,56 +18,43 @@ namespace Bonsai.Areas.Mcp.Logic.Auth;
 /// </summary>
 public class OAuthKeyManager(IServiceScopeFactory scopeFactory)
 {
-    private const string SigningPurpose = "Signing";
-    private const string EncryptionPurpose = "Encryption";
-
     private readonly Lock _lock = new();
-    private RsaSecurityKey _signingKey;
-    private RsaSecurityKey _encryptionKey;
+    private Dictionary<OAuthKeyPurpose, RsaSecurityKey> _keys;
 
     /// <summary>
-    /// Returns the persistent signing key, generating and storing it on first use.
+    /// Returns the persistent key of the specified purpose, generating and storing it on first use.
     /// </summary>
-    public RsaSecurityKey GetSigningKey()
+    public RsaSecurityKey GetKey(OAuthKeyPurpose purpose)
     {
         EnsureLoaded();
-        return _signingKey;
+        return _keys[purpose];
     }
 
     /// <summary>
-    /// Returns the persistent encryption key, generating and storing it on first use.
-    /// </summary>
-    public RsaSecurityKey GetEncryptionKey()
-    {
-        EnsureLoaded();
-        return _encryptionKey;
-    }
-
-    /// <summary>
-    /// Loads both keys from the database exactly once per process.
+    /// Loads the keys of all purposes from the database exactly once per process.
     /// </summary>
     private void EnsureLoaded()
     {
-        if (_signingKey != null && _encryptionKey != null)
+        if (_keys != null)
             return;
 
         lock (_lock)
         {
-            if (_signingKey != null && _encryptionKey != null)
+            if (_keys != null)
                 return;
 
             using var scope = scopeFactory.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            _signingKey = new RsaSecurityKey(LoadOrCreateKey(db, SigningPurpose));
-            _encryptionKey = new RsaSecurityKey(LoadOrCreateKey(db, EncryptionPurpose));
+            _keys = Enum.GetValues<OAuthKeyPurpose>()
+                        .ToDictionary(x => x, x => new RsaSecurityKey(LoadOrCreateKey(db, x)));
         }
     }
 
     /// <summary>
     /// Reads the key of the specified purpose from the database, or generates and stores a new one.
     /// </summary>
-    private static RSA LoadOrCreateKey(AppDbContext db, string purpose)
+    private static RSA LoadOrCreateKey(AppDbContext db, OAuthKeyPurpose purpose)
     {
         var rsa = RSA.Create(2048);
 
