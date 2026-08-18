@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
@@ -70,12 +70,8 @@ public class OAuthKeyManager(IServiceScopeFactory scopeFactory)
     {
         var rsa = RSA.Create(2048);
 
-        var existing = db.OAuthKeys.FirstOrDefault(x => x.Purpose == purpose);
-        if (existing != null)
-        {
-            rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(existing.PrivateKey), out _);
+        if (TryImportStoredKey())
             return rsa;
-        }
 
         db.OAuthKeys.Add(new OAuthKey
         {
@@ -92,10 +88,20 @@ public class OAuthKeyManager(IServiceScopeFactory scopeFactory)
         {
             // Another instance generated the key concurrently: discard ours and reuse the stored one.
             db.ChangeTracker.Clear();
-            var stored = db.OAuthKeys.First(x => x.Purpose == purpose);
-            rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(stored.PrivateKey), out _);
+            if (!TryImportStoredKey())
+                throw;
         }
 
         return rsa;
+
+        bool TryImportStoredKey()
+        {
+            var stored = db.OAuthKeys.FirstOrDefault(x => x.Purpose == purpose);
+            if (stored == null)
+                return false;
+
+            rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(stored.PrivateKey), out _);
+            return true;
+        }
     }
 }
