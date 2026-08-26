@@ -28,6 +28,11 @@ public class OAuthController(
     BonsaiConfigService configService)
     : Controller
 {
+    /// <summary>
+    /// Scopes granted to a client that requests none explicitly.
+    /// </summary>
+    private static readonly string[] DefaultScopes =
+        [Scopes.OpenId, Scopes.Profile, Scopes.Email, "mcp", Scopes.OfflineAccess];
 
     /// <summary>
     /// Authorization endpoint - handles OAuth authorization requests.
@@ -68,15 +73,16 @@ public class OAuthController(
         var application = await applicationManager.FindByClientIdAsync(request.ClientId!) ??
             throw new InvalidOperationException("The application details cannot be found.");
 
-        // Retrieve the permanent authorizations associated with the user and the calling client application
+        var principal = await CreateUserPrincipalAsync(user, request);
+
+        // Retrieve the permanent authorizations associated with the user and the calling client
+        // application, matching on the effective scopes rather than the requested ones.
         var authorizations = await authorizationManager.FindAsync(
             subject: await userManager.GetUserIdAsync(user),
             client: await applicationManager.GetIdAsync(application) ?? throw new InvalidOperationException(),
             status: Statuses.Valid,
             type: AuthorizationTypes.Permanent,
-            scopes: request.GetScopes()).ToListAsync();
-
-        var principal = await CreateUserPrincipalAsync(user, request);
+            scopes: principal.GetScopes()).ToListAsync();
 
         // Automatically grant consent for MCP clients (since they're registered dynamically)
         // In a more restrictive scenario, you might want to show a consent screen
@@ -142,6 +148,15 @@ public class OAuthController(
 
             var principal = await CreateUserPrincipalAsync(user, request);
 
+            // A token request carries no scope parameter: preserve the ones granted earlier,
+            // otherwise offline_access is lost and no refresh token is issued.
+            var scopes = request.GetScopes();
+            if (scopes.IsEmpty && result.Principal?.GetScopes() is { IsEmpty: false } granted)
+            {
+                principal.SetScopes(granted);
+                principal.SetDestinations(GetDestinations); // depends on the scopes
+            }
+
             // Set the authorization id from the original token
             var authorizationId = result.Principal?.GetAuthorizationId();
             if (!string.IsNullOrEmpty(authorizationId))
@@ -201,7 +216,12 @@ public class OAuthController(
 
         identity.AddClaim(new Claim("bonsai_role", userRole.ToString()));
 
-        principal.SetScopes(request.GetScopes());
+        var scopes = request.GetScopes();
+        if (scopes.IsEmpty)
+            principal.SetScopes(DefaultScopes);
+        else
+            principal.SetScopes(scopes);
+
         principal.SetResources("bonsai-mcp");
         principal.SetDestinations(GetDestinations);
 
