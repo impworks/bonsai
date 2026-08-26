@@ -21,6 +21,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     }
 
     public virtual DbSet<DynamicConfigWrapper> DynamicConfig => Set<DynamicConfigWrapper>();
+    public virtual DbSet<OAuthKey> OAuthKeys => Set<OAuthKey>();
     public virtual DbSet<Changeset> Changes => Set<Changeset>();
     public virtual DbSet<ChangeEventGroup> ChangeEvents => Set<ChangeEventGroup>();
     public virtual DbSet<LivingBeingOverview> LivingBeingOverviews => Set<LivingBeingOverview>();
