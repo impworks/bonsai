@@ -637,6 +637,15 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Прочее.
+        /// </summary>
+        public static string Admin_Config_Other {
+            get {
+                return ResourceManager.GetString("Admin_Config_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Регистрация.
         /// </summary>
         public static string Admin_Config_Registration {
@@ -673,11 +682,74 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Главное.
+        /// </summary>
+        public static string Admin_Config_Section_Main {
+            get {
+                return ResourceManager.GetString("Admin_Config_Section_Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фамильное древо.
+        /// </summary>
+        public static string Admin_Config_Section_Tree {
+            get {
+                return ResourceManager.GetString("Admin_Config_Section_Tree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Настройки.
         /// </summary>
         public static string Admin_Config_Title {
             get {
                 return ResourceManager.GetString("Admin_Config_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Направление.
+        /// </summary>
+        public static string Admin_Config_TreeDirection {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDirection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Снизу вверх.
+        /// </summary>
+        public static string Admin_Config_TreeDirection_BottomToTop {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDirection_BottomToTop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дети над родителями.
+        /// </summary>
+        public static string Admin_Config_TreeDirection_BottomToTopDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDirection_BottomToTopDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сверху вниз.
+        /// </summary>
+        public static string Admin_Config_TreeDirection_TopToBottom {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDirection_TopToBottom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дети под родителями.
+        /// </summary>
+        public static string Admin_Config_TreeDirection_TopToBottomDescription {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeDirection_TopToBottomDescription", resourceCulture);
             }
         }
         
@@ -795,6 +867,33 @@ namespace Bonsai.Localization {
         public static string Admin_Config_TreeKinds_FullTreeDescription {
             get {
                 return ResourceManager.GetString("Admin_Config_TreeKinds_FullTreeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вид.
+        /// </summary>
+        public static string Admin_Config_TreeView {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Компактный.
+        /// </summary>
+        public static string Admin_Config_TreeView_Compact {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeView_Compact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Обычный.
+        /// </summary>
+        public static string Admin_Config_TreeView_Default {
+            get {
+                return ResourceManager.GetString("Admin_Config_TreeView_Default", resourceCulture);
             }
         }
         

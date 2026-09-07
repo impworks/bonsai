@@ -47,6 +47,16 @@ public class UpdateDynamicConfigVM: IMapped
     public TreeKind[] TreeKinds { get; set; }
 
     /// <summary>
+    /// The vertical direction in which trees are laid out.
+    /// </summary>
+    public TreeDirection TreeDirection { get; set; }
+
+    /// <summary>
+    /// The look of the cards in a tree.
+    /// </summary>
+    public TreeViewMode TreeViewMode { get; set; }
+
+    /// <summary>
     /// Flag indicating whether the MCP server is enabled for AI agent access.
     /// </summary>
     public bool McpEnabled { get; set; }
@@ -60,6 +70,8 @@ public class UpdateDynamicConfigVM: IMapped
               .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
               .Map(x => x.TreeKinds, x => x.TreeKinds == null ? 0 : x.TreeKinds.Aggregate((TreeKind)0, (a, b) => a | b))
+              .Map(x => x.TreeDirection, x => x.TreeDirection)
+              .Map(x => x.TreeViewMode, x => x.TreeViewMode)
               .Map(x => x.McpEnabled, x => x.McpEnabled);
 
         config.NewConfig<Code.Services.Config.DynamicConfig, UpdateDynamicConfigVM>()
@@ -69,6 +81,8 @@ public class UpdateDynamicConfigVM: IMapped
               .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
               .Map(x => x.TreeKinds, x => Enum.GetValues<TreeKind>().Where(y => x.TreeKinds.HasFlag(y)).ToArray())
+              .Map(x => x.TreeDirection, x => x.TreeDirection)
+              .Map(x => x.TreeViewMode, x => x.TreeViewMode)
               .Map(x => x.McpEnabled, x => x.McpEnabled);
     }
 }

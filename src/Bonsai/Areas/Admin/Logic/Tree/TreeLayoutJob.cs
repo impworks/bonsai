@@ -52,14 +52,27 @@ public partial class TreeLayoutJob: JobBase
     }
 
     /// <summary>
-    /// Renders the tree using ELK.js.
+    /// Renders the tree using Graphviz.
     /// </summary>
-    protected async Task<string> RenderTreeAsync(TreeLayoutVM tree, int thoroughness, CancellationToken token)
+    /// <param name="tree">Tree contents.</param>
+    /// <param name="exhaustive">
+    /// Search over many declaration orders and keep the tidiest layout.
+    /// Only worth the time for the full tree: the partial trees are simple enough
+    /// for Graphviz to get right on the first try, and there is one per page.
+    /// </param>
+    /// <param name="token">Cancellation token.</param>
+    protected async Task<string> RenderTreeAsync(TreeLayoutVM tree, bool exhaustive, CancellationToken token)
     {
         var json = JsonConvert.SerializeObject(tree);
+        var options = new
+        {
+            direction = _config.TreeDirection.ToString(),
+            view = _config.TreeViewMode.ToString()
+        };
+
         var result = await _js.InvokeFromFileAsync<string>(
             "./External/tree/tree-layout.js",
-            args: [json, thoroughness],
+            args: [json, exhaustive, options],
             cancellationToken: token
         );
 

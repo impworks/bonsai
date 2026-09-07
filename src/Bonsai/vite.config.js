@@ -174,15 +174,9 @@ export default defineConfig(({ mode }) => ({
                 { src: 'node_modules/font-awesome/fonts/*', dest: 'fonts' },
                 { src: 'node_modules/gijgo/fonts/*', dest: 'fonts' },
                 { src: 'Areas/Common/Fonts/*', dest: 'fonts' },
-                // ELK tree layout files (go to project root External/, not wwwroot/External/)
+                // Graphviz tree layout files (go to project root External/, not wwwroot/External/)
                 { src: 'Areas/Admin/BackendScripts/tree-layout.js', dest: '../../External/tree' },
-                { src: 'node_modules/elkjs/lib/elk-api.js', dest: '../../External/tree' },
-                { src: 'node_modules/elkjs/lib/elk-worker.min.js', dest: '../../External/tree' },
-                {
-                    src: 'node_modules/elkjs/lib/main.js',
-                    dest: '../../External/tree',
-                    rename: 'elk.js'
-                },
+                { src: 'node_modules/@viz-js/viz/dist/viz.cjs', dest: '../../External/tree' },
                 // PDF.js worker (named to match vendor-admin.js bundle)
                 {
                     src: 'node_modules/pdfjs-dist/build/pdf.worker.js',

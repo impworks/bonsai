@@ -1,5 +1,6 @@
 @using Bonsai.Areas.Front.ViewModels.Page
 @using Bonsai.Code.Services.Config
+@using Bonsai.Data.Models
 @using Bonsai.Localization
 @inject BonsaiConfigService ConfigService
 @model PageTreeVM
@@ -12,11 +13,11 @@
 }
 
 <div class="tree">
-    <div class="tree-wrapper" data-key="@Model.Key" data-kind="@Model.TreeKind">
+    <div class="tree-wrapper @(cfg.TreeViewMode == TreeViewMode.Compact ? "compact" : null)" data-key="@Model.Key" data-kind="@Model.TreeKind" data-direction="@cfg.TreeDirection" data-view="@cfg.TreeViewMode">
         <svg class="tree-back" :width="width" :height="height">
             <polyline :points="e.points" v-for="e in edges" />
         </svg>
-        <tree-card v-for="p in persons" :key="p.id" :value="p" :active="p.id == root" />
+        <tree-card v-for="p in persons" :key="p.id" :value="p" :active="p.id == root" :compact="compact" />
     </div>
     <div class="tree-preloader">
         <h4>
@@ -32,12 +33,12 @@
 <script id="tree-card-template" type="text/x-template">
     <div :class="{'tree-card-wrapper': true, male: value.info.IsMale, female: !value.info.IsMale, deceased: @(cfg.HideBlackRibbon ? "false" : "value.info.IsDead"), active: active}"
          :style="{left: value.x, top: value.y, width: value.width, height: value.height}" :data-id="value.id">
-        <a :href="value.info.Url" class="tree-card" draggable="false" target="_top">
+        <a :href="value.info.Url" class="tree-card" draggable="false" target="_top" :title="compact ? fullName : null">
             <div class="tree-card-photo" :style="{'background-image': 'url(' + value.info.Photo + ')'}"></div>
             <div class="tree-card-body">
                 <span class="tree-card-title">
-                    {{value.info.Name}}
-                    <span v-if="value.info.MaidenName">({{value.info.MaidenName}})</span>
+                    {{displayName}}
+                    <span v-if="value.info.MaidenName && !compact">({{value.info.MaidenName}})</span>
                 </span>
                 <span class="tree-card-date">
                     <span>{{value.info.Birth}}</span>

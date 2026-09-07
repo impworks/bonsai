@@ -1643,6 +1643,9 @@
   <data name="Admin_Config_CaptionDescription" xml:space="preserve">
     <value>Показывается в заголовке сайта</value>
   </data>
+  <data name="Admin_Config_Other" xml:space="preserve">
+    <value>Прочее</value>
+  </data>
   <data name="Admin_Config_Registration" xml:space="preserve">
     <value>Регистрация</value>
   </data>
@@ -1652,8 +1655,29 @@
   <data name="Admin_Config_Registration_Enabled" xml:space="preserve">
     <value>Разрешена</value>
   </data>
+  <data name="Admin_Config_Section_Main" xml:space="preserve">
+    <value>Главное</value>
+  </data>
+  <data name="Admin_Config_Section_Tree" xml:space="preserve">
+    <value>Фамильное древо</value>
+  </data>
   <data name="Admin_Config_Title" xml:space="preserve">
     <value>Настройки</value>
+  </data>
+  <data name="Admin_Config_TreeDirection" xml:space="preserve">
+    <value>Направление</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_BottomToTop" xml:space="preserve">
+    <value>Снизу вверх</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_BottomToTopDescription" xml:space="preserve">
+    <value>Дети над родителями</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_TopToBottom" xml:space="preserve">
+    <value>Сверху вниз</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_TopToBottomDescription" xml:space="preserve">
+    <value>Дети под родителями</value>
   </data>
   <data name="Admin_Config_TreeDisplay" xml:space="preserve">
     <value>Внешний вид дерева</value>
@@ -1693,6 +1717,15 @@
   </data>
   <data name="Admin_Config_TreeKinds_FullTreeDescription" xml:space="preserve">
     <value>весь связанный граф родственников</value>
+  </data>
+  <data name="Admin_Config_TreeView" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="Admin_Config_TreeView_Compact" xml:space="preserve">
+    <value>Компактный</value>
+  </data>
+  <data name="Admin_Config_TreeView_Default" xml:space="preserve">
+    <value>Обычный</value>
   </data>
   <data name="Admin_Config_Version" xml:space="preserve">
     <value>Версия</value>

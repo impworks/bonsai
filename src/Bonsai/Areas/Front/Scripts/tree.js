@@ -6,7 +6,22 @@
 
     Vue.component('tree-card', {
         template: '#tree-card-template',
-        props: ['value', 'active']
+        props: ['value', 'active', 'compact'],
+        computed: {
+            fullName: function () {
+                var info = this.value.info;
+                return info.MaidenName
+                    ? info.Name + ' (' + info.MaidenName + ')'
+                    : info.Name;
+            },
+            displayName: function () {
+                // a compact card has no room for the whole name, so it shows the
+                // short form and keeps the full one in the tooltip
+                return this.compact
+                    ? abbreviateName(this.value.info.Name)
+                    : this.value.info.Name;
+            }
+        }
     });
 
     $trees.each(function () {
@@ -17,10 +32,15 @@
         var kind = $wrap.data('kind');
         var url = '/util/tree/' + encodeURIComponent(key) + '?kind=' + encodeURIComponent(kind);
 
-        requestTreeInfo($wrap, url, 0);
+        var view = {
+            direction: $wrap.data('direction'),
+            compact: $wrap.data('view') === 'Compact'
+        };
+
+        requestTreeInfo($wrap, url, view, 0);
     });
 
-    function requestTreeInfo($wrap, url, retryCount) {
+    function requestTreeInfo($wrap, url, view, retryCount) {
         if (retryCount > 10) {
             var $tree = $wrap.closest('.tree');
             $tree.find('.tree-preloader').remove();
@@ -31,27 +51,27 @@
         $.ajax(url)
             .then(function(data) {
                 if (data && data.content) {
-                    renderTree($wrap, data);
+                    renderTree($wrap, data, view);
                     return;
                 }
 
                 setTimeout(
                     function () {
-                        requestTreeInfo($wrap, url, retryCount + 1);
+                        requestTreeInfo($wrap, url, view, retryCount + 1);
                     },
                     5000
                 );
             }, function () {
-                requestTreeInfo($wrap, url, 11);
+                requestTreeInfo($wrap, url, view, 11);
             });
     }
 
-    function renderTree($wrap, treeInfo) {
+    function renderTree($wrap, treeInfo, view) {
         // displays the tree
         var tree = treeInfo.content;
         var rootId = treeInfo.rootId;
         var persons = convertPersons(tree);
-        var edges = convertEdges(tree);
+        var edges = convertEdges(tree, view.direction);
         var vue = new Vue({
             el: $wrap[0],
             data: {
@@ -59,7 +79,8 @@
                 edges: edges,
                 width: tree.width,
                 height: tree.height,
-                root: rootId
+                root: rootId,
+                compact: view.compact
             },
             mounted: function () {
                 var $view = $(this.$el);
@@ -75,8 +96,26 @@
         return tree.children.filter(function (x) { return !!x.info; });
     }
 
-    function convertEdges(tree) {
+    function abbreviateName(name) {
+        // shortens everything after the surname to an initial:
+        // "Горбунов Дмитрий Владимирович" -> "Горбунов Д. В."
+        var parts = (name || '').split(' ').filter(function (x) { return x.length > 0; });
+        if (parts.length < 2) {
+            return name;
+        }
+
+        var initials = parts.slice(1).map(function (x) {
+            return x.charAt(0).toUpperCase() + '.';
+        });
+
+        return [parts[0]].concat(initials).join(' ');
+    }
+
+    function convertEdges(tree, direction) {
         // returns the SVG-friendly list of edges
+        // a wire ends on the border of a card, so the last point is nudged one
+        // pixel into it - which is upwards when the tree grows from the bottom up
+        var nudge = direction === 'BottomToTop' ? -1 : 1;
         var hasChildren = detectChildren(tree);
         var result = [];
         for (var idx = 0; idx < tree.edges.length; idx++) {
@@ -93,8 +132,8 @@
             }
             if (!edgeInfo.info.fakeTarget || hasChildren[edgeInfo.targets[0]]) {
                 // omit the last segment if the marriage has no children (avoids dangling connector)
-                // +1 to account for a pseudo-node's height (avoids gaps)
-                points.push(e.x, e.y + 1);
+                // the nudge accounts for a pseudo-node's height (avoids gaps)
+                points.push(e.x, e.y + nudge);
             }
             result.push({
                 // +0.5 for crispy clear nodes

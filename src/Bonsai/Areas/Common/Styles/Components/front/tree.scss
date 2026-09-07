@@ -106,6 +106,47 @@
             }
         }
 
+        // The compact view: the layout hands out cards half as wide and a little
+        // shorter, so the contents have to give up their breathing room. The photo
+        // keeps 2px around it and shrinks to a thumbnail, which leaves the name
+        // enough width to stay readable; what still does not fit is clipped
+        // rather than wrapped out of the card.
+        &.compact .tree-card-wrapper {
+            &.deceased:before {
+                height: 6px;
+                width: 36px;
+                top: 3px;
+                left: -7px;
+            }
+
+            .tree-card {
+                border-radius: 4px;
+                padding: 2px;
+                overflow: hidden;
+
+                .tree-card-photo {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 2px;
+                    margin-right: 4px;
+                }
+
+                .tree-card-body {
+                    overflow: hidden;
+
+                    .tree-card-title {
+                        font-size: 12px;
+                        margin-bottom: 2px;
+                        max-height: 52px;
+                    }
+
+                    .tree-card-date {
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+
         .tree-back {
             polyline {
                 fill: transparent;

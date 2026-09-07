@@ -18,98 +18,137 @@
     <div class="col-md-9 col-sm-12">
         <form action="@Url.Action("Update")" method="post">
 
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label">@Texts.Admin_Config_Caption</label>
-                <div class="col-sm-9">
-                    <input asp-for="Title" class="form-control" />
-                    <span class="small text-muted">@Texts.Admin_Config_CaptionDescription</span>
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3">@Texts.Admin_Config_Access</label>
-                <div class="col-sm-9">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" asp-for="AllowGuests" value="True" class="custom-control-input" id="AllowGuestsTrue" />
-                        <label class="custom-control-label" for="AllowGuestsTrue">
-                            @Texts.Admin_Config_Access_AnyCanRead
-                        </label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" asp-for="AllowGuests" value="False" class="custom-control-input" id="AllowGuestsFalse" />
-                        <label class="custom-control-label" for="AllowGuestsFalse">
-                            @Texts.Admin_Config_Access_RegisteredCanRead
-                        </label>
+            <div class="config-section">
+                <h4>@Texts.Admin_Config_Section_Main</h4>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">@Texts.Admin_Config_Caption</label>
+                    <div class="col-sm-9">
+                        <input asp-for="Title" class="form-control" />
+                        <span class="small text-muted">@Texts.Admin_Config_CaptionDescription</span>
+                        <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3">@Texts.Admin_Config_Registration</label>
-                <div class="col-sm-9">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" asp-for="AllowRegistration" value="True" class="custom-control-input" id="AllowRegistrationTrue" />
-                        <label class="custom-control-label" for="AllowRegistrationTrue">
-                            @Texts.Admin_Config_Registration_Enabled
-                        </label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" asp-for="AllowRegistration" value="False" class="custom-control-input" id="AllowRegistrationFalse" />
-                        <label class="custom-control-label" for="AllowRegistrationFalse">
-                            @Texts.Admin_Config_Registration_Disabled
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3">@Texts.Admin_Config_TreeKinds</label>
-                <div class="col-sm-9">
-                    @{ TreeKindOption(TreeKind.FullTree, Texts.Admin_Config_TreeKinds_FullTree, Texts.Admin_Config_TreeKinds_FullTreeDescription); }
-                    @{ TreeKindOption(TreeKind.CloseFamily, Texts.Admin_Config_TreeKinds_CloseFamily, Texts.Admin_Config_TreeKinds_CloseFamilyDescription); }
-                    @{ TreeKindOption(TreeKind.Ancestors, Texts.Admin_Config_TreeKinds_Ancestors, Texts.Admin_Config_TreeKinds_AncestorsDescription); }
-                    @{ TreeKindOption(TreeKind.Descendants, Texts.Admin_Config_TreeKinds_Descendants, Texts.Admin_Config_TreeKinds_DescendantsDescription); }
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3">@Texts.Admin_Config_TreeDisplay</label>
-                <div class="col-sm-9">
-                    <div class="mb-2">
-                        <input asp-for="TreeRenderThoroughness" type="range" min="1" max="100" class="form-control"/>
-                        <div class="small text-muted">
-                            <div class="pull-left">@Texts.Admin_Config_TreeDisplay_FastAndRough</div>
-                            <div class="pull-right">@Texts.Admin_Config_TreeDisplay_SlowAndThorough</div>
-                            <div class="clearfix"></div>
+                <div class="form-group row">
+                    <label class="col-sm-3">@Texts.Admin_Config_Access</label>
+                    <div class="col-sm-9">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="AllowGuests" value="True" class="custom-control-input" id="AllowGuestsTrue" />
+                            <label class="custom-control-label" for="AllowGuestsTrue">
+                                @Texts.Admin_Config_Access_AnyCanRead
+                            </label>
                         </div>
-                        <span asp-validation-for="TreeRenderThoroughness" class="text-danger"></span>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" asp-for="HideBlackRibbon" class="custom-control-input" id="HideBlackRibbon" />
-                        <label class="custom-control-label" for="HideBlackRibbon">
-                            @Texts.Admin_Config_TreeDisplay_HideBlackRibbon
-                        </label>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="AllowGuests" value="False" class="custom-control-input" id="AllowGuestsFalse" />
+                            <label class="custom-control-label" for="AllowGuestsFalse">
+                                @Texts.Admin_Config_Access_RegisteredCanRead
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="form-group row">
-                <label class="col-sm-3">@Texts.Admin_Config_Mcp</label>
-                <div class="col-sm-9">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" asp-for="McpEnabled" class="custom-control-input" id="McpEnabled" />
-                        <label class="custom-control-label" for="McpEnabled">
-                            @Texts.Admin_Config_Mcp_Enabled<br />
-                            <small class="text-muted">@Texts.Admin_Config_Mcp_EnabledDescription</small>
-                        </label>
+                <div class="form-group row">
+                    <label class="col-sm-3">@Texts.Admin_Config_Registration</label>
+                    <div class="col-sm-9">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="AllowRegistration" value="True" class="custom-control-input" id="AllowRegistrationTrue" />
+                            <label class="custom-control-label" for="AllowRegistrationTrue">
+                                @Texts.Admin_Config_Registration_Enabled
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="AllowRegistration" value="False" class="custom-control-input" id="AllowRegistrationFalse" />
+                            <label class="custom-control-label" for="AllowRegistrationFalse">
+                                @Texts.Admin_Config_Registration_Disabled
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <div class="col-sm-3">@Texts.Admin_Config_Version</div>
-                <div class="col-sm-9 text-muted">
-                    <small>
-                        @Texts.Admin_Config_Version_Build: @(StringHelper.Coalesce(config.BuildCommit, @Texts.Admin_Config_Version_BuildUnknown))<br />
-                        @Texts.Admin_Config_Version_Database: @(config.ConnectionStrings.UseEmbeddedDatabase ? "SQLite" : "PostgreSQL")
-                    </small>
+            <div class="config-section">
+                <h4>@Texts.Admin_Config_Section_Tree</h4>
+
+                <div class="form-group row">
+                    <label class="col-sm-3">@Texts.Admin_Config_TreeKinds</label>
+                    <div class="col-sm-9">
+                        @{ TreeKindOption(TreeKind.FullTree, Texts.Admin_Config_TreeKinds_FullTree, Texts.Admin_Config_TreeKinds_FullTreeDescription); }
+                        @{ TreeKindOption(TreeKind.CloseFamily, Texts.Admin_Config_TreeKinds_CloseFamily, Texts.Admin_Config_TreeKinds_CloseFamilyDescription); }
+                        @{ TreeKindOption(TreeKind.Ancestors, Texts.Admin_Config_TreeKinds_Ancestors, Texts.Admin_Config_TreeKinds_AncestorsDescription); }
+                        @{ TreeKindOption(TreeKind.Descendants, Texts.Admin_Config_TreeKinds_Descendants, Texts.Admin_Config_TreeKinds_DescendantsDescription); }
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3">@Texts.Admin_Config_TreeDirection</label>
+                    <div class="col-sm-9">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="TreeDirection" value="@TreeDirection.TopToBottom" class="custom-control-input" id="TreeDirectionTopToBottom" />
+                            <label class="custom-control-label" for="TreeDirectionTopToBottom">
+                                @Texts.Admin_Config_TreeDirection_TopToBottom <br/>
+                                <small class="text-muted">@Texts.Admin_Config_TreeDirection_TopToBottomDescription</small>
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="TreeDirection" value="@TreeDirection.BottomToTop" class="custom-control-input" id="TreeDirectionBottomToTop" />
+                            <label class="custom-control-label" for="TreeDirectionBottomToTop">
+                                @Texts.Admin_Config_TreeDirection_BottomToTop <br/>
+                                <small class="text-muted">@Texts.Admin_Config_TreeDirection_BottomToTopDescription</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3">@Texts.Admin_Config_TreeView</label>
+                    <div class="col-sm-9">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="TreeViewMode" value="@TreeViewMode.Default" class="custom-control-input" id="TreeViewModeDefault" />
+                            <label class="custom-control-label" for="TreeViewModeDefault">
+                                @Texts.Admin_Config_TreeView_Default
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" asp-for="TreeViewMode" value="@TreeViewMode.Compact" class="custom-control-input" id="TreeViewModeCompact" />
+                            <label class="custom-control-label" for="TreeViewModeCompact">
+                                @Texts.Admin_Config_TreeView_Compact
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3">@Texts.Admin_Config_Other</label>
+                    <div class="col-sm-9">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" asp-for="HideBlackRibbon" class="custom-control-input" id="HideBlackRibbon" />
+                            <label class="custom-control-label" for="HideBlackRibbon">
+                                @Texts.Admin_Config_TreeDisplay_HideBlackRibbon
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h4>@Texts.Admin_Config_Other</h4>
+
+                <div class="form-group row">
+                    <label class="col-sm-3">@Texts.Admin_Config_Mcp</label>
+                    <div class="col-sm-9">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" asp-for="McpEnabled" class="custom-control-input" id="McpEnabled" />
+                            <label class="custom-control-label" for="McpEnabled">
+                                @Texts.Admin_Config_Mcp_Enabled<br />
+                                <small class="text-muted">@Texts.Admin_Config_Mcp_EnabledDescription</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">@Texts.Admin_Config_Version</div>
+                    <div class="col-sm-9 text-muted">
+                        <small>
+                            @Texts.Admin_Config_Version_Build: @(StringHelper.Coalesce(config.BuildCommit, @Texts.Admin_Config_Version_BuildUnknown))<br />
+                            @Texts.Admin_Config_Version_Database: @(config.ConnectionStrings.UseEmbeddedDatabase ? "SQLite" : "PostgreSQL")
+                        </small>
+                    </div>
                 </div>
             </div>
 

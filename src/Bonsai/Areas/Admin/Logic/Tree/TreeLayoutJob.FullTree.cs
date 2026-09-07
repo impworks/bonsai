@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Code.DomainModel.Relations;
-using Bonsai.Code.Utils;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Impworks.Utils.Linq;
@@ -24,13 +23,12 @@ public partial class TreeLayoutJob
             return;
 
         var trees = GetAllSubtrees(ctx);
-        var thoroughness = GetThoroughness();
 
         _logger.Information($"Full tree layout started: {ctx.Pages.Count} people, {ctx.Relations.Count} rels, {trees.Count} subtrees.");
 
         foreach (var tree in trees)
         {
-            var rendered = await RenderTreeAsync(tree, thoroughness, token);
+            var rendered = await RenderTreeAsync(tree, true, token);
             var layout = new TreeLayout
             {
                 Id = Guid.NewGuid(),
@@ -67,19 +65,6 @@ public partial class TreeLayoutJob
         }
 
         return result;
-    }
-
-    /// <summary>
-    /// Returns interpolated thoroughness.
-    /// </summary>
-    private int GetThoroughness()
-    {
-        return Interpolator.MapValue(
-            _config.TreeRenderThoroughness,
-            new IntervalMap(1, 10, 1, 10),
-            new IntervalMap(11, 50, 11, 600),
-            new IntervalMap(51, 100, 601, 15000)
-        );
     }
 
     #endregion

@@ -1629,6 +1629,9 @@
   <data name="Admin_Config_CaptionDescription" xml:space="preserve">
     <value>Displayed in the header</value>
   </data>
+  <data name="Admin_Config_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
   <data name="Admin_Config_Registration" xml:space="preserve">
     <value>Registration</value>
   </data>
@@ -1638,8 +1641,29 @@
   <data name="Admin_Config_Registration_Enabled" xml:space="preserve">
     <value>Allowed</value>
   </data>
+  <data name="Admin_Config_Section_Main" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Admin_Config_Section_Tree" xml:space="preserve">
+    <value>Family tree</value>
+  </data>
   <data name="Admin_Config_Title" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="Admin_Config_TreeDirection" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_BottomToTop" xml:space="preserve">
+    <value>Bottom to top</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_BottomToTopDescription" xml:space="preserve">
+    <value>Children above their parents</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_TopToBottom" xml:space="preserve">
+    <value>Top to bottom</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_TopToBottomDescription" xml:space="preserve">
+    <value>Children below their parents</value>
   </data>
   <data name="Admin_Config_TreeDisplay" xml:space="preserve">
     <value>Tree display</value>
@@ -1679,6 +1703,15 @@
   </data>
   <data name="Admin_Config_TreeKinds_FullTreeDescription" xml:space="preserve">
     <value>the whole connected graph of relatives</value>
+  </data>
+  <data name="Admin_Config_TreeView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Admin_Config_TreeView_Compact" xml:space="preserve">
+    <value>Compact</value>
+  </data>
+  <data name="Admin_Config_TreeView_Default" xml:space="preserve">
+    <value>Default</value>
   </data>
   <data name="Admin_Config_Version" xml:space="preserve">
     <value>Version</value>

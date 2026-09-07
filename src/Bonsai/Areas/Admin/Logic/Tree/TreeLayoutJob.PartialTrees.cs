@@ -34,7 +34,7 @@ public partial class TreeLayoutJob
 
             try
             {
-                var rendered = await RenderTreeAsync(tree, 1000, token);
+                var rendered = await RenderTreeAsync(tree, false, token);
 
                 layouts.Add(new TreeLayout
                 {

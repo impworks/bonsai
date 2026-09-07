@@ -91,6 +91,21 @@
         }
     }
 
+    // A settings form is a long list of unrelated switches, so it is broken into
+    // titled sections with a rule between them.
+    .config-section {
+        margin-bottom: 1.5rem;
+
+        h4 {
+            margin-bottom: 1rem;
+        }
+
+        & + .config-section {
+            border-top: 1px solid #e2e2e2;
+            padding-top: 1.5rem;
+        }
+    }
+
     .form-label-required {
         &::after {
             display: inline-block;
