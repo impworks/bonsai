@@ -33,17 +33,15 @@
 <script id="tree-card-template" type="text/x-template">
     <div :class="{'tree-card-wrapper': true, male: value.info.IsMale, female: !value.info.IsMale, deceased: @(cfg.HideBlackRibbon ? "false" : "value.info.IsDead"), active: active}"
          :style="{left: value.x, top: value.y, width: value.width, height: value.height}" :data-id="value.id">
-        <a :href="value.info.Url" class="tree-card" draggable="false" target="_top" :title="compact ? fullName : null">
+        <a :href="value.info.Url" class="tree-card" draggable="false" target="_top" :title="tooltip">
             <div class="tree-card-photo" :style="{'background-image': 'url(' + value.info.Photo + ')'}"></div>
             <div class="tree-card-body">
                 <span class="tree-card-title">
                     {{displayName}}
+                    <span v-if="displayInitials" class="tree-card-initials">{{displayInitials}}</span>
                     <span v-if="value.info.MaidenName && !compact">({{value.info.MaidenName}})</span>
                 </span>
-                <span class="tree-card-date">
-                    <span>{{value.info.Birth}}</span>
-                    <span v-if="value.info.Death != null"> &mdash; {{value.info.Death}}</span>
-                </span>
+                <span class="tree-card-date" v-if="dates">{{dates}}</span>
             </div>
         </a>
     </div>

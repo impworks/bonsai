@@ -14,25 +14,23 @@ using Bonsai.Data.Models;
 using Bonsai.Localization;
 using Impworks.Utils.Linq;
 using Impworks.Utils.Strings;
-using Jering.Javascript.NodeJS;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace Bonsai.Areas.Admin.Logic.Tree;
 
 public partial class TreeLayoutJob: JobBase
 {
-    public TreeLayoutJob(AppDbContext db, INodeJSService js, BonsaiConfigService config, ILogger logger)
+    public TreeLayoutJob(AppDbContext db, TreeLayoutEngine engine, BonsaiConfigService config, ILogger logger)
     {
         _db = db;
-        _js = js;
+        _engine = engine;
         _config = config.GetDynamicConfig();
         _logger = logger;
     }
 
     private readonly AppDbContext _db;
-    private readonly INodeJSService _js;
+    private readonly TreeLayoutEngine _engine;
     private readonly DynamicConfig _config;
     private readonly ILogger _logger;
 
@@ -63,17 +61,12 @@ public partial class TreeLayoutJob: JobBase
     /// <param name="token">Cancellation token.</param>
     protected async Task<string> RenderTreeAsync(TreeLayoutVM tree, bool exhaustive, CancellationToken token)
     {
-        var json = JsonConvert.SerializeObject(tree);
-        var options = new
-        {
-            direction = _config.TreeDirection.ToString(),
-            view = _config.TreeViewMode.ToString()
-        };
-
-        var result = await _js.InvokeFromFileAsync<string>(
-            "./External/tree/tree-layout.js",
-            args: [json, exhaustive, options],
-            cancellationToken: token
+        var result = await _engine.LayoutAsync(
+            tree,
+            exhaustive,
+            _config.TreeDirection,
+            _config.TreeViewMode,
+            token
         );
 
         if (string.IsNullOrEmpty(result) || result == "null")

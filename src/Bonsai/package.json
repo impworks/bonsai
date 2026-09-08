@@ -24,7 +24,6 @@
     "vite-plugin-static-copy": "^2.2.0"
   },
   "dependencies": {
-    "@viz-js/viz": "^3.30.0",
     "blueimp-file-upload": "10.32.0",
     "bootstrap": "4.6.1",
     "datepicker-bootstrap": "1.9.13",

@@ -138,6 +138,11 @@
                         font-size: 12px;
                         margin-bottom: 2px;
                         max-height: 52px;
+
+                        // the initials wrap as a whole, never between themselves
+                        .tree-card-initials {
+                            white-space: nowrap;
+                        }
                     }
 
                     .tree-card-date {

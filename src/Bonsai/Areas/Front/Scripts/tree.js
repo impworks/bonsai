@@ -16,10 +16,38 @@
             },
             displayName: function () {
                 // a compact card has no room for the whole name, so it shows the
-                // short form and keeps the full one in the tooltip
+                // surname only and keeps the full one in the tooltip
                 return this.compact
-                    ? abbreviateName(this.value.info.Name)
+                    ? getSurname(this.value.info.Name)
                     : this.value.info.Name;
+            },
+            displayInitials: function () {
+                // the initials are rendered separately, because they must not be
+                // broken apart by a line wrap
+                return this.compact
+                    ? getInitials(this.value.info.Name)
+                    : null;
+            },
+            dates: function () {
+                // a compact card only has room for the years, and it drops them
+                // altogether when nothing is known
+                var info = this.value.info;
+                return this.compact
+                    ? formatDates(getYear(info.Birth), getYear(info.Death))
+                    : formatDates(info.Birth, info.Death);
+            },
+            tooltip: function () {
+                // the compact card is abbreviated, so the tooltip carries the
+                // full name and the full dates
+                if (!this.compact) {
+                    return null;
+                }
+
+                var info = this.value.info;
+                var dates = formatDates(info.Birth, info.Death);
+                return dates
+                    ? this.fullName + '\n' + dates
+                    : this.fullName;
             }
         }
     });
@@ -96,19 +124,51 @@
         return tree.children.filter(function (x) { return !!x.info; });
     }
 
-    function abbreviateName(name) {
+    function splitName(name) {
+        return (name || '').split(' ').filter(function (x) { return x.length > 0; });
+    }
+
+    function getSurname(name) {
+        // "Горбунов Дмитрий Владимирович" -> "Горбунов"
+        var parts = splitName(name);
+        return parts.length < 2 ? name : parts[0];
+    }
+
+    function getInitials(name) {
         // shortens everything after the surname to an initial:
-        // "Горбунов Дмитрий Владимирович" -> "Горбунов Д. В."
-        var parts = (name || '').split(' ').filter(function (x) { return x.length > 0; });
+        // "Горбунов Дмитрий Владимирович" -> "Д. В."
+        var parts = splitName(name);
         if (parts.length < 2) {
-            return name;
+            return null;
         }
 
-        var initials = parts.slice(1).map(function (x) {
-            return x.charAt(0).toUpperCase() + '.';
-        });
+        return parts.slice(1)
+                    .map(function (x) { return x.charAt(0).toUpperCase() + '.'; })
+                    .join(' ');
+    }
 
-        return [parts[0]].concat(initials).join(' ');
+    function getYear(date) {
+        // returns the year component of a short date ("12/03/1980" -> "1980"),
+        // or nothing at all when the year is unknown
+        if (!date) {
+            return null;
+        }
+
+        var year = date.split('/').pop();
+        return year.indexOf('?') === 0 ? null : year;
+    }
+
+    function formatDates(birth, death) {
+        // renders the lifespan; either of the dates may be missing
+        if (birth && death) {
+            return birth + ' — ' + death;
+        }
+
+        if (death) {
+            return '— ' + death;
+        }
+
+        return birth || null;
     }
 
     function convertEdges(tree, direction) {
