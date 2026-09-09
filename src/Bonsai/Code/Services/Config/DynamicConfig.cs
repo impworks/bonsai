@@ -31,11 +31,6 @@ public class DynamicConfig
     public bool HideBlackRibbon { get; set; }
 
     /// <summary>
-    /// Tree render thoroughness coefficient.
-    /// </summary>
-    public int TreeRenderThoroughness { get; set; }
-
-    /// <summary>
     /// Allowed kinds of trees.
     /// </summary>
     public TreeKind TreeKinds { get; set; }

@@ -763,29 +763,11 @@ namespace Bonsai.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Быстро и грубо.
-        /// </summary>
-        public static string Admin_Config_TreeDisplay_FastAndRough {
-            get {
-                return ResourceManager.GetString("Admin_Config_TreeDisplay_FastAndRough", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Не показывать черную ленту на карточках умерших.
         /// </summary>
         public static string Admin_Config_TreeDisplay_HideBlackRibbon {
             get {
                 return ResourceManager.GetString("Admin_Config_TreeDisplay_HideBlackRibbon", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Долго и тщательно.
-        /// </summary>
-        public static string Admin_Config_TreeDisplay_SlowAndThorough {
-            get {
-                return ResourceManager.GetString("Admin_Config_TreeDisplay_SlowAndThorough", resourceCulture);
             }
         }
         
@@ -1137,15 +1119,6 @@ namespace Bonsai.Localization {
         public static string Admin_DemoMode_Banner {
             get {
                 return ResourceManager.GetString("Admin_DemoMode_Banner", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Значение должно быть в диапазоне от 1 до 100.
-        /// </summary>
-        public static string Admin_DynamicConfig_Validation_ThoroughnessRange {
-            get {
-                return ResourceManager.GetString("Admin_DynamicConfig_Validation_ThoroughnessRange", resourceCulture);
             }
         }
         

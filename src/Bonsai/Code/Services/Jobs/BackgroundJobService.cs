@@ -44,7 +44,7 @@ public class BackgroundJobService: IHostedService, IBackgroundJobService
         await _startup.WaitForStartup();
 
         foreach (var def in await LoadPendingJobsAsync())
-            _ = ExecuteJobAsync(def);
+            StartJob(def);
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class BackgroundJobService: IHostedService, IBackgroundJobService
         if(jb.IsSuperseding)
             Cancel(def.ResourceKey);
             
-        _ = ExecuteJobAsync(def); // sic! fire and forget
+        StartJob(def);
     }
 
     /// <summary>
@@ -92,6 +92,24 @@ public class BackgroundJobService: IHostedService, IBackgroundJobService
     #endregion
 
     #region Helpers
+
+    /// <summary>
+    /// Hands the job over to the thread pool and returns at once.
+    ///
+    /// Calling ExecuteJobAsync directly would not be enough: an async method runs
+    /// on the calling thread until its first genuine suspension, and a job whose
+    /// awaits all complete synchronously (Microsoft.Data.Sqlite is synchronous
+    /// throughout, and so is reading a child process's output) would run to
+    /// completion inside the request that started it.
+    /// </summary>
+    private void StartJob(JobDescriptor def)
+    {
+        // registered here rather than inside the job, so that a superseding job
+        // queued right after this one still sees it and cancels it
+        _jobs.TryAdd(def.JobStateId, def);
+
+        _ = Task.Run(() => ExecuteJobAsync(def));
+    }
 
     /// <summary>
     /// Loads all incomplete jobs from the database.
@@ -175,8 +193,6 @@ public class BackgroundJobService: IHostedService, IBackgroundJobService
     /// </summary>
     private async Task ExecuteJobAsync(JobDescriptor def)
     {
-        _jobs.TryAdd(def.JobStateId, def);
-            
         var success = false;
 
         try

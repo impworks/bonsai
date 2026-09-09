@@ -54,8 +54,7 @@ public class DynamicConfigController(DynamicConfigManagerService configMgr, Bons
 
         bool IsTreeConfigChanged()
         {
-            return oldValue.TreeRenderThoroughness != vm.TreeRenderThoroughness
-                   || oldValue.TreeKinds?.JoinString(",") != vm.TreeKinds?.JoinString(",")
+            return oldValue.TreeKinds?.JoinString(",") != vm.TreeKinds?.JoinString(",")
                    || oldValue.TreeDirection != vm.TreeDirection
                    || oldValue.TreeViewMode != vm.TreeViewMode;
         }

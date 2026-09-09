@@ -36,12 +36,6 @@ public class UpdateDynamicConfigVM: IMapped
     public bool HideBlackRibbon { get; set; }
 
     /// <summary>
-    /// Tree render thoroughness coefficient.
-    /// </summary>
-    [Range(1, 100, ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Admin_DynamicConfig_Validation_ThoroughnessRange")]
-    public int TreeRenderThoroughness { get; set; }
-
-    /// <summary>
     /// Kinds of tree which should be rendered automatically.
     /// </summary>
     public TreeKind[] TreeKinds { get; set; }
@@ -67,7 +61,6 @@ public class UpdateDynamicConfigVM: IMapped
               .Map(x => x.Title, x => x.Title)
               .Map(x => x.AllowGuests, x => x.AllowGuests)
               .Map(x => x.AllowRegistration, x => x.AllowRegistration)
-              .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
               .Map(x => x.TreeKinds, x => x.TreeKinds == null ? 0 : x.TreeKinds.Aggregate((TreeKind)0, (a, b) => a | b))
               .Map(x => x.TreeDirection, x => x.TreeDirection)
@@ -78,7 +71,6 @@ public class UpdateDynamicConfigVM: IMapped
               .Map(x => x.Title, x => x.Title)
               .Map(x => x.AllowGuests, x => x.AllowGuests)
               .Map(x => x.AllowRegistration, x => x.AllowRegistration)
-              .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
               .Map(x => x.TreeKinds, x => Enum.GetValues<TreeKind>().Where(y => x.TreeKinds.HasFlag(y)).ToArray())
               .Map(x => x.TreeDirection, x => x.TreeDirection)

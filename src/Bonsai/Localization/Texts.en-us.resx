@@ -1668,14 +1668,8 @@
   <data name="Admin_Config_TreeDisplay" xml:space="preserve">
     <value>Tree display</value>
   </data>
-  <data name="Admin_Config_TreeDisplay_FastAndRough" xml:space="preserve">
-    <value>Fast and rough</value>
-  </data>
   <data name="Admin_Config_TreeDisplay_HideBlackRibbon" xml:space="preserve">
     <value>Hide black ribbon on the cards of deceased people</value>
-  </data>
-  <data name="Admin_Config_TreeDisplay_SlowAndThorough" xml:space="preserve">
-    <value>Slow and thorough</value>
   </data>
   <data name="Admin_Config_TreeKinds" xml:space="preserve">
     <value>Tree kinds</value>
@@ -2296,9 +2290,6 @@
   </data>
   <data name="Admin_DynamicConfig_Validation_TitleTooLong" xml:space="preserve">
     <value>Caption length cannot exceed 200 characters</value>
-  </data>
-  <data name="Admin_DynamicConfig_Validation_ThoroughnessRange" xml:space="preserve">
-    <value>Value must be between 1 and 100</value>
   </data>
   <data name="Admin_Pages_Validation_TitleEmpty" xml:space="preserve">
     <value>Please enter the page title</value>

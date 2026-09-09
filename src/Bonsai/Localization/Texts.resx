@@ -1682,14 +1682,8 @@
   <data name="Admin_Config_TreeDisplay" xml:space="preserve">
     <value>Внешний вид дерева</value>
   </data>
-  <data name="Admin_Config_TreeDisplay_FastAndRough" xml:space="preserve">
-    <value>Быстро и грубо</value>
-  </data>
   <data name="Admin_Config_TreeDisplay_HideBlackRibbon" xml:space="preserve">
     <value>Не показывать черную ленту на карточках умерших</value>
-  </data>
-  <data name="Admin_Config_TreeDisplay_SlowAndThorough" xml:space="preserve">
-    <value>Долго и тщательно</value>
   </data>
   <data name="Admin_Config_TreeKinds" xml:space="preserve">
     <value>Типы деревьев</value>
@@ -2331,9 +2325,6 @@
   </data>
   <data name="Admin_DynamicConfig_Validation_TitleTooLong" xml:space="preserve">
     <value>Название не может превышать 200 символов</value>
-  </data>
-  <data name="Admin_DynamicConfig_Validation_ThoroughnessRange" xml:space="preserve">
-    <value>Значение должно быть в диапазоне от 1 до 100</value>
   </data>
   <data name="Admin_Pages_Validation_TitleEmpty" xml:space="preserve">
     <value>Необходимо ввести название страницы</value>

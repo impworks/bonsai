@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic.Changesets;
+using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.ViewModels.Changesets;
+using Bonsai.Code.Services.Jobs;
 using Bonsai.Code.Utils;
 using Bonsai.Data;
+using Bonsai.Data.Models;
 using Bonsai.Localization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +16,7 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing changesets.
 /// </summary>
 [Route("admin/changes")]
-public class ChangesetsController(ChangesetsManagerService changesSvc, AppDbContext db) : AdminControllerBase
+public class ChangesetsController(ChangesetsManagerService changesSvc, AppDbContext db, IBackgroundJobService jobs) : AdminControllerBase
 {
     protected override Type ListStateType => typeof(ChangesetsListRequestVM);
 
@@ -68,6 +71,10 @@ public class ChangesetsController(ChangesetsManagerService changesSvc, AppDbCont
 
         await changesSvc.RevertChangeAsync(id, User);
         await db.SaveChangesAsync();
+
+        // reverting a page or a relation can add, remove or rewire tree nodes
+        if (editVm.EntityType is ChangesetEntityType.Page or ChangesetEntityType.Relation)
+            await jobs.RunAsync(JobBuilder.For<TreeLayoutJob>().SupersedeAll());
 
         return RedirectToSuccess(Texts.Admin_Changesets_RevertedMessage);
     }
