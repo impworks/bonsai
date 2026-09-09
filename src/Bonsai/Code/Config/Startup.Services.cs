@@ -1,14 +1,14 @@
-﻿using System.Net;
-using Bonsai.Areas.Admin.Logic;
+﻿using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.Logic.Changesets;
 using Bonsai.Areas.Admin.Logic.MediaHandlers;
+using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.Logic.Validation;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Front.Logic.Auth;
 using Bonsai.Areas.Front.Logic.Relations;
 using Bonsai.Code.Services;
 using Bonsai.Code.Services.Config;
-using Jering.Javascript.NodeJS;
+using Bonsai.Code.Services.Graphviz;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,11 +29,9 @@ public partial class Startup
             x.MultipartBodyLengthLimit = int.MaxValue;
         });
 
-        services.AddNodeJS();
-        services.Configure<OutOfProcessNodeJSServiceOptions>(opts => opts.InvocationTimeoutMS = -1);
-        services.Configure<HttpNodeJSServiceOptions>(opts => opts.Version = HttpVersion.Version20);
-
         // common
+        services.AddSingleton<IGraphvizService, GraphvizService>();
+        services.AddTransient<TreeLayoutEngine>();
         services.AddScoped<MarkdownService>();
         services.AddSingleton<CacheService>();
         services.AddTransient<BonsaiConfigService>();

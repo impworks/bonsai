@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.ViewModels.Tree;
 using Bonsai.Code.DomainModel.Relations;
+using Bonsai.Code.Services.Graphviz;
 using Bonsai.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -34,7 +35,7 @@ public partial class TreeLayoutJob
 
             try
             {
-                var rendered = await RenderTreeAsync(tree, 1000, token);
+                var rendered = await RenderTreeAsync(tree, false, token);
 
                 layouts.Add(new TreeLayout
                 {
@@ -45,7 +46,7 @@ public partial class TreeLayoutJob
                     Kind = kind
                 });
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not GraphvizNotFoundException)
             {
                 var json = JsonConvert.SerializeObject(tree);
                 _logger.Error(ex.Demystify(), $"Failed to render partial tree ({kind}) for page {page.Id}:\n{json}");

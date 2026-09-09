@@ -31,14 +31,19 @@ public class DynamicConfig
     public bool HideBlackRibbon { get; set; }
 
     /// <summary>
-    /// Tree render thoroughness coefficient.
-    /// </summary>
-    public int TreeRenderThoroughness { get; set; }
-
-    /// <summary>
     /// Allowed kinds of trees.
     /// </summary>
     public TreeKind TreeKinds { get; set; }
+
+    /// <summary>
+    /// The vertical direction in which trees are laid out.
+    /// </summary>
+    public TreeDirection TreeDirection { get; set; }
+
+    /// <summary>
+    /// The look of the cards in a tree.
+    /// </summary>
+    public TreeViewMode TreeViewMode { get; set; }
 
     /// <summary>
     /// Flag indicating whether the MCP server is enabled for AI agent access.

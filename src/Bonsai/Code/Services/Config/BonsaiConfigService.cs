@@ -58,21 +58,8 @@ public class BonsaiConfigService
     /// </summary>
     private DynamicConfig LoadDynamicConfig()
     {
-        var cfg = JsonConvert.DeserializeObject<DynamicConfig>(
+        return JsonConvert.DeserializeObject<DynamicConfig>(
             _context.DynamicConfig.First().Value
         );
-
-        ApplyDefaults(cfg);
-
-        return cfg;
-    }
-
-    /// <summary>
-    /// Sets default values to properties (for backwards compatibility).
-    /// </summary>
-    private void ApplyDefaults(DynamicConfig cfg)
-    {
-        if (cfg.TreeRenderThoroughness == 0)
-            cfg.TreeRenderThoroughness = 50;
     }
 }

@@ -1643,6 +1643,9 @@
   <data name="Admin_Config_CaptionDescription" xml:space="preserve">
     <value>Показывается в заголовке сайта</value>
   </data>
+  <data name="Admin_Config_Other" xml:space="preserve">
+    <value>Прочее</value>
+  </data>
   <data name="Admin_Config_Registration" xml:space="preserve">
     <value>Регистрация</value>
   </data>
@@ -1652,20 +1655,35 @@
   <data name="Admin_Config_Registration_Enabled" xml:space="preserve">
     <value>Разрешена</value>
   </data>
+  <data name="Admin_Config_Section_Main" xml:space="preserve">
+    <value>Главное</value>
+  </data>
+  <data name="Admin_Config_Section_Tree" xml:space="preserve">
+    <value>Фамильное древо</value>
+  </data>
   <data name="Admin_Config_Title" xml:space="preserve">
     <value>Настройки</value>
+  </data>
+  <data name="Admin_Config_TreeDirection" xml:space="preserve">
+    <value>Направление</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_BottomToTop" xml:space="preserve">
+    <value>Снизу вверх</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_BottomToTopDescription" xml:space="preserve">
+    <value>Дети над родителями</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_TopToBottom" xml:space="preserve">
+    <value>Сверху вниз</value>
+  </data>
+  <data name="Admin_Config_TreeDirection_TopToBottomDescription" xml:space="preserve">
+    <value>Дети под родителями</value>
   </data>
   <data name="Admin_Config_TreeDisplay" xml:space="preserve">
     <value>Внешний вид дерева</value>
   </data>
-  <data name="Admin_Config_TreeDisplay_FastAndRough" xml:space="preserve">
-    <value>Быстро и грубо</value>
-  </data>
   <data name="Admin_Config_TreeDisplay_HideBlackRibbon" xml:space="preserve">
     <value>Не показывать черную ленту на карточках умерших</value>
-  </data>
-  <data name="Admin_Config_TreeDisplay_SlowAndThorough" xml:space="preserve">
-    <value>Долго и тщательно</value>
   </data>
   <data name="Admin_Config_TreeKinds" xml:space="preserve">
     <value>Типы деревьев</value>
@@ -1693,6 +1711,15 @@
   </data>
   <data name="Admin_Config_TreeKinds_FullTreeDescription" xml:space="preserve">
     <value>весь связанный граф родственников</value>
+  </data>
+  <data name="Admin_Config_TreeView" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="Admin_Config_TreeView_Compact" xml:space="preserve">
+    <value>Компактный</value>
+  </data>
+  <data name="Admin_Config_TreeView_Default" xml:space="preserve">
+    <value>Обычный</value>
   </data>
   <data name="Admin_Config_Version" xml:space="preserve">
     <value>Версия</value>
@@ -2298,9 +2325,6 @@
   </data>
   <data name="Admin_DynamicConfig_Validation_TitleTooLong" xml:space="preserve">
     <value>Название не может превышать 200 символов</value>
-  </data>
-  <data name="Admin_DynamicConfig_Validation_ThoroughnessRange" xml:space="preserve">
-    <value>Значение должно быть в диапазоне от 1 до 100</value>
   </data>
   <data name="Admin_Pages_Validation_TitleEmpty" xml:space="preserve">
     <value>Необходимо ввести название страницы</value>

@@ -66,8 +66,9 @@ For development, you will need the following:
 * [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0): the main runtime for Bonsai
 
 1. Install [NodeJS](https://nodejs.org/en/)
-2. Download [ffmpeg shared binaries](https://www.ffmpeg.org/download.html) for your system and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
-3. Create a file called `appsettings.Development.json`, add the connection string:
+2. Install [Graphviz](https://graphviz.org/download/) and extract the `bin` folder into the `External/graphviz` folder in the solution root (must contain `dot`).
+3. Download [ffmpeg shared binaries](https://www.ffmpeg.org/download.html) and extract the archive's contents into `External/ffmpeg` folder in the solution root (must contain both `ffmpeg` and `ffprobe` executables).
+4. Create a file called `appsettings.Development.json`, add the connection string:
 
     ```
     {

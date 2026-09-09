@@ -36,15 +36,19 @@ public class UpdateDynamicConfigVM: IMapped
     public bool HideBlackRibbon { get; set; }
 
     /// <summary>
-    /// Tree render thoroughness coefficient.
-    /// </summary>
-    [Range(1, 100, ErrorMessageResourceType = typeof(Texts), ErrorMessageResourceName = "Admin_DynamicConfig_Validation_ThoroughnessRange")]
-    public int TreeRenderThoroughness { get; set; }
-
-    /// <summary>
     /// Kinds of tree which should be rendered automatically.
     /// </summary>
     public TreeKind[] TreeKinds { get; set; }
+
+    /// <summary>
+    /// The vertical direction in which trees are laid out.
+    /// </summary>
+    public TreeDirection TreeDirection { get; set; }
+
+    /// <summary>
+    /// The look of the cards in a tree.
+    /// </summary>
+    public TreeViewMode TreeViewMode { get; set; }
 
     /// <summary>
     /// Flag indicating whether the MCP server is enabled for AI agent access.
@@ -57,18 +61,20 @@ public class UpdateDynamicConfigVM: IMapped
               .Map(x => x.Title, x => x.Title)
               .Map(x => x.AllowGuests, x => x.AllowGuests)
               .Map(x => x.AllowRegistration, x => x.AllowRegistration)
-              .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
               .Map(x => x.TreeKinds, x => x.TreeKinds == null ? 0 : x.TreeKinds.Aggregate((TreeKind)0, (a, b) => a | b))
+              .Map(x => x.TreeDirection, x => x.TreeDirection)
+              .Map(x => x.TreeViewMode, x => x.TreeViewMode)
               .Map(x => x.McpEnabled, x => x.McpEnabled);
 
         config.NewConfig<Code.Services.Config.DynamicConfig, UpdateDynamicConfigVM>()
               .Map(x => x.Title, x => x.Title)
               .Map(x => x.AllowGuests, x => x.AllowGuests)
               .Map(x => x.AllowRegistration, x => x.AllowRegistration)
-              .Map(x => x.TreeRenderThoroughness, x => x.TreeRenderThoroughness)
               .Map(x => x.HideBlackRibbon, x => x.HideBlackRibbon)
               .Map(x => x.TreeKinds, x => Enum.GetValues<TreeKind>().Where(y => x.TreeKinds.HasFlag(y)).ToArray())
+              .Map(x => x.TreeDirection, x => x.TreeDirection)
+              .Map(x => x.TreeViewMode, x => x.TreeViewMode)
               .Map(x => x.McpEnabled, x => x.McpEnabled);
     }
 }

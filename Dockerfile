@@ -37,7 +37,7 @@ ARG BUILD_COMMIT
 
 RUN --mount=type=cache,id=apk-$TARGETARCH$TARGETVARIANT,sharing=locked,target=/var/cache/apk \
     apk --update add \
-      nodejs \
+      graphviz \
       ffmpeg \
       libintl \
       icu \
@@ -50,7 +50,7 @@ WORKDIR /app
 COPY --from=net-builder /out .
 
 RUN mkdir /app/App_Data && chmod +w /app/App_Data
-RUN mkdir /app/External/ffmpeg
+RUN mkdir -p /app/External/ffmpeg
 RUN ln -s /usr/bin/ffmpeg /app/External/ffmpeg/ffmpeg && \
     ln -s /usr/bin/ffprobe /app/External/ffmpeg/ffprobe && \
     chmod +x /app/Bonsai

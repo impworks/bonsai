@@ -68,8 +68,9 @@
 * [.NET 10](https://dotnet.microsoft.com/download/dotnet/10.0): основной рантайм для Bonsai
 
 1. Установите [NodeJS](https://nodejs.org/en/)
-2. Скачайте [shared-сборку ffmpeg](https://www.ffmpeg.org/download.html) для вашей операционной системы и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
-3. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
+2. Установите [Graphviz](https://graphviz.org/download/), извлеките данные из папки `bin` в папку `External/graphviz` в корне проекта (необходим файл `dot`).
+3. Скачайте [shared-сборку ffmpeg](https://www.ffmpeg.org/download.html) и извлеките данные в папку `External/ffmpeg` в корне проекта (необходимы исполняемые файлы `ffmpeg` и `ffprobe`).
+4. Создайте файл `appsettings.Development.json`, пропишите строку подключения к БД:
 
   ```
     {
