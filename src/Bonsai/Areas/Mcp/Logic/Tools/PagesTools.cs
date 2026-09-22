@@ -28,6 +28,7 @@ public class PagesTools(
     SearchPresenterService searchService,
     PagePresenterService pagePresenterService,
     PagesManagerService pagesManagerService,
+    MediaManagerService mediaManagerService,
     McpToolAuthorizationService authService,
     McpUserContext userContext,
     AppDbContext db,
@@ -160,7 +161,8 @@ public class PagesTools(
         [Description("Page type (Person, Pet, Location, Event, Other)")] string type,
         [Description("Page description in Markdown format")] string description,
         [Description("Page facts as JSON (optional, format depends on page type)")] string facts = null,
-        [Description("Comma-separated list of title aliases (optional)")] string aliases = null)
+        [Description("Comma-separated list of title aliases (optional)")] string aliases = null,
+        [Description("Key of an existing photo to use as the page's main photo, e.g. 'media-12345678' (optional)")] string mainPhotoKey = null)
     {
         await authService.RequireRoleAsync(UserRole.Editor);
 
@@ -172,10 +174,14 @@ public class PagesTools(
             Type = pageType,
             Description = description,
             Facts = facts,
-            Aliases = aliases != null ? System.Text.Json.JsonSerializer.Serialize(aliases.Split(',').Select(a => a.Trim()).ToList()) : null
+            Aliases = aliases != null ? System.Text.Json.JsonSerializer.Serialize(aliases.Split(',').Select(a => a.Trim()).ToList()) : null,
+            MainPhotoKey = mainPhotoKey
         };
 
         var page = await pagesManagerService.CreateAsync(vm, userContext.Principal, isAIGenerated: true);
+        await db.SaveChangesAsync();
+
+        await mediaManagerService.TryAddMainPhotoTagAsync(page.MainPhoto, page, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
 
         await search.AddPageAsync(page);
@@ -199,7 +205,8 @@ public class PagesTools(
         [Description("New page title (optional)")] string title = null,
         [Description("New page description in Markdown (optional)")] string description = null,
         [Description("New page facts as JSON (optional)")] string facts = null,
-        [Description("New comma-separated list of title aliases (optional)")] string aliases = null)
+        [Description("New comma-separated list of title aliases (optional)")] string aliases = null,
+        [Description("Key of an existing photo to use as the page's main photo, e.g. 'media-12345678' (optional, empty string removes the main photo)")] string mainPhotoKey = null)
     {
         await authService.RequireRoleAsync(UserRole.Editor);
 
@@ -218,7 +225,13 @@ public class PagesTools(
         if (aliases != null)
             current.Aliases = System.Text.Json.JsonSerializer.Serialize(aliases.Split(',').Select(a => a.Trim()).ToList());
 
+        if (mainPhotoKey != null)
+            current.MainPhotoKey = mainPhotoKey == "" ? null : mainPhotoKey;
+
         var page = await pagesManagerService.UpdateAsync(current, userContext.Principal, isAIGenerated: true);
+        await db.SaveChangesAsync();
+
+        await mediaManagerService.TryAddMainPhotoTagAsync(page.MainPhoto, page, userContext.Principal, isAIGenerated: true);
         await db.SaveChangesAsync();
 
         await search.AddPageAsync(page);

@@ -1,4 +1,5 @@
-﻿using Impworks.Utils.Strings;
+﻿using System;
+using Impworks.Utils.Strings;
 
 namespace Bonsai.Code.Services.Config;
 
@@ -12,6 +13,7 @@ public class StaticConfig
     public WebServerConfig WebServer { get; set; }
     public DemoModeConfig DemoMode { get; set; }
     public AuthConfig Auth { get; set; }
+    public McpConfig Mcp { get; set; }
     public string Locale { get; set; }
     public string BuildCommit { get; set; }
 }
@@ -41,6 +43,21 @@ public class WebServerConfig
 {
     public bool RequireHttps { get; set; }
     public long? MaxUploadSize { get; set; }
+}
+
+/// <summary>
+/// MCP server properties.
+/// </summary>
+public class McpConfig
+{
+    public static readonly TimeSpan DefaultUploadTokenLifetime = TimeSpan.FromMinutes(10);
+
+    /// <summary>
+    /// Lifetime of one-time media upload tokens issued to AI assistants (e.g. "00:10:00").
+    /// </summary>
+    public TimeSpan? UploadTokenLifetime { get; set; }
+
+    public TimeSpan EffectiveUploadTokenLifetime => UploadTokenLifetime ?? DefaultUploadTokenLifetime;
 }
 
 /// <summary>

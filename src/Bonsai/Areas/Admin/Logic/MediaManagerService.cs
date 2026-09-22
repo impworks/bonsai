@@ -122,25 +122,34 @@ public class MediaManagerService
     /// </summary>
     public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, IFormFile file, IFormFile preview, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
+        await using var source = file.OpenReadStream();
+        return await UploadAsync(vm, source, file.FileName, file.ContentType, preview, principal, isAIGenerated);
+    }
+
+    /// <summary>
+    /// Uploads a new media file from a raw stream.
+    /// </summary>
+    public async Task<MediaUploadResultVM> UploadAsync(MediaUploadRequestVM vm, Stream source, string sourceFileName, string mimeType, IFormFile preview, ClaimsPrincipal principal, bool isAIGenerated = false)
+    {
         var id = Guid.NewGuid();
         var key = PageHelper.GetMediaKey(id);
 
-        var handler = _mediaHandlers.FirstOrDefault(x => x.SupportedMimeTypes.Contains(file.ContentType));
+        var handler = GetHandler(mimeType);
         if(handler == null)
             throw new UploadException(Texts.Admin_Media_UnknownFileType);
 
         var user = await _userMgr.GetUserAsync(principal, Texts.Admin_Users_NotFound);
-        var paths = await SaveUploadAsync(file, key, handler, preview);
+        var paths = await SaveUploadAsync(source, sourceFileName, key, handler, mimeType, preview);
         var tags = await GetTagsForUploadedMedia(vm);
-        var meta = await handler.ExtractMetadataAsync(paths.LocalPath, file.ContentType);
+        var meta = await handler.ExtractMetadataAsync(paths.LocalPath, mimeType);
 
-        var title = vm.UseFileNameAsTitle ? SanitizeFileName(file.FileName) : vm.Title;
+        var title = vm.UseFileNameAsTitle ? SanitizeFileName(sourceFileName) : vm.Title;
         var media = new Media
         {
             Id = id,
             Key = key,
             Type = handler.MediaType,
-            MimeType = file.ContentType,
+            MimeType = mimeType,
             Title = title,
             NormalizedTitle = PageHelper.NormalizeTitle(title),
             FilePath = paths.UrlPath,
@@ -159,6 +168,14 @@ public class MediaManagerService
         _db.Changes.Add(changeset);
 
         return _mapper.Map<MediaUploadResultVM>(media);
+    }
+
+    /// <summary>
+    /// Returns the media type for the specified MIME type, or null if it is not supported.
+    /// </summary>
+    public MediaType? GetMediaType(string mimeType)
+    {
+        return GetHandler(mimeType)?.MediaType;
     }
 
     /// <summary>
@@ -326,7 +343,7 @@ public class MediaManagerService
     /// <summary>
     /// Tags the whole image with the corresponding page.
     /// </summary>
-    public async Task TryAddMainPhotoTagAsync(Media media, Page page, ClaimsPrincipal principal)
+    public async Task TryAddMainPhotoTagAsync(Media media, Page page, ClaimsPrincipal principal, bool isAIGenerated = false)
     {
         if (media == null || media.Tags.Any())
             return;
@@ -338,7 +355,7 @@ public class MediaManagerService
             Coordinates = "0;0;1;1"
         };
         vm.DepictedEntities = JsonConvert.SerializeObject(new[] {tag});
-        await UpdateAsync(vm, principal);
+        await UpdateAsync(vm, principal, isAIGenerated: isAIGenerated);
     }
 
     #endregion
@@ -446,18 +463,26 @@ public class MediaManagerService
     /// <summary>
     /// Saves an uploaded file to disk.
     /// </summary>
-    private async Task<(string LocalPath, string UrlPath)> SaveUploadAsync(IFormFile file, string key, IMediaHandler handler, IFormFile preview = null)
+    private async Task<(string LocalPath, string UrlPath)> SaveUploadAsync(Stream source, string sourceFileName, string key, IMediaHandler handler, string mimeType, IFormFile preview = null)
     {
         var mediaFolderPath = Path.Combine(_env.WebRootPath, "media");
         Directory.CreateDirectory(mediaFolderPath);
 
-        var ext = Path.GetExtension(file.FileName);
+        var ext = Path.GetExtension(sourceFileName);
         var fileName = key + ext;
         var filePath = Path.Combine(mediaFolderPath, fileName);
 
-        await using (var localStream = new FileStream(filePath, FileMode.CreateNew))
-        await using (var sourceStream = file.OpenReadStream())
-            await sourceStream.CopyToAsync(localStream);
+        try
+        {
+            await using var localStream = new FileStream(filePath, FileMode.CreateNew);
+            await source.CopyToAsync(localStream);
+        }
+        catch
+        {
+            // do not leave partially transferred files behind (e.g. client disconnected, size limit exceeded)
+            File.Delete(filePath);
+            throw;
+        }
 
         using (var frame = await GetPreviewFrameAsync())
             await MediaHandlerHelper.CreateThumbnailsAsync(filePath, frame);
@@ -479,8 +504,16 @@ public class MediaManagerService
                 }
             }
 
-            return await handler.ExtractThumbnailAsync(filePath, file.ContentType);
+            return await handler.ExtractThumbnailAsync(filePath, mimeType);
         }
+    }
+
+    /// <summary>
+    /// Finds the handler for the specified MIME type.
+    /// </summary>
+    private IMediaHandler GetHandler(string mimeType)
+    {
+        return _mediaHandlers.FirstOrDefault(x => x.SupportedMimeTypes.Contains(mimeType));
     }
 
     /// <summary>

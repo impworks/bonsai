@@ -1,15 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
 using Bonsai.Areas.Admin.ViewModels.Media;
 using Bonsai.Areas.Front.Logic;
 using Bonsai.Areas.Mcp.Logic.Auth;
 using Bonsai.Areas.Mcp.Logic.Services;
+using Bonsai.Code.Services.Config;
+using Bonsai.Code.Utils.Date;
 using Bonsai.Data;
 using Bonsai.Data.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 using ModelContextProtocol.Server;
 
 namespace Bonsai.Areas.Mcp.Logic.Tools;
@@ -23,8 +29,75 @@ public class MediaTools(
     MediaManagerService mediaManagerService,
     McpToolAuthorizationService authService,
     McpUserContext userContext,
+    MediaUploadTokenService uploadTokenService,
+    BonsaiConfigService configService,
+    IHttpContextAccessor httpContextAccessor,
     AppDbContext db)
 {
+    private static readonly FileExtensionContentTypeProvider ContentTypeProvider = new();
+
+    /// <summary>
+    /// Creates a one-time upload URL for a new media file.
+    /// </summary>
+    [McpServerTool(Name = "create_media_upload")]
+    [Description("""
+        Create a one-time URL for uploading a new media file (photo, video, or PDF document). Requires Editor role.
+        File contents cannot be passed through MCP: send the raw file as the body of an HTTP PUT request to the returned URL,
+        e.g. `curl --fail-with-body -T "<local file path>" "<uploadUrl>"` (in PowerShell, call `curl.exe`, not the `curl` alias).
+        The URL expires after a short time and can only be used once. The response of the PUT request is JSON with the new media's id and key,
+        which can then be used with update_media (description, tags) or as mainPhotoKey in create_page/update_page.
+        Videos are processed in the background: check isProcessed via read_media.
+        """)]
+    public async Task<CreateMediaUploadResult> CreateMediaUpload(
+        [Description("Name of the file including extension (e.g. 'IMG_1234.jpg'). The extension is kept for the stored file.")] string fileName,
+        [Description("MIME type of the file (optional, detected from the extension if omitted). Supported: image/jpeg, image/png, common video types, application/pdf")] string mimeType = null,
+        [Description("File size in bytes (optional, used to reject files that exceed the server's upload limit before sending them)")] long? fileSize = null,
+        [Description("Media title (optional)")] string title = null,
+        [Description("Date in any of the formats: YYYY.MM.DD = precise date, YYYY.MM.?? = year and month, YYYY.??.?? = year, YYY?.YY.YY = decade, ????.MM.DD = date without year (optional, extracted from photo metadata if omitted)")] string date = null,
+        [Description("Location page ID (optional)")] string locationId = null,
+        [Description("Event page ID (optional)")] string eventId = null)
+    {
+        await authService.RequireRoleAsync(UserRole.Editor);
+
+        fileName = Path.GetFileName(fileName ?? "");
+        var ext = Path.GetExtension(fileName);
+        if (!Regex.IsMatch(ext, @"^\.[A-Za-z0-9]{1,10}$"))
+            throw new ArgumentException($"File name '{fileName}' must have a valid extension (e.g. '.jpg').");
+
+        if (string.IsNullOrEmpty(mimeType) && !ContentTypeProvider.TryGetContentType(fileName, out mimeType))
+            throw new ArgumentException($"Cannot detect the MIME type of '{fileName}'. Specify mimeType explicitly.");
+
+        if (mediaManagerService.GetMediaType(mimeType) == null)
+            throw new ArgumentException($"Unsupported file type: {mimeType}.");
+
+        var maxSize = configService.GetStaticConfig().WebServer?.MaxUploadSize;
+        if (fileSize > maxSize)
+            throw new ArgumentException($"The file is too large ({fileSize} bytes). Maximum upload size is {maxSize} bytes.");
+
+        if (!string.IsNullOrEmpty(date) && FuzzyDate.TryParse(date) == null)
+            throw new ArgumentException($"Invalid date: '{date}'.");
+
+        var request = new MediaUploadRequestVM
+        {
+            Title = title,
+            Date = date,
+            Location = locationId,
+            Event = eventId
+        };
+        var ticket = uploadTokenService.Create(userContext.UserId, fileName, mimeType, request);
+
+        var http = httpContextAccessor.HttpContext.Request;
+        var url = $"{http.Scheme}://{http.Host}{http.PathBase}/mcp/upload/{ticket.Token}";
+
+        return new CreateMediaUploadResult
+        {
+            UploadUrl = url,
+            Method = "PUT",
+            ExpiresAt = ticket.ExpiresAt,
+            CurlCommand = $"curl --fail-with-body -T \"<local file path>\" \"{url}\""
+        };
+    }
+
     /// <summary>
     /// Lists media files with optional filters.
     /// </summary>
@@ -186,6 +259,14 @@ public class MediaTools(
 }
 
 #region Input/Result Types
+
+public class CreateMediaUploadResult
+{
+    public string UploadUrl { get; set; }
+    public string Method { get; set; }
+    public DateTimeOffset ExpiresAt { get; set; }
+    public string CurlCommand { get; set; }
+}
 
 public class ListMediaResult
 {

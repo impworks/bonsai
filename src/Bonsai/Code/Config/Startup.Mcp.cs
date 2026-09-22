@@ -24,6 +24,7 @@ public partial class Startup
         // MCP context and authorization
         services.AddScoped<McpUserContext>();
         services.AddScoped<McpToolAuthorizationService>();
+        services.AddSingleton<MediaUploadTokenService>();
 
         var jsonOpts = new JsonSerializerOptions
         {
@@ -286,8 +287,21 @@ public partial class Startup
         - **Editor**: Can create, update, and delete content
         - **Admin**: Full access including user management
         
+        ## Uploading Media
+
+        File contents cannot be sent through MCP tool calls. To upload a file:
+        1. Call `create_media_upload` with the file name (and optionally title, date, location, event).
+           It returns a one-time `uploadUrl` that expires after a few minutes.
+        2. Send the raw file as the body of an HTTP PUT request to that URL, e.g.:
+           `curl --fail-with-body -T "/path/to/photo.jpg" "<uploadUrl>"` (in PowerShell use `curl.exe`).
+           The response is JSON with the new media's `id` and `key`.
+        3. Optionally call `update_media` to add a description, or pass the key as `mainPhotoKey` to `create_page` / `update_page`.
+
+        If the upload fails, the URL is consumed anyway: request a new one. Videos are encoded in the background,
+        `read_media` shows when `isProcessed` becomes true.
+
         ## Changes
-        
+
         Bonsai persists the history of changes to all pages, relations, and media files.
         Whenever any create_*, update_*, or delete_* tool is invoked, a new changeset is created, so it's crucial not to invoke them multiple times.
         It can be viewed using the changes-related tools, and reverted only manually in the Bonsai Web interface.
