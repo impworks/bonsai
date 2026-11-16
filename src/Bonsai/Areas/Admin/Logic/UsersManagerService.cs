@@ -117,22 +117,39 @@ public class UsersManagerService
 
         ValidateDemoModeRestrictions(user);
 
+        var wasLocked = user.LockoutEnd > DateTimeOffset.Now;
+        var revokeSessions = false;
+
         _mapper.Map(request, user);
         user.IsValidated = true;
 
         if(!IsSelf(request.Id, currUser))
         {
             var allRoles = await _userMgr.GetRolesAsync(user);
-            await _userMgr.RemoveFromRolesAsync(user, allRoles);
-
             var role = request.Role.ToString();
-            await _userMgr.AddToRoleAsync(user, role);
+
+            if (allRoles.Count != 1 || allRoles[0] != role)
+            {
+                await _userMgr.RemoveFromRolesAsync(user, allRoles);
+                await _userMgr.AddToRoleAsync(user, role);
+                revokeSessions = true;
+            }
         }
 
-        if(request.IsLocked && user.LockoutEnd == null)
+        if (request.IsLocked && !wasLocked)
+        {
             user.LockoutEnd = DateTimeOffset.MaxValue;
+            revokeSessions = true;
+        }
         else if (!request.IsLocked && user.LockoutEnd != null)
+        {
             user.LockoutEnd = null;
+        }
+
+        // A new security stamp invalidates existing auth cookies of the user,
+        // so that a lock or a role change takes effect without waiting for the cookie to expire.
+        if (revokeSessions)
+            await _userMgr.UpdateSecurityStampAsync(user);
 
         return user;
     }

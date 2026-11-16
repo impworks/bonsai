@@ -134,8 +134,8 @@ public class OAuthController(
                     }));
             }
 
-            // Ensure the user is still allowed to sign in
-            if (!await signInManager.CanSignInAsync(user))
+            // Ensure the user is still allowed to sign in (CanSignInAsync does not check lockout)
+            if (!await signInManager.CanSignInAsync(user) || await userManager.IsLockedOutAsync(user))
             {
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,

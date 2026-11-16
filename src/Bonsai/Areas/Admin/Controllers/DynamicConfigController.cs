@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Auth;
 using Bonsai.Areas.Admin.Logic.Tree;
 using Bonsai.Areas.Admin.ViewModels.DynamicConfig;
 using Bonsai.Areas.Front.ViewModels.Page;
@@ -9,6 +10,7 @@ using Bonsai.Code.Services.Jobs;
 using Bonsai.Data;
 using Bonsai.Localization;
 using Impworks.Utils.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bonsai.Areas.Admin.Controllers;
@@ -17,6 +19,7 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing the global configuration.
 /// </summary>
 [Route("admin/config")]
+[Authorize(Policy = AdminOnlyAuthRequirement.Name)]
 public class DynamicConfigController(DynamicConfigManagerService configMgr, BonsaiConfigService configSvc, IBackgroundJobService jobsScv, AppDbContext db, CacheService cache)
     : AdminControllerBase
 {

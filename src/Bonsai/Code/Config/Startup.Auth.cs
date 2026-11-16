@@ -17,10 +17,12 @@ public partial class Startup
         {
             opts.AddPolicy(AuthRequirement.Name, p => p.Requirements.Add(new AuthRequirement()));
             opts.AddPolicy(AdminAuthRequirement.Name, p => p.Requirements.Add(new AdminAuthRequirement()));
+            opts.AddPolicy(AdminOnlyAuthRequirement.Name, p => p.Requirements.Add(new AdminOnlyAuthRequirement()));
         });
 
         services.AddScoped<IAuthorizationHandler, AuthHandler>();
         services.AddScoped<IAuthorizationHandler, AdminAuthHandler>();
+        services.AddScoped<IAuthorizationHandler, AdminOnlyAuthHandler>();
 
         var auth = services.AddAuthentication(IdentityConstants.ApplicationScheme);
         var authProvider = new AuthProviderService();

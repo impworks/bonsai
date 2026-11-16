@@ -237,7 +237,7 @@ public class PagesTools(
     /// Deletes a page (soft delete).
     /// </summary>
     [McpServerTool(Name = "delete_page")]
-    [Description("Delete a wiki page (soft delete, can be restored). Requires Editor role.")]
+    [Description("Delete a wiki page (soft delete, can be restored). Requires Admin role.")]
     public async Task<DeletePageResult> DeletePage(
         [Description("Page ID (GUID)")] string pageId)
     {

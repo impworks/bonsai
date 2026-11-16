@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bonsai.Areas.Admin.Logic;
+using Bonsai.Areas.Admin.Logic.Auth;
 using Bonsai.Areas.Admin.ViewModels.Users;
 using Bonsai.Code.Services.Config;
 using Bonsai.Code.Services.Search;
@@ -12,6 +13,7 @@ using Bonsai.Code.Utils.Validation;
 using Bonsai.Data;
 using Bonsai.Data.Models;
 using Bonsai.Localization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +24,7 @@ namespace Bonsai.Areas.Admin.Controllers;
 /// Controller for managing users.
 /// </summary>
 [Route("admin/users")]
+[Authorize(Policy = AdminOnlyAuthRequirement.Name)]
 public class UsersController(UsersManagerService usersSvc, PagesManagerService pagesSvc, BonsaiConfigService configSvc, ISearchEngine search, AppDbContext db)
     : AdminControllerBase
 {
